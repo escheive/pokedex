@@ -15,12 +15,12 @@ const HomeScreen = ({ navigation, pokemonList }: Props) => {
 
     const renderItem = ({ item }: { item: Pokemon }) => (
         <TouchableOpacity style={styles.itemContainer} onPress={() => handlePress(item)}>
+            <Text style={styles.itemName}>{item.id}</Text>
+            <Text style={styles.itemName}>{item.name}</Text>
             <Image
                 style={styles.image}
                 source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${item.id}.png` }}
             />
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text style={styles.itemName}>{item.id}</Text>
         </TouchableOpacity>
     );
 
@@ -57,8 +57,8 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 75,
+    height: 75,
   },
 });
 
