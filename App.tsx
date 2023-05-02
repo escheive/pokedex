@@ -10,12 +10,6 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import DetailsScreen from './src/screens/DetailsScreen';
 
-const styles = StyleSheet.create({
-    header: {
-        backgroundColor: 'black',
-    },
-});
-
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -24,7 +18,7 @@ const HomeStack = ({ pokemonList }) => {
     <Stack.Navigator
         screenOptions={{
             headerStyle: {
-                backgroundColor: 'gray',
+                backgroundColor: 'red',
             }
         }}
     >
