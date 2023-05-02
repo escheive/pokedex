@@ -1,10 +1,9 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, Button, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import LinearGradient from 'react-native-linear-gradient';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Pokemon } from './types';
 // Screens
 import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
@@ -20,7 +19,7 @@ const styles = StyleSheet.create({
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const HomeStack = () => {
+const HomeStack = ({ pokemonList }) => {
   return (
     <Stack.Navigator
         screenOptions={{
@@ -29,7 +28,9 @@ const HomeStack = () => {
             }
         }}
     >
-        <Stack.Screen name="Spotify Music Finder" component={HomeScreen} />
+        <Stack.Screen name="Gotta Catch Them All">
+            {props => <HomeScreen {...props} pokemonList={pokemonList} />}
+        </Stack.Screen>
         <Stack.Screen name="Details" component={DetailsScreen} />
     </Stack.Navigator>
   );
@@ -55,11 +56,20 @@ function SettingsStack() {
 
 
 export default function App() {
+    const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
+
+    useEffect(() => {
+        fetch('https://pokeapi.co/api/v2/pokemon?limit=20')
+            .then(response => response.json())
+            .then(data => setPokemonList(data.results));
+    }, []);
 
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={{ headerShown: false }}>
-        <Tab.Screen name="Home" component={HomeStack} options={{ tabBarBadge: 3 }} />
+        <Tab.Screen name="Home" options={{ tabBarBadge: 3 }}>
+            {(props) => <HomeStack {...props} pokemonList={pokemonList} />}
+        </Tab.Screen>
         <Tab.Screen name="Profile" component={ProfileStack} />
         <Tab.Screen name="Settings" component={SettingsStack} />
       </Tab.Navigator>
