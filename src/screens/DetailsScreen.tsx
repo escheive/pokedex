@@ -32,74 +32,92 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         case 'normal':
           return {
             backgroundColor: 'gray',
+            color: 'white',
           };
         case 'fire':
           return {
             backgroundColor: 'orange',
+            color: 'black',
           };
         case 'water':
           return {
             backgroundColor: 'blue',
+            color: 'white',
           };
         case 'grass':
           return {
-            backgroundColor: '#78c850',
+            backgroundColor: 'green',
+            color: 'white',
           };
         case 'electric':
           return {
             backgroundColor: 'yellow',
+            color: 'black',
           };
         case 'ice':
           return {
             backgroundColor: 'cyan',
+            color: 'black',
           };
         case 'fighting':
           return {
             backgroundColor: 'red',
+            color: 'white',
           };
         case 'poison':
           return {
             backgroundColor: 'purple',
+            color: 'white',
           };
         case 'ground':
           return {
             backgroundColor: 'brown',
+            color: 'white',
           };
         case 'flying':
           return {
-            backgroundColor: 'sky-blue',
+            backgroundColor: 'skyBlue',
+            color: 'black',
           };
         case 'psychic':
           return {
             backgroundColor: 'pink',
+            color: 'black',
           };
         case 'bug':
           return {
             backgroundColor: 'lime',
+            color: 'black',
           };
         case 'rock':
           return {
             backgroundColor: 'sienna',
+            color: 'white',
           };
         case 'ghost':
           return {
             backgroundColor: 'violet',
+            color: 'white',
           };
         case 'dragon':
           return {
             backgroundColor: 'indigo',
+            color: 'white',
           };
         case 'dark':
           return {
             backgroundColor: 'black',
+            color: 'white',
           };
         case 'steel':
           return {
             backgroundColor: 'silver',
+            color: 'black',
           };
         case 'fairy':
           return {
             backgroundColor: 'magenta',
+            color: 'white',
           };
         default:
           return {};
@@ -110,8 +128,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
       const stylesArray = types.map((type) => getTypeStyle(type.type.name));
       return stylesArray.filter(style => Object.keys(style).length > 0);
     };
-
-
 
 
   return (
@@ -125,7 +141,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
       <View style={styles.typesContainer}>
         {pokemon.types.map((type) => (
           <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
-            <Text style={styles.typeText}>
+            <Text style={{ color: getTypeStyle(type.type.name).color }}>
               {type.type.name}
             </Text>
           </View>
@@ -162,9 +178,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   type: {
-    color: 'white',
     padding: 8,
-    borderRadius: 8,
+    borderRadius: 16,
     marginHorizontal: 8,
   },
 });
