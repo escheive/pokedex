@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Image } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Pokemon } from '../types';
 
@@ -14,19 +14,25 @@ const HomeScreen = ({ navigation, pokemonList }: Props) => {
     };
 
     const renderItem = ({ item }: { item: Pokemon }) => (
-        <TouchableOpacity onPress={() => handlePress(item)}>
-            <View style={{ padding: 10 }}>
-                <Text>{item.name}</Text>
-            </View>
+        <TouchableOpacity style={styles.itemContainer} onPress={() => handlePress(item)}>
+            <Image
+                style={styles.image}
+                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${item.id}.png` }}
+            />
+            <Text style={styles.itemName}>{item.name}</Text>
+            <Text style={styles.itemName}>{item.id}</Text>
         </TouchableOpacity>
     );
 
   return (
-    <FlatList
+    <View style={styles.container}>
+      <FlatList
         data={pokemonList}
         renderItem={renderItem}
-        keyExtractor={item => item.name}
-    />
+        keyExtractor={(item) => item.name}
+        contentContainerStyle={styles.listContainer}
+      />
+    </View>
   );
 }
 
@@ -37,16 +43,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'gray',
   },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
+  listContainer: {
+    padding: 10,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  itemName: {
+    fontSize: 16,
+    marginLeft: 10,
     color: 'white',
   },
-  body: {
-    fontSize: 16,
-    textAlign: 'center',
-    color: 'white',
+  image: {
+    width: 50,
+    height: 50,
   },
 });
 

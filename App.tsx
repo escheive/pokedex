@@ -61,7 +61,13 @@ export default function App() {
     useEffect(() => {
         fetch('https://pokeapi.co/api/v2/pokemon?limit=20')
             .then(response => response.json())
-            .then(data => setPokemonList(data.results));
+            .then(data => {
+                // Use `Promise.all()` to fetch data for each Pokemon in parallel
+                const promises = data.results.map(pokemon => fetch(pokemon.url).then(response => response.json()));
+                return Promise.all(promises);
+            })
+            .then(data => setPokemonList(data))
+            .catch(error => console.error(error))
     }, []);
 
   return (
