@@ -34,92 +34,92 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
       switch (typeName) {
         case 'normal':
             return {
-                backgroundColor: 'gray',
+                backgroundColor: 'rgba(128, 128, 128, 0.5)',
                 color: 'white',
             };
         case 'fire':
             return {
-                backgroundColor: 'orange',
+                backgroundColor: 'rgba(255, 165, 0, 0.5)',
                 color: 'black',
             };
         case 'water':
             return {
-                backgroundColor: 'blue',
+                backgroundColor: 'rgba(30, 144, 255, 0.5)',
                 color: 'white',
             };
         case 'grass':
             return {
-                backgroundColor: 'green',
+                backgroundColor: 'rgba(0, 128, 0, 0.5)',
                 color: 'white',
             };
         case 'electric':
             return {
-                backgroundColor: 'yellow',
+                backgroundColor: 'rgba(255, 255, 0, 0.5)',
                 color: 'black',
             };
         case 'ice':
             return {
-                backgroundColor: 'cyan',
+                backgroundColor: 'rgba(0, 255, 255, 0.5)',
                 color: 'black',
             };
         case 'fighting':
             return {
-                backgroundColor: 'red',
+                backgroundColor: 'rgba(255, 0, 0, 0.5)',
                 color: 'white',
             };
         case 'poison':
             return {
-                backgroundColor: 'purple',
+                backgroundColor: 'rgba(128, 0, 128, 0.5)',
                 color: 'white',
             };
         case 'ground':
             return {
-                backgroundColor: 'brown',
+                backgroundColor: 'rgba(165, 42, 42, 0.5)',
                 color: 'white',
             };
         case 'flying':
             return {
-                backgroundColor: 'skyblue',
+                backgroundColor: 'rgba(135, 206, 235, 0.5)',
                 color: 'black',
             };
         case 'psychic':
             return {
-                backgroundColor: 'pink',
+                backgroundColor: 'rgba(255, 192, 203, 0.5)',
                 color: 'black',
             };
         case 'bug':
             return {
-                backgroundColor: 'lime',
+                backgroundColor: 'rgba(0, 255, 0, 0.5)',
                 color: 'black',
             };
         case 'rock':
             return {
-                backgroundColor: 'sienna',
+                backgroundColor: 'rgba(160, 82, 45, 0.5)',
                 color: 'white',
             };
         case 'ghost':
             return {
-                backgroundColor: 'violet',
+                backgroundColor: 'rgba(238, 130, 238, 0.5)',
                 color: 'white',
             };
         case 'dragon':
             return {
-                backgroundColor: 'indigo',
+                backgroundColor: 'rgba(75, 0, 130, 0.5)',
                 color: 'white',
             };
         case 'dark':
             return {
-                backgroundColor: 'black',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 color: 'white',
             };
         case 'steel':
             return {
-                backgroundColor: 'silver',
+                backgroundColor: 'rgba(192, 192, 192, 0.5)',
                 color: 'black',
             };
         case 'fairy':
             return {
-                backgroundColor: 'magenta',
+                backgroundColor: 'rgba(255, 0, 255, 0.5)',
                 color: 'white',
             };
         default:
@@ -132,6 +132,10 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
       pokemonColors.push(stylesArray[0].backgroundColor)
       return stylesArray.filter(style => Object.keys(style).length > 0);
     };
+
+    const stylesArray = getTypeBackgroundStyle(pokemon.types);
+    pokemonColors = stylesArray.map((style) => style.backgroundColor);
+    const gradientColors = pokemonColors.length < 2 ? [pokemonColors[0], '#FFFFFF'] : pokemonColors;
 
     const styles = StyleSheet.create({
       container: {
@@ -206,10 +210,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         borderColor: '#ffffff',
       },
     });
-
-    const stylesArray = getTypeBackgroundStyle(pokemon.types);
-    pokemonColors = stylesArray.map((style) => style.backgroundColor);
-    const gradientColors = pokemonColors.length < 2 ? [pokemonColors[0], '#FFFFFF'] : pokemonColors;
 
   return (
     <View style={styles.container}>

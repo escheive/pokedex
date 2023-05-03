@@ -18,8 +18,9 @@ const HomeStack = ({ pokemonList }) => {
     <Stack.Navigator
         screenOptions={{
             headerStyle: {
-                backgroundColor: 'red',
-            }
+                backgroundColor: 'white',
+            },
+            headerTitleAlign: 'center',
         }}
     >
         <Stack.Screen name="Gotta Catch Them All">
@@ -53,7 +54,7 @@ export default function App() {
     const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
 
     useEffect(() => {
-        fetch('https://pokeapi.co/api/v2/pokemon?limit=20')
+        fetch('https://pokeapi.co/api/v2/pokemon?limit=60')
             .then(response => response.json())
             .then(data => {
                 // Use `Promise.all()` to fetch data for each Pokemon in parallel
