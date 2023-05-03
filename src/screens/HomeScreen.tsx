@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'red',
   },
   listContainer: {
     padding: 5,
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     margin: 5,
-    backgroundColor: 'red',
+    backgroundColor: 'tan',
   },
   itemCard: {
     height: '100%',

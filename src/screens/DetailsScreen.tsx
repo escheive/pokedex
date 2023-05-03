@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button, Image } from 'react-native';
+import GradientBackground from '../components/GradientBackground';
+import LinearGradient from 'react-native-linear-gradient';
 
 type TypeProps = {
     type: {
@@ -25,100 +27,101 @@ type DetailsScreenProps = {
 
 const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
   const { pokemon } = route.params;
+  let pokemonColors = [];
 
   // Define a function to return styles for each type
     const getTypeStyle = (typeName: string) => {
       switch (typeName) {
         case 'normal':
-          return {
-            backgroundColor: 'gray',
-            color: 'white',
-          };
+            return {
+                backgroundColor: 'gray',
+                color: 'white',
+            };
         case 'fire':
-          return {
-            backgroundColor: 'orange',
-            color: 'black',
-          };
+            return {
+                backgroundColor: 'orange',
+                color: 'black',
+            };
         case 'water':
-          return {
-            backgroundColor: 'blue',
-            color: 'white',
-          };
+            return {
+                backgroundColor: 'blue',
+                color: 'white',
+            };
         case 'grass':
-          return {
-            backgroundColor: 'green',
-            color: 'white',
-          };
+            return {
+                backgroundColor: 'green',
+                color: 'white',
+            };
         case 'electric':
-          return {
-            backgroundColor: 'yellow',
-            color: 'black',
-          };
+            return {
+                backgroundColor: 'yellow',
+                color: 'black',
+            };
         case 'ice':
-          return {
-            backgroundColor: 'cyan',
-            color: 'black',
-          };
+            return {
+                backgroundColor: 'cyan',
+                color: 'black',
+            };
         case 'fighting':
-          return {
-            backgroundColor: 'red',
-            color: 'white',
-          };
+            return {
+                backgroundColor: 'red',
+                color: 'white',
+            };
         case 'poison':
-          return {
-            backgroundColor: 'purple',
-            color: 'white',
-          };
+            return {
+                backgroundColor: 'purple',
+                color: 'white',
+            };
         case 'ground':
-          return {
-            backgroundColor: 'brown',
-            color: 'white',
-          };
+            return {
+                backgroundColor: 'brown',
+                color: 'white',
+            };
         case 'flying':
-          return {
-            backgroundColor: 'skyBlue',
-            color: 'black',
-          };
+            return {
+                backgroundColor: 'skyblue',
+                color: 'black',
+            };
         case 'psychic':
-          return {
-            backgroundColor: 'pink',
-            color: 'black',
-          };
+            return {
+                backgroundColor: 'pink',
+                color: 'black',
+            };
         case 'bug':
-          return {
-            backgroundColor: 'lime',
-            color: 'black',
-          };
+            return {
+                backgroundColor: 'lime',
+                color: 'black',
+            };
         case 'rock':
-          return {
-            backgroundColor: 'sienna',
-            color: 'white',
-          };
+            return {
+                backgroundColor: 'sienna',
+                color: 'white',
+            };
         case 'ghost':
-          return {
-            backgroundColor: 'violet',
-            color: 'white',
-          };
+            return {
+                backgroundColor: 'violet',
+                color: 'white',
+            };
         case 'dragon':
-          return {
-            backgroundColor: 'indigo',
-            color: 'white',
-          };
+            return {
+                backgroundColor: 'indigo',
+                color: 'white',
+            };
         case 'dark':
-          return {
-            backgroundColor: 'black',
-            color: 'white',
-          };
+            return {
+                backgroundColor: 'black',
+                color: 'white',
+            };
         case 'steel':
-          return {
-            backgroundColor: 'silver',
-            color: 'black',
-          };
+            return {
+                backgroundColor: 'silver',
+                color: 'black',
+            };
         case 'fairy':
-          return {
-            backgroundColor: 'magenta',
-            color: 'white',
-          };
+            return {
+                backgroundColor: 'magenta',
+                color: 'white',
+            };
         default:
           return {};
       }
@@ -126,9 +129,9 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
     const getTypeBackgroundStyle = (types: TypeProps[]) => {
       const stylesArray = types.map((type) => getTypeStyle(type.type.name));
+      pokemonColors.push(stylesArray[0].backgroundColor)
       return stylesArray.filter(style => Object.keys(style).length > 0);
     };
-
 
     const styles = StyleSheet.create({
       container: {
@@ -136,22 +139,22 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         alignItems: 'center',
         justifyContent: 'flex-start',
         borderWidth: 10,
-        borderColor: 'tan',
+        borderColor: '#e3cc0c',
         borderRadius: 10,
+        overflow: 'hidden',
         margin: 10,
         padding: 10,
-        backgroundColor: getTypeBackgroundStyle([pokemon.types[0]])[0].backgroundColor,
+        backgroundColor: pokemonColors[0],
         shadowColor: 'black',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 5,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 4,
         fontFamily: 'Arial, sans-serif',
       },
       heading: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginLeft: 24,
         alignSelf: 'flex-start'
       },
       header: {
@@ -163,12 +166,12 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         flex: 1,
-        marginRight: 24,
+        marginHorizontal: 16,
       },
       hp: {
         fontSize: 22,
         fontWeight: '600',
-        },
+      },
       detailsText: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -178,9 +181,17 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
       image: {
         width: 300,
         height: 300,
+        resizeMode: 'contain',
+      },
+      imageContainer: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 5,
+        borderWidth: 10,
+        borderColor: '#dcb922',
         marginBottom: 32,
-        borderWidth: 3,
-        borderColor: 'gray',
       },
       typesContainer: {
         flexDirection: 'row',
@@ -196,8 +207,9 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
       },
     });
 
-
-
+    const stylesArray = getTypeBackgroundStyle(pokemon.types);
+    pokemonColors = stylesArray.map((style) => style.backgroundColor);
+    const gradientColors = pokemonColors.length < 2 ? [pokemonColors[0], '#FFFFFF'] : pokemonColors;
 
   return (
     <View style={styles.container}>
@@ -207,21 +219,28 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                 <Text style={styles.hp}>{pokemon.stats[0].base_stat} HP</Text>
             </View>
         </View>
-    <Image
-        style={[styles.image, getTypeBackgroundStyle([pokemon.types[0]])[0]]}
-        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
-    />
-    <Text style={styles.detailsText}>Type:</Text>
-    <View style={styles.typesContainer}>
-        {pokemon.types.map((type) => (
-            <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
-                <Text style={{ color: getTypeStyle(type.type.name).color, fontSize: 16, fontWeight: '600' }}>
-                    {type.type.name}
-                </Text>
-            </View>
-        ))}
-    </View>
-    <Text>{pokemon.stats.hp}</Text>
+        <LinearGradient
+            colors={gradientColors}
+            start={{ x: 0, y: 0}}
+            end={{ x: 1, y: 1}}
+            style={styles.imageContainer}
+        >
+            <Image
+                style={[styles.image, pokemonColors[0]]}
+                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
+            />
+        </LinearGradient>
+        <Text style={styles.detailsText}>Type:</Text>
+        <View style={styles.typesContainer}>
+            {pokemon.types.map((type) => (
+                <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
+                    <Text style={{ color: getTypeStyle(type.type.name).color, fontSize: 16, fontWeight: '600' }}>
+                        {type.type.name}
+                    </Text>
+                </View>
+            ))}
+        </View>
+        <Text>{pokemon.stats.hp}</Text>
     </View>
   );
 };
