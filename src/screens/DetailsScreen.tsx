@@ -130,58 +130,100 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     };
 
 
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        borderWidth: 10,
+        borderColor: 'tan',
+        borderRadius: 10,
+        margin: 10,
+        padding: 10,
+        backgroundColor: getTypeBackgroundStyle([pokemon.types[0]])[0].backgroundColor,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
+        fontFamily: 'Arial, sans-serif',
+      },
+      heading: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginLeft: 24,
+        alignSelf: 'flex-start'
+      },
+      header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      nameContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flex: 1,
+        marginRight: 24,
+      },
+      hp: {
+        fontSize: 22,
+        fontWeight: '600',
+        },
+      detailsText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: 16,
+        marginBottom: 4,
+      },
+      image: {
+        width: 300,
+        height: 300,
+        marginBottom: 32,
+        borderWidth: 3,
+        borderColor: 'gray',
+      },
+      typesContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginBottom: 16,
+      },
+      type: {
+        padding: 10,
+        borderRadius: 16,
+        marginHorizontal: 8,
+        borderWidth: 2,
+        borderColor: '#ffffff',
+      },
+    });
+
+
+
+
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>{pokemon.name}</Text>
-      <Image
-        style={styles.image}
+        <View style={styles.header}>
+            <View style={styles.nameContainer}>
+                <Text style={styles.heading}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+                <Text style={styles.hp}>{pokemon.stats[0].base_stat} HP</Text>
+            </View>
+        </View>
+    <Image
+        style={[styles.image, getTypeBackgroundStyle([pokemon.types[0]])[0]]}
         source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
-      />
-      <Text style={styles.detailsText}>Type:</Text>
-      <View style={styles.typesContainer}>
+    />
+    <Text style={styles.detailsText}>Type:</Text>
+    <View style={styles.typesContainer}>
         {pokemon.types.map((type) => (
-          <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
-            <Text style={{ color: getTypeStyle(type.type.name).color }}>
-              {type.type.name}
-            </Text>
-          </View>
+            <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
+                <Text style={{ color: getTypeStyle(type.type.name).color, fontSize: 16, fontWeight: '600' }}>
+                    {type.type.name}
+                </Text>
+            </View>
         ))}
-      </View>
+    </View>
+    <Text>{pokemon.stats.hp}</Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  detailsText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 16,
-  },
-  image: {
-    width: 200,
-    height: 200,
-    marginBottom: 16,
-  },
-  typesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  type: {
-    padding: 8,
-    borderRadius: 16,
-    marginHorizontal: 8,
-  },
-});
 
 export default DetailsScreen;
