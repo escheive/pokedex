@@ -8,7 +8,7 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     getData();
-    getFavorites();
+    
   }, []);
 
   const getData = async () => {
@@ -20,23 +20,6 @@ const ProfileScreen = () => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const getFavorites = async () => {
-      try {
-        const favorites = await AsyncStorage.getItem('favorites');
-        if (favorites !== null) {
-          const parsedFavorites = JSON.parse(favorites);
-          if (parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
-            setIsFavorite(true);
-          }
-        } else {
-            // Initialize the 'favorites' key with an empty array
-            await AsyncStorage.setItem('favorites', JSON.stringify([]));
-        }
-      } catch (error) {
-        console.log(error);
-      }
   };
 
   const handleNameChange = async (value) => {
