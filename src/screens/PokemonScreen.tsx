@@ -18,8 +18,6 @@ const PokemonScreen = ({ navigation, pokemonList }: Props) => {
         const screenWidth = Dimensions.get('window').width;
         const itemWidth = screenWidth / 2 - 15;
         const backgroundColor = (getTypeStyle(pokemon.types[0].type.name)).backgroundColor;
-        console.log(backgroundColor)
-
         return (
             <View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
                 <TouchableOpacity style={styles.itemCard} onPress={() => handlePress(pokemon)}>
