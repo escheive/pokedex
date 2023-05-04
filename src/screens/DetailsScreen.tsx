@@ -201,7 +201,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
       typesContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginBottom: 16,
+        marginBottom: 8,
       },
       type: {
         paddingVertical: 10,
@@ -210,9 +210,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         marginHorizontal: 8,
         borderWidth: 2,
         borderColor: '#ffffff',
-      },
-      statsContainer: {
-
       },
     });
 
