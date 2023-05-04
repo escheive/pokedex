@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Button, TextInput, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen = () => {
   const [name, setName] = useState('');
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     getData();
+    getFavorites();
   }, []);
 
   const getData = async () => {
@@ -18,6 +20,17 @@ const ProfileScreen = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const getFavorites = async () => {
+      try {
+        const value = await AsyncStorage.getItem('favorites');
+        if (value !== null) {
+          setFavorites(JSON.parse(value));
+        }
+      } catch (error) {
+        console.log(error);
+      }
   };
 
   const handleNameChange = async (value) => {
@@ -68,6 +81,13 @@ const ProfileScreen = () => {
           <Button title="Edit Name" onPress={handleEdit} />
         </>
       )}
+
+      {favorites.map((pokemon) => (
+        <View key={pokemon.id}>
+          <Text>{pokemon.name}</Text>
+          <Image source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }} />
+        </View>
+      ))}
     </View>
   );
 };

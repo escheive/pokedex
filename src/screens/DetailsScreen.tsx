@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, Image, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import GradientBackground from '../components/GradientBackground';
 import LinearGradient from 'react-native-linear-gradient';
 import PokemonStats from '../components/PokemonStats';
@@ -28,7 +29,70 @@ type DetailsScreenProps = {
 
 const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
   const { pokemon } = route.params;
+  const [isFavorite, setIsFavorite] = useState(false);
+
   let pokemonColors = [];
+
+
+  useEffect(() => {
+      getFavorites();
+    }, []);
+
+    const getFavorites = async () => {
+      try {
+        const favorites = await AsyncStorage.getItem('favorites');
+        if (favorites !== null) {
+          const parsedFavorites = JSON.parse(favorites);
+          if (parsedFavorites.includes(pokemon.id)) {
+            setIsFavorite(true);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const addFavoritePokemon = async () => {
+        try {
+          const favorites = await AsyncStorage.getItem('favorites');
+          if (favorites !== null) {
+            const parsedFavorites = JSON.parse(favorites);
+            if (!parsedFavorites.includes(pokemon.id)) {
+              const updatedFavorites = [...parsedFavorites, pokemon.id];
+              await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+              setIsFavorite(true);
+            }
+          } else {
+            const newFavorites = [pokemon.id];
+            await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
+            setIsFavorite(true);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      const handleFavoritePress = () => {
+        if (isFavorite) {
+          removeFavoritePokemon();
+        } else {
+          addFavoritePokemon();
+        }
+      };
+
+      const removeFavoritePokemon = async () => {
+        try {
+          const favorites = await AsyncStorage.getItem('favorites');
+          if (favorites !== null) {
+            const parsedFavorites = JSON.parse(favorites);
+            const updatedFavorites = parsedFavorites.filter((id) => id !== pokemon.id);
+            await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+            setIsFavorite(false);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
   // Define a function to return styles for each type
     const getTypeStyle = (typeName: string) => {
@@ -140,6 +204,9 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
     const styles = StyleSheet.create({
       container: {
+        height: '100%',
+      },
+      card: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -148,6 +215,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         borderRadius: 10,
         overflow: 'hidden',
         margin: 10,
+        marginBottom: 20,
         padding: 10,
         backgroundColor: pokemonColors[0],
         shadowColor: 'black',
@@ -214,35 +282,46 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     });
 
   return (
-    <View style={styles.container}>
-        <View style={styles.header}>
-            <View style={styles.nameContainer}>
-                <Text style={styles.heading}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
-                <Text style={styles.hp}>{pokemon.stats[0].base_stat} HP</Text>
-            </View>
-        </View>
-        <LinearGradient
-            colors={gradientColors}
-            start={{ x: 0, y: 0}}
-            end={{ x: 1, y: 1}}
-            style={styles.imageContainer}
-        >
-            <Image
-                style={[styles.image, pokemonColors[0]]}
-                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
-            />
-        </LinearGradient>
-        <View style={styles.typesContainer}>
-            {pokemon.types.map((type) => (
-                <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
-                    <Text style={{ color: getTypeStyle(type.type.name).color, fontSize: 16, fontWeight: '600' }}>
-                        {type.type.name}
-                    </Text>
+    <FlatList style={styles.container}
+        data={[pokemon]}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+            <>
+                <View style={styles.card}>
+                    <View style={styles.header}>
+                        <View style={styles.nameContainer}>
+                            <Text style={styles.heading}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+                            <Text style={styles.hp}>{pokemon.stats[0].base_stat} HP</Text>
+                        </View>
+                    </View>
+                    <LinearGradient
+                        colors={gradientColors}
+                        start={{ x: 0, y: 0}}
+                        end={{ x: 1, y: 1}}
+                        style={styles.imageContainer}
+                    >
+                        <Image
+                            style={[styles.image, pokemonColors[0]]}
+                            source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
+                        />
+                    </LinearGradient>
+                    <View style={styles.typesContainer}>
+                        {pokemon.types.map((type) => (
+                            <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
+                                <Text style={{ color: getTypeStyle(type.type.name).color, fontSize: 16, fontWeight: '600' }}>
+                                    {type.type.name}
+                                </Text>
+                            </View>
+                        ))}
+                    </View>
+                    <PokemonStats stats={pokemon.stats} />
                 </View>
-            ))}
-        </View>
-        <PokemonStats stats={pokemon.stats} />
-    </View>
+                <View>
+                  <Button title={isFavorite ? 'Remove from favorites' : 'Add to favorites'} onPress={handleFavoritePress} />
+                </View>
+            </>
+        )}
+    />
   );
 };
 
