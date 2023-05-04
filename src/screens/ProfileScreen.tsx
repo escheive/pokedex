@@ -1,15 +1,73 @@
-import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Button, TextInput } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = () => {
+  const [name, setName] = useState('');
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('name');
+      if (value !== null) {
+        setName(value);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleNameChange = async (value) => {
+    try {
+      await AsyncStorage.setItem('name', value);
+      setName(value);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempName, setTempName] = useState('');
+
+  const handleEdit = () => {
+    setTempName(name);
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    handleNameChange(tempName);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setTempName(name);
+    setIsEditing(false);
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Welcome to My App!</Text>
-      <Text style={styles.body}>This is the profile screen.</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
-      />
+      <Text style={styles.heading}>Welcome to your profile!</Text>
+      {isEditing ? (
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setTempName(text)}
+            value={tempName}
+          />
+          <View style={styles.buttonsContainer}>
+            <Button title="Save" onPress={handleSave} />
+            <Button title="Cancel" onPress={handleCancel} />
+          </View>
+        </View>
+      ) : (
+        <>
+          <Text style={styles.name}>{name}</Text>
+          <Button title="Edit Name" onPress={handleEdit} />
+        </>
+      )}
     </View>
   );
 };
@@ -25,9 +83,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
   },
-  body: {
+  name: {
     fontSize: 16,
     textAlign: 'center',
+    marginBottom: 16,
+  },
+  inputContainer: {
+    alignItems: 'center',
+  },
+  input: {
+    height: 40,
+    width: '80%',
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '20%',
   },
 });
 
