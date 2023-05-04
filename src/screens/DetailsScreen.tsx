@@ -4,6 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import GradientBackground from '../components/GradientBackground';
 import LinearGradient from 'react-native-linear-gradient';
 import PokemonStats from '../components/PokemonStats';
+// Import the heart icon from the react-icons library
+import { FaHeart } from 'react-icons/fa';
+import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
 
 type TypeProps = {
     type: {
@@ -34,82 +37,89 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
   let pokemonColors = [];
 
   useEffect(() => {
-      getFavorites();
+      checkIfFavorite();
     }, []);
 
-  const getFavorites = async () => {
-        try {
-          const favorites = await AsyncStorage.getItem('favorites');
-          if (favorites !== null) {
-            const parsedFavorites = JSON.parse(favorites);
-            if (parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
-              setIsFavorite(true);
-            }
-          } else {
-              // Initialize the 'favorites' key with an empty array
-              await AsyncStorage.setItem('favorites', JSON.stringify([]));
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      };
-
-    const addFavoritePokemon = async () => {
-        try {
-          const favorites = await AsyncStorage.getItem('favorites');
+//   const getFavorites = async () => {
+//         try {
+//           const favorites = await AsyncStorage.getItem('favorites');
 //           if (favorites !== null) {
-            if ( isFavorite ) {
-            const parsedFavorites = JSON.parse(favorites);
-            console.log(parsedFavorites)
-            if (!parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
-              const updatedFavorites = [
-                ...parsedFavorites,
-                {
-                    id: pokemon.id,
-                    name: pokemon.name,
-                    image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
-                },
-              ];
-              await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-              setIsFavorite(true);
-            }
-          } else {
-            const newFavorites = [
-                {
-                  name: pokemon.name,
-                  picture: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
-                  id: pokemon.id,
-                },
-            ];
-            await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
+//             const parsedFavorites = JSON.parse(favorites);
+//             if (parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
+//               setIsFavorite(true);
+//             }
+//           } else {
+//               // Initialize the 'favorites' key with an empty array
+//               await AsyncStorage.setItem('favorites', JSON.stringify([]));
+//           }
+//         } catch (error) {
+//           console.log(error);
+//         }
+//       };
+    const checkIfFavorite = async () => {
+        const favorites = await getFavorites();
+        if (favorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
             setIsFavorite(true);
-          }
-        } catch (error) {
-          console.log(error);
         }
-      };
+    };
 
-      const removeFavoritePokemon = async () => {
-        try {
-          const favorites = await AsyncStorage.getItem('favorites');
-          if (favorites !== null) {
-            const parsedFavorites = JSON.parse(favorites);
-            const updatedFavorites = parsedFavorites.filter((pokemonObject) => pokemonObject.id !== pokemon.id);
-            await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-            setIsFavorite(false);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      };
+//     const addFavoritePokemon = async () => {
+//         try {
+//           const favorites = await AsyncStorage.getItem('favorites');
+//             if ( isFavorite ) {
+//             const parsedFavorites = JSON.parse(favorites);
+//             console.log(parsedFavorites)
+//             if (!parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
+//               const updatedFavorites = [
+//                 ...parsedFavorites,
+//                 {
+//                     id: pokemon.id,
+//                     name: pokemon.name,
+//                     image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
+//                 },
+//               ];
+//               await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+//               setIsFavorite(true);
+//             }
+//           } else {
+//             const newFavorites = [
+//                 {
+//                   name: pokemon.name,
+//                   picture: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
+//                   id: pokemon.id,
+//                 },
+//             ];
+//             await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
+//             setIsFavorite(true);
+//           }
+//         } catch (error) {
+//           console.log(error);
+//         }
+//       };
 
-      const handleFavoritePress = () => {
+//       const removeFavoritePokemon = async () => {
+//         try {
+//           const favorites = await AsyncStorage.getItem('favorites');
+//           if (favorites !== null) {
+//             const parsedFavorites = JSON.parse(favorites);
+//             const updatedFavorites = parsedFavorites.filter((pokemonObject) => pokemonObject.id !== pokemon.id);
+//             await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+//             setIsFavorite(false);
+//           }
+//         } catch (error) {
+//           console.log(error);
+//         }
+//       };
+
+      const handleFavoritePress = async () => {
           if (isFavorite) {
-            removeFavoritePokemon();
+            await removeFavoritePokemon(pokemon);
+            setIsFavorite(false);
           } else {
-            addFavoritePokemon();
+            const added = await addFavoritePokemon(pokemon);
+            setIsFavorite(added);
           }
-        };
+      };
 
 
 
