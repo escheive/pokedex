@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, Image } from 'react-native';
+import { View, Text, StyleSheet, Button, Image, FlatList } from 'react-native';
 import GradientBackground from '../components/GradientBackground';
 import LinearGradient from 'react-native-linear-gradient';
+import PokemonStats from '../components/PokemonStats';
 
 type TypeProps = {
     type: {
@@ -179,7 +180,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
       detailsText: {
         fontSize: 20,
         fontWeight: 'bold',
-        marginTop: 16,
+        marginTop: 0,
         marginBottom: 4,
       },
       image: {
@@ -195,7 +196,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         elevation: 5,
         borderWidth: 10,
         borderColor: '#dcb922',
-        marginBottom: 32,
+        marginBottom: 16,
       },
       typesContainer: {
         flexDirection: 'row',
@@ -203,11 +204,15 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         marginBottom: 16,
       },
       type: {
-        padding: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 16,
         borderRadius: 16,
         marginHorizontal: 8,
         borderWidth: 2,
         borderColor: '#ffffff',
+      },
+      statsContainer: {
+
       },
     });
 
@@ -230,7 +235,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                 source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
             />
         </LinearGradient>
-        <Text style={styles.detailsText}>Type:</Text>
         <View style={styles.typesContainer}>
             {pokemon.types.map((type) => (
                 <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
@@ -240,7 +244,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                 </View>
             ))}
         </View>
-        <Text>{pokemon.stats.hp}</Text>
+        <PokemonStats stats={pokemon.stats} />
     </View>
   );
 };
