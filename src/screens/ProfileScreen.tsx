@@ -8,7 +8,7 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     getData();
-    
+
   }, []);
 
   const getData = async () => {
