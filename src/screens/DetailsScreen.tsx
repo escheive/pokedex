@@ -33,37 +33,54 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
   let pokemonColors = [];
 
-
   useEffect(() => {
       getFavorites();
     }, []);
 
-    const getFavorites = async () => {
-      try {
-        const favorites = await AsyncStorage.getItem('favorites');
-        if (favorites !== null) {
-          const parsedFavorites = JSON.parse(favorites);
-          if (parsedFavorites.includes(pokemon.id)) {
-            setIsFavorite(true);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const addFavoritePokemon = async () => {
+  const getFavorites = async () => {
         try {
           const favorites = await AsyncStorage.getItem('favorites');
           if (favorites !== null) {
             const parsedFavorites = JSON.parse(favorites);
-            if (!parsedFavorites.includes(pokemon.id)) {
-              const updatedFavorites = [...parsedFavorites, pokemon.id];
+            if (parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
+              setIsFavorite(true);
+            }
+          } else {
+              // Initialize the 'favorites' key with an empty array
+              await AsyncStorage.setItem('favorites', JSON.stringify([]));
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+    const addFavoritePokemon = async () => {
+        try {
+          const favorites = await AsyncStorage.getItem('favorites');
+//           if (favorites !== null) {
+            if ( isFavorite ) {
+            const parsedFavorites = JSON.parse(favorites);
+            console.log(parsedFavorites)
+            if (!parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
+              const updatedFavorites = [
+                ...parsedFavorites,
+                {
+                    id: pokemon.id,
+                    name: pokemon.name,
+                    image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
+                },
+              ];
               await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
               setIsFavorite(true);
             }
           } else {
-            const newFavorites = [pokemon.id];
+            const newFavorites = [
+                {
+                  name: pokemon.name,
+                  picture: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
+                  id: pokemon.id,
+                },
+            ];
             await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
             setIsFavorite(true);
           }
@@ -72,20 +89,12 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         }
       };
 
-      const handleFavoritePress = () => {
-        if (isFavorite) {
-          removeFavoritePokemon();
-        } else {
-          addFavoritePokemon();
-        }
-      };
-
       const removeFavoritePokemon = async () => {
         try {
           const favorites = await AsyncStorage.getItem('favorites');
           if (favorites !== null) {
             const parsedFavorites = JSON.parse(favorites);
-            const updatedFavorites = parsedFavorites.filter((id) => id !== pokemon.id);
+            const updatedFavorites = parsedFavorites.filter((pokemonObject) => pokemonObject.id !== pokemon.id);
             await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
             setIsFavorite(false);
           }
@@ -93,6 +102,16 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
           console.log(error);
         }
       };
+
+      const handleFavoritePress = () => {
+          if (isFavorite) {
+            removeFavoritePokemon();
+          } else {
+            addFavoritePokemon();
+          }
+        };
+
+
 
   // Define a function to return styles for each type
     const getTypeStyle = (typeName: string) => {

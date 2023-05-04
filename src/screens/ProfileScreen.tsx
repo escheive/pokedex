@@ -24,9 +24,15 @@ const ProfileScreen = () => {
 
   const getFavorites = async () => {
       try {
-        const value = await AsyncStorage.getItem('favorites');
-        if (value !== null) {
-          setFavorites(JSON.parse(value));
+        const favorites = await AsyncStorage.getItem('favorites');
+        if (favorites !== null) {
+          const parsedFavorites = JSON.parse(favorites);
+          if (parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
+            setIsFavorite(true);
+          }
+        } else {
+            // Initialize the 'favorites' key with an empty array
+            await AsyncStorage.setItem('favorites', JSON.stringify([]));
         }
       } catch (error) {
         console.log(error);
@@ -59,6 +65,8 @@ const ProfileScreen = () => {
     setTempName(name);
     setIsEditing(false);
   };
+
+  console.log(favorites)
 
   return (
     <View style={styles.container}>
