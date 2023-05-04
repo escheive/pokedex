@@ -49,8 +49,6 @@ const ProfileScreen = () => {
     setIsEditing(false);
   };
 
-  console.log(favorites)
-
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Welcome to your profile!</Text>
