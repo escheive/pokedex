@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Pokemon } from '../types';
+import { getTypeStyle } from '../utils/typeStyle';
 
 type Props = {
     navigation: StackNavigationProp<any>;
@@ -16,8 +17,11 @@ const PokemonScreen = ({ navigation, pokemonList }: Props) => {
     const renderItem = ({ item: pokemon }: { item: Pokemon }) => {
         const screenWidth = Dimensions.get('window').width;
         const itemWidth = screenWidth / 2 - 15;
+        const backgroundColor = (getTypeStyle(pokemon.types[0].type.name)).backgroundColor;
+        console.log(backgroundColor)
+
         return (
-            <View style={[styles.itemContainer, { width: itemWidth}]}>
+            <View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
                 <TouchableOpacity style={styles.itemCard} onPress={() => handlePress(pokemon)}>
                     <Text>{pokemon.id}</Text>
                     <Text style={styles.pokemonName}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
@@ -48,7 +52,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'red',
+    backgroundColor: 'white',
   },
   listContainer: {
     padding: 5,
@@ -62,7 +66,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     margin: 5,
-    backgroundColor: 'tan',
   },
   itemCard: {
     height: '100%',
