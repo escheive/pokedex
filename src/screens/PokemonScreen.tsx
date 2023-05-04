@@ -8,7 +8,7 @@ type Props = {
     pokemonList: Pokemon[];
 };
 
-const HomeScreen = ({ navigation, pokemonList }: Props) => {
+const PokemonScreen = ({ navigation, pokemonList }: Props) => {
     const handlePress = (pokemon: Pokemon) => {
         navigation.navigate('Details', { pokemon });
     };
@@ -80,4 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default PokemonScreen;

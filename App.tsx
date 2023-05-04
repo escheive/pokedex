@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Pokemon } from './types';
 // Screens
-import HomeScreen from './src/screens/HomeScreen';
+import PokemonScreen from './src/screens/PokemonScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import DetailsScreen from './src/screens/DetailsScreen';
@@ -13,7 +13,7 @@ import DetailsScreen from './src/screens/DetailsScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const HomeStack = ({ pokemonList }) => {
+const PokemonStack = ({ pokemonList }) => {
   return (
     <Stack.Navigator
         screenOptions={{
@@ -24,7 +24,7 @@ const HomeStack = ({ pokemonList }) => {
         }}
     >
         <Stack.Screen name="Gotta Catch Them All">
-            {props => <HomeScreen {...props} pokemonList={pokemonList} />}
+            {props => <PokemonScreen {...props} pokemonList={pokemonList} />}
         </Stack.Screen>
         <Stack.Screen name="Details" component={DetailsScreen} />
     </Stack.Navigator>
@@ -68,8 +68,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={{ headerShown: false }}>
-        <Tab.Screen name="Home" options={{ tabBarBadge: 3 }}>
-            {(props) => <HomeStack {...props} pokemonList={pokemonList} />}
+{/*         <Tab.Screen name="Home" options={{ tabBarBadge: 3 }}> */}
+{/*             {(props) => <HomeStack {...props} pokemonList={pokemonList} />} */}
+{/*         </Tab.Screen> */}
+        <Tab.Screen name="Pokemon" options={{ tabBarBadge: 3 }}>
+            {(props) => <PokemonStack {...props} pokemonList={pokemonList} />}
         </Tab.Screen>
         <Tab.Screen name="Profile" component={ProfileStack} />
         <Tab.Screen name="Settings" component={SettingsStack} />
