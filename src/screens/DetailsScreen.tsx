@@ -51,7 +51,18 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
   const fetchAbility = async (ability: AbilityProps) => {
       const abilityDefinitionResponse = await fetch(ability.ability.url);
       const abilityDefinition = await abilityDefinitionResponse.json();
-      const abilityData = await { name: ability.ability.name, definition: abilityDefinition.effect_entries[1].effect }
+
+      const getEnglishAbilityDescription = () => {
+          for (const entry of abilityDefinition.effect_entries) {
+              if (entry.language.name == "en") {
+                  return entry.short_effect;
+              }
+          };
+          return undefined;
+      };
+
+      const effect_entries = getEnglishAbilityDescription();
+      const abilityData = { name: ability.ability.name, definition: effect_entries }
       setPokemonAbilities((prevAbilities) => [...prevAbilities, abilityData]);
     };
 
@@ -170,8 +181,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         borderColor: '#ffffff',
       },
     });
-
-    console.log(pokemonAbilities)
 
   return (
     <FlatList style={styles.container}
