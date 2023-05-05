@@ -8,6 +8,7 @@ import PokemonStats from '../components/PokemonStats';
 import { FaHeart } from 'react-icons/fa';
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
 import { getTypeStyle } from '../utils/typeStyle';
+import { PokemonAbilities } from '../components/PokemonAbilities';
 
 type TypeProps = {
     type: {
@@ -34,29 +35,35 @@ type DetailsScreenProps = {
 const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
   const { pokemon } = route.params;
   const [isFavorite, setIsFavorite] = useState(false);
+  const [pokemonAbilities, setPokemonAbilities] = useState([]);
 
   let pokemonColors = [];
 
+//   if (pokemon.abilities) {
+//     pokemon.abilities.map(async (ability, index) => {
+//         let abilityDefinitionResponse = await fetch(ability.ability.url)
+//         let abilityDefinition = await abilityDefinitionResponse.json();
+//         pokemonAbilities.push({ name: ability.ability.name, definition: abilityDefinition.effect_entries[1].effect })
+//         console.log(pokemonAbilities)
+//     });
+//   }
+
+  const fetchAbility = async (ability: AbilityProps) => {
+      const abilityDefinitionResponse = await fetch(ability.ability.url);
+      const abilityDefinition = await abilityDefinitionResponse.json();
+      const abilityData = await { name: ability.ability.name, definition: abilityDefinition.effect_entries[1].effect }
+      setPokemonAbilities((prevAbilities) => [...prevAbilities, abilityData]);
+    };
+
   useEffect(() => {
       checkIfFavorite();
+      const fetchAbilityData = async () => {
+        const promises = pokemon.abilities.map((ability) => fetchAbility(ability));
+        const result = await Promise.all(promises);
+      };
+      fetchAbilityData();
     }, []);
 
-//   const getFavorites = async () => {
-//         try {
-//           const favorites = await AsyncStorage.getItem('favorites');
-//           if (favorites !== null) {
-//             const parsedFavorites = JSON.parse(favorites);
-//             if (parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
-//               setIsFavorite(true);
-//             }
-//           } else {
-//               // Initialize the 'favorites' key with an empty array
-//               await AsyncStorage.setItem('favorites', JSON.stringify([]));
-//           }
-//         } catch (error) {
-//           console.log(error);
-//         }
-//       };
     const checkIfFavorite = async () => {
         const favorites = await getFavorites();
         if (favorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
@@ -64,63 +71,15 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         }
     };
 
-//     const addFavoritePokemon = async () => {
-//         try {
-//           const favorites = await AsyncStorage.getItem('favorites');
-//             if ( isFavorite ) {
-//             const parsedFavorites = JSON.parse(favorites);
-//             console.log(parsedFavorites)
-//             if (!parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
-//               const updatedFavorites = [
-//                 ...parsedFavorites,
-//                 {
-//                     id: pokemon.id,
-//                     name: pokemon.name,
-//                     image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
-//                 },
-//               ];
-//               await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-//               setIsFavorite(true);
-//             }
-//           } else {
-//             const newFavorites = [
-//                 {
-//                   name: pokemon.name,
-//                   picture: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
-//                   id: pokemon.id,
-//                 },
-//             ];
-//             await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
-//             setIsFavorite(true);
-//           }
-//         } catch (error) {
-//           console.log(error);
-//         }
-//       };
-
-//       const removeFavoritePokemon = async () => {
-//         try {
-//           const favorites = await AsyncStorage.getItem('favorites');
-//           if (favorites !== null) {
-//             const parsedFavorites = JSON.parse(favorites);
-//             const updatedFavorites = parsedFavorites.filter((pokemonObject) => pokemonObject.id !== pokemon.id);
-//             await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-//             setIsFavorite(false);
-//           }
-//         } catch (error) {
-//           console.log(error);
-//         }
-//       };
-
-      const handleFavoritePress = async () => {
-          if (isFavorite) {
-            await removeFavoritePokemon(pokemon);
-            setIsFavorite(false);
-          } else {
-            const added = await addFavoritePokemon(pokemon);
-            setIsFavorite(added);
-          }
-      };
+  const handleFavoritePress = async () => {
+      if (isFavorite) {
+        await removeFavoritePokemon(pokemon);
+        setIsFavorite(false);
+      } else {
+        const added = await addFavoritePokemon(pokemon);
+        setIsFavorite(added);
+      }
+  };
 
 
     const getTypeBackgroundStyle = (types: TypeProps[]) => {
@@ -212,6 +171,8 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
       },
     });
 
+    console.log(pokemonAbilities)
+
   return (
     <FlatList style={styles.container}
         data={[pokemon]}
@@ -249,6 +210,16 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                 </View>
                 <View>
                   <Button title={isFavorite ? 'Remove from favorites' : 'Add to favorites'} onPress={handleFavoritePress} />
+                </View>
+                <View>
+                    {pokemonAbilities !== null && (
+                        pokemonAbilities.map((ability) => (
+                            <View key={ability.name}>
+                                <Text>{ability.name}</Text>
+                                <Text>{ability.definition}</Text>
+                            </View>
+                        ))
+                    )}
                 </View>
             </>
         )}
