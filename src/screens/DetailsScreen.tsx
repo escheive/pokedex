@@ -8,6 +8,7 @@ import PokemonStats from '../components/PokemonStats';
 import { FaHeart } from 'react-icons/fa';
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
 import { getTypeStyle } from '../utils/typeStyle';
+import { PokemonAbilities } from '../components/PokemonAbilities';
 
 type TypeProps = {
     type: {
@@ -32,107 +33,91 @@ type DetailsScreenProps = {
 
 
 const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
-  const { pokemon } = route.params;
-  const [isFavorite, setIsFavorite] = useState(false);
+    // Grab our pokemon data that was pulled in our app.tsx from params
+    const { pokemon } = route.params;
+    // useState to update if a pokemon was favorited or unfavorited without refreshing
+    const [isFavorite, setIsFavorite] = useState(false);
+    // useState to track pokemonAbilities for each individual pokemon when their page is pulled up
+    const [pokemonAbilities, setPokemonAbilities] = useState([]);
+    // Declare an array so that we can assign colors for this pokemon based on its type
+    let pokemonColors = [];
 
-  let pokemonColors = [];
+    // Function to fetch the ability information as abilities are stored in a separate part of the PokeApi
+    const fetchAbility = async (ability: AbilityProps) => {
+        // Fetch the url provided for the pokemons ability in the pokemon info
+        const abilityDefinitionResponse = await fetch(ability.ability.url);
+        // assign the returned json to a variable so that it can be handled
+        const abilityDefinition = await abilityDefinitionResponse.json();
 
-  useEffect(() => {
-      checkIfFavorite();
+        // Because not all abilities are formatted the same, this function will only return the english definition.
+        const getEnglishAbilityDescription = () => {
+            // Loop through all of the keys in effect_entries
+            for (const entry of abilityDefinition.effect_entries) {
+                // If the entry language is english, return data
+                if (entry.language.name == "en") {
+                    return entry.short_effect;
+                }
+            };
+            // If not english definition exists, return undefined
+            return undefined;
+        };
+
+        // Assign the return of the above function as a variable
+        const effect_entries = getEnglishAbilityDescription();
+        // assign the ability's name which is part of our original pokemon info, and the newly returned description as an object
+        const abilityData = { name: ability.ability.name, definition: effect_entries }
+        // Updated our abilities state by combining any previous info stored with our new info
+        setPokemonAbilities((prevAbilities) => [...prevAbilities, abilityData]);
+    };
+
+    // useEffect to check if a pokemon is favorited and fetch ability info on component mount
+    useEffect(() => {
+        checkIfFavorite();
+        // Function to map through the pokemon abilities and then run fetchAbility function to grab the definitions for each
+        const fetchAbilityData = async () => {
+            const promises = pokemon.abilities.map((ability) => fetchAbility(ability));
+            const result = await Promise.all(promises);
+        };
+        fetchAbilityData();
     }, []);
 
-//   const getFavorites = async () => {
-//         try {
-//           const favorites = await AsyncStorage.getItem('favorites');
-//           if (favorites !== null) {
-//             const parsedFavorites = JSON.parse(favorites);
-//             if (parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
-//               setIsFavorite(true);
-//             }
-//           } else {
-//               // Initialize the 'favorites' key with an empty array
-//               await AsyncStorage.setItem('favorites', JSON.stringify([]));
-//           }
-//         } catch (error) {
-//           console.log(error);
-//         }
-//       };
+    // Function to check if a pokemon is favorited and update the page accordingly
     const checkIfFavorite = async () => {
+        // Run imported function from favorites file in utils folder to grab all favorited pokemon for a user and store them in a variable
         const favorites = await getFavorites();
+        // If this pokemon is one of the favorites, set as true
         if (favorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
             setIsFavorite(true);
         }
     };
 
-//     const addFavoritePokemon = async () => {
-//         try {
-//           const favorites = await AsyncStorage.getItem('favorites');
-//             if ( isFavorite ) {
-//             const parsedFavorites = JSON.parse(favorites);
-//             console.log(parsedFavorites)
-//             if (!parsedFavorites.some(pokemonObject => pokemonObject.id === pokemon.id)) {
-//               const updatedFavorites = [
-//                 ...parsedFavorites,
-//                 {
-//                     id: pokemon.id,
-//                     name: pokemon.name,
-//                     image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
-//                 },
-//               ];
-//               await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-//               setIsFavorite(true);
-//             }
-//           } else {
-//             const newFavorites = [
-//                 {
-//                   name: pokemon.name,
-//                   picture: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
-//                   id: pokemon.id,
-//                 },
-//             ];
-//             await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
-//             setIsFavorite(true);
-//           }
-//         } catch (error) {
-//           console.log(error);
-//         }
-//       };
-
-//       const removeFavoritePokemon = async () => {
-//         try {
-//           const favorites = await AsyncStorage.getItem('favorites');
-//           if (favorites !== null) {
-//             const parsedFavorites = JSON.parse(favorites);
-//             const updatedFavorites = parsedFavorites.filter((pokemonObject) => pokemonObject.id !== pokemon.id);
-//             await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-//             setIsFavorite(false);
-//           }
-//         } catch (error) {
-//           console.log(error);
-//         }
-//       };
-
-      const handleFavoritePress = async () => {
-          if (isFavorite) {
+    // Handle someone pressing the favorite pokemon button
+    const handleFavoritePress = async () => {
+        // If pokemon is already favorited, run imported function from favorites util to remove it from storage, then update page without needing refresh
+        if (isFavorite) {
             await removeFavoritePokemon(pokemon);
             setIsFavorite(false);
-          } else {
+        // If pokemon is not favorited, run imported function from utils folder to save it as a favorite, then update state to reflect immediately
+        } else {
             const added = await addFavoritePokemon(pokemon);
             setIsFavorite(added);
-          }
-      };
+        }
+    };
 
 
+    // Function to take the pokemons types, run function to get the corresponding color and then create an array of colors based on types
     const getTypeBackgroundStyle = (types: TypeProps[]) => {
       const stylesArray = types.map((type) => getTypeStyle(type.type.name));
       pokemonColors.push(stylesArray[0].backgroundColor)
       return stylesArray.filter(style => Object.keys(style).length > 0);
     };
 
+    // Variables to track the pokemons colors
     const stylesArray = getTypeBackgroundStyle(pokemon.types);
     pokemonColors = stylesArray.map((style) => style.backgroundColor);
     const gradientColors = pokemonColors.length < 2 ? [pokemonColors[0], '#FFFFFF'] : pokemonColors;
 
+    // Stylesheet for this screen
     const styles = StyleSheet.create({
       container: {
         height: '100%',
@@ -249,6 +234,16 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                 </View>
                 <View>
                   <Button title={isFavorite ? 'Remove from favorites' : 'Add to favorites'} onPress={handleFavoritePress} />
+                </View>
+                <View>
+                    {pokemonAbilities !== null && (
+                        pokemonAbilities.map((ability) => (
+                            <View key={ability.name}>
+                                <Text>{ability.name}</Text>
+                                <Text>{ability.definition}</Text>
+                            </View>
+                        ))
+                    )}
                 </View>
             </>
         )}
