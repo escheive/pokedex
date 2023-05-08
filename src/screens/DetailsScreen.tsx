@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import { FaHeart } from 'react-icons/fa';
@@ -197,6 +197,49 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             borderWidth: 2,
             borderColor: '#ffffff',
         },
+        favButton: {
+            backgroundColor: pokemonColors[0],
+            padding: 10,
+            alignItems: 'center',
+            marginBottom: 20,
+        },
+        favButtonText: {
+            fontSize: 20,
+        },
+        abilityContainer: {
+            marginTop: 20,
+        },
+        abilitiesTitle: {
+            fontSize: 25,
+            fontWeight: 'bold',
+            color: pokemonColors[0],
+            marginBottom: 15,
+            textAlign: 'center',
+        },
+        ability: {
+            backgroundColor: "#fff",
+            padding: 10,
+            borderRadius: 10,
+            marginBottom: 10,
+            shadowColor: "#000",
+            shadowOffset: {
+                width: 0,
+                height: 1,
+            },
+            shadowOpacity: 0.22,
+            shadowRadius: 2.22,
+
+            elevation: 3,
+        },
+        abilityName: {
+            fontWeight: "bold",
+            fontSize: 16,
+            marginBottom: 5,
+        },
+        abilityDefinition: {
+            fontSize: 14,
+            lineHeight: 20,
+        },
     });
 
     return (
@@ -237,16 +280,23 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                         <PokemonStats stats={pokemon.stats} />
                     </View>
 
-                    <View>
-                      <Button title={isFavorite ? 'Remove from favorites' : 'Add to favorites'} onPress={handleFavoritePress} />
+                    <View style={{ marginTop: 20 }}>
+
+                            <TouchableOpacity
+                                style={styles.favButton}
+                                onPress={handleFavoritePress}
+                            >
+                                <Text style={styles.favButtonText}>{isFavorite ? 'Remove from favorites' : 'Add to favorites'}</Text>
+                            </TouchableOpacity>
                     </View>
 
-                    <View>
+                    <View style={styles.abilityContainer}>
+                        <Text style={styles.abilitiesTitle}>Abilities</Text>
                         {pokemonAbilities !== null && (
                             pokemonAbilities.map((ability) => (
-                                <View key={ability.name}>
-                                    <Text>{ability.name}</Text>
-                                    <Text>{ability.definition}</Text>
+                                <View key={ability.name} style={styles.ability}>
+                                    <Text style={styles.abilityName}>{ability.name}</Text>
+                                    <Text style={styles.abilityDefinition}>{ability.definition}</Text>
                                 </View>
                             ))
                         )}
