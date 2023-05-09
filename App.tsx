@@ -9,26 +9,47 @@ import PokemonScreen from './src/screens/PokemonScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import DetailsScreen from './src/screens/DetailsScreen';
+// Utils
+import { getTypeStyle } from './src/utils/typeStyle';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const PokemonStack = ({ pokemonList }) => {
-  return (
-    <Stack.Navigator
-        screenOptions={{
-            headerStyle: {
-                backgroundColor: 'white',
-            },
-            headerTitleAlign: 'center',
-        }}
-    >
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: 'transparent',
+                },
+                headerTitleAlign: 'center',
+            }}
+        >
         <Stack.Screen name="Gotta Catch Them All">
             {props => <PokemonScreen {...props} pokemonList={pokemonList} />}
         </Stack.Screen>
-        <Stack.Screen name="Details" component={DetailsScreen} />
-    </Stack.Navigator>
-  );
+        <Stack.Screen
+            name="Details"
+            component={DetailsScreen}
+            options={({ route }) => {
+                const pokemonType = route.params.pokemon.types[0].type.name;
+                const backgroundColor = getTypeStyle(pokemonType);
+
+                return {
+                    title: route.params.pokemon.name,
+                    headerStyle: {
+                        backgroundColor: backgroundColor.backgroundColor,
+                    },
+                    headerTintColor: 'white',
+                    headerShadowVisible: false,
+                    headerTitleStyle: {
+                        fontWeight: 'bold'
+                    }
+                };
+            }}
+        />
+        </Stack.Navigator>
+    );
 };
 
 function ProfileStack() {
@@ -68,9 +89,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={{ headerShown: false }}>
-{/*         <Tab.Screen name="Home" options={{ tabBarBadge: 3 }}> */}
-{/*             {(props) => <HomeStack {...props} pokemonList={pokemonList} />} */}
-{/*         </Tab.Screen> */}
         <Tab.Screen name="Pokemon" options={{ tabBarBadge: 3 }}>
             {(props) => <PokemonStack {...props} pokemonList={pokemonList} />}
         </Tab.Screen>

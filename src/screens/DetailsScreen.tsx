@@ -33,11 +33,11 @@ type DetailsScreenProps = {
 }
 
 const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
+    // Grab our pokemon data that was pulled in our app.tsx from params
+    const { pokemon } = route.params;
     // Grab the dimensions of the device for sizing of components
     const windowHeight = Dimensions.get('window').height;
     const windowWidth = Dimensions.get('window').width;
-    // Grab our pokemon data that was pulled in our app.tsx from params
-    const { pokemon } = route.params;
     // useState to update if a pokemon was favorited or unfavorited without refreshing
     const [isFavorite, setIsFavorite] = useState(false);
     // useState to track pokemonAbilities for each individual pokemon when their page is pulled up
@@ -46,6 +46,8 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     let pokemonColors = [];
     // Variable to store pokedex entry after fetching
     const [pokedexEntry, setPokedexEntry] = useState({ "genus": "", "flavorText": ""});
+    // useState for the nav below the pokemon card
+    const [selectedTab, setSelectedTab] = React.useState('stats');
 
     // Function to fetch the ability information as abilities are stored in a separate part of the PokeApi
     const fetchAbility = async (ability: AbilityProps) => {
@@ -177,7 +179,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             height: windowHeight * 0.75,
             borderWidth: 10,
             borderColor: '#5C6B7C',
-            borderRadius: 10,
             overflow: 'hidden',
             marginBottom: 20,
             fontFamily: 'Arial, sans-serif',
@@ -325,7 +326,53 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                                 <Text style={styles.pokedexEntry}>{pokedexEntry.genus}</Text>
                                 <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
                             </View>
+                            <View>
+                                <View>
+                                    <Text>Strong Against</Text>
+                                </View>
+                                <View>
+                                    <Text>Weak Against</Text>
+                                </View>
+                            </View>
                         </View>
+                    </View>
+
+                    <View style={styles.navContainer}>
+                        <TouchableOpacity
+                            style={[styles.navItem, selectedTab === 'stats' && styles.selectedNavItem]}
+                            onPress={() => setSelectedTab('stats')}
+                        >
+                            <Text style={[styles.navItemText, selectedTab === 'stats' && styles.selectedNavItemText]}>Stats</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.navItem, selectedTab === 'about' && styles.selectedNavItem]}
+                            onPress={() => setSelectedTab('about')}
+                        >
+                            <Text style={[styles.navItemText, selectedTab === 'about' && styles.selectedNavItemText]}>About</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.navItem, selectedTab === 'moves' && styles.selectedNavItem]}
+                            onPress={() => setSelectedTab('moves')}
+                        >
+                            <Text style={[styles.navItemText, selectedTab === 'moves' && styles.selectedNavItemText]}>Moves</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.tabContent}>
+                        {selectedTab === 'stats' && <PokemonStats stats={pokemon.stats} />}
+                        {selectedTab === 'about' && (
+                        <View>
+                            <Text style={styles.pokedexEntry}>{pokedexEntry.genus}</Text>
+                            <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
+                        </View>
+                        )}
+                        {selectedTab === 'moves' && (
+                        <View>
+                            <Text>Move 1</Text>
+                            <Text>Move 2</Text>
+                            <Text>Move 3</Text>
+                            <Text>Move 4</Text>
+                        </View>
+                        )}
                     </View>
 
                     <View>
