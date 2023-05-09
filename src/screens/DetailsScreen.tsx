@@ -201,7 +201,11 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             right: 10,
             borderRadius: 50,
             backgroundColor: '#5C6B7C',
-            padding: 10,
+            padding: 1,
+            width: 60,
+            height: 60,
+            justifyContent: 'center',
+            alignItems: 'center',
         },
         idText: {
             color: 'white',
@@ -300,7 +304,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                                 source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
                             />
                             <View style={styles.idContainer}>
-                                <Text style={styles.idText}>{pokemon.id}</Text>
+                                <Text style={styles.idText}>{pokemon.id > 100 ? pokemon.id : pokemon.id > 10 ? "0" + pokemon.id : "00" + pokemon.id }</Text>
                             </View>
                         </View>
 
