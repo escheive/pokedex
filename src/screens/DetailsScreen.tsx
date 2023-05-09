@@ -246,6 +246,21 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             borderRadius: 32,
             marginRight: 8,
         },
+        strengthWeaknessColumnContainer: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 20,
+        },
+        strengthWeaknessColumn: {
+            flex: 1,
+            flexDirection: 'column',
+            alignItems: 'center',
+        },
+        strengthWeaknessColumnHeading: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            marginBottom: 10,
+        },
         favButton: {
             backgroundColor: pokemonColors[0],
             padding: 10,
@@ -326,12 +341,16 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                                 <Text style={styles.pokedexEntry}>{pokedexEntry.genus}</Text>
                                 <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
                             </View>
-                            <View>
-                                <View>
-                                    <Text>Strong Against</Text>
+                            <View style={styles.strengthWeaknessColumnContainer}>
+                                <View style={styles.strengthWeaknessColumn}>
+                                    <Text style={styles.strengthWeaknessColumnHeading}>Strong Against</Text>
+                                    <View>
+                                    </View>
                                 </View>
-                                <View>
-                                    <Text>Weak Against</Text>
+                                <View style={styles.strengthWeaknessColumn}>
+                                    <Text style={styles.strengthWeaknessColumnHeading}>Weak Against</Text>
+                                    <View>
+                                    </View>
                                 </View>
                             </View>
                         </View>
