@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
+// Components
+import PillBar from './PillBar';
 
 const styles = StyleSheet.create({
   container: {
@@ -33,6 +35,7 @@ const PokemonStats = ({ stats }) => {
     <View style={styles.statItem}>
       <Text style={styles.statName}>{item.stat.name}:</Text>
       <Text style={styles.statValue}>{item.base_stat}</Text>
+      <PillBar percentage={50} />
     </View>
   );
 

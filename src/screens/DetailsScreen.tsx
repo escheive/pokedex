@@ -1,11 +1,12 @@
 // Dependencies
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import { FaHeart } from 'react-icons/fa';
 // Components
 import PokemonStats from '../components/PokemonStats';
+import PillBar from '../components/PillBar';
 // Utils
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
 import { getTypeStyle } from '../utils/typeStyle';
@@ -31,8 +32,10 @@ type DetailsScreenProps = {
     navigation: any;
 }
 
-
 const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
+    // Grab the dimensions of the device for sizing of components
+    const windowHeight = Dimensions.get('window').height;
+    const windowWidth = Dimensions.get('window').width;
     // Grab our pokemon data that was pulled in our app.tsx from params
     const { pokemon } = route.params;
     // useState to update if a pokemon was favorited or unfavorited without refreshing
@@ -41,6 +44,8 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [pokemonAbilities, setPokemonAbilities] = useState([]);
     // Declare an array so that we can assign colors for this pokemon based on its type
     let pokemonColors = [];
+    // Variable to store pokedex entry after fetching
+    const [pokedexEntry, setPokedexEntry] = useState({ "genus": "", "flavorText": ""});
 
     // Function to fetch the ability information as abilities are stored in a separate part of the PokeApi
     const fetchAbility = async (ability: AbilityProps) => {
@@ -70,17 +75,58 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         setPokemonAbilities((prevAbilities) => [...prevAbilities, abilityData]);
     };
 
+    // Function to grab pokedex entry
+    const getPokedexEntry = async () => {
+        try {
+            const pokedexSpeciesDataResponse = await fetch(pokemon.species.url);
+            const pokedexSpeciesData = await pokedexSpeciesDataResponse.json();
+
+            const getEnglishPokedexEntry = (entryType) => {
+                return new Promise((resolve, reject) => {
+                    let entries;
+
+                    if (entryType === "flavor_text") {
+                        entries = pokedexSpeciesData.flavor_text_entries;
+                    } else if (entryType === "genus") {
+                        entries = pokedexSpeciesData.genera;
+                    } else {
+                        reject("Invalid entry type");
+                    }
+
+                    for (const entry of entries) {
+                        if (entry.language.name === 'en') {
+                            resolve(entry[entryType].replace(/[\n\f]/g, " "));
+                        }
+                    }
+                    reject("No english pokedex entry found");
+                });
+            };
+
+            const englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
+            const englishPokedexGenus = await getEnglishPokedexEntry("genus");
+            setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText });
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    // Function to map through the pokemon abilities and then run fetchAbility function to grab the definitions for each
+    const fetchAbilityData = async () => {
+        if (pokemonAbilities.length < pokemon.abilities.length) {
+            const promises = pokemon.abilities.map((ability) => fetchAbility(ability));
+            const result = await Promise.all(promises);
+        }
+    };
+
+
     // useEffect to check if a pokemon is favorited and fetch ability info on component mount
     useEffect(() => {
         checkIfFavorite();
-        // Function to map through the pokemon abilities and then run fetchAbility function to grab the definitions for each
-        const fetchAbilityData = async () => {
-            if (pokemonAbilities.length < pokemon.abilities.length) {
-                const promises = pokemon.abilities.map((ability) => fetchAbility(ability));
-                const result = await Promise.all(promises);
-            }
-        };
+
         fetchAbilityData();
+
+        getPokedexEntry()
+
     }, []);
 
     // Function to check if a pokemon is favorited and update the page accordingly
@@ -128,74 +174,72 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'flex-start',
+            height: windowHeight * 0.75,
             borderWidth: 10,
-            borderColor: '#e3cc0c',
+            borderColor: '#5C6B7C',
             borderRadius: 10,
             overflow: 'hidden',
-            margin: 10,
             marginBottom: 20,
-            padding: 10,
-            backgroundColor: pokemonColors[0],
-            shadowColor: 'black',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.23,
-            shadowRadius: 2.62,
-            elevation: 4,
             fontFamily: 'Arial, sans-serif',
         },
+        imageContainer: {
+            backgroundColor: 'white',
+            height: '50%',
+            width: '100%',
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        image: {
+            width: '110%',
+            height: '110%',
+            resizeMode: 'contain',
+        },
+        idContainer: {
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            borderRadius: 50,
+            backgroundColor: '#5C6B7C',
+            padding: 10,
+        },
+        idText: {
+            color: 'white',
+            fontSize: 22,
+            fontWeight: 'bold',
+        },
+        bottomOfCard: {
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            backgroundColor: '#E0E0E0',
+            padding: 20,
+            paddingTop: 30,
+            height: '50%',
+            width: '100%',
+        },
         heading: {
-            fontSize: 24,
+            fontSize: 32,
             fontWeight: 'bold',
             alignSelf: 'flex-start'
         },
-        header: {
-            flexDirection: 'row',
-            alignItems: 'center',
-        },
         nameContainer: {
             flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flex: 1,
-            marginHorizontal: 16,
+            alignItems: 'flex-start',
         },
-        hp: {
-            fontSize: 22,
-            fontWeight: '600',
-        },
-        detailsText: {
-            fontSize: 20,
-            fontWeight: 'bold',
-            marginTop: 0,
-            marginBottom: 4,
-        },
-        image: {
-            width: 300,
-            height: 300,
-            resizeMode: 'contain',
-        },
-        imageContainer: {
-            shadowColor: 'black',
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.3,
-            shadowRadius: 2,
-            elevation: 5,
-            borderWidth: 10,
-            borderColor: '#dcb922',
-            marginBottom: 16,
+        pokedexEntry: {
+            fontSize: 16,
+            marginBottom: 12,
         },
         typesContainer: {
             flexDirection: 'row',
             justifyContent: 'center',
-            marginBottom: 8,
+            marginHorizontal: 16,
         },
         type: {
-            paddingVertical: 10,
+            paddingVertical: 9,
             paddingHorizontal: 16,
-            borderRadius: 16,
-            marginHorizontal: 8,
-            borderWidth: 2,
-            borderColor: '#ffffff',
+            borderRadius: 32,
+            marginRight: 8,
         },
         favButton: {
             backgroundColor: pokemonColors[0],
@@ -243,40 +287,44 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     });
 
     return (
+
         <FlatList style={styles.container}
             data={[pokemon]}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
                 <>
                     <View style={styles.card}>
-                        <View style={styles.header}>
-                            <View style={styles.nameContainer}>
-                                <Text style={styles.heading}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
-                                <Text style={styles.hp}>{pokemon.stats[0].base_stat} HP</Text>
+                        <View style={styles.imageContainer}>
+                            <Image
+                                style={styles.image}
+                                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
+                            />
+                            <View style={styles.idContainer}>
+                                <Text style={styles.idText}>{pokemon.id}</Text>
                             </View>
                         </View>
 
-                        <LinearGradient
-                            colors={gradientColors}
-                            start={{ x: 0, y: 0}}
-                            end={{ x: 1, y: 1}}
-                            style={styles.imageContainer}
-                        >
-                            <Image
-                                style={[styles.image, pokemonColors[0]]}
-                                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
-                            />
-                        </LinearGradient>
-
-                        <View style={styles.typesContainer}>
-                            {pokemon.types.map((type) => (
-                                <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
-                                    <Text style={{ color: getTypeStyle(type.type.name).color, fontSize: 16, fontWeight: '600' }}>
-                                        {type.type.name}
-                                    </Text>
+                        <View style={styles.bottomOfCard}>
+                            <View style={styles.nameContainer}>
+                                <Text style={styles.heading}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+                                <View style={styles.typesContainer}>
+                                    {pokemon.types.map((type) => (
+                                        <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
+                                            <Text style={{ color: getTypeStyle(type.type.name).color, fontSize: 18, fontWeight: '600' }}>
+                                                {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
+                                            </Text>
+                                        </View>
+                                    ))}
                                 </View>
-                            ))}
+                            </View>
+                            <View>
+                                <Text style={styles.pokedexEntry}>{pokedexEntry.genus}</Text>
+                                <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
+                            </View>
                         </View>
+                    </View>
+
+                    <View>
                         <PokemonStats stats={pokemon.stats} />
                     </View>
 
