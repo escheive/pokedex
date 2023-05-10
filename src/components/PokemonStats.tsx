@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 const PokemonStats = ({ stats }) => {
   const renderStatItem = ({ item }) => (
     <View style={styles.statItem}>
-      <Text style={styles.statName}>{item.stat.name}:</Text>
+      <Text style={styles.statName}>{item.stat.name.charAt(0).toUpperCase() + item.stat.name.slice(1)}:</Text>
       <Text style={styles.statValue}>{item.base_stat}</Text>
       <PillBar percentage={50} />
     </View>
