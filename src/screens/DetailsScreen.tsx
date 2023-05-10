@@ -449,7 +449,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                             style={[
                                 styles.navItem,
                                 selectedTab === 'stats' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
-                                selectedTab !== 'stats' && { backgroundColor: pokemonColors[1] || 'grey' }
+                                selectedTab !== 'stats' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1] } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
                             onPress={() => setSelectedTab('stats')}
                         >
@@ -459,7 +459,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                             style={[
                                 styles.navItem,
                                 selectedTab === 'about' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
-                                selectedTab !== 'about' && { backgroundColor: pokemonColors[1] || 'grey' }
+                                selectedTab !== 'about' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1] } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
                             onPress={() => setSelectedTab('about')}
                         >
@@ -469,7 +469,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                             style={[
                                 styles.navItem,
                                 selectedTab === 'moves' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
-                                selectedTab !== 'moves' && { backgroundColor: pokemonColors[1] || 'grey' }
+                                selectedTab !== 'moves' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1] } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
                             onPress={() => setSelectedTab('moves')}
                         >
