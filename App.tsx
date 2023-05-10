@@ -11,11 +11,34 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import DetailsScreen from './src/screens/DetailsScreen';
 // Utils
 import { getTypeStyle } from './src/utils/typeStyle';
+// Assets
+import typeData from './src/assets/typeData';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const PokemonStack = ({ pokemonList }) => {
+// let typesData = [];
+//
+// const grabTypesData = async () => {
+//     for (let i=1; i<=18; i++) {
+//         const typeDataResponse = await fetch(`https://pokeapi.co/api/v2/type/${i}`);
+//         const typeData = await typeDataResponse.json();
+//         const typeName = await typeData.name;
+//         const damageRelations = await typeData.damage_relations;
+//
+//         for (const [relation, value] of Object.entries(damageRelations)) {
+//             const names = value.map(obj => obj.name);
+//             damageRelations[relation] = names;
+//         }
+//
+//         typesData.push({ [typeName]: damageRelations });
+//     };
+//     console.log(JSON.stringify(typesData, null, 2))
+// };
+
+const PokemonStack = ({ pokemonList, typeData }) => {
+    const [selectedPokemonTypeData, setSelectedPokemonTypeData] = useState(null);
+
     return (
         <Stack.Navigator
             screenOptions={{
@@ -26,7 +49,7 @@ const PokemonStack = ({ pokemonList }) => {
             }}
         >
         <Stack.Screen name="Gotta Catch Them All">
-            {props => <PokemonScreen {...props} pokemonList={pokemonList} />}
+            {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
         </Stack.Screen>
         <Stack.Screen
             name="Details"
@@ -38,7 +61,7 @@ const PokemonStack = ({ pokemonList }) => {
                 return {
                     title: route.params.pokemon.name,
                     headerStyle: {
-                        backgroundColor: backgroundColor.backgroundColor,
+                        backgroundColor: `rgba(${backgroundColor.backgroundColor}, 0.5)`,
                     },
                     headerTintColor: 'white',
                     headerShadowVisible: false,
@@ -84,13 +107,15 @@ export default function App() {
             })
             .then(data => setPokemonList(data))
             .catch(error => console.error(error))
+
+//         grabTypesData();
     }, []);
 
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={{ headerShown: false }}>
         <Tab.Screen name="Pokemon" options={{ tabBarBadge: 3 }}>
-            {(props) => <PokemonStack {...props} pokemonList={pokemonList} />}
+            {(props) => <PokemonStack {...props} pokemonList={pokemonList} typeData={typeData} />}
         </Tab.Screen>
         <Tab.Screen name="Profile" component={ProfileStack} />
         <Tab.Screen name="Settings" component={SettingsStack} />

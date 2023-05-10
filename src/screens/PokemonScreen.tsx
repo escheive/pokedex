@@ -7,9 +7,11 @@ import { getTypeStyle } from '../utils/typeStyle';
 type Props = {
     navigation: StackNavigationProp<any>;
     pokemonList: Pokemon[];
+    typeData: { [key: string]: typeData };
 };
 
-const PokemonScreen = ({ navigation, pokemonList }: Props) => {
+const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
+    console.log(typeData)
     const handlePress = (pokemon: Pokemon) => {
         navigation.navigate('Details', { pokemon });
     };
@@ -17,6 +19,8 @@ const PokemonScreen = ({ navigation, pokemonList }: Props) => {
     const renderItem = ({ item: pokemon }: { item: Pokemon }) => {
         const screenWidth = Dimensions.get('window').width;
         const itemWidth = screenWidth / 2 - 15;
+//         const typeData = typesData[pokemon.types[0].type.name];
+//         console.log(typeData)
         const backgroundColor = (getTypeStyle(pokemon.types[0].type.name)).backgroundColor;
         return (
             <View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>

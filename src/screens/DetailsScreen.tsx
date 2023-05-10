@@ -162,6 +162,64 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         return stylesArray.filter(style => Object.keys(style).length > 0);
     };
 
+    // Function to take the pokemons types, and grab the info for that type
+    const getTypeInfo = async (typesArr: TypeProps[]) => {
+        const typePromises = typesArr.map(async (type) => {
+            const response = await fetch(type.type.url);
+            let typeInfo = await response.json();
+            typeInfo = typeInfo.damage_relations;
+            const strengthsAndWeaknesses = {
+                strengths: typeInfo.double_damage_to,
+                weaknesses: typeInfo.double_damage_from,
+                noDamageFrom: typeInfo.no_damage_from,
+                noDamageTo: typeInfo.no_damage_to
+            }
+            return strengthsAndWeaknesses;
+        });
+        const damageRelations = await Promise.all(typePromises);
+        return damageRelations;
+    };
+
+    const getTypeInfoAndCalculateDamage = async (typesArr: TypeProps[]) => {
+        const damageRelations = await getTypeInfo(typesArr);
+        let strengths = [];
+        let weaknesses = [];
+        let noDamageTo = [];
+        let noDamageFrom = [];
+
+        for (const type of damageRelations) {
+//             console.log(type.strengths.map((strength) => strength.name))
+            typeStrengths = type.strengths ? await type.strengths.map((strength) => strengths.push(strength.name)) : [];
+//             strengths.push(typeStrengths)
+//             console.log(strengths)
+            weaknesses = type.weaknesses ? await type.weaknesses.map((weakness) => weakness.name) : [];
+            noDamageFrom = type.no_damage_from ? await type.no_damage_from.map((noDamageFrom) => noDamageFrom.name) : [];
+            noDamageTo = type.no_damage_to ? await type.no_damage_to.map((noDamageTo) => noDamageTo.name) : [];
+        }
+
+        console.log(strengths)
+
+        return {
+            strengths,
+            weaknesses,
+            noDamageFrom,
+            noDamageTo
+        };
+    };
+
+    async function getPokemonTypeInfo(pokemon) {
+        try {
+            const typeInfo = await getTypeInfoAndCalculateDamage(pokemon.types);
+            return typeInfo;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    getPokemonTypeInfo(pokemon).then((typeInfo) => {
+//         console.log(typeInfo)
+    });
+
     // Variables to track the pokemons colors
     const stylesArray = getTypeBackgroundStyle(pokemon.types);
     pokemonColors = stylesArray.map((style) => style.backgroundColor);
@@ -247,19 +305,39 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             marginRight: 8,
         },
         strengthWeaknessColumnContainer: {
-            flexDirection: 'row',
+            flexDirection: 'column',
             justifyContent: 'space-between',
-            marginTop: 20,
+            marginTop: 2,
         },
         strengthWeaknessColumn: {
-            flex: 1,
-            flexDirection: 'column',
+            flex: 0,
+            flexDirection: 'row',
             alignItems: 'center',
         },
         strengthWeaknessColumnHeading: {
             fontSize: 18,
             fontWeight: 'bold',
             marginBottom: 10,
+        },
+        navContainer: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginHorizontal: 30,
+        },
+        navItem: {
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 10,
+            borderRadius: 5,
+            marginHorizontal: 5,
+        },
+        navItemText: {
+            color: 'white',
+            fontSize: 16,
+        },
+        selectedNavItemText: {
+            fontWeight: 'bold',
         },
         favButton: {
             backgroundColor: pokemonColors[0],
@@ -352,25 +430,47 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                                     <View>
                                     </View>
                                 </View>
+                                <View style={styles.strengthWeaknessColumn}>
+                                    <Text style={styles.strengthWeaknessColumnHeading}>No Damage From</Text>
+                                    <View>
+                                    </View>
+                                </View>
+                                <View style={styles.strengthWeaknessColumn}>
+                                    <Text style={styles.strengthWeaknessColumnHeading}>No Damage To</Text>
+                                    <View>
+                                    </View>
+                                </View>
                             </View>
                         </View>
                     </View>
 
                     <View style={styles.navContainer}>
                         <TouchableOpacity
-                            style={[styles.navItem, selectedTab === 'stats' && styles.selectedNavItem]}
+                            style={[
+                                styles.navItem,
+                                selectedTab === 'stats' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
+                                selectedTab !== 'stats' && { backgroundColor: pokemonColors[1] || 'grey' }
+                            ]}
                             onPress={() => setSelectedTab('stats')}
                         >
                             <Text style={[styles.navItemText, selectedTab === 'stats' && styles.selectedNavItemText]}>Stats</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[styles.navItem, selectedTab === 'about' && styles.selectedNavItem]}
+                            style={[
+                                styles.navItem,
+                                selectedTab === 'about' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
+                                selectedTab !== 'about' && { backgroundColor: pokemonColors[1] || 'grey' }
+                            ]}
                             onPress={() => setSelectedTab('about')}
                         >
                             <Text style={[styles.navItemText, selectedTab === 'about' && styles.selectedNavItemText]}>About</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[styles.navItem, selectedTab === 'moves' && styles.selectedNavItem]}
+                            style={[
+                                styles.navItem,
+                                selectedTab === 'moves' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
+                                selectedTab !== 'moves' && { backgroundColor: pokemonColors[1] || 'grey' }
+                            ]}
                             onPress={() => setSelectedTab('moves')}
                         >
                             <Text style={[styles.navItemText, selectedTab === 'moves' && styles.selectedNavItemText]}>Moves</Text>
@@ -392,10 +492,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                             <Text>Move 4</Text>
                         </View>
                         )}
-                    </View>
-
-                    <View>
-                        <PokemonStats stats={pokemon.stats} />
                     </View>
 
                     <View style={{ marginTop: 20 }}>
