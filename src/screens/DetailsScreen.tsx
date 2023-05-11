@@ -251,7 +251,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginHorizontal: 10,
-            marginBottom: 20,
+            marginBottom: 25,
         },
         navItem: {
             flex: 1,
@@ -279,13 +279,14 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             marginRight: 10,
         },
         entryTitle: {
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: 'bold',
             marginBottom: 10,
         },
         entryInfo: {
             fontSize: 18,
             marginBottom: 10,
+            paddingVertical: 1,
         },
         favButton: {
             backgroundColor: pokemonColors[0],
