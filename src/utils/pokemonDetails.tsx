@@ -27,3 +27,14 @@ const fetchAbility = async (ability, setPokemonAbilities) => {
 };
 
 export { fetchAbility };
+
+// Function to map through the pokemon abilities and then run fetchAbility function to grab the definitions for each
+const fetchAbilityData = async (pokemonAbilities, abilities, setPokemonAbilities) => {
+    if (pokemonAbilities.length < abilities.length) {
+        const promises = abilities.map((ability) => fetchAbility(ability, setPokemonAbilities));
+        const result = await Promise.all(promises);
+    }
+    console.log('here')
+};
+
+export { fetchAbilityData };
