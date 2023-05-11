@@ -434,10 +434,14 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                             <View style={styles.column}>
                                 <Text style={styles.entryTitle}>Species:</Text>
                                 <Text style={styles.entryTitle}>Habitat:</Text>
+                                <Text style={styles.entryTitle}>Height:</Text>
+                                <Text style={styles.entryTitle}>Weight:</Text>
                             </View>
                             <View style={styles.column}>
                                 <Text style={styles.entryInfo}>{pokedexEntry.genus}</Text>
                                 <Text style={styles.entryInfo}>{pokedexEntry.habitat}</Text>
+                                <Text style={styles.entryInfo}>{Math.floor((pokemon.height * 3.937) / 12)} feet {Math.round((pokemon.height * 3.937) % 12)} inches</Text>
+                                <Text style={styles.entryInfo}>{(pokemon.weight / 4.536).toFixed(0)} lbs</Text>
                             </View>
                         </View>
 
