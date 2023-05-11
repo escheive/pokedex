@@ -197,8 +197,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             noDamageTo = type.no_damage_to ? await type.no_damage_to.map((noDamageTo) => noDamageTo.name) : [];
         }
 
-        console.log(strengths)
-
         return {
             strengths,
             weaknesses,

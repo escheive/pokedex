@@ -17,27 +17,11 @@ import typeData from './src/assets/typeData';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// let typesData = [];
-//
-// const grabTypesData = async () => {
-//     for (let i=1; i<=18; i++) {
-//         const typeDataResponse = await fetch(`https://pokeapi.co/api/v2/type/${i}`);
-//         const typeData = await typeDataResponse.json();
-//         const typeName = await typeData.name;
-//         const damageRelations = await typeData.damage_relations;
-//
-//         for (const [relation, value] of Object.entries(damageRelations)) {
-//             const names = value.map(obj => obj.name);
-//             damageRelations[relation] = names;
-//         }
-//
-//         typesData.push({ [typeName]: damageRelations });
-//     };
-//     console.log(JSON.stringify(typesData, null, 2))
-// };
 
 const PokemonStack = ({ pokemonList, typeData }) => {
-    const [selectedPokemonTypeData, setSelectedPokemonTypeData] = useState(null);
+//  // TODO
+//     const [selectedPokemonTypeData, setSelectedPokemonTypeData] = useState(null);
+
 
     return (
         <Stack.Navigator
@@ -67,7 +51,7 @@ const PokemonStack = ({ pokemonList, typeData }) => {
                     headerShadowVisible: false,
                     headerTitleStyle: {
                         fontWeight: 'bold'
-                    }
+                    },
                 };
             }}
         />
