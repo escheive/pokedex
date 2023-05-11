@@ -21,8 +21,10 @@ const fetchAbility = async (ability, setPokemonAbilities) => {
 
     // Assign the return of the above function as a variable
     const effect_entries = getEnglishAbilityDescription();
+    // Capitalize the ability name
+    const abilityName = ability.ability.name.charAt(0).toUpperCase() + ability.ability.name.slice(1);
     // assign the ability's name which is part of our original pokemon info, and the newly returned description as an object
-    const abilityData = { name: ability.ability.name, definition: effect_entries }
+    const abilityData = { name: abilityName, definition: effect_entries }
     // Updated our abilities state by combining any previous info stored with our new info
     setPokemonAbilities((prevAbilities) => [...prevAbilities, abilityData]);
 };

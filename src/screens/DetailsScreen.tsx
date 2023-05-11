@@ -297,38 +297,22 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         favButtonText: {
             fontSize: 20,
         },
-        abilityContainer: {
-            marginTop: 20,
-        },
         abilitiesTitle: {
-            fontSize: 25,
+            fontSize: 20,
             fontWeight: 'bold',
-            color: pokemonColors[0],
             marginBottom: 15,
-            textAlign: 'center',
         },
         ability: {
-            backgroundColor: "#fff",
-            padding: 10,
-            borderRadius: 10,
             marginBottom: 10,
-            shadowColor: "#000",
-            shadowOffset: {
-                width: 0,
-                height: 1,
-            },
-            shadowOpacity: 0.22,
-            shadowRadius: 2.22,
-
-            elevation: 3,
+            paddingLeft: 15,
         },
         abilityName: {
             fontWeight: "bold",
-            fontSize: 16,
+            fontSize: 18,
             marginBottom: 5,
         },
         abilityDefinition: {
-            fontSize: 14,
+            fontSize: 16,
             lineHeight: 20,
         },
     });
@@ -430,6 +414,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                         {selectedTab === 'stats' && <PokemonStats stats={pokemon.stats} />}
 
                         {selectedTab === 'about' && (
+                        <>
                         <View style={styles.pokedexEntryContainer}>
                             <View style={styles.column}>
                                 <Text style={styles.entryTitle}>Species:</Text>
@@ -444,6 +429,19 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                                 <Text style={styles.entryInfo}>{(pokemon.weight / 4.536).toFixed(0)} lbs</Text>
                             </View>
                         </View>
+
+                        <View style={styles.abilityContainer}>
+                            <Text style={styles.abilitiesTitle}>Abilities:</Text>
+                            {pokemonAbilities !== null && (
+                                pokemonAbilities.map((ability) => (
+                                    <View key={ability.name} style={styles.ability}>
+                                        <Text style={styles.abilityName}>{ability.name}</Text>
+                                        <Text style={styles.abilityDefinition}>{ability.definition}</Text>
+                                    </View>
+                                ))
+                            )}
+                        </View>
+                        </>
 
                         )}
 
@@ -465,18 +463,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                             >
                                 <Text style={styles.favButtonText}>{isFavorite ? 'Remove from favorites' : 'Add to favorites'}</Text>
                             </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.abilityContainer}>
-                        <Text style={styles.abilitiesTitle}>Abilities</Text>
-                        {pokemonAbilities !== null && (
-                            pokemonAbilities.map((ability) => (
-                                <View key={ability.name} style={styles.ability}>
-                                    <Text style={styles.abilityName}>{ability.name}</Text>
-                                    <Text style={styles.abilityDefinition}>{ability.definition}</Text>
-                                </View>
-                            ))
-                        )}
                     </View>
 
                 </>
