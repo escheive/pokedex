@@ -50,7 +50,6 @@ const getPokedexEntry = async (setPokedexEntry, species) => {
         const getEnglishPokedexEntry = (entryType) => {
             return new Promise((resolve, reject) => {
                 let entries;
-
                 if (entryType === "flavor_text") {
                     entries = pokedexSpeciesData.flavor_text_entries;
                 } else if (entryType === "genus") {
@@ -70,7 +69,9 @@ const getPokedexEntry = async (setPokedexEntry, species) => {
 
         const englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
         const englishPokedexGenus = await getEnglishPokedexEntry("genus");
-        setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText });
+        let pokedexHabitat = pokedexSpeciesData.habitat.name;
+        pokedexHabitat = pokedexHabitat.charAt(0).toUpperCase() + pokedexHabitat.slice(1);
+        setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText, habitat: pokedexHabitat });
     } catch (error) {
         throw error;
     }

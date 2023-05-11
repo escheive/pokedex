@@ -51,41 +51,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [selectedTab, setSelectedTab] = React.useState('stats');
 
 
-    // Function to grab pokedex entry
-//     const getPokedexEntry = async () => {
-//         try {
-//             const pokedexSpeciesDataResponse = await fetch(pokemon.species.url);
-//             const pokedexSpeciesData = await pokedexSpeciesDataResponse.json();
-//
-//             const getEnglishPokedexEntry = (entryType) => {
-//                 return new Promise((resolve, reject) => {
-//                     let entries;
-//
-//                     if (entryType === "flavor_text") {
-//                         entries = pokedexSpeciesData.flavor_text_entries;
-//                     } else if (entryType === "genus") {
-//                         entries = pokedexSpeciesData.genera;
-//                     } else {
-//                         reject("Invalid entry type");
-//                     }
-//
-//                     for (const entry of entries) {
-//                         if (entry.language.name === 'en') {
-//                             resolve(entry[entryType].replace(/[\n\f]/g, " "));
-//                         }
-//                     }
-//                     reject("No english pokedex entry found");
-//                 });
-//             };
-//
-//             const englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
-//             const englishPokedexGenus = await getEnglishPokedexEntry("genus");
-//             setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText });
-//         } catch (error) {
-//             throw error;
-//         }
-//     };
-
     // useEffect to check if a pokemon is favorited and fetch ability info on component mount
     useEffect(() => {
         checkIfFavorite();
@@ -285,7 +250,8 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         navContainer: {
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginHorizontal: 30,
+            marginHorizontal: 10,
+            marginBottom: 20,
         },
         navItem: {
             flex: 1,
@@ -301,6 +267,25 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         },
         selectedNavItemText: {
             fontWeight: 'bold',
+        },
+        tabContent: {
+            marginHorizontal: 20,
+        },
+        pokedexEntryContainer: {
+            flexDirection: 'row',
+        },
+        column: {
+            flex: 1,
+            marginRight: 10,
+        },
+        entryTitle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            marginBottom: 10,
+        },
+        entryInfo: {
+            fontSize: 18,
+            marginBottom: 10,
         },
         favButton: {
             backgroundColor: pokemonColors[0],
@@ -439,14 +424,24 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                             <Text style={[styles.navItemText, selectedTab === 'moves' && styles.selectedNavItemText]}>Moves</Text>
                         </TouchableOpacity>
                     </View>
+
                     <View style={styles.tabContent}>
                         {selectedTab === 'stats' && <PokemonStats stats={pokemon.stats} />}
+
                         {selectedTab === 'about' && (
-                        <View>
-                            <Text style={styles.pokedexEntry}>{pokedexEntry.genus}</Text>
-                            <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
+                        <View style={styles.pokedexEntryContainer}>
+                            <View style={styles.column}>
+                                <Text style={styles.entryTitle}>Species:</Text>
+                                <Text style={styles.entryTitle}>Habitat:</Text>
+                            </View>
+                            <View style={styles.column}>
+                                <Text style={styles.entryInfo}>{pokedexEntry.genus}</Text>
+                                <Text style={styles.entryInfo}>{pokedexEntry.habitat}</Text>
+                            </View>
                         </View>
+
                         )}
+
                         {selectedTab === 'moves' && (
                         <View>
                             <Text>Move 1</Text>
