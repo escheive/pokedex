@@ -10,6 +10,7 @@ import PillBar from '../components/PillBar';
 // Utils
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
 import { getTypeStyle } from '../utils/typeStyle';
+import { fetchAbility } from '../utils/pokemonDetails';
 
 type TypeProps = {
     type: {
@@ -50,32 +51,32 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [selectedTab, setSelectedTab] = React.useState('stats');
 
     // Function to fetch the ability information as abilities are stored in a separate part of the PokeApi
-    const fetchAbility = async (ability: AbilityProps) => {
-        // Fetch the url provided for the pokemons ability in the pokemon info
-        const abilityDefinitionResponse = await fetch(ability.ability.url);
-        // assign the returned json to a variable so that it can be handled
-        const abilityDefinition = await abilityDefinitionResponse.json();
-
-        // Because not all abilities are formatted the same, this function will only return the english definition.
-        const getEnglishAbilityDescription = () => {
-            // Loop through all of the keys in effect_entries
-            for (const entry of abilityDefinition.effect_entries) {
-                // If the entry language is english, return data
-                if (entry.language.name == "en") {
-                    return entry.short_effect;
-                }
-            };
-            // If not english definition exists, return undefined
-            return undefined;
-        };
-
-        // Assign the return of the above function as a variable
-        const effect_entries = getEnglishAbilityDescription();
-        // assign the ability's name which is part of our original pokemon info, and the newly returned description as an object
-        const abilityData = { name: ability.ability.name, definition: effect_entries }
-        // Updated our abilities state by combining any previous info stored with our new info
-        setPokemonAbilities((prevAbilities) => [...prevAbilities, abilityData]);
-    };
+//     const fetchAbility = async (ability: AbilityProps) => {
+//         // Fetch the url provided for the pokemons ability in the pokemon info
+//         const abilityDefinitionResponse = await fetch(ability.ability.url);
+//         // assign the returned json to a variable so that it can be handled
+//         const abilityDefinition = await abilityDefinitionResponse.json();
+//
+//         // Because not all abilities are formatted the same, this function will only return the english definition.
+//         const getEnglishAbilityDescription = () => {
+//             // Loop through all of the keys in effect_entries
+//             for (const entry of abilityDefinition.effect_entries) {
+//                 // If the entry language is english, return data
+//                 if (entry.language.name == "en") {
+//                     return entry.short_effect;
+//                 }
+//             };
+//             // If not english definition exists, return undefined
+//             return undefined;
+//         };
+//
+//         // Assign the return of the above function as a variable
+//         const effect_entries = getEnglishAbilityDescription();
+//         // assign the ability's name which is part of our original pokemon info, and the newly returned description as an object
+//         const abilityData = { name: ability.ability.name, definition: effect_entries }
+//         // Updated our abilities state by combining any previous info stored with our new info
+//         setPokemonAbilities((prevAbilities) => [...prevAbilities, abilityData]);
+//     };
 
     // Function to grab pokedex entry
     const getPokedexEntry = async () => {
@@ -115,7 +116,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     // Function to map through the pokemon abilities and then run fetchAbility function to grab the definitions for each
     const fetchAbilityData = async () => {
         if (pokemonAbilities.length < pokemon.abilities.length) {
-            const promises = pokemon.abilities.map((ability) => fetchAbility(ability));
+            const promises = pokemon.abilities.map((ability) => fetchAbility(ability, setPokemonAbilities));
             const result = await Promise.all(promises);
         }
     };
