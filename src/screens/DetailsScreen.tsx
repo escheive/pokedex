@@ -10,7 +10,7 @@ import PillBar from '../components/PillBar';
 // Utils
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
 import { getTypeStyle } from '../utils/typeStyle';
-import { fetchAbility, fetchAbilityData } from '../utils/pokemonDetails';
+import { fetchAbility, fetchAbilityData, getPokedexEntry } from '../utils/pokemonDetails';
 
 type TypeProps = {
     type: {
@@ -52,48 +52,39 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
 
     // Function to grab pokedex entry
-    const getPokedexEntry = async () => {
-        try {
-            const pokedexSpeciesDataResponse = await fetch(pokemon.species.url);
-            const pokedexSpeciesData = await pokedexSpeciesDataResponse.json();
-
-            const getEnglishPokedexEntry = (entryType) => {
-                return new Promise((resolve, reject) => {
-                    let entries;
-
-                    if (entryType === "flavor_text") {
-                        entries = pokedexSpeciesData.flavor_text_entries;
-                    } else if (entryType === "genus") {
-                        entries = pokedexSpeciesData.genera;
-                    } else {
-                        reject("Invalid entry type");
-                    }
-
-                    for (const entry of entries) {
-                        if (entry.language.name === 'en') {
-                            resolve(entry[entryType].replace(/[\n\f]/g, " "));
-                        }
-                    }
-                    reject("No english pokedex entry found");
-                });
-            };
-
-            const englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
-            const englishPokedexGenus = await getEnglishPokedexEntry("genus");
-            setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText });
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    // Function to map through the pokemon abilities and then run fetchAbility function to grab the definitions for each
-//     const fetchAbilityData = async () => {
-//         if (pokemonAbilities.length < pokemon.abilities.length) {
-//             const promises = pokemon.abilities.map((ability) => fetchAbility(ability, setPokemonAbilities));
-//             const result = await Promise.all(promises);
+//     const getPokedexEntry = async () => {
+//         try {
+//             const pokedexSpeciesDataResponse = await fetch(pokemon.species.url);
+//             const pokedexSpeciesData = await pokedexSpeciesDataResponse.json();
+//
+//             const getEnglishPokedexEntry = (entryType) => {
+//                 return new Promise((resolve, reject) => {
+//                     let entries;
+//
+//                     if (entryType === "flavor_text") {
+//                         entries = pokedexSpeciesData.flavor_text_entries;
+//                     } else if (entryType === "genus") {
+//                         entries = pokedexSpeciesData.genera;
+//                     } else {
+//                         reject("Invalid entry type");
+//                     }
+//
+//                     for (const entry of entries) {
+//                         if (entry.language.name === 'en') {
+//                             resolve(entry[entryType].replace(/[\n\f]/g, " "));
+//                         }
+//                     }
+//                     reject("No english pokedex entry found");
+//                 });
+//             };
+//
+//             const englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
+//             const englishPokedexGenus = await getEnglishPokedexEntry("genus");
+//             setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText });
+//         } catch (error) {
+//             throw error;
 //         }
 //     };
-
 
     // useEffect to check if a pokemon is favorited and fetch ability info on component mount
     useEffect(() => {
@@ -101,7 +92,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
         fetchAbilityData(pokemonAbilities, pokemon.abilities, setPokemonAbilities);
 
-        getPokedexEntry()
+        getPokedexEntry(setPokedexEntry, pokemon.species)
 
     }, []);
 

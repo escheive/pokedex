@@ -1,3 +1,4 @@
+
 // Function to fetch the ability information as abilities are stored in a separate part of the PokeApi
 const fetchAbility = async (ability, setPokemonAbilities) => {
     // Fetch the url provided for the pokemons ability in the pokemon info
@@ -28,13 +29,51 @@ const fetchAbility = async (ability, setPokemonAbilities) => {
 
 export { fetchAbility };
 
+
 // Function to map through the pokemon abilities and then run fetchAbility function to grab the definitions for each
 const fetchAbilityData = async (pokemonAbilities, abilities, setPokemonAbilities) => {
     if (pokemonAbilities.length < abilities.length) {
         const promises = abilities.map((ability) => fetchAbility(ability, setPokemonAbilities));
         const result = await Promise.all(promises);
     }
-    console.log('here')
 };
 
 export { fetchAbilityData };
+
+
+// Function to grab pokedex entry
+const getPokedexEntry = async (setPokedexEntry, species) => {
+    try {
+        const pokedexSpeciesDataResponse = await fetch(species.url);
+        const pokedexSpeciesData = await pokedexSpeciesDataResponse.json();
+
+        const getEnglishPokedexEntry = (entryType) => {
+            return new Promise((resolve, reject) => {
+                let entries;
+
+                if (entryType === "flavor_text") {
+                    entries = pokedexSpeciesData.flavor_text_entries;
+                } else if (entryType === "genus") {
+                    entries = pokedexSpeciesData.genera;
+                } else {
+                    reject("Invalid entry type");
+                }
+
+                for (const entry of entries) {
+                    if (entry.language.name === 'en') {
+                        resolve(entry[entryType].replace(/[\n\f]/g, " "));
+                    }
+                }
+                reject("No english pokedex entry found");
+            });
+        };
+
+        const englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
+        const englishPokedexGenus = await getEnglishPokedexEntry("genus");
+        setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText });
+    } catch (error) {
+        throw error;
+    }
+};
+
+export { getPokedexEntry };
