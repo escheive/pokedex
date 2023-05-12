@@ -320,11 +320,10 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         },
         pokedexEntryContainer: {
             flexDirection: 'row',
-            paddingHorizontal: 20,
+            paddingHorizontal: 10,
         },
         column: {
             flex: 1,
-            marginRight: 10,
         },
         entryTitle: {
             fontSize: 22,
@@ -347,7 +346,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             fontSize: 20,
         },
         abilityContainer: {
-            marginLeft: 20,
+            marginLeft: 10,
         },
         abilitiesTitle: {
             fontSize: 22,
