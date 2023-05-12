@@ -484,7 +484,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                                     columnWrapperStyle={styles.columnWrapper}
                                     renderItem={({ item }) => (
                                         <View style={styles.individualMoveContainer}>
-                                            <Text style={styles.moves} key={item.move.name}>{item.move.name}</Text>
+                                            <Text style={styles.moves} key={item.move.name}>{item.move.name.charAt(0).toUpperCase() + item.move.name.slice(1)}</Text>
                                         </View>
                                     )}
                                 />
