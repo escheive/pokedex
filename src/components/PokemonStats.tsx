@@ -48,7 +48,7 @@ const PokemonStats = ({ stats }) => {
     const renderStatItem = ({ item }) => (
         <View style={styles.statItem}>
             <Text style={styles.statName}>{shortenStatName(item.stat.name)}:</Text>
-            <PillBar percentage={(item.base_stat / 120) * 100} stat={item.base_stat} statName={item.stat.name} />
+            <PillBar percentage={(item.base_stat / 155) * 100} stat={item.base_stat} statName={item.stat.name} />
         </View>
     );
 

@@ -56,8 +56,6 @@ const getPokedexEntry = async (setPokedexEntry, species) => {
                     entries = pokedexSpeciesData.flavor_text_entries;
                 } else if (entryType === "genus") {
                     entries = pokedexSpeciesData.genera;
-                } else if (entryType === "evolution_chain") {
-                    console.log(evolutionData)
                 } else {
                     reject("Invalid entry type");
                 }
@@ -78,11 +76,21 @@ const getPokedexEntry = async (setPokedexEntry, species) => {
             return string
         }
 
-        let englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
-        englishPokedexFlavorText = await correctSpacing(englishPokedexFlavorText)
         const englishPokedexGenus = await getEnglishPokedexEntry("genus");
-        let pokedexHabitat = pokedexSpeciesData.habitat.name;
-        pokedexHabitat = pokedexHabitat.charAt(0).toUpperCase() + pokedexHabitat.slice(1);
+        let pokedexHabitat;
+        if (pokedexSpeciesData.habitat !== null) {
+            let pokedexHabitat = pokedexSpeciesData.habitat.name;
+            pokedexHabitat = pokedexHabitat.charAt(0).toUpperCase() + pokedexHabitat.slice(1);
+        } else {
+            pokedexHabitat = "None";
+        }
+        let englishPokedexFlavorText;
+        if (pokedexSpeciesData.flavor_text_entries.length > 0) {
+            englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
+            englishPokedexFlavorText = await correctSpacing(englishPokedexFlavorText)
+        } else {
+            englishPokedexFlavorText = "There is no flavor text for this pokemon"
+        }
         const evolvesFrom = pokedexSpeciesData.evolves_from_species;
         setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText, habitat: pokedexHabitat, evolvesFrom: evolvesFrom });
     } catch (error) {

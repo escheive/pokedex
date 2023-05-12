@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
-import { FaHeart } from 'react-icons/fa';
 // Components
 import PokemonStats from '../components/PokemonStats';
 import PillBar from '../components/PillBar';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 // Utils
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
 import { getTypeStyle } from '../utils/typeStyle';
@@ -200,13 +200,13 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         },
         nextPokemonButton: {
             position: 'absolute',
-            top: 50,
-            right: 20,
+            top: '45%',
+            right: 0,
         },
         prevPokemonButton: {
             position: 'absolute',
-            top: 50,
-            left: 20,
+            top: '45%',
+            left: 0,
         },
         idContainer: {
             position: 'absolute',
@@ -247,18 +247,21 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             alignItems: 'flex-start',
             backgroundColor: '#E0E0E0',
             padding: 20,
-            paddingTop: 30,
+            paddingTop: 15,
             height: '50%',
             width: '100%',
         },
         heading: {
-            fontSize: 32,
+            fontSize: 30,
             fontWeight: 'bold',
-            alignSelf: 'flex-start'
+            alignSelf: 'flex-start',
         },
         nameContainer: {
             flexDirection: 'row',
-            alignItems: 'flex-start',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 8,
+            flexWrap: 'wrap'
         },
         pokedexEntry: {
             fontSize: 16,
@@ -274,6 +277,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             paddingHorizontal: 16,
             borderRadius: 32,
             marginRight: 8,
+            flexShrink: 1,
         },
         strengthWeaknessColumnContainer: {
             flexDirection: 'column',
@@ -416,15 +420,15 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
                             <TouchableOpacity
                                 style={styles.prevPokemonButton}
-                                onPress={() => handlePress(currentIndex - 1 >= 0 ? currentIndex - 1 : totalPokemon - 1)}
+                                onPress={() => handlePress(pokemon.id - 1 > 0 ? pokemon.id - 1 : 1010)}
                             >
-                                <Text style={styles.navItemText}>Previous</Text>
+                                <Ionicons name="chevron-back-outline" size={50} color="black" />
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.nextPokemonButton}
-                                onPress={() => handlePress((currentIndex + 1) % totalPokemon)}
+                                onPress={() => handlePress((pokemon.id + 1 <= 1010 ? pokemon.id + 1 : 1))}
                             >
-                                <Text style={styles.navItemText}>Next</Text>
+                                <Ionicons name="chevron-forward-outline" size={50} color="black" />
                             </TouchableOpacity>
 
                         </View>

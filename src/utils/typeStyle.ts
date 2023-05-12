@@ -53,7 +53,7 @@
             };
         case 'psychic':
             return {
-                backgroundColor: 'rgba(255, 192, 203, 0.5)',
+                backgroundColor: 'rgba(245, 42, 183, 0.5)',
                 color: 'black',
             };
         case 'bug':
@@ -88,7 +88,7 @@
             };
         case 'fairy':
             return {
-                backgroundColor: 'rgba(255, 0, 255, 0.5)',
+                backgroundColor: 'rgba(255, 92, 255, 0.5)',
                 color: 'white',
             };
         default:
