@@ -52,13 +52,17 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     // useState for displaying pokemon moves
     const [displayedMovesCount, setDisplayedMovesCount] = useState(20); // Set an initial count, such as 10
 
-    // Function to handle links to other pokemon
-    const handlePress = async (pokemon: Pokemon) => {
+    // Function to handlePress of the previous evolution button in top left corner
+    const handlePress = async (pokemonId) => {
+        // Fetch info for the pokemon id that is -1 of the current pokemons id
+        const pokemonResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}/`);
+        // parse the returned api response and extract the JSON data
+        const pokemon = await pokemonResponse.json();
+        // Navigate to the details page with this new pokemon data
         navigation.navigate('Details', { pokemon });
-    };
+    }
 
-
-    // useEffect to check if a pokemon is favorited and fetch ability info on component mount
+    // useEffect to check if a pokemon is favorited and fetch ability info when pokemon object changes
     useEffect(() => {
         checkIfFavorite();
 
@@ -66,7 +70,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
         getPokedexEntry(setPokedexEntry, pokemon.species)
 
-    }, []);
+    }, [pokemon]);
 
     // Function to check if a pokemon is favorited and update the page accordingly
     const checkIfFavorite = async () => {
@@ -387,12 +391,12 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                             </View>
 
                             {pokedexEntry.evolvesFrom !== null && (
-                            <View style={styles.evolutionContainer}>
+                            <TouchableOpacity style={styles.evolutionContainer} onPress={() => handlePress(pokemon.id - 1)}>
                                 <Image
                                     style={styles.evolutionImage}
                                     source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id - 1}.png` }}
                                 />
-                            </View>
+                            </TouchableOpacity>
                             )}
 
                         </View>
