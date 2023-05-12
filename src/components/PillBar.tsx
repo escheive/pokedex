@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   pillContainer: {
-    height: 25,
+    height: 30,
     width: '100%',
     borderRadius: 10,
     overflow: 'hidden',
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
       textShadowColor: 'rgba(0, 0, 0, 0.25)',
       textShadowOffset: { width: 0, height: 1 },
       textShadowRadius: 2,
-      fontSize: 18,
+      fontSize: 20,
   },
 });
 

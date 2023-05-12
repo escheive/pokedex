@@ -12,10 +12,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 5,
+    marginVertical: 10,
   },
   statName: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     width: 80,
   },

@@ -273,20 +273,22 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         },
         pokedexEntryContainer: {
             flexDirection: 'row',
+            paddingHorizontal: 20,
         },
         column: {
             flex: 1,
             marginRight: 10,
         },
         entryTitle: {
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: 'bold',
             marginBottom: 10,
         },
         entryInfo: {
-            fontSize: 18,
+            fontSize: 20,
             marginBottom: 10,
             paddingVertical: 1,
+            alignSelf: 'flex-end',
         },
         favButton: {
             backgroundColor: pokemonColors[0],
@@ -297,8 +299,11 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         favButtonText: {
             fontSize: 20,
         },
+        abilityContainer: {
+            marginLeft: 20,
+        },
         abilitiesTitle: {
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: 'bold',
             marginBottom: 15,
         },
@@ -308,11 +313,11 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         },
         abilityName: {
             fontWeight: "bold",
-            fontSize: 18,
+            fontSize: 20,
             marginBottom: 5,
         },
         abilityDefinition: {
-            fontSize: 16,
+            fontSize: 18,
             lineHeight: 20,
         },
     });
