@@ -52,6 +52,11 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     // useState for displaying pokemon moves
     const [displayedMovesCount, setDisplayedMovesCount] = useState(20); // Set an initial count, such as 10
 
+    // Function to handle links to other pokemon
+    const handlePress = async (pokemon: Pokemon) => {
+        navigation.navigate('Details', { pokemon });
+    };
+
 
     // useEffect to check if a pokemon is favorited and fetch ability info on component mount
     useEffect(() => {
@@ -200,6 +205,23 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             color: 'white',
             fontSize: 22,
             fontWeight: 'bold',
+        },
+        evolutionContainer: {
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            borderRadius: 50,
+            backgroundColor: '#5C6B7C',
+            padding: 1,
+            width: 60,
+            height: 60,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        evolutionImage: {
+            width: '100%',
+            height: '100%',
+            resizeMode: 'contain',
         },
         bottomOfCard: {
             flexDirection: 'column',
@@ -363,6 +385,16 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                             <View style={styles.idContainer}>
                                 <Text style={styles.idText}>{pokemon.id > 100 ? pokemon.id : pokemon.id > 10 ? "0" + pokemon.id : "00" + pokemon.id }</Text>
                             </View>
+
+                            {pokedexEntry.evolvesFrom !== null && (
+                            <View style={styles.evolutionContainer}>
+                                <Image
+                                    style={styles.evolutionImage}
+                                    source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id - 1}.png` }}
+                                />
+                            </View>
+                            )}
+
                         </View>
 
                         <View style={styles.bottomOfCard}>

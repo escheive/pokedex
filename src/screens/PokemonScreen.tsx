@@ -10,46 +10,8 @@ type Props = {
     typeData: { [key: string]: typeData };
 };
 
-// // Function to grab pokedex entry
-//     const getPokedexEntry = async (pokemon) => {
-//         try {
-//             const pokedexSpeciesDataResponse = await fetch(pokemon.species.url);
-//             const pokedexSpeciesData = await pokedexSpeciesDataResponse.json();
-//
-//             console.log(pokedexSpeciesData)
-//
-//             const getEnglishPokedexEntry = (entryType) => {
-//                 return new Promise((resolve, reject) => {
-//                     let entries;
-//
-//                     if (entryType === "flavor_text") {
-//                         entries = pokedexSpeciesData.flavor_text_entries;
-//                     } else if (entryType === "genus") {
-//                         entries = pokedexSpeciesData.genera;
-//                     } else {
-//                         reject("Invalid entry type");
-//                     }
-//
-//                     for (const entry of entries) {
-//                         if (entry.language.name === 'en') {
-//                             resolve(entry[entryType].replace(/[\n\f]/g, " "));
-//                         }
-//                     }
-//                     reject("No english pokedex entry found");
-//                 });
-//             };
-//
-//             const englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
-//             const englishPokedexGenus = await getEnglishPokedexEntry("genus");
-// //             setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText });
-//             return { "genus": englishPokedexGenus, "flavorText": englishPokedexFlavorText};
-//         } catch (error) {
-//             throw error;
-//         }
-//     };
-
 const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
-//     console.log(typeData)
+
     const handlePress = async (pokemon: Pokemon) => {
         navigation.navigate('Details', { pokemon });
     };
