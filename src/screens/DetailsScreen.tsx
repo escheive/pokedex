@@ -49,6 +49,8 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [pokedexEntry, setPokedexEntry] = useState({ "genus": "", "flavorText": ""});
     // useState for the nav below the pokemon card
     const [selectedTab, setSelectedTab] = React.useState('stats');
+    // useState for displaying pokemon moves
+    const [displayedMovesCount, setDisplayedMovesCount] = useState(20); // Set an initial count, such as 10
 
 
     // useEffect to check if a pokemon is favorited and fetch ability info on component mount
@@ -263,7 +265,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         },
         navItemText: {
             color: 'white',
-            fontSize: 16,
+            fontSize: 20,
         },
         selectedNavItemText: {
             fontWeight: 'bold',
@@ -319,6 +321,29 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         abilityDefinition: {
             fontSize: 18,
             lineHeight: 20,
+        },
+        movesContainer: {
+            flex: 1,
+            justifyContent: 'center',
+            marginBottom: 15,
+        },
+        columnWrapper: {
+            justifyContent: 'space-between',
+        },
+        individualMoveContainer: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 15,
+        },
+        moves: {
+            textAlign: 'center',
+            fontSize: 20,
+        },
+        loadMoreMoves: {
+            fontSize: 26,
+            color: pokemonColors[0],
+            textAlign: 'center',
         },
     });
 
@@ -451,13 +476,31 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                         )}
 
                         {selectedTab === 'moves' && (
-                        <View>
-                            <Text>Move 1</Text>
-                            <Text>Move 2</Text>
-                            <Text>Move 3</Text>
-                            <Text>Move 4</Text>
-                        </View>
+                        <>
+                            <View style={styles.movesContainer}>
+                                <FlatList
+                                    data={pokemon.moves.slice(0, displayedMovesCount)}
+                                    keyExtractor={(move) => move.move.name}
+                                    numColumns={2}
+                                    columnWrapperStyle={styles.columnWrapper}
+                                    renderItem={({ item }) => (
+                                        <View style={styles.individualMoveContainer}>
+                                            <Text style={styles.moves} key={item.move.name}>{item.move.name}</Text>
+                                        </View>
+                                    )}
+                                />
+                            </View>
+
+                            {displayedMovesCount < pokemon.moves.length && (
+                                <TouchableOpacity
+                                    onPress={() => setDisplayedMovesCount(displayedMovesCount + 20)}
+                                >
+                                    <Text style={styles.loadMoreMoves}>More moves</Text>
+                                </TouchableOpacity>
+                            )}
+                        </>
                         )}
+
                     </View>
 
                     <View style={{ marginTop: 20 }}>
