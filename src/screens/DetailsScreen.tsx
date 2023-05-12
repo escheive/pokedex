@@ -51,6 +51,11 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [selectedTab, setSelectedTab] = React.useState('stats');
     // useState for displaying pokemon moves
     const [displayedMovesCount, setDisplayedMovesCount] = useState(20); // Set an initial count, such as 10
+    // useState for the index of the current pokemon, for use with prev and next buttons
+    const [currentIndex, setCurrentIndex] = useState(0);
+    // Total number of pokemon, for use with next and previous pokemon buttons
+    const totalPokemon = 1000;
+
 
     // Function to handlePress of the previous evolution button in top left corner
     const handlePress = async (pokemonId) => {
@@ -192,6 +197,16 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             width: '110%',
             height: '110%',
             resizeMode: 'contain',
+        },
+        nextPokemonButton: {
+            position: 'absolute',
+            top: 50,
+            right: 20,
+        },
+        prevPokemonButton: {
+            position: 'absolute',
+            top: 50,
+            left: 20,
         },
         idContainer: {
             position: 'absolute',
@@ -398,6 +413,19 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                                 />
                             </TouchableOpacity>
                             )}
+
+                            <TouchableOpacity
+                                style={styles.prevPokemonButton}
+                                onPress={() => handlePress(currentIndex - 1 >= 0 ? currentIndex - 1 : totalPokemon - 1)}
+                            >
+                                <Text style={styles.navItemText}>Previous</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.nextPokemonButton}
+                                onPress={() => handlePress((currentIndex + 1) % totalPokemon)}
+                            >
+                                <Text style={styles.navItemText}>Next</Text>
+                            </TouchableOpacity>
 
                         </View>
 
