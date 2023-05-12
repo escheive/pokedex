@@ -69,7 +69,15 @@ const getPokedexEntry = async (setPokedexEntry, species) => {
             });
         };
 
-        const englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
+        const correctSpacing = (string) => {
+            if (species.name === 'golduck') {
+                string = string.replace(' m', 'm')
+            }
+            return string
+        }
+
+        let englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
+        englishPokedexFlavorText = await correctSpacing(englishPokedexFlavorText)
         const englishPokedexGenus = await getEnglishPokedexEntry("genus");
         let pokedexHabitat = pokedexSpeciesData.habitat.name;
         pokedexHabitat = pokedexHabitat.charAt(0).toUpperCase() + pokedexHabitat.slice(1);

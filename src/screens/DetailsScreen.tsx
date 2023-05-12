@@ -379,7 +379,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                                 </View>
                             </View>
                             <View>
-                                <Text style={styles.pokedexEntry}>{pokedexEntry.genus}</Text>
                                 <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
                             </View>
                             <View style={styles.strengthWeaknessColumnContainer}>
