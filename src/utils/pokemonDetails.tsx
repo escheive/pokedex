@@ -91,7 +91,8 @@ const getPokedexEntry = async (setPokedexEntry, species) => {
         }
 
         const evolvesFrom = pokedexSpeciesData.evolves_from_species;
-        setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText, habitat: pokedexHabitat, evolvesFrom: evolvesFrom });
+
+        setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText, habitat: pokedexHabitat, evolvesFrom : evolvesFrom });
     } catch (error) {
         throw error;
     }

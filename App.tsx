@@ -81,19 +81,62 @@ function SettingsStack() {
 export default function App() {
     const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
 
-    useEffect(() => {
-        fetch('https://pokeapi.co/api/v2/pokemon?limit=60')
-            .then(response => response.json())
-            .then(data => {
-                // Use `Promise.all()` to fetch data for each Pokemon in parallel
-                const promises = data.results.map(pokemon => fetch(pokemon.url).then(response => response.json()));
-                return Promise.all(promises);
-            })
-            .then(data => setPokemonList(data))
-            .catch(error => console.error(error))
+        useEffect(() => {
+            // Function to fetch base pokemon data from the api
+            const fetchPokemonData = async (start, end) => {
+                try {
+                    const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${end - start}&offset=${start}`);
+                    const data = await response.json();
+                    const pokemonUrls = data.results.map((pokemon) => pokemon.url);
+                    const pokemonData = await Promise.all(pokemonUrls.map((url) => fetch(url).then((response) => response.json())));
+                    setPokemonList((prevList) => [...prevList, ...pokemonData]);
 
-//         grabTypesData();
-    }, []);
+                    // Fetch the remaining pokemon in the background
+                    const remainingPokemons = 1010 - end; // Total number of pokemon - initial batch
+                    const batchSize = 20;
+
+                    if (remainingPokemons > 0) {
+                        const nextStart = end;
+                        const nextEnd = Math.min(end + batchSize, 1010);
+                        fetchPokemonData(nextStart, nextEnd);
+                    }
+                } catch (error) {
+                    console.error(`Error fetching pokemon data for range ${start} - ${end}:`, error)
+                }
+            };
+
+            // Fetch the initial 60 pokemon
+            fetchPokemonData(0, 60);
+
+//             // Fetch the remaining pokemon in the background
+//             const remainingPokemons = 1010 - end; // Total number of pokemon - initial batch
+//             const batchSize = 20;
+//
+//             if (remainingPokemons > 0) {
+//                 const nextStart = end;
+//                 const nextEnd = Math.min(end + batchSize, 1010);
+//                 fetchPokemonData(nextStart, nextEnd);
+//             }
+
+//             for (let i=0; i < totalBatches; i++) {
+//                 const start = 60 + i * batchSize;
+//                 const end = start + batchSize;
+//                 fetchPokemonData(start, end);
+//             }
+        }, []);
+
+//     useEffect(() => {
+//         fetch('https://pokeapi.co/api/v2/pokemon?limit=60')
+//             .then(response => response.json())
+//             .then(data => {
+//                 // Use `Promise.all()` to fetch data for each Pokemon in parallel
+//                 const promises = data.results.map(pokemon => fetch(pokemon.url).then(response => response.json()));
+//                 return Promise.all(promises);
+//             })
+//             .then(data => setPokemonList(data))
+//             .catch(error => console.error(error))
+//
+//     }, []);
 
   return (
     <NavigationContainer>

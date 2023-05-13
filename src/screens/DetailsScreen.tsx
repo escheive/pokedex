@@ -51,30 +51,109 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [selectedTab, setSelectedTab] = React.useState('stats');
     // useState for displaying pokemon moves
     const [displayedMovesCount, setDisplayedMovesCount] = useState(20); // Set an initial count, such as 10
-    // useState for the index of the current pokemon, for use with prev and next buttons
-    const [currentIndex, setCurrentIndex] = useState(0);
-    // Total number of pokemon, for use with next and previous pokemon buttons
-    const totalPokemon = 1000;
+    // useState for tracking previous evolution
+    const [prevEvolution, setPrevEvolution] = useState(`${pokemon.id - 1}`)
 
 
     // Function to handlePress of the previous evolution button in top left corner
     const handlePress = async (pokemonId) => {
-        // Fetch info for the pokemon id that is -1 of the current pokemons id
+        // Create a cache key based on the pokemons id
+        const cacheKey = `pokemon_${pokemonId}`;
+
+        // Check if the pokemon data is already cached
+        const cachedData = await AsyncStorage.getItem(cacheKey);
+        if (cachedData) {
+            // If cached data is found, parse it and navigate to the details page
+            const pokemon = JSON.parse(cachedData);
+            navigation.navigate('Details', { pokemon });
+            return;
+        }
+
+        console.log('api request')
+        // If the pokemon data is not cached, fetch it
         const pokemonResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}/`);
         // parse the returned api response and extract the JSON data
         const pokemon = await pokemonResponse.json();
-        // Navigate to the details page with this new pokemon data
+
+        // Cache the fetched Pokemon data
+        await AsyncStorage.setItem(cacheKey, JSON.stringify(pokemon));
+        // Navigate to the details page with the fetched pokemon data
         navigation.navigate('Details', { pokemon });
     }
 
+    const handlePrevEvolution = async (pokemonId) => {
+      // Fetch info for the pokemon species
+      const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`);
+      const species = await speciesResponse.json();
+
+      // Check if the species has evolution chain information
+      if (species.evolution_chain && species.evolution_chain.url) {
+        // Fetch the evolution chain data
+        const evolutionChainResponse = await fetch(species.evolution_chain.url);
+        const evolutionChain = await evolutionChainResponse.json();
+
+        // Find the previous evolution based on the current pokemonId
+        const prevEvolution = findPreviousEvolution(evolutionChain, pokemonId);
+
+        if (prevEvolution) {
+          handlePress(prevEvolution)
+        }
+      }
+    };
+
+    const findPreviousEvolution = (evolutionChain, pokemonId) => {
+        if (evolutionChain.chain.species && evolutionChain.chain.species.url) {
+            const urlParts = evolutionChain.chain.species.url.split('/');
+            const id = parseInt(urlParts[urlParts.length - 2]);
+            console.log(evolutionChain.chain.evolves_to[0].species.name)
+            if (id === pokemonId) {
+                // If the current Pokemon is the base species, return null
+                return null;
+            } else if (id === pokemonId - 1) {
+                return evolutionChain.chain.species.name;
+            } else if (id === pokemonId - 2) {
+                return evolutionChain.chain.evolves_to[0].species.name;
+            } else if (evolutionChain.chain.evolves_to.length > 0) {
+                // If the current Pokemon is not the base species, find its previous evolution
+                for (const evolution of evolutionChain.chain.evolves_to) {
+                    if (evolution.species && evolution.species.url) {
+                        const urlParts = evolution.species.url.split('/');
+                        const id = parseInt(urlParts[urlParts.length - 2]);
+
+
+                        if (id === pokemonId) {
+                            // Found the previous evolution, return its id
+                            return evolutionChain.chain.species.name;
+                        } else if (evolutionChain.chain.evolves_to[0].evolves_to.length > 0) {
+                            console.log('here')
+                            for (const evolution of evolutionChain.chain.evolves_to[0].evolves_to) {
+                                if (evolution.species && evolution.species.url) {
+                                    const urlParts = evolution.species.url.split('/');
+                                    const id = parseInt(urlParts[urlParts.length - 2]);
+
+                                    if (id === pokemonId) {
+                                        return evolutionChain.chain.evolves_to[0].species.name;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Previous evolution not found
+        return null;
+    };
+
+
     // useEffect to check if a pokemon is favorited and fetch ability info when pokemon object changes
     useEffect(() => {
+        getPokedexEntry(setPokedexEntry, pokemon.species)
+
         checkIfFavorite();
 
         fetchAbilityData(pokemonAbilities, pokemon.abilities, setPokemonAbilities);
-
-        getPokedexEntry(setPokedexEntry, pokemon.species)
-
     }, [pokemon]);
 
     // Function to check if a pokemon is favorited and update the page accordingly
@@ -252,7 +331,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             width: '100%',
         },
         heading: {
-            fontSize: 30,
+            fontSize: (30 - (pokemon.name.length + pokemon.types[0].type.name.length) / 4),
             fontWeight: 'bold',
             alignSelf: 'flex-start',
         },
@@ -260,8 +339,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            marginBottom: 8,
-            flexWrap: 'wrap'
+            paddingBottom: 8,
         },
         pokedexEntry: {
             fontSize: 16,
@@ -270,7 +348,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         typesContainer: {
             flexDirection: 'row',
             justifyContent: 'center',
-            marginHorizontal: 16,
+            marginLeft: 16,
         },
         type: {
             paddingVertical: 9,
@@ -407,12 +485,11 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                             <View style={styles.idContainer}>
                                 <Text style={styles.idText}>{pokemon.id > 100 ? pokemon.id : pokemon.id > 10 ? "0" + pokemon.id : "00" + pokemon.id }</Text>
                             </View>
-
                             {pokedexEntry.evolvesFrom !== null && (
-                            <TouchableOpacity style={styles.evolutionContainer} onPress={() => handlePress(pokemon.id - 1)}>
+                            <TouchableOpacity style={styles.evolutionContainer} onPress={() => handlePrevEvolution(pokemon.id)}>
                                 <Image
                                     style={styles.evolutionImage}
-                                    source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id - 1}.png` }}
+                                    source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id-1}.png` }}
                                 />
                             </TouchableOpacity>
                             )}
