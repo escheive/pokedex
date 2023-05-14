@@ -41,9 +41,11 @@ const PokemonStack = ({ pokemonList, typeData }) => {
             options={({ route }) => {
                 const pokemonType = route.params.pokemon.types[0].type.name;
                 const backgroundColor = getTypeStyle(pokemonType);
+                let pokemonName = route.params.pokemon.name;
+                pokemonName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
 
                 return {
-                    title: route.params.pokemon.name,
+                    title: pokemonName,
                     headerStyle: {
                         backgroundColor: `rgba(${backgroundColor.backgroundColor}, 0.5)`,
                     },
@@ -51,7 +53,7 @@ const PokemonStack = ({ pokemonList, typeData }) => {
                     headerShadowVisible: false,
                     headerTitleStyle: {
                         fontWeight: 'bold'
-                    },
+                    }
                 };
             }}
         />
@@ -107,22 +109,6 @@ export default function App() {
 
             // Fetch the initial 60 pokemon
             fetchPokemonData(0, 60);
-
-//             // Fetch the remaining pokemon in the background
-//             const remainingPokemons = 1010 - end; // Total number of pokemon - initial batch
-//             const batchSize = 20;
-//
-//             if (remainingPokemons > 0) {
-//                 const nextStart = end;
-//                 const nextEnd = Math.min(end + batchSize, 1010);
-//                 fetchPokemonData(nextStart, nextEnd);
-//             }
-
-//             for (let i=0; i < totalBatches; i++) {
-//                 const start = 60 + i * batchSize;
-//                 const end = start + batchSize;
-//                 fetchPokemonData(start, end);
-//             }
         }, []);
 
 //     useEffect(() => {

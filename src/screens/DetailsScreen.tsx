@@ -10,7 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // Utils
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
 import { getTypeStyle } from '../utils/typeStyle';
-import { fetchAbility, fetchAbilityData, getPokedexEntry } from '../utils/pokemonDetails';
+import { fetchAbility, fetchAbilityData, getPokedexEntry, fetchAdditionalData } from '../utils/pokemonDetails';
 
 type TypeProps = {
     type: {
@@ -53,6 +53,8 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [displayedMovesCount, setDisplayedMovesCount] = useState(20); // Set an initial count, such as 10
     // useState for tracking previous evolution
     const [prevEvolution, setPrevEvolution] = useState(`${pokemon.id - 1}`)
+    // useState for additional pokemon data
+    const [additionalData, setAdditionalData] = useState(null);
 
 
     // Function to handlePress of the previous evolution button in top left corner
@@ -154,7 +156,13 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         checkIfFavorite();
 
         fetchAbilityData(pokemonAbilities, pokemon.abilities, setPokemonAbilities);
-    }, [pokemon]);
+
+        const fetchDetails = async () => {
+            const data = await fetchAdditionalData(pokemon.id); // Fetch additional data using this pokemons id
+            setAdditionalData(data);
+        }
+        fetchDetails();
+    }, [pokemon.id]);
 
     // Function to check if a pokemon is favorited and update the page accordingly
     const checkIfFavorite = async () => {

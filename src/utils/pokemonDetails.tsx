@@ -1,4 +1,30 @@
 
+// Function to fetch additional data about a pokemon
+const fetchAdditionalData = async (pokemonId) => {
+    try {
+        // Fetch additional details for the given Pokemon using the Pokemon Id
+        const pokedexInfoResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`);
+        const pokedexInfoData = await pokedexInfoResponse.json();
+//         console.log(pokedexInfoData)
+        // TODO: process pokedexInfoData
+
+        const abilitiesResponse = await fetch(`https://pokeapi.co/api/v2/ability/${pokemonId}`);
+        const abilitiesData = await abilitiesResponse.json();
+        // TODO: process abilitiesData
+
+        // return the fetched data
+        return {
+            pokedexInfo: pokedexInfoData,
+            abilities: abilitiesData,
+        };
+    } catch (error) {
+        console.error('Error fetching additional data for Pokemon', error);
+        return null;
+    }
+};
+
+export { fetchAdditionalData };
+
 // Function to fetch the ability information as abilities are stored in a separate part of the PokeApi
 const fetchAbility = async (ability, setPokemonAbilities) => {
     // Fetch the url provided for the pokemons ability in the pokemon info
@@ -44,58 +70,114 @@ export { fetchAbilityData };
 
 
 // Function to grab pokedex entry
+// const getPokedexEntry = async (setPokedexEntry, species) => {
+//     try {
+//         const pokedexSpeciesDataResponse = await fetch(species.url);
+//         const pokedexSpeciesData = await pokedexSpeciesDataResponse.json();
+//
+//         const getEnglishPokedexEntry = (entryType) => {
+//             return new Promise((resolve, reject) => {
+//                 let entries;
+//                 if (entryType === "flavor_text") {
+//                     entries = pokedexSpeciesData.flavor_text_entries;
+//                 } else if (entryType === "genus") {
+//                     entries = pokedexSpeciesData.genera;
+//                 } else {
+//                     reject("Invalid entry type");
+//                 }
+//
+//                 for (const entry of entries) {
+//                     if (entry.language.name === 'en') {
+//                         resolve(entry[entryType].replace(/[\n\f]/g, " "));
+//                     }
+//                 }
+//                 reject("No english pokedex entry found");
+//             });
+//         };
+//
+//         const correctSpacing = (string) => {
+//             if (species.name === 'golduck') {
+//                 string = string.replace(' m', 'm')
+//             }
+//             return string
+//         }
+//
+//         const englishPokedexGenus = await getEnglishPokedexEntry("genus");
+//
+//         let pokedexHabitat = "None";
+//         if (pokedexSpeciesData.habitat !== null) {
+//             let pokedexHabitat = pokedexSpeciesData.habitat.name;
+//             pokedexHabitat = pokedexHabitat.charAt(0).toUpperCase() + pokedexHabitat.slice(1);
+//         }
+//
+//         let englishPokedexFlavorText = "There is no flavor text for this pokemon";
+//         if (pokedexSpeciesData.flavor_text_entries.length > 0) {
+//             englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
+//             englishPokedexFlavorText = await correctSpacing(englishPokedexFlavorText)
+//         }
+//
+//         const evolvesFrom = pokedexSpeciesData.evolves_from_species;
+//
+//         setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText, habitat: pokedexHabitat, evolvesFrom : evolvesFrom });
+//     } catch (error) {
+//         throw error;
+//     }
+// };
+
 const getPokedexEntry = async (setPokedexEntry, species) => {
     try {
         const pokedexSpeciesDataResponse = await fetch(species.url);
         const pokedexSpeciesData = await pokedexSpeciesDataResponse.json();
 
         const getEnglishPokedexEntry = (entryType) => {
-            return new Promise((resolve, reject) => {
-                let entries;
-                if (entryType === "flavor_text") {
-                    entries = pokedexSpeciesData.flavor_text_entries;
-                } else if (entryType === "genus") {
-                    entries = pokedexSpeciesData.genera;
-                } else {
-                    reject("Invalid entry type");
-                }
 
-                for (const entry of entries) {
-                    if (entry.language.name === 'en') {
-                        resolve(entry[entryType].replace(/[\n\f]/g, " "));
-                    }
-                }
-                reject("No english pokedex entry found");
-            });
+            const entries = pokedexSpeciesData[entryType];
+            let englishEntry;
+
+            if (entryType === "flavor_text_entries") {
+                englishEntry = entries.find((entry) => entry.language.name === 'en' && entry.version.name === 'emerald');
+                englishEntry = englishEntry.flavor_text.replace(/[\n\f]/g, ' ');
+            } else if (entryType === "genera") {
+                englishEntry = entries.find((entry) => entry.language.name === 'en');
+                englishEntry = englishEntry.genus
+            }
+
+            if (englishEntry) {
+                return englishEntry
+            } else {
+                throw new Error('No English pokedex entry found');
+            }
         };
 
         const correctSpacing = (string) => {
             if (species.name === 'golduck') {
-                string = string.replace(' m', 'm')
+                return string.replace(' m', 'm');
             }
-            return string
-        }
+            return string;
+        };
 
-        const englishPokedexGenus = await getEnglishPokedexEntry("genus");
 
-        let pokedexHabitat = "None";
+        const englishPokedexGenus = await getEnglishPokedexEntry('genera');
+
+        let pokedexHabitat = 'None';
         if (pokedexSpeciesData.habitat !== null) {
-            let pokedexHabitat = pokedexSpeciesData.habitat.name;
+            pokedexHabitat = pokedexSpeciesData.habitat.name;
             pokedexHabitat = pokedexHabitat.charAt(0).toUpperCase() + pokedexHabitat.slice(1);
         }
 
-        let englishPokedexFlavorText = "There is no flavor text for this pokemon";
+        let englishPokedexFlavorText = 'There is no flavor text for this pokemon';
         if (pokedexSpeciesData.flavor_text_entries.length > 0) {
-            englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
-            englishPokedexFlavorText = await correctSpacing(englishPokedexFlavorText)
+            englishPokedexFlavorText = await getEnglishPokedexEntry('flavor_text_entries');
+            englishPokedexFlavorText = correctSpacing(englishPokedexFlavorText);
         }
 
         const evolvesFrom = pokedexSpeciesData.evolves_from_species;
 
-        setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText, habitat: pokedexHabitat, evolvesFrom : evolvesFrom });
+        setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText, habitat: pokedexHabitat, evolvesFrom });
     } catch (error) {
         throw error;
     }
 };
+
 
 export { getPokedexEntry };
