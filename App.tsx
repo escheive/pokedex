@@ -13,6 +13,7 @@ import DetailsScreen from './src/screens/DetailsScreen';
 import { getTypeStyle } from './src/utils/typeStyle';
 // Assets
 import typeData from './src/assets/typeData';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -73,7 +74,7 @@ function ProfileStack() {
 function SettingsStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="Options" component={SettingsScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />
     </Stack.Navigator>
   );
@@ -124,15 +125,36 @@ export default function App() {
 //
 //     }, []);
 
-  return (
-    <NavigationContainer>
-      <Tab.Navigator screenOptions={{ headerShown: false }}>
-        <Tab.Screen name="Pokemon" options={{ tabBarBadge: 3 }}>
-            {(props) => <PokemonStack {...props} pokemonList={pokemonList} typeData={typeData} />}
-        </Tab.Screen>
-        <Tab.Screen name="Profile" component={ProfileStack} />
-        <Tab.Screen name="Settings" component={SettingsStack} />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    headerShown: false,
+                    tabBarIcon: ({ focused, color, size }) => {
+                        let iconName;
+
+                        if (route.name === 'Pokemon') {
+                            iconName = focused ? 'ios-paw' : 'ios-paw-outline';
+                        } else if (route.name === 'Profile') {
+                            iconName = focused ? 'person' : 'person-outline';
+                        } else if (route.name === 'Settings') {
+                            iconName = focused ? 'cog' : 'cog-outline';
+                        }
+
+                        return <Ionicons name={iconName} size={size} color={color} />;
+                    },
+                    'tabBarActiveTintColor': 'black',
+                    'tabBarInactiveTintColor': 'gray',
+                })}
+            >
+                <Tab.Screen name="Pokemon" options={{ tabBarBadge: 3 }}>
+                    {(props) => <PokemonStack {...props} pokemonList={pokemonList} typeData={typeData} />}
+                </Tab.Screen>
+                <Tab.Screen name="Profile" component={ProfileStack} />
+                <Tab.Screen name="Settings" component={SettingsStack} />
+            </Tab.Navigator>
+
+        </NavigationContainer>
+    );
 }
