@@ -1,26 +1,23 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native';
+// Components
+import PillBar from './PillBar';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 10,
+
     marginTop: 5,
-    borderWidth: 2,
-    borderColor: 'black',
-    borderRadius: 4,
   },
   statItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 5,
-    width: 300,
+    alignItems: 'center',
+    marginVertical: 10,
   },
   statName: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-
+    width: 80,
   },
   statValue: {
     fontSize: 20,
@@ -28,21 +25,42 @@ const styles = StyleSheet.create({
   },
 });
 
+const shortenStatName = (name) => {
+    switch (name) {
+        case 'hp':
+            return 'HP';
+        case 'attack':
+            return 'Atk';
+        case 'defense':
+            return 'Def';
+        case 'special-attack':
+            return 'SpAtk';
+        case 'special-defense':
+            return 'SpDef';
+        case 'speed':
+            return 'Spd';
+        default:
+            return name;
+    }
+};
+
 const PokemonStats = ({ stats }) => {
-  const renderStatItem = ({ item }) => (
-    <View style={styles.statItem}>
-      <Text style={styles.statName}>{item.stat.name}:</Text>
-      <Text style={styles.statValue}>{item.base_stat}</Text>
-    </View>
-  );
+    const renderStatItem = ({ item }) => (
+        <View style={styles.statItem}>
+            <Text style={styles.statName}>{shortenStatName(item.stat.name)}:</Text>
+            <PillBar percentage={(item.base_stat / 155) * 100} stat={item.base_stat} statName={item.stat.name} />
+        </View>
+    );
 
   return (
-    <FlatList
-      data={stats}
-      renderItem={renderStatItem}
-      keyExtractor={(item) => item.stat.name}
-      contentContainerStyle={styles.container}
-    />
+    <View style={styles.container}>
+        <FlatList
+          data={stats}
+          renderItem={renderStatItem}
+          keyExtractor={(item) => item.stat.name}
+          contentContainerStyle={styles.container}
+        />
+    </View>
   );
 };
 
