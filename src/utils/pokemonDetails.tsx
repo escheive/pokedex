@@ -146,6 +146,8 @@ const getPokedexEntry = async (setPokedexEntry, species) => {
         const pokedexSpeciesDataResponse = await fetch(species.url);
         const pokedexSpeciesData = await pokedexSpeciesDataResponse.json();
 
+        const isLegendary = pokedexSpeciesData.is_legendary;
+
         const getEnglishPokedexEntry = (entryType) => {
 
             const entries = pokedexSpeciesData[entryType];
@@ -173,7 +175,6 @@ const getPokedexEntry = async (setPokedexEntry, species) => {
             return string;
         };
 
-
         const englishPokedexGenus = await getEnglishPokedexEntry('genera');
 
         let pokedexHabitat = 'None';
@@ -190,7 +191,7 @@ const getPokedexEntry = async (setPokedexEntry, species) => {
 
         const evolvesFrom = pokedexSpeciesData.evolves_from_species;
 
-        setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText, habitat: pokedexHabitat, evolvesFrom });
+        setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText, habitat: pokedexHabitat, evolvesFrom, isLegendary: isLegendary });
     } catch (error) {
         throw error;
     }

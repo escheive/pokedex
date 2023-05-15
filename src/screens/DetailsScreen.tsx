@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 // Components
@@ -318,11 +318,16 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         bottomOfCard: {
             flexDirection: 'column',
             alignItems: 'flex-start',
-            backgroundColor: '#E0E0E0',
             padding: 20,
             paddingTop: 15,
             height: '50%',
             width: '100%',
+        },
+        normalCard: {
+            backgroundColor: '#E0E0E0',
+        },
+        legendaryCard: {
+            backgroundColor: 'gold',
         },
         heading: {
             fontSize: (30 - (pokemon.name.length + pokemon.types[0].type.name.length) / 4),
@@ -503,7 +508,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
                         </View>
 
-                        <View style={styles.bottomOfCard}>
+                        <View style={[styles.bottomOfCard, pokedexEntry.isLegendary ? styles.legendaryCard : styles.normalCard ]}>
                             <View style={styles.nameContainer}>
                                 <Text style={styles.heading}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
                                 <View style={styles.typesContainer}>
