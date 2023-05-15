@@ -40,10 +40,12 @@ const fetchAdditionalData = async (pokemonId, pokemonAbilities) => {
                 const response = await fetch(url);
                 // Parse that fetched information
                 const data = await response.json();
+                // Capitalize the ability name
+                const abilityName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
                 // Grab an english description for the ability. Here we just take the first one found
                 const abilityDescription = await data.flavor_text_entries.find((description) => description.language.name === "en")
                 // The description is paired with the name in an object
-                const abilityData = { "name": data.name, "description": abilityDescription.flavor_text };
+                const abilityData = { "name": abilityName, "description": abilityDescription.flavor_text };
                 // The ability object is now pushed to our abilitiesInformation array
                 abilitiesInformation.push(abilityData)
             }
