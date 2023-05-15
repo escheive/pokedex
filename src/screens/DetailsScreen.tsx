@@ -158,7 +158,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         fetchAbilityData(pokemonAbilities, pokemon.abilities, setPokemonAbilities);
 
         const fetchDetails = async () => {
-            const data = await fetchAdditionalData(pokemon.id); // Fetch additional data using this pokemons id
+            const data = await fetchAdditionalData(pokemon.id, pokemon.abilities); // Fetch additional data using this pokemons id
             setAdditionalData(data);
         }
         fetchDetails();

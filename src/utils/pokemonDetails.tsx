@@ -1,21 +1,64 @@
 
 // Function to fetch additional data about a pokemon
-const fetchAdditionalData = async (pokemonId) => {
+const fetchAdditionalData = async (pokemonId, pokemonAbilities) => {
+
     try {
-        // Fetch additional details for the given Pokemon using the Pokemon Id
+        // Declare an empty object to store all returned data
+        const pokedexObject = {};
+        // Fetch pokedex information for the pokemon
         const pokedexInfoResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`);
+        // Parse the fetched data
         const pokedexInfoData = await pokedexInfoResponse.json();
-//         console.log(pokedexInfoData)
+
+        // Using the parsed data, find the english genus/pokemon species
+        const species = (pokedexInfoData.genera.find((genus) => genus.language.name === "en")).genus; // Find the english version of the pokemon genus
+        // Initializing a variable that is defaulting to no description available for this pokemon
+        let englishFlavorTexts = "There is no description for this pokemon :("
+        // If there is information available, lets get it
+        if (pokedexInfoData.flavor_text_entries.length != null) {
+            // redefine our variable as an array of all available english flavor texts
+            englishFlavorTexts = pokedexInfoData.flavor_text_entries.filter((flavor) => flavor.language.name === "en"); // Grab all the english flavor_text entries
+        }
+
+        // Declare the key 'flavorText' in our pokemonObject, equal to our englishFlavorTexts variable
+        pokedexObject.flavorText = englishFlavorTexts;
+        // Assign the key 'genus' in our pokedexObject equal to our species variable
+        pokedexObject.genus = species;
+
+
         // TODO: process pokedexInfoData
+        // Grab all the urls from our pokemons ability data to fetch descriptions
+        const abilityUrls = pokemonAbilities.map((ability) => ability.ability.url)
 
-        const abilitiesResponse = await fetch(`https://pokeapi.co/api/v2/ability/${pokemonId}`);
-        const abilitiesData = await abilitiesResponse.json();
+        // Function that fetches descriptions about the pokemons abilities
+        async function fetchAbilityData() {
+            // Initialize an empty array to store our abilities
+            const abilitiesInformation = [];
+            // Loop through the pokemons urls
+            for (const url of abilityUrls) {
+                // Fetch the corresponding information for the url
+                const response = await fetch(url);
+                // Parse that fetched information
+                const data = await response.json();
+                // Grab an english description for the ability. Here we just take the first one found
+                const abilityDescription = await data.flavor_text_entries.find((description) => description.language.name === "en")
+                // The description is paired with the name in an object
+                const abilityData = { "name": data.name, "description": abilityDescription.flavor_text };
+                // The ability object is now pushed to our abilitiesInformation array
+                abilitiesInformation.push(abilityData)
+            }
+            // Define the key 'abilities' in our pokedexObject equal to abilitiesInformation array
+            pokedexObject.abilities = abilitiesInformation;
+        }
+        // Call our fetchAbilityData function above
+        await fetchAbilityData();
+
         // TODO: process abilitiesData
-
+        console.log(pokedexObject)
+        // TODO: Swap the return for a set function so that we may update a useState
         // return the fetched data
         return {
-            pokedexInfo: pokedexInfoData,
-            abilities: abilitiesData,
+            pokedexInfo: pokedexObject,
         };
     } catch (error) {
         console.error('Error fetching additional data for Pokemon', error);
@@ -24,6 +67,9 @@ const fetchAdditionalData = async (pokemonId) => {
 };
 
 export { fetchAdditionalData };
+
+
+
 
 // Function to fetch the ability information as abilities are stored in a separate part of the PokeApi
 const fetchAbility = async (ability, setPokemonAbilities) => {
