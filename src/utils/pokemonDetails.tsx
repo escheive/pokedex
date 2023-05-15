@@ -11,22 +11,41 @@ const fetchAdditionalData = async (pokemonId, pokemonAbilities) => {
         const pokedexInfoData = await pokedexInfoResponse.json();
 
         // Using the parsed data, find the english genus/pokemon species
-        const species = (pokedexInfoData.genera.find((genus) => genus.language.name === "en")).genus; // Find the english version of the pokemon genus
+        const species = (pokedexInfoData.genera.find((genus) => genus.language.name === "en")).genus;
+
         // Initializing a variable that is defaulting to no description available for this pokemon
         let englishFlavorTexts = "There is no description for this pokemon :("
-        // If there is information available, lets get it
-        if (pokedexInfoData.flavor_text_entries.length != null) {
-            // redefine our variable as an array of all available english flavor texts
+        // If there is information available, lets update the variable with all the english flavor_texts
+        if (pokedexInfoData.flavor_text_entries.length > 0) {
             englishFlavorTexts = pokedexInfoData.flavor_text_entries.filter((flavor) => flavor.language.name === "en"); // Grab all the english flavor_text entries
+        }
+
+        // Declare a default value for the pokemon habitat
+        let habitat = "None";
+        // If pokemon has a habitat, update the variable with the habitat name capitalized
+        if (pokedexInfoData.habitat !== null) {
+            habitat = pokedexInfoData.habitat.name.charAt(0).toUpperCase() + pokedexInfoData.habitat.name.slice(1)
+        }
+
+        // If the pokemon has a previous evolution, we will add the name to our pokedexObject
+        if (pokedexInfoData.evolves_from_species !== null) {
+            // Assign a variable for the previous evolutions name and capitalize it
+            const previousEvolutionName = pokedexInfoData.evolves_from_species.name.charAt(0).toUpperCase() + pokedexInfoData.evolves_from_species.name.slice(1);
+            // Deconstruct the previous evolutions pokedex url by the /
+            const parts = pokedexInfoData.evolves_from_species.url.split("/")
+            // The url contains the pokemons id, so this will grab that id number
+            const previousEvolutionId = parts[parts.length-2];
+            pokedexObject.evolvesFrom = { "name": previousEvolutionName }
         }
 
         // Declare the key 'flavorText' in our pokemonObject, equal to our englishFlavorTexts variable
         pokedexObject.flavorText = englishFlavorTexts;
         // Assign the key 'genus' in our pokedexObject equal to our species variable
         pokedexObject.genus = species;
+        // Assign the key 'habitat' in our pokedexObject equal to our habitat variable
+        pokedexObject.habitat = habitat;
 
 
-        // TODO: process pokedexInfoData
         // Grab all the urls from our pokemons ability data to fetch descriptions
         const abilityUrls = pokemonAbilities.map((ability) => ability.ability.url)
 
@@ -42,10 +61,14 @@ const fetchAdditionalData = async (pokemonId, pokemonAbilities) => {
                 const data = await response.json();
                 // Capitalize the ability name
                 const abilityName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
-                // Grab an english description for the ability. Here we just take the first one found
-                const abilityDescription = await data.flavor_text_entries.find((description) => description.language.name === "en")
+                let abilityDescription = "There is no description for this ability"
+                if (data.flavor_text_entries.length > 0) {
+                    // Grab an english description for the ability. Here we just take the first one found
+                    abilityDescription = await data.flavor_text_entries.find((description) => description.language.name === "en")
+                    abilityDescription = abilityDescription.flavor_text;
+                }
                 // The description is paired with the name in an object
-                const abilityData = { "name": abilityName, "description": abilityDescription.flavor_text };
+                const abilityData = { "name": abilityName, "description": abilityDescription };
                 // The ability object is now pushed to our abilitiesInformation array
                 abilitiesInformation.push(abilityData)
             }
@@ -117,60 +140,6 @@ const fetchAbilityData = async (pokemonAbilities, abilities, setPokemonAbilities
 export { fetchAbilityData };
 
 
-// Function to grab pokedex entry
-// const getPokedexEntry = async (setPokedexEntry, species) => {
-//     try {
-//         const pokedexSpeciesDataResponse = await fetch(species.url);
-//         const pokedexSpeciesData = await pokedexSpeciesDataResponse.json();
-//
-//         const getEnglishPokedexEntry = (entryType) => {
-//             return new Promise((resolve, reject) => {
-//                 let entries;
-//                 if (entryType === "flavor_text") {
-//                     entries = pokedexSpeciesData.flavor_text_entries;
-//                 } else if (entryType === "genus") {
-//                     entries = pokedexSpeciesData.genera;
-//                 } else {
-//                     reject("Invalid entry type");
-//                 }
-//
-//                 for (const entry of entries) {
-//                     if (entry.language.name === 'en') {
-//                         resolve(entry[entryType].replace(/[\n\f]/g, " "));
-//                     }
-//                 }
-//                 reject("No english pokedex entry found");
-//             });
-//         };
-//
-//         const correctSpacing = (string) => {
-//             if (species.name === 'golduck') {
-//                 string = string.replace(' m', 'm')
-//             }
-//             return string
-//         }
-//
-//         const englishPokedexGenus = await getEnglishPokedexEntry("genus");
-//
-//         let pokedexHabitat = "None";
-//         if (pokedexSpeciesData.habitat !== null) {
-//             let pokedexHabitat = pokedexSpeciesData.habitat.name;
-//             pokedexHabitat = pokedexHabitat.charAt(0).toUpperCase() + pokedexHabitat.slice(1);
-//         }
-//
-//         let englishPokedexFlavorText = "There is no flavor text for this pokemon";
-//         if (pokedexSpeciesData.flavor_text_entries.length > 0) {
-//             englishPokedexFlavorText = await getEnglishPokedexEntry("flavor_text");
-//             englishPokedexFlavorText = await correctSpacing(englishPokedexFlavorText)
-//         }
-//
-//         const evolvesFrom = pokedexSpeciesData.evolves_from_species;
-//
-//         setPokedexEntry({ genus: englishPokedexGenus, flavorText: englishPokedexFlavorText, habitat: pokedexHabitat, evolvesFrom : evolvesFrom });
-//     } catch (error) {
-//         throw error;
-//     }
-// };
 
 const getPokedexEntry = async (setPokedexEntry, species) => {
     try {

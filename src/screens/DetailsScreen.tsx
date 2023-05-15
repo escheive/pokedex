@@ -59,26 +59,12 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
     // Function to handlePress of the previous evolution button in top left corner
     const handlePress = async (pokemonId) => {
-        // Create a cache key based on the pokemons id
-        const cacheKey = `pokemon_${pokemonId}`;
 
-        // Check if the pokemon data is already cached
-        const cachedData = await AsyncStorage.getItem(cacheKey);
-        if (cachedData) {
-            // If cached data is found, parse it and navigate to the details page
-            const pokemon = JSON.parse(cachedData);
-            navigation.navigate('Details', { pokemon });
-            return;
-        }
-
-        console.log('api request')
         // If the pokemon data is not cached, fetch it
         const pokemonResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}/`);
         // parse the returned api response and extract the JSON data
         const pokemon = await pokemonResponse.json();
 
-        // Cache the fetched Pokemon data
-        await AsyncStorage.setItem(cacheKey, JSON.stringify(pokemon));
         // Navigate to the details page with the fetched pokemon data
         navigation.navigate('Details', { pokemon });
     }
@@ -281,8 +267,8 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             alignItems: 'center'
         },
         image: {
-            width: '110%',
-            height: '110%',
+            width: '100%',
+            height: '100%',
             resizeMode: 'contain',
         },
         nextPokemonButton: {
@@ -488,7 +474,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                         <View style={styles.imageContainer}>
                             <Image
                                 style={styles.image}
-                                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
+                                source={{ uri: `${pokemon.sprites.other['official-artwork'].front_default}`  }}
                             />
                             <View style={styles.idContainer}>
                                 <Text style={styles.idText}>{pokemon.id > 100 ? pokemon.id : pokemon.id > 10 ? "0" + pokemon.id : "00" + pokemon.id }</Text>
