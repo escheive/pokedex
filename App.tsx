@@ -21,8 +21,6 @@ const Tab = createBottomTabNavigator();
 
 
 const PokemonStack = ({ pokemonList, typeData }) => {
-//  // TODO
-//     const [selectedPokemonTypeData, setSelectedPokemonTypeData] = useState(null);
 
 
     return (
