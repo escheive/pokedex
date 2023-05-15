@@ -1,6 +1,5 @@
 # pokedexApp
-- Creating a pokedex app using the pokeapi and react native for all
- your pokemon needs!
+- Creating a pokedex app using the pokeapi and react native for all your pokemon needs!
 
 # Screenshots
 <img width="475" alt="Screen Shot 2023-05-15 at 12 56 06 PM" src="https://github.com/escheive/pokedex/assets/115295094/7265093d-6ed9-49ce-abea-263ebec7982c">
@@ -14,8 +13,7 @@
 
 
 # Description
-- This app was inspired by my want to learn more about react native. I am comfortabl![Uploading Screen Shot 2023-05-15 at 12.56.06 PM.png…]()
-e working with React and wanted to dive more into the mobile side of things while incorporating an api.
+- This app was inspired by my want to learn more about react native. I am comfortable working with React and wanted to dive more into the mobile side of things while incorporating an api.
 - I chose to use TypeScript because that is where my expertise lies and I didn't want to take on too many new things at once with this project. Baby steps.
 - I am also using async storage to allow data saving for the app. I am new to async so my choice to use it was based on research and curiosity on how well it works.
 - Current goals for this project are:
