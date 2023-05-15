@@ -3,7 +3,7 @@ import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'rea
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getTypeStyle } from '../utils/typeStyle';
 
-const PokemonCard = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution, getTypeBackgroundStyle }) => {
+const PokemonCard = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution, getTypeBackgroundStyle, pokemonColors }) => {
 
     // Grab the dimensions of the device for sizing of components
     const windowHeight = Dimensions.get('window').height;
@@ -173,9 +173,9 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution, 
                 <View style={styles.nameContainer}>
                     <Text style={styles.heading}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
                     <View style={styles.typesContainer}>
-                        {pokemon.types.map((type) => (
-                            <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
-                                <Text style={{ color: getTypeStyle(type.type.name).color, fontSize: 18, fontWeight: '600' }}>
+                        {pokemon.types.map((type, index) => (
+                            <View key={type.type.name} style={[styles.type, { backgroundColor: pokemonColors[index].backgroundColor } ]}>
+                                <Text style={{ color: pokemonColors[index].color, fontSize: 18, fontWeight: '600' }}>
                                     {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
                                 </Text>
                             </View>

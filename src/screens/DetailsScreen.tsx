@@ -37,9 +37,6 @@ type DetailsScreenProps = {
 const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     // Grab our pokemon data that was pulled in our app.tsx from params
     const { pokemon } = route.params;
-    // Grab the dimensions of the device for sizing of components
-    const windowHeight = Dimensions.get('window').height;
-    const windowWidth = Dimensions.get('window').width;
     // useState to update if a pokemon was favorited or unfavorited without refreshing
     const [isFavorite, setIsFavorite] = useState(false);
     // useState to track pokemonAbilities for each individual pokemon when their page is pulled up
@@ -57,6 +54,14 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     // useState for additional pokemon data
     const [additionalData, setAdditionalData] = useState(null);
 
+
+    grabPokemonColors = async () => {
+        for(const type of pokemon.types) {
+            pokemonColors.push((getTypeStyle(type.type.name)))
+        }
+        console.log(pokemonColors)
+    }
+    grabPokemonColors();
 
     // Function to handlePress of the previous evolution button in top left corner
     const handlePress = async (pokemonId) => {
@@ -176,11 +181,11 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
 
     // Function to take the pokemons types, run function to get the corresponding color and then create an array of colors based on types
-    const getTypeBackgroundStyle = (types: TypeProps[]) => {
-        const stylesArray = types.map((type) => getTypeStyle(type.type.name));
-        pokemonColors.push(stylesArray[0].backgroundColor)
-        return stylesArray.filter(style => Object.keys(style).length > 0);
-    };
+//     const getTypeBackgroundStyle = (types: TypeProps[]) => {
+//         const stylesArray = types.map((type) => getTypeStyle(type.type.name));
+//         pokemonColors.push(stylesArray[0].backgroundColor)
+//         return stylesArray.filter(style => Object.keys(style).length > 0);
+//     };
 
     // Function to take the pokemons types, and grab the info for that type
     const getTypeInfo = async (typesArr: TypeProps[]) => {
@@ -239,9 +244,9 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     });
 
     // Variables to track the pokemons colors
-    const stylesArray = getTypeBackgroundStyle(pokemon.types);
-    pokemonColors = stylesArray.map((style) => style.backgroundColor);
-    const gradientColors = pokemonColors.length < 2 ? [pokemonColors[0], '#FFFFFF'] : pokemonColors;
+//     const stylesArray = getTypeBackgroundStyle(pokemon.types);
+//     pokemonColors = stylesArray.map((style) => style.backgroundColor);
+//     const gradientColors = pokemonColors.length < 2 ? [pokemonColors[0], '#FFFFFF'] : pokemonColors;
 
     // Stylesheet for this screen
     const styles = StyleSheet.create({
@@ -357,15 +362,15 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                         pokedexEntry={pokedexEntry}
                         handlePress={handlePress}
                         handlePrevEvolution={handlePrevEvolution}
-                        getTypeBackgroundStyle={getTypeBackgroundStyle}
+                        pokemonColors={pokemonColors}
                     />
 
                     <View style={styles.navContainer}>
                         <TouchableOpacity
                             style={[
                                 styles.navItem,
-                                selectedTab === 'stats' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
-                                selectedTab !== 'stats' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1] } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                                selectedTab === 'stats' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
+                                selectedTab !== 'stats' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
                             onPress={() => setSelectedTab('stats')}
                         >
@@ -374,8 +379,8 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                         <TouchableOpacity
                             style={[
                                 styles.navItem,
-                                selectedTab === 'about' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
-                                selectedTab !== 'about' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1] } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                                selectedTab === 'about' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
+                                selectedTab !== 'about' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
                             onPress={() => setSelectedTab('about')}
                         >
@@ -384,8 +389,8 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                         <TouchableOpacity
                             style={[
                                 styles.navItem,
-                                selectedTab === 'moves' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
-                                selectedTab !== 'moves' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1] } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                                selectedTab === 'moves' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
+                                selectedTab !== 'moves' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
                             onPress={() => setSelectedTab('moves')}
                         >
