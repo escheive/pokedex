@@ -19,6 +19,7 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 
+
 const PokemonStack = ({ pokemonList, typeData }) => {
 //  // TODO
 //     const [selectedPokemonTypeData, setSelectedPokemonTypeData] = useState(null);
@@ -33,52 +34,59 @@ const PokemonStack = ({ pokemonList, typeData }) => {
                 headerTitleAlign: 'center',
             }}
         >
-        <Stack.Screen name="Gotta Catch Them All">
-            {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
-        </Stack.Screen>
-        <Stack.Screen
-            name="Details"
-            component={DetailsScreen}
-            options={({ route }) => {
-                const pokemonType = route.params.pokemon.types[0].type.name;
-                const backgroundColor = getTypeStyle(pokemonType);
-                let pokemonName = route.params.pokemon.name;
-                pokemonName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+            <Stack.Screen name="Gotta Catch Them All">
+                {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
+            </Stack.Screen>
 
-                return {
-                    title: pokemonName,
-                    headerStyle: {
-                        backgroundColor: `rgba(${backgroundColor.backgroundColor}, 0.5)`,
-                    },
-                    headerTintColor: 'white',
-                    headerShadowVisible: false,
-                    headerTitleStyle: {
-                        fontWeight: 'bold'
-                    }
-                };
-            }}
-        />
+            <Stack.Screen
+                name="Details"
+                component={DetailsScreen}
+                options={({ route }) => {
+                    const pokemonType = route.params.pokemon.types[0].type.name;
+                    const backgroundColor = getTypeStyle(pokemonType);
+                    let pokemonName = route.params.pokemon.name;
+                    pokemonName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+
+                    return {
+                        title: pokemonName,
+                        headerStyle: {
+                            backgroundColor: `rgba(${backgroundColor.backgroundColor}, 0.5)`,
+                        },
+                        headerTintColor: 'white',
+                        headerShadowVisible: false,
+                        headerTitleStyle: {
+                            fontWeight: 'bold'
+                        }
+                    };
+                }}
+            />
         </Stack.Navigator>
     );
 };
 
+
+
 function ProfileStack() {
-  return (
-    <Stack.Navigator>
-        <Stack.Screen name="User" component={ProfileScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
-    </Stack.Navigator>
-  );
+
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="User" component={ProfileScreen} />
+            <Stack.Screen name="Details" component={DetailsScreen} />
+        </Stack.Navigator>
+    );
 };
 
+
+
 function SettingsStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Options" component={SettingsScreen} />
-      <Stack.Screen name="Details" component={DetailsScreen} />
-    </Stack.Navigator>
-  );
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Options" component={SettingsScreen} />
+            <Stack.Screen name="Details" component={DetailsScreen} />
+        </Stack.Navigator>
+    );
 };
+
 
 
 export default function App() {
@@ -88,19 +96,26 @@ export default function App() {
             // Function to fetch base pokemon data from the api
             const fetchPokemonData = async (start, end) => {
                 try {
+                    // Grab pokemon data using start and end variables to determine which ones are being fetched
                     const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${end - start}&offset=${start}`);
+                    // parse the data
                     const data = await response.json();
+
                     const pokemonUrls = data.results.map((pokemon) => pokemon.url);
                     const pokemonData = await Promise.all(pokemonUrls.map((url) => fetch(url).then((response) => response.json())));
                     setPokemonList((prevList) => [...prevList, ...pokemonData]);
 
                     // Fetch the remaining pokemon in the background
                     const remainingPokemons = 1010 - end; // Total number of pokemon - initial batch
-                    const batchSize = 20;
+                    const batchSize = 30;
 
+                    // If there are still unfetched pokemon, keep going
                     if (remainingPokemons > 0) {
+                        // nextStart will be set to the current end so that we can start with the very next pokemon
                         const nextStart = end;
+                        // nextEnd will be calculated based on current end and batchSize
                         const nextEnd = Math.min(end + batchSize, 1010);
+                        // fetch the pokemon using the updated variables
                         fetchPokemonData(nextStart, nextEnd);
                     }
                 } catch (error) {
@@ -108,22 +123,10 @@ export default function App() {
                 }
             };
 
-            // Fetch the initial 60 pokemon
-            fetchPokemonData(0, 60);
+            // Fetch the initial 100 pokemon on app start
+            fetchPokemonData(0, 100);
         }, []);
 
-//     useEffect(() => {
-//         fetch('https://pokeapi.co/api/v2/pokemon?limit=60')
-//             .then(response => response.json())
-//             .then(data => {
-//                 // Use `Promise.all()` to fetch data for each Pokemon in parallel
-//                 const promises = data.results.map(pokemon => fetch(pokemon.url).then(response => response.json()));
-//                 return Promise.all(promises);
-//             })
-//             .then(data => setPokemonList(data))
-//             .catch(error => console.error(error))
-//
-//     }, []);
 
     return (
         <NavigationContainer>
