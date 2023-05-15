@@ -1,8 +1,21 @@
 # pokedexApp
-- Creating a pokedex app using the pokeapi and react native for all your pokemon needs!
+- Creating a pokedex app using the pokeapi and react native for all
+ your pokemon needs!
+
+# Screenshots
+<img width="475" alt="Screen Shot 2023-05-15 at 12 56 06 PM" src="https://github.com/escheive/pokedex/assets/115295094/7265093d-6ed9-49ce-abea-263ebec7982c">
+<img width="477" alt="Screen Shot 2023-05-15 at 12 56 18 PM" src="https://github.com/escheive/pokedex/assets/115295094/0102320f-e1b8-4bdb-9332-0cc4af69709d">
+<img width="485" alt="Screen Shot 2023-05-15 at 12 56 26 PM" src="https://github.com/escheive/pokedex/assets/115295094/0e260262-8e24-4c50-aa97-d9f97ad478fb">
+<img width="486" alt="Screen Shot 2023-05-15 at 12 56 34 PM" src="https://github.com/escheive/pokedex/assets/115295094/c844f204-02e6-4322-b46a-2df237feebd9">
+<img width="479" alt="Screen Shot 2023-05-15 at 12 56 43 PM" src="https://github.com/escheive/pokedex/assets/115295094/60dd2d1a-fe6d-40e6-aa44-26783f7442d2">
+<img width="510" alt="Screen Shot 2023-05-15 at 12 57 15 PM" src="https://github.com/escheive/pokedex/assets/115295094/ffd503fe-c701-4514-acd4-fd4b86bc3cfe">
+
+
+
 
 # Description
-- This app was inspired by my want to learn more about react native. I am comfortable working with React and wanted to dive more into the mobile side of things while incorporating an api.
+- This app was inspired by my want to learn more about react native. I am comfortabl![Uploading Screen Shot 2023-05-15 at 12.56.06 PM.png…]()
+e working with React and wanted to dive more into the mobile side of things while incorporating an api.
 - I chose to use TypeScript because that is where my expertise lies and I didn't want to take on too many new things at once with this project. Baby steps.
 - I am also using async storage to allow data saving for the app. I am new to async so my choice to use it was based on research and curiosity on how well it works.
 - Current goals for this project are:
