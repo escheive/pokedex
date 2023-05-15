@@ -9,6 +9,8 @@ import PokemonScreen from './src/screens/PokemonScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import DetailsScreen from './src/screens/DetailsScreen';
+// Components
+import LoadingScreen from './src/components/LoadingScreen';
 // Utils
 import { getTypeStyle } from './src/utils/typeStyle';
 // Assets
@@ -88,42 +90,50 @@ function SettingsStack() {
 
 
 export default function App() {
+    const [isLoading, setIsLoading] = useState(true);
     const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
 
-        useEffect(() => {
-            // Function to fetch base pokemon data from the api
-            const fetchPokemonData = async (start, end) => {
-                try {
-                    // Grab pokemon data using start and end variables to determine which ones are being fetched
-                    const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${end - start}&offset=${start}`);
-                    // parse the data
-                    const data = await response.json();
+    useEffect(() => {
+        // Function to fetch base pokemon data from the api
+        const fetchPokemonData = async (start, end) => {
+            try {
+                // Grab pokemon data using start and end variables to determine which ones are being fetched
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${end - start}&offset=${start}`);
+                // parse the data
+                const data = await response.json();
 
-                    const pokemonUrls = data.results.map((pokemon) => pokemon.url);
-                    const pokemonData = await Promise.all(pokemonUrls.map((url) => fetch(url).then((response) => response.json())));
-                    setPokemonList((prevList) => [...prevList, ...pokemonData]);
+                const pokemonUrls = data.results.map((pokemon) => pokemon.url);
+                const pokemonData = await Promise.all(pokemonUrls.map((url) => fetch(url).then((response) => response.json())));
+                setPokemonList((prevList) => [...prevList, ...pokemonData]);
+                setIsLoading(false);
 
-                    // Fetch the remaining pokemon in the background
-                    const remainingPokemons = 1010 - end; // Total number of pokemon - initial batch
-                    const batchSize = 30;
+                // Fetch the remaining pokemon in the background
+                const remainingPokemons = 1010 - end; // Total number of pokemon - initial batch
+                const batchSize = 30;
 
-                    // If there are still unfetched pokemon, keep going
-                    if (remainingPokemons > 0) {
-                        // nextStart will be set to the current end so that we can start with the very next pokemon
-                        const nextStart = end;
-                        // nextEnd will be calculated based on current end and batchSize
-                        const nextEnd = Math.min(end + batchSize, 1010);
-                        // fetch the pokemon using the updated variables
-                        fetchPokemonData(nextStart, nextEnd);
-                    }
-                } catch (error) {
-                    console.error(`Error fetching pokemon data for range ${start} - ${end}:`, error)
+                // If there are still unfetched pokemon, keep going
+                if (remainingPokemons > 0) {
+                    // nextStart will be set to the current end so that we can start with the very next pokemon
+                    const nextStart = end;
+                    // nextEnd will be calculated based on current end and batchSize
+                    const nextEnd = Math.min(end + batchSize, 1010);
+                    // fetch the pokemon using the updated variables
+                    fetchPokemonData(nextStart, nextEnd);
                 }
-            };
+            } catch (error) {
+                console.error(`Error fetching pokemon data for range ${start} - ${end}:`, error)
+            }
+        };
 
-            // Fetch the initial 100 pokemon on app start
-            fetchPokemonData(0, 100);
-        }, []);
+        // Fetch the initial 100 pokemon on app start
+        fetchPokemonData(0, 500);
+    }, []);
+
+
+
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
 
 
     return (
