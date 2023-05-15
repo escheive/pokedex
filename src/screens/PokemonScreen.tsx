@@ -29,7 +29,7 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
                     <Text style={styles.pokemonName}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
                     <Image
                         style={styles.image}
-                        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
+                        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
                     />
                 </TouchableOpacity>
             </View>
