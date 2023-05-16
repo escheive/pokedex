@@ -113,15 +113,20 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
 
     const renderItem = ({ item: pokemon }: { item: Pokemon }) => {
         const screenWidth = Dimensions.get('window').width;
-        const itemWidth = screenWidth / 2 - 15;
+        // Width for two columns
+//         const itemWidth = screenWidth / 2 - 15;
+        // Width for one column
+        const itemWidth = screenWidth - 5;
 //         const typeData = typesData[pokemon.types[0].type.name];
 //         console.log(typeData)
         const backgroundColor = (getTypeStyle(pokemon.types[0].type.name)).backgroundColor;
         return (
             <View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
                 <TouchableOpacity style={styles.itemCard} onPress={() => handlePress(pokemon)}>
-                    <Text>{pokemon.id}</Text>
-                    <Text style={styles.pokemonName}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+                    <View style={styles.itemDetailsContainer}>
+                        <Text style={styles.pokemonId}>{pokemon.id}</Text>
+                        <Text style={styles.pokemonName}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+                    </View>
                     <Image
                         style={styles.image}
                         source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
@@ -142,7 +147,7 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
                 renderItem={renderItem}
                 keyExtractor={(item) => item.name}
                 contentContainerStyle={styles.listContainer}
-                numColumns={2}
+
             />
         );
     };
@@ -243,7 +248,9 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
         marginVertical: 10,
-        aspectRatio: 1,
+        // aspectRatio for two columns
+//         aspectRatio: 1,
+        aspectRatio: 3,
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
@@ -253,17 +260,32 @@ const styles = StyleSheet.create({
     },
     itemCard: {
         height: '100%',
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        paddingHorizontal: 20,
     },
-    itemName: {
-        fontSize: 18,
+    itemDetailsContainer: {
+        alignItems: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+    },
+    pokemonId: {
+        fontSize: 16,
+        color: 'white',
+        paddingRight: 20,
+    },
+    pokemonName: {
+        fontSize: 20,
         marginVertical: 5,
         color: 'white',
     },
     image: {
-        width: 100,
-        height: 100,
+//         width: 100,
+//         height: 100,
+        width: 75,
+        height: 75,
     },
 });
 
