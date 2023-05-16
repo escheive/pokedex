@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Image, Dimensions, Switch } from 'react-native';
+import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Image, Dimensions, Switch, TextInput } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Pokemon } from '../types';
 import { getTypeStyle } from '../utils/typeStyle';
@@ -25,10 +25,16 @@ const versionOptions = [
 const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
     const [excludeMetapod, setExcludeMetapod] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     // function to handle user press on a pokemon
     const handlePress = async (pokemon: Pokemon) => {
         navigation.navigate('Details', { pokemon });
+    };
+
+    // function to handle search query changes
+    const handleSearchQueryChange = (query) => {
+        setSearchQuery(query);
     };
 
     // function to handle selected generations for filter
@@ -77,8 +83,8 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
     };
 
     // function to handle the filtering of pokemon
-    const filterPokemonByVersions = (pokemonList: Pokemon[]) => {
-        if (selectedVersions.length === 0) {
+    const filterPokemonByVersions = (pokemonList: Pokemon[], searchQuery: string) => {
+        if (selectedVersions.length === 0 && !searchQuery) {
             return pokemonList;
         }
 
@@ -88,21 +94,21 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
                 const range = groupedVersions[generationKey];
                 return pokemon.id >= range.start && pokemon.id <= range.end;
             }
+
+            if (excludeMetapod && pokemon.name === 'metapod') {
+                return false;
+            }
+
+            if (searchQuery) {
+                const lowerCaseQuery = searchQuery.toLowerCase();
+                return pokemon.name.toLowerCase().includes(lowerCaseQuery);
+            }
+
             return false;
         });
     };
 
-    const filterPokemon = (pokemonList) => {
-        let filteredList = filterPokemonByVersions(pokemonList);
-
-        if (excludeMetapod) {
-            filteredList = filteredList.filter((pokemon) => pokemon.name !== 'metapod');
-        }
-
-        return filteredList;
-    };
-
-    const filteredPokemon = filterPokemon(pokemonList, selectedVersions);
+    const filteredPokemon = filterPokemonByVersions(pokemonList, searchQuery);
 
 
     const renderItem = ({ item: pokemon }: { item: Pokemon }) => {
@@ -145,6 +151,15 @@ return (
                             <Text style={styles.filterButtonText}>{range.label}</Text>
                         </TouchableOpacity>
                     ))}
+                </View>
+
+                <View style={styles.searchContainer}>
+                    <TextInput
+                        style={styles.searchInput}
+                        value={searchQuery}
+                        onChangeText={handleSearchQueryChange}
+                        placeholder="Search Pokemon"
+                    />
                 </View>
 
                 <View style={styles.excludeContainer}>
@@ -202,6 +217,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 10,
+    },
+    searchContainer: {
+        marginVertical: 10,
+    },
+    searchInput: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        paddingHorizontal: 25,
+        paddingVertical: 5,
     },
     listContainer: {
         padding: 5,
