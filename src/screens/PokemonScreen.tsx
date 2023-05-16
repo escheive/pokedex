@@ -118,7 +118,7 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
 return (
         <View style={styles.container}>
             <View style={styles.filterContainer}>
-                <Text>Filter by Versions:</Text>
+                <Text style={styles.filterTitleText}>Filter by Versions:</Text>
                 <View style={styles.filterButtonContainer}>
                     {versionOptions.map((range) => (
                         <TouchableOpacity
@@ -157,9 +157,13 @@ const styles = StyleSheet.create({
     filterContainer: {
         flexDirection: 'column',
         alignItems: 'center',
-        marginBottom: 10,
+        marginVertical: 10,
+    },
+    filterTitleText: {
+        fontSize: 18,
     },
     filterButtonContainer: {
+        marginTop: 10,
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
@@ -169,6 +173,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 5,
         marginHorizontal: 5,
+        marginVertical: 3,
     },
     filterButtonText: {
         color: 'white',
