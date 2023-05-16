@@ -11,15 +11,15 @@ type Props = {
 };
 
 const versionOptions = [
-    { key: 'red', label: 'Gen 1' },
-    { key: 'gold', label: 'Gen 2' },
-    { key: 'ruby', label: 'Gen 3' },
-    { key: 'diamond', label: 'Gen 4' },
-    { key: 'black', label: 'Gen 5' },
-    { key: 'x', label: 'Gen 6' },
-    { key: 'moon', label: 'Gen 7' },
-    { key: 'sword', label: 'Gen 8' },
-    { key: 'scarlet', label: 'Gen 9' },
+    { key: 'gen1', label: 'Gen 1' },
+    { key: 'gen2', label: 'Gen 2' },
+    { key: 'gen3', label: 'Gen 3' },
+    { key: 'gen4', label: 'Gen 4' },
+    { key: 'gen5', label: 'Gen 5' },
+    { key: 'gen6', label: 'Gen 6' },
+    { key: 'gen7', label: 'Gen 7' },
+    { key: 'gen8', label: 'Gen 8' },
+    { key: 'gen9', label: 'Gen 9' },
 ];
 
 const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
@@ -39,28 +39,29 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
 //         }
 //     };
 
+    const groupedVersions = {
+            gen1: { start: 1, end: 151 },
+            gen2: { start: 152, end: 251 },
+            gen3: { start: 252, end: 386 },
+            gen4: { start: 387, end: 493 },
+            gen5: { start: 494, end: 649 },
+            gen6: { start: 650, end: 721 },
+            gen7: { start: 722, end: 809 },
+            gen8: { start: 810, end: 905 },
+            gen9: { start: 906, end: 1010 },
+          };
 
     const handleVersionSelect = (version: string) => {
       let updatedVersions: string[] = [];
-      const groupedVersions = {
-        red: ['red', 'blue', 'yellow'],
-        gold: ['gold', 'silver', 'crystal'],
-        ruby: ['ruby', 'sapphire', 'emerald'],
-        diamond: ['diamond', 'pearl', 'platinum'],
-        black: ['black', 'white'],
-        x: ['x', 'y'],
-        moon: ['moon', 'sun'],
-        sword: ['sword', 'shield'],
-        scarlet: ['scarlet', 'violet'],
-      };
+
 
       if (groupedVersions.hasOwnProperty(version)) {
         // If the selected version is a grouped version, handle it accordingly
-        const versionsToAdd = groupedVersions[version];
+        const range = groupedVersions[version];
         if (selectedVersions.includes(version)) {
-          updatedVersions = selectedVersions.filter((v) => !versionsToAdd.includes(v));
+          updatedVersions = selectedVersions.filter((v) => !v.includes(v));
         } else {
-          updatedVersions = [...selectedVersions, ...versionsToAdd];
+          updatedVersions = [...selectedVersions, version];
         }
       } else {
         // If the selected version is not a grouped version, handle it as usual
@@ -81,11 +82,12 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
         }
 
         return pokemonList.filter((pokemon) => {
-            if (pokemon.game_indices.length === 0) {
-                return false;
+            const generationKey = selectedVersions.find((v) => groupedVersions.hasOwnProperty(v));
+            if (generationKey) {
+                const range = groupedVersions[generationKey];
+                return pokemon.id >= range.start && pokemon.id <= range.end;
             }
-
-            return selectedVersions.includes(pokemon.game_indices[0].version.name)
+            return false;
         });
     };
 
