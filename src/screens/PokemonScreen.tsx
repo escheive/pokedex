@@ -131,8 +131,24 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
         );
     };
 
+    const renderPokemonList = () => {
+        if (filteredPokemon.length === 0) {
+            return <Text>There are no results for {searchQuery}</Text>
+        }
 
-return (
+        return (
+            <FlatList
+                data={filteredPokemon}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.name}
+                contentContainerStyle={styles.listContainer}
+                numColumns={2}
+            />
+        );
+    };
+
+
+    return (
         <View style={styles.container}>
             <View style={styles.filterContainer}>
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
@@ -171,13 +187,7 @@ return (
                 </View>
 
             </View>
-            <FlatList
-                data={filteredPokemon}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.name}
-                contentContainerStyle={styles.listContainer}
-                numColumns={2}
-            />
+            {renderPokemonList()}
         </View>
     );
 };
