@@ -24,6 +24,7 @@ const versionOptions = [
 
 const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
+    const [excludeMetapod, setExcludeMetapod] = useState(false);
 
     // function to handle user press on a pokemon
     const handlePress = async (pokemon: Pokemon) => {
@@ -76,7 +77,7 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
     };
 
     // function to handle the filtering of pokemon
-    const filterPokemonByVersions = (pokemonList: Pokemon[], selectedVersions: string[]) => {
+    const filterPokemonByVersions = (pokemonList: Pokemon[]) => {
         if (selectedVersions.length === 0) {
             return pokemonList;
         }
@@ -91,7 +92,17 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
         });
     };
 
-    const filteredPokemon = filterPokemonByVersions(pokemonList, selectedVersions);
+    const filterPokemon = (pokemonList) => {
+        let filteredList = filterPokemonByVersions(pokemonList);
+
+        if (excludeMetapod) {
+            filteredList = filteredList.filter((pokemon) => pokemon.name !== 'metapod');
+        }
+
+        return filteredList;
+    };
+
+    const filteredPokemon = filterPokemon(pokemonList, selectedVersions);
 
 
     const renderItem = ({ item: pokemon }: { item: Pokemon }) => {
@@ -135,6 +146,15 @@ return (
                         </TouchableOpacity>
                     ))}
                 </View>
+
+                <View style={styles.excludeContainer}>
+                    <Text>Exclude Metapod:</Text>
+                    <Switch
+                        value={excludeMetapod}
+                        onValueChange={(value) => setExcludeMetapod(value)}
+                    />
+                </View>
+
             </View>
             <FlatList
                 data={filteredPokemon}
@@ -177,6 +197,11 @@ const styles = StyleSheet.create({
     },
     filterButtonText: {
         color: 'white',
+    },
+    excludeContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 10,
     },
     listContainer: {
         padding: 5,
