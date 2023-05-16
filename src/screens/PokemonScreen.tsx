@@ -59,7 +59,7 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
         // If the selected version is a grouped version, handle it accordingly
         const range = groupedVersions[version];
         if (selectedVersions.includes(version)) {
-          updatedVersions = selectedVersions.filter((v) => !v.includes(v));
+          updatedVersions = selectedVersions.filter((v) => v !== version);
         } else {
           updatedVersions = [...selectedVersions, version];
         }
