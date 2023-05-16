@@ -1,11 +1,12 @@
 // Dependencies
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 // Components
 import PokemonStats from '../components/PokemonStats';
 import PillBar from '../components/PillBar';
+import PokemonCard from '../components/PokemonCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Utils
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
@@ -36,9 +37,6 @@ type DetailsScreenProps = {
 const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     // Grab our pokemon data that was pulled in our app.tsx from params
     const { pokemon } = route.params;
-    // Grab the dimensions of the device for sizing of components
-    const windowHeight = Dimensions.get('window').height;
-    const windowWidth = Dimensions.get('window').width;
     // useState to update if a pokemon was favorited or unfavorited without refreshing
     const [isFavorite, setIsFavorite] = useState(false);
     // useState to track pokemonAbilities for each individual pokemon when their page is pulled up
@@ -57,28 +55,22 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [additionalData, setAdditionalData] = useState(null);
 
 
+    grabPokemonColors = async () => {
+        for(const type of pokemon.types) {
+            pokemonColors.push((getTypeStyle(type.type.name)))
+        }
+        console.log(pokemonColors)
+    }
+    grabPokemonColors();
+
     // Function to handlePress of the previous evolution button in top left corner
     const handlePress = async (pokemonId) => {
-        // Create a cache key based on the pokemons id
-        const cacheKey = `pokemon_${pokemonId}`;
 
-        // Check if the pokemon data is already cached
-        const cachedData = await AsyncStorage.getItem(cacheKey);
-        if (cachedData) {
-            // If cached data is found, parse it and navigate to the details page
-            const pokemon = JSON.parse(cachedData);
-            navigation.navigate('Details', { pokemon });
-            return;
-        }
-
-        console.log('api request')
         // If the pokemon data is not cached, fetch it
         const pokemonResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}/`);
         // parse the returned api response and extract the JSON data
         const pokemon = await pokemonResponse.json();
 
-        // Cache the fetched Pokemon data
-        await AsyncStorage.setItem(cacheKey, JSON.stringify(pokemon));
         // Navigate to the details page with the fetched pokemon data
         navigation.navigate('Details', { pokemon });
     }
@@ -189,11 +181,11 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
 
     // Function to take the pokemons types, run function to get the corresponding color and then create an array of colors based on types
-    const getTypeBackgroundStyle = (types: TypeProps[]) => {
-        const stylesArray = types.map((type) => getTypeStyle(type.type.name));
-        pokemonColors.push(stylesArray[0].backgroundColor)
-        return stylesArray.filter(style => Object.keys(style).length > 0);
-    };
+//     const getTypeBackgroundStyle = (types: TypeProps[]) => {
+//         const stylesArray = types.map((type) => getTypeStyle(type.type.name));
+//         pokemonColors.push(stylesArray[0].backgroundColor)
+//         return stylesArray.filter(style => Object.keys(style).length > 0);
+//     };
 
     // Function to take the pokemons types, and grab the info for that type
     const getTypeInfo = async (typesArr: TypeProps[]) => {
@@ -252,133 +244,14 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     });
 
     // Variables to track the pokemons colors
-    const stylesArray = getTypeBackgroundStyle(pokemon.types);
-    pokemonColors = stylesArray.map((style) => style.backgroundColor);
-    const gradientColors = pokemonColors.length < 2 ? [pokemonColors[0], '#FFFFFF'] : pokemonColors;
+//     const stylesArray = getTypeBackgroundStyle(pokemon.types);
+//     pokemonColors = stylesArray.map((style) => style.backgroundColor);
+//     const gradientColors = pokemonColors.length < 2 ? [pokemonColors[0], '#FFFFFF'] : pokemonColors;
 
     // Stylesheet for this screen
     const styles = StyleSheet.create({
         container: {
             height: '100%',
-        },
-        card: {
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            height: windowHeight * 0.75,
-            borderWidth: 10,
-            borderColor: '#5C6B7C',
-            overflow: 'hidden',
-            marginBottom: 20,
-            fontFamily: 'Arial, sans-serif',
-        },
-        imageContainer: {
-            backgroundColor: 'white',
-            height: '50%',
-            width: '100%',
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center'
-        },
-        image: {
-            width: '110%',
-            height: '110%',
-            resizeMode: 'contain',
-        },
-        nextPokemonButton: {
-            position: 'absolute',
-            top: '45%',
-            right: 0,
-        },
-        prevPokemonButton: {
-            position: 'absolute',
-            top: '45%',
-            left: 0,
-        },
-        idContainer: {
-            position: 'absolute',
-            top: 10,
-            right: 10,
-            borderRadius: 50,
-            backgroundColor: '#5C6B7C',
-            padding: 1,
-            width: 60,
-            height: 60,
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-        idText: {
-            color: 'white',
-            fontSize: 22,
-            fontWeight: 'bold',
-        },
-        evolutionContainer: {
-            position: 'absolute',
-            top: 10,
-            left: 10,
-            borderRadius: 50,
-            backgroundColor: '#5C6B7C',
-            padding: 1,
-            width: 60,
-            height: 60,
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-        evolutionImage: {
-            width: '100%',
-            height: '100%',
-            resizeMode: 'contain',
-        },
-        bottomOfCard: {
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            backgroundColor: '#E0E0E0',
-            padding: 20,
-            paddingTop: 15,
-            height: '50%',
-            width: '100%',
-        },
-        heading: {
-            fontSize: (30 - (pokemon.name.length + pokemon.types[0].type.name.length) / 4),
-            fontWeight: 'bold',
-            alignSelf: 'flex-start',
-        },
-        nameContainer: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingBottom: 8,
-        },
-        pokedexEntry: {
-            fontSize: 16,
-            marginBottom: 12,
-        },
-        typesContainer: {
-            flexDirection: 'row',
-            justifyContent: 'center',
-            marginLeft: 16,
-        },
-        type: {
-            paddingVertical: 9,
-            paddingHorizontal: 16,
-            borderRadius: 32,
-            marginRight: 8,
-            flexShrink: 1,
-        },
-        strengthWeaknessColumnContainer: {
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            marginTop: 2,
-        },
-        strengthWeaknessColumn: {
-            flex: 0,
-            flexDirection: 'row',
-            alignItems: 'center',
-        },
-        strengthWeaknessColumnHeading: {
-            fontSize: 18,
-            fontWeight: 'bold',
-            marginBottom: 10,
         },
         navContainer: {
             flexDirection: 'row',
@@ -484,86 +357,20 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
                 <>
-                    <View style={styles.card}>
-                        <View style={styles.imageContainer}>
-                            <Image
-                                style={styles.image}
-                                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }}
-                            />
-                            <View style={styles.idContainer}>
-                                <Text style={styles.idText}>{pokemon.id > 100 ? pokemon.id : pokemon.id > 10 ? "0" + pokemon.id : "00" + pokemon.id }</Text>
-                            </View>
-                            {pokedexEntry.evolvesFrom !== null && (
-                            <TouchableOpacity style={styles.evolutionContainer} onPress={() => handlePrevEvolution(pokemon.id)}>
-                                <Image
-                                    style={styles.evolutionImage}
-                                    source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id-1}.png` }}
-                                />
-                            </TouchableOpacity>
-                            )}
-
-                            <TouchableOpacity
-                                style={styles.prevPokemonButton}
-                                onPress={() => handlePress(pokemon.id - 1 > 0 ? pokemon.id - 1 : 1010)}
-                            >
-                                <Ionicons name="chevron-back-outline" size={50} color="black" />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.nextPokemonButton}
-                                onPress={() => handlePress((pokemon.id + 1 <= 1010 ? pokemon.id + 1 : 1))}
-                            >
-                                <Ionicons name="chevron-forward-outline" size={50} color="black" />
-                            </TouchableOpacity>
-
-                        </View>
-
-                        <View style={styles.bottomOfCard}>
-                            <View style={styles.nameContainer}>
-                                <Text style={styles.heading}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
-                                <View style={styles.typesContainer}>
-                                    {pokemon.types.map((type) => (
-                                        <View key={type.type.name} style={[styles.type, ...getTypeBackgroundStyle([type])]}>
-                                            <Text style={{ color: getTypeStyle(type.type.name).color, fontSize: 18, fontWeight: '600' }}>
-                                                {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
-                                            </Text>
-                                        </View>
-                                    ))}
-                                </View>
-                            </View>
-                            <View>
-                                <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
-                            </View>
-                            <View style={styles.strengthWeaknessColumnContainer}>
-                                <View style={styles.strengthWeaknessColumn}>
-                                    <Text style={styles.strengthWeaknessColumnHeading}>Strong Against</Text>
-                                    <View>
-                                    </View>
-                                </View>
-                                <View style={styles.strengthWeaknessColumn}>
-                                    <Text style={styles.strengthWeaknessColumnHeading}>Weak Against</Text>
-                                    <View>
-                                    </View>
-                                </View>
-                                <View style={styles.strengthWeaknessColumn}>
-                                    <Text style={styles.strengthWeaknessColumnHeading}>No Damage From</Text>
-                                    <View>
-                                    </View>
-                                </View>
-                                <View style={styles.strengthWeaknessColumn}>
-                                    <Text style={styles.strengthWeaknessColumnHeading}>No Damage To</Text>
-                                    <View>
-                                    </View>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
+                    <PokemonCard
+                        pokemon={pokemon}
+                        pokedexEntry={pokedexEntry}
+                        handlePress={handlePress}
+                        handlePrevEvolution={handlePrevEvolution}
+                        pokemonColors={pokemonColors}
+                    />
 
                     <View style={styles.navContainer}>
                         <TouchableOpacity
                             style={[
                                 styles.navItem,
-                                selectedTab === 'stats' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
-                                selectedTab !== 'stats' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1] } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                                selectedTab === 'stats' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
+                                selectedTab !== 'stats' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
                             onPress={() => setSelectedTab('stats')}
                         >
@@ -572,8 +379,8 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                         <TouchableOpacity
                             style={[
                                 styles.navItem,
-                                selectedTab === 'about' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
-                                selectedTab !== 'about' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1] } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                                selectedTab === 'about' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
+                                selectedTab !== 'about' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
                             onPress={() => setSelectedTab('about')}
                         >
@@ -582,8 +389,8 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                         <TouchableOpacity
                             style={[
                                 styles.navItem,
-                                selectedTab === 'moves' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0] }],
-                                selectedTab !== 'moves' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1] } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                                selectedTab === 'moves' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
+                                selectedTab !== 'moves' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
                             onPress={() => setSelectedTab('moves')}
                         >
