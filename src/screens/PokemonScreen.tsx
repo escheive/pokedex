@@ -125,7 +125,14 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
                 <TouchableOpacity style={styles.itemCard} onPress={() => handlePress(pokemon)}>
                     <View style={styles.itemDetailsContainer}>
                         <Text style={styles.pokemonId}>{pokemon.id}</Text>
-                        <Text style={styles.pokemonName}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+                        <View style={styles.pokemonNameAndTypeContainer}>
+                            <Text style={styles.pokemonName}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+                            <View style={styles.pokemonTypesContainer}>
+                                {pokemon.types.map((type) => (
+                                    <Text style={styles.pokemonType}>{type.type.name}</Text>
+                                ))}
+                            </View>
+                        </View>
                     </View>
                     <Image
                         style={styles.image}
@@ -200,8 +207,6 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: 'white',
     },
     filterContainer: {
@@ -244,19 +249,18 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
     },
     listContainer: {
-        padding: 5,
+        alignItems: 'center',
     },
     itemContainer: {
         marginVertical: 10,
         // aspectRatio for two columns
 //         aspectRatio: 1,
-        aspectRatio: 3,
+        aspectRatio: 5,
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
-        margin: 5,
     },
     itemCard: {
         height: '100%',
@@ -274,12 +278,28 @@ const styles = StyleSheet.create({
     pokemonId: {
         fontSize: 16,
         color: 'white',
-        paddingRight: 20,
+        paddingRight: 40,
+    },
+    pokemonNameAndTypeContainer: {
+//         paddingRight: 10,
     },
     pokemonName: {
         fontSize: 20,
-        marginVertical: 5,
+        marginBottom: 10,
         color: 'white',
+    },
+    pokemonTypesContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    pokemonType: {
+        fontSize: 16,
+        paddingHorizontal: 20,
+        marginRight: 15,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 10,
+        textAlign: 'center',
     },
     image: {
 //         width: 100,
