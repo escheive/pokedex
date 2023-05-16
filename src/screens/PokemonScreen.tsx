@@ -91,7 +91,6 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
         });
     };
 
-
     const filteredPokemon = filterPokemonByVersions(pokemonList, selectedVersions);
 
 
@@ -115,23 +114,35 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
         );
     };
 
+//     {versionOptions.map((option) => (
+//                         <View key={option.key} style={styles.switchContainer}>
+//                             <Switch
+//                                 value={selectedVersions.includes(option.key)}
+//                                 onValueChange={() => handleVersionSelect(option.key)}
+//                             />
+//                             <Text>{option.label}</Text>
+//                       </View>
+//                     ))}
+
 
 return (
         <View style={styles.container}>
             <View style={styles.filterContainer}>
                 <Text>Filter by Versions:</Text>
-                {versionOptions.map((option) => (
-                    <View key={option.key} style={styles.switchContainer}>
-                        <Switch
-                            value={selectedVersions.includes(option.key)}
-                            onValueChange={() => handleVersionSelect(option.key)}
-                        />
-                        <Text>{option.label}</Text>
-                  </View>
+                {versionOptions.map((range) => (
+                    <TouchableOpacity
+                        key={range.key}
+                        style={[
+                            styles.rangeButton,
+                            {
+                                backgroundColor: selectedVersions.includes(range.key) ? 'blue' : 'gray',
+                            },
+                        ]}
+                        onPress={() => handleVersionSelect(range.key)}
+                    >
+                        <Text style={styles.rangeButtonText}>{range.label}</Text>
+                    </TouchableOpacity>
                 ))}
-
-
-
             </View>
             <FlatList
                 data={filteredPokemon}
