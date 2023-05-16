@@ -11,6 +11,7 @@ type Props = {
 };
 
 const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
+    const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 
     const handlePress = async (pokemon: Pokemon) => {
         navigation.navigate('Details', { pokemon });
