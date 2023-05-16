@@ -114,35 +114,27 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
         );
     };
 
-//     {versionOptions.map((option) => (
-//                         <View key={option.key} style={styles.switchContainer}>
-//                             <Switch
-//                                 value={selectedVersions.includes(option.key)}
-//                                 onValueChange={() => handleVersionSelect(option.key)}
-//                             />
-//                             <Text>{option.label}</Text>
-//                       </View>
-//                     ))}
-
 
 return (
         <View style={styles.container}>
             <View style={styles.filterContainer}>
                 <Text>Filter by Versions:</Text>
-                {versionOptions.map((range) => (
-                    <TouchableOpacity
-                        key={range.key}
-                        style={[
-                            styles.rangeButton,
-                            {
-                                backgroundColor: selectedVersions.includes(range.key) ? 'blue' : 'gray',
-                            },
-                        ]}
-                        onPress={() => handleVersionSelect(range.key)}
-                    >
-                        <Text style={styles.rangeButtonText}>{range.label}</Text>
-                    </TouchableOpacity>
-                ))}
+                <View style={styles.filterButtonContainer}>
+                    {versionOptions.map((range) => (
+                        <TouchableOpacity
+                            key={range.key}
+                            style={[
+                                styles.filterButton,
+                                {
+                                    backgroundColor: selectedVersions.includes(range.key) ? 'blue' : 'gray',
+                                },
+                            ]}
+                            onPress={() => handleVersionSelect(range.key)}
+                        >
+                            <Text style={styles.filterButtonText}>{range.label}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
             </View>
             <FlatList
                 data={filteredPokemon}
@@ -163,13 +155,23 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     filterContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
+        marginBottom: 10,
     },
-    switchContainer: {
+    filterButtonContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
-        marginHorizontal: 10,
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    },
+    filterButton: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+        marginHorizontal: 5,
+    },
+    filterButtonText: {
+        color: 'white',
     },
     listContainer: {
         padding: 5,
