@@ -173,20 +173,44 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
             },
             modalContainer: {
                 flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: pokemonColors[0].backgroundColor,
+                justifyContent: 'flex-end',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
               },
+            modalContent: {
+                alignItems: 'center',
+                width: '100%',
+                height: '30%',
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
+            },
               modalTitle: {
+                textAlign: 'center',
+                width: '100%',
                 fontSize: 24,
                 fontWeight: 'bold',
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
+                backgroundColor: pokemonColors[0].backgroundColor,
                 color: 'white',
-                marginBottom: 16,
+                paddingVertical: 16,
               },
-              modalDescription: {
+              modalDefinitionContainer: {
+                backgroundColor: '#fff',
+                width: '100%',
+                height: '100%',
+                alignItems: 'center',
+                paddingTop: 40,
+                paddingHorizontal: 10,
+              },
+              modalDefinition: {
                 fontSize: 18,
-                color: 'white',
-                marginBottom: 24,
+                color: 'gray',
+                padding: 10,
+                width: '100%',
+                backgroundColor: '#eee',
+                borderRadius: 12,
+                textAlign: 'center',
+                marginBottom: 10,
               },
               closeButton: {
                 padding: 8,
@@ -219,7 +243,8 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
     const handleAbilitySelect = (ability) => {
         setSelectedAbility(ability)
     };
-    console.log(pokemonAbilities)
+
+    console.log(selectedAbility)
 
     return (
         <View style={styles.card}>
@@ -269,16 +294,20 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
                 ))}
 
                 <Modal visible={selectedAbility !== null} animationType="slide">
-                  <View style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>{selectedAbility?.name}</Text>
-                    <Text style={styles.modalDescription}>{selectedAbility?.description}</Text>
-                    <TouchableOpacity
-                      style={styles.closeButton}
-                      onPress={() => setSelectedAbility(null)}
-                    >
-                      <Text style={styles.closeButtonText}>Close</Text>
-                    </TouchableOpacity>
-                  </View>
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalTitle}>{selectedAbility?.name}</Text>
+                            <View style={styles.modalDefinitionContainer}>
+                                <Text style={styles.modalDefinition}>{selectedAbility?.definition}</Text>
+                                <TouchableOpacity
+                                    style={styles.closeButton}
+                                    onPress={() => setSelectedAbility(null)}
+                                >
+                                    <Text style={styles.closeButtonText}>Close</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
                 </Modal>
 
             </View>
