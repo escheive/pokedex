@@ -173,16 +173,15 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
             },
             modalContainer: {
                 flex: 1,
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
+                alignItems: 'center',
                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
               },
             modalContent: {
                 alignItems: 'center',
                 backgroundColor: '#ccc',
-                width: '100%',
-                height: '30%',
-                borderTopLeftRadius: 16,
-                borderTopRightRadius: 16,
+                width: '90%',
+                borderRadius: 16,
             },
               modalTitle: {
                 textAlign: 'center',
@@ -198,30 +197,19 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
               modalDefinitionContainer: {
                 backgroundColor: '#fff',
                 width: '100%',
-                height: '100%',
                 alignItems: 'center',
-                paddingTop: 40,
                 paddingHorizontal: 10,
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
               },
               modalDefinition: {
                 fontSize: 18,
                 color: 'gray',
                 padding: 10,
                 width: '100%',
-                backgroundColor: '#eee',
                 borderRadius: 12,
                 textAlign: 'center',
-                marginBottom: 10,
-              },
-              closeButton: {
-                padding: 8,
-                backgroundColor: 'white',
-                borderRadius: 8,
-              },
-              closeButtonText: {
-                fontSize: 16,
-                fontWeight: 'bold',
-                color: 'black',
+                marginVertical: 30,
               },
         });
 
@@ -294,7 +282,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
                     </TouchableOpacity>
                 ))}
 
-                <Modal visible={selectedAbility !== null} animationType="slide" transparent>
+                <Modal visible={selectedAbility !== null} animationType="fade" transparent>
                     <TouchableOpacity
                         style={styles.modalContainer}
                         activeOpacity={1}
