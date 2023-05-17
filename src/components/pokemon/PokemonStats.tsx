@@ -5,7 +5,7 @@ import PillBar from '../PillBar';
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 5,
+    margin: 10,
     backgroundColor: '#eee',
     borderRadius: 15,
     padding: 10,
