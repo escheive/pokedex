@@ -70,13 +70,14 @@ function calculateMinMaxStats(baseStats, level, ivs, evs, nature) {
     Object.keys(baseStats).forEach((stat) => {
         // baseStat variable will be equal to the numerical value of the base_stat
         const baseStat = baseStats[stat].base_stat;
+        const statName = baseStats[stat].stat.name;
         // Effort values and individual values default to 0
         const iv = ivs || 0;
         const ev = evs || 0;
 
         let maxStat = Math.floor(((2 * baseStat + iv + Math.floor(ev / 4)) * level) / 100) + 5;
 
-        if (baseStats[stat].stat.name !== "hp") {
+        if (statName !== "hp") {
             if (nature === 'max') {
                 maxStat = Math.floor(maxStat * 1.1)
             } else {
@@ -86,19 +87,21 @@ function calculateMinMaxStats(baseStats, level, ivs, evs, nature) {
             maxStat += level + 5
         }
 
-        maxStats[stat] = maxStat;
+        maxStats[statName] = maxStat;
     });
 
     return maxStats;
 }
 
 const PokemonStats = ({ pokemonColors, pokemon }) => {
+    // useState for selected stat value tab
     const [selectedTab, setSelectedTab] = useState('base');
     const [calculatedStats, setCalculatedStats] = useState({})
     const [highestStat, setHighestStat] = useState(0)
 
 
     useEffect(() => {
+        // Based on your tab, calculate stats
         if (selectedTab === 'base') {
             setCalculatedStats({});
         } else if (selectedTab === 'min') {
@@ -106,19 +109,23 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
         } else if (selectedTab === 'max') {
             setCalculatedStats(calculateMinMaxStats(pokemon.stats, 100, 31, 252, 'max'));
         }
+
+        // This resets highestStat on tab switch so when you go back to a lower level it doesnt keep that same high limit
+        setHighestStat(0);
     }, [selectedTab, pokemon.stats]);
 
 
     const renderStatItem = ({ item }) => {
         let statValue = item.base_stat
-        if (statValue > highestStat) {
-            setHighestStat(statValue)
-        }
 
         if (selectedTab === 'min' && calculatedStats[item.stat.name]) {
-            statValue = calculatedStats[item.stat.name].min;
+            statValue = calculatedStats[item.stat.name];
         } else if (selectedTab === 'max' && calculatedStats[item.stat.name]) {
-            statValue = calculatedStats[item.stat.name].max;
+            statValue = calculatedStats[item.stat.name];
+        }
+
+        if (statValue > highestStat) {
+            setHighestStat(statValue)
         }
 
         return  (
