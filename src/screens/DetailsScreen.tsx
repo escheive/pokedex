@@ -4,9 +4,9 @@ import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableO
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 // Components
-import PokemonStats from '../components/PokemonStats';
+import PokemonStats from '../components/pokemon/PokemonStats';
 import PillBar from '../components/PillBar';
-import PokemonCard from '../components/PokemonCard';
+import PokemonCard from '../components/pokemon/PokemonCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Utils
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';

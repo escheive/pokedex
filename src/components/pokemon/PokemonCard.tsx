@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { getTypeStyle } from '../utils/typeStyle';
+import { getTypeStyle } from '../../utils/typeStyle';
 
 const PokemonCard = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution, getTypeBackgroundStyle, pokemonColors }) => {
 

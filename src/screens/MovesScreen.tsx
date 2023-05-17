@@ -5,9 +5,10 @@ import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableO
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 // Components
-import PokemonStats from '../components/PokemonStats';
+import PokemonStats from '../components/pokemon/PokemonStats';
 import PillBar from '../components/PillBar';
-import PokemonCard from '../components/PokemonCard';
+import PokemonCard from '../components/pokemon/PokemonCard';
+import PokemonImage from '../components/pokemon/PokemonImage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Utils
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
@@ -357,12 +358,8 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
                 <>
-                    <PokemonCard
+                    <PokemonImage
                         pokemon={pokemon}
-                        pokedexEntry={pokedexEntry}
-                        handlePress={handlePress}
-                        handlePrevEvolution={handlePrevEvolution}
-                        pokemonColors={pokemonColors}
                     />
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native';
 // Components
-import PillBar from './PillBar';
+import PillBar from '../PillBar';
 
 const styles = StyleSheet.create({
   container: {
