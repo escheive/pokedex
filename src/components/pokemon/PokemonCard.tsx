@@ -178,6 +178,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
               },
             modalContent: {
                 alignItems: 'center',
+                backgroundColor: '#ccc',
                 width: '100%',
                 height: '30%',
                 borderTopLeftRadius: 16,
@@ -294,8 +295,11 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
                 ))}
 
                 <Modal visible={selectedAbility !== null} animationType="slide" transparent>
-                
-                    <View style={styles.modalContainer}>
+                    <TouchableOpacity
+                        style={styles.modalContainer}
+                        activeOpacity={1}
+                        onPress={() => setSelectedAbility(null)}
+                    >
                         <View style={styles.modalContent}>
                             <Text style={styles.modalTitle}>{selectedAbility?.name}</Text>
                             <View style={styles.modalDefinitionContainer}>
@@ -308,7 +312,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
                                 </TouchableOpacity>
                             </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </Modal>
 
             </View>
