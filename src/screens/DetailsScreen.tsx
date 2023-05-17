@@ -286,6 +286,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                     <PokemonCard
                         pokemon={pokemon}
                         pokedexEntry={pokedexEntry}
+                        pokemonAbilities={pokemonAbilities}
                         handlePress={handlePress}
                         pokemonColors={pokemonColors}
                     />

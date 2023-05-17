@@ -3,7 +3,7 @@ import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'rea
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getTypeStyle } from '../../utils/typeStyle';
 
-const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyle, pokemonColors }) => {
+const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, getTypeBackgroundStyle, pokemonColors }) => {
 
     // Grab the dimensions of the device for sizing of components
     const windowHeight = Dimensions.get('window').height;
@@ -153,6 +153,23 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
                 paddingVertical: 10,
                 marginBottom: 8,
             },
+            abilitiesTitle: {
+                fontSize: 18,
+                marginBottom: 10,
+            },
+            abilityContainer: {
+                width: '90%',
+                backgroundColor: pokemonColors[0].backgroundColor,
+                borderWidth: 1,
+                borderColor: '#ccc',
+                borderRadius: 15,
+                alignItems: 'center',
+                marginBottom: 15,
+                padding: 5,
+            },
+            abilityItem: {
+                fontSize: 16,
+            },
         });
 
 
@@ -170,6 +187,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
 //                                 <Text style={styles.pokedexCardEntryInfo}>{pokedexEntry.habitat}</Text>
 //                             </View>
 //                         </View>
+    console.log(pokemonAbilities)
 
     return (
         <View style={styles.card}>
@@ -207,7 +225,13 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
                 </View>
 
                 <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
+                <Text style={styles.abilitiesTitle}>Abilities</Text>
+                {pokemonAbilities.map((ability) => (
+                    <View key={ability.name} style={styles.abilityContainer}>
+                        <Text style={styles.abilityItem}>{ability.name}</Text>
 
+                    </View>
+                ))}
 
             </View>
         </View>
