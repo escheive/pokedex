@@ -84,7 +84,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
             },
             bottomOfCard: {
                 flexDirection: 'column',
-                alignItems: 'flex-start',
+                alignItems: 'center',
                 padding: 20,
                 paddingTop: 15,
                 height: '50%',
@@ -104,12 +104,17 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
             nameContainer: {
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center',
+                justifyContent: 'flex-start',
+                width: '100%',
                 paddingBottom: 8,
             },
             pokedexEntry: {
                 fontSize: 16,
                 marginBottom: 12,
+                borderWidth: 1,
+                borderColor: '#ccc',
+                borderRadius: 10,
+                padding: 5,
             },
             typesContainer: {
                 flexDirection: 'row',
@@ -117,26 +122,34 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
                 marginLeft: 16,
             },
             type: {
-                paddingVertical: 9,
+                paddingVertical: 3,
                 paddingHorizontal: 16,
                 borderRadius: 32,
                 marginRight: 8,
                 flexShrink: 1,
             },
-            strengthWeaknessColumnContainer: {
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                marginTop: 2,
-            },
-            strengthWeaknessColumn: {
-                flex: 0,
+            pokedexCardColumnsContainer: {
+                width: '80%',
                 flexDirection: 'row',
-                alignItems: 'center',
+                justifyContent: 'space-between',
             },
-            strengthWeaknessColumnHeading: {
-                fontSize: 18,
-                fontWeight: 'bold',
-                marginBottom: 10,
+            pokedexCardColumn: {
+                flexDirection: 'column',
+            },
+            pokedexCardEntryTitle: {
+                color: '#999',
+                textAlign: 'left',
+                paddingLeft: 6,
+            },
+            pokedexCardEntryInfo: {
+                width: '100%',
+                textAlign: 'center',
+                borderWidth: 1,
+                borderColor: '#ccc',
+                borderRadius: 10,
+                paddingHorizontal: 10,
+                paddingVertical: 8,
+                marginBottom: 8,
             },
         });
 
@@ -178,25 +191,18 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
                 <View>
                     <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
                 </View>
-                <View style={styles.strengthWeaknessColumnContainer}>
-                    <View style={styles.strengthWeaknessColumn}>
-                        <Text style={styles.strengthWeaknessColumnHeading}>Strong Against</Text>
-                        <View>{/* Render the content for "Strong Against" */}</View>
+                <View style={styles.pokedexCardColumnsContainer}>
+                    <View style={styles.pokedexCardColumn}>
+                        <Text style={styles.pokedexCardEntryTitle}>Height</Text>
+                        <Text style={styles.pokedexCardEntryInfo}>{Math.floor((pokemon.height * 3.937) / 12)}'{Math.round((pokemon.height * 3.937) % 12)}" ({pokemon.height / 10} m)</Text>
+                        <Text style={styles.pokedexCardEntryTitle}>Weight</Text>
+                        <Text style={styles.pokedexCardEntryInfo}>{(pokemon.weight / 4.536).toFixed(0)} lbs ({pokemon.weight / 10} kg)</Text>
                     </View>
-                    <View style={styles.strengthWeaknessColumn}>
-                        <Text style={styles.strengthWeaknessColumnHeading}>Weak Against</Text>
-                        <View>
-                        </View>
-                    </View>
-                    <View style={styles.strengthWeaknessColumn}>
-                        <Text style={styles.strengthWeaknessColumnHeading}>No Damage From</Text>
-                        <View>
-                        </View>
-                    </View>
-                    <View style={styles.strengthWeaknessColumn}>
-                        <Text style={styles.strengthWeaknessColumnHeading}>No Damage To</Text>
-                        <View>
-                        </View>
+                    <View style={styles.pokedexCardColumn}>
+                        <Text style={styles.pokedexCardEntryTitle}>Species</Text>
+                        <Text style={styles.pokedexCardEntryInfo}>{pokedexEntry.genus}</Text>
+                        <Text style={styles.pokedexCardEntryTitle}>Habitat</Text>
+                        <Text style={styles.pokedexCardEntryInfo}>{pokedexEntry.habitat}</Text>
                     </View>
                 </View>
             </View>
