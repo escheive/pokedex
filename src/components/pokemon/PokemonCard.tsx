@@ -293,7 +293,8 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
                     </TouchableOpacity>
                 ))}
 
-                <Modal visible={selectedAbility !== null} animationType="slide">
+                <Modal visible={selectedAbility !== null} animationType="slide" transparent>
+                
                     <View style={styles.modalContainer}>
                         <View style={styles.modalContent}>
                             <Text style={styles.modalTitle}>{selectedAbility?.name}</Text>
