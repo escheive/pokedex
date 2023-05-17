@@ -13,6 +13,7 @@ import PokemonScreen from './src/screens/PokemonScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import DetailsScreen from './src/screens/DetailsScreen';
+import MovesScreen from './src/screens/MovesScreen';
 // Components
 import LoadingScreen from './src/components/LoadingScreen';
 // Utils
@@ -76,7 +77,7 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route }) => {
                 headerShown: false,
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
-                    if (route.name === 'Details') {
+                    if (route.name === 'Info') {
                         iconName = focused ? 'ios-information-circle' : 'ios-information-circle-outline';
                     } else if (route.name === 'Moves') {
                         iconName = focused ? 'ios-play-circle' : 'ios-play-circle-outline';
@@ -91,6 +92,14 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route }) => {
                 initialParams={{ pokemon: route.params.pokemon }}
                 options={{
                     title: 'Details',
+                }}
+            />
+            <Screen
+                name="Moves"
+                component={MovesScreen}
+                initialParams={{ pokemon: route.params.pokemon }}
+                options={{
+                    title: 'Moves'
                 }}
             />
 
