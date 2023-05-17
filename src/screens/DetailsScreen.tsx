@@ -360,7 +360,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                         pokemon={pokemon}
                         pokedexEntry={pokedexEntry}
                         handlePress={handlePress}
-                        handlePrevEvolution={handlePrevEvolution}
                         pokemonColors={pokemonColors}
                     />
 

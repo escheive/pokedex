@@ -3,7 +3,7 @@ import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'rea
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getTypeStyle } from '../../utils/typeStyle';
 
-const PokemonCard = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution, getTypeBackgroundStyle, pokemonColors }) => {
+const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyle, pokemonColors }) => {
 
     // Grab the dimensions of the device for sizing of components
     const windowHeight = Dimensions.get('window').height;
@@ -152,14 +152,6 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution, 
                         {pokemon.id > 100 ? pokemon.id : pokemon.id > 10 ? '0' + pokemon.id : '00' + pokemon.id}
                     </Text>
                 </View>
-                {pokedexEntry.evolvesFrom !== null && (
-                    <TouchableOpacity style={styles.evolutionContainer} onPress={() => handlePrevEvolution(pokemon.id)}>
-                        <Image
-                            style={styles.evolutionImage}
-                            source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id - 1}.png` }}
-                        />
-                    </TouchableOpacity>
-                )}
 
                 <TouchableOpacity style={styles.prevPokemonButton} onPress={() => handlePress(pokemon.id - 1 > 0 ? pokemon.id - 1 : 1010)}>
                     <Ionicons name="chevron-back-outline" size={50} color="black" />
