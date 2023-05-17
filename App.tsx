@@ -67,7 +67,7 @@ const DrawerNavigator = () => {
 };
 
 
-const PokemonTabNavigator = ({ pokemonList, typeData, route }) => {
+const DetailsTabNavigator = ({ pokemonList, typeData, route }) => {
     const { Navigator, Screen } = createBottomTabNavigator();
 
     return (
@@ -86,9 +86,12 @@ const PokemonTabNavigator = ({ pokemonList, typeData, route }) => {
             })}
         >
             <Screen
-                name='Details'
+                name='Info'
                 component={DetailsScreen}
                 initialParams={{ pokemon: route.params.pokemon }}
+                options={{
+                    title: 'Details',
+                }}
             />
 
         </Navigator>
@@ -108,7 +111,7 @@ const PokemonStackNavigator = ({ pokemonList, typeData }) => {
 
             <Stack.Screen
                 name="Details"
-                component={DetailsScreen}
+                component={DetailsTabNavigator}
                 options={({ route }) => {
                     const pokemonType = route.params.pokemon.types[0].type.name;
                     const backgroundColor = getTypeStyle(pokemonType);

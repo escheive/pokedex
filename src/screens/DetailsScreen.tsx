@@ -59,7 +59,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         for(const type of pokemon.types) {
             pokemonColors.push((getTypeStyle(type.type.name)))
         }
-        console.log(pokemonColors)
     }
     grabPokemonColors();
 
