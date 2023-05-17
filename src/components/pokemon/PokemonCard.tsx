@@ -109,11 +109,10 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
                 paddingBottom: 8,
             },
             pokedexEntry: {
+                width: '100%',
+                textAlign: 'center',
                 fontSize: 16,
                 marginBottom: 12,
-                borderWidth: 1,
-                borderColor: '#ccc',
-                borderRadius: 10,
                 padding: 5,
             },
             typesContainer: {
@@ -129,26 +128,29 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
                 flexShrink: 1,
             },
             pokedexCardColumnsContainer: {
-                width: '80%',
+                width: '100%',
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+//                 justifyContent: 'center',
+                justifyContent: 'space-around',
             },
             pokedexCardColumn: {
+                width: '40%',
                 flexDirection: 'column',
             },
             pokedexCardEntryTitle: {
-                color: '#999',
+                color: '#777',
                 textAlign: 'left',
                 paddingLeft: 6,
             },
             pokedexCardEntryInfo: {
                 width: '100%',
                 textAlign: 'center',
+                color: '#555',
                 borderWidth: 1,
                 borderColor: '#ccc',
                 borderRadius: 10,
-                paddingHorizontal: 10,
-                paddingVertical: 8,
+                paddingHorizontal: 18,
+                paddingVertical: 10,
                 marginBottom: 8,
             },
         });
@@ -188,9 +190,8 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
                     </View>
                 </View>
 
-                <View>
-                    <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
-                </View>
+                <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
+
                 <View style={styles.pokedexCardColumnsContainer}>
                     <View style={styles.pokedexCardColumn}>
                         <Text style={styles.pokedexCardEntryTitle}>Height</Text>
