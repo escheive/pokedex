@@ -173,23 +173,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 //         console.log(typeInfo)
     });
 
-
-    function calculateMaxStats(baseStats, level) {
-      const maxStats = {};
-
-      // Iterate over each stat
-      Object.keys(baseStats).forEach((stat) => {
-        const baseStat = baseStats[stat];
-//         const iv = ivs[stat];
-//         const ev = evs[stat];
-
-        const maxStat = Math.round((((2 * baseStat) * level) / 100) + 5);
-        maxStats[stat] = maxStat;
-      });
-
-      return maxStats;
-    }
-
     // Stylesheet for this screen
     const styles = StyleSheet.create({
         container: {
