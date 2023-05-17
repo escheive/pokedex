@@ -67,7 +67,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         const pokemon = await pokemonResponse.json();
 
         // Navigate to the details page with the fetched pokemon data
-        navigation.navigate('Details', { pokemon });
+        navigation.navigate('Info', { pokemon });
     }
 
 
