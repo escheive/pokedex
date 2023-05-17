@@ -58,13 +58,7 @@ const DrawerNavigator = () => {
             onNavigationStateChange={handleNavigationStateChange}
         >
 
-            <Screen
-                name="Pokemon"
-                component={(props) => <PokemonTabNavigator {...props} pokemonList={pokemonList} typeData={typeData} />}
-                options={({ route }) => ({
-                    headerTitle: route.params.pokemon.name,
-                })}
-            />
+            <Screen name="Pokemon" component={PokemonStackNavigator} />
             <Screen name="Profile" component={ProfileScreen} />
             <Screen name="Settings" component={SettingsScreen} />
 
@@ -79,6 +73,7 @@ const PokemonTabNavigator = ({ pokemonList, typeData, route }) => {
     return (
         <Navigator
             screenOptions={({ route }) => ({
+                headerShown: false,
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
                     if (route.name === 'Details') {
@@ -90,16 +85,44 @@ const PokemonTabNavigator = ({ pokemonList, typeData, route }) => {
                 },
             })}
         >
-            <Screen name="PokemonScreen">
-                {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
-            </Screen>
+            <Screen
+                name='Details'
+                component={DetailsScreen}
+                initialParams={{ pokemon: route.params.pokemon }}
+            />
 
         </Navigator>
     );
 };
 
 
+const PokemonStackNavigator = ({ pokemonList, typeData }) => {
 
+    return (
+        <Stack.Navigator
+            screenOptions={{ headerShown: false }}
+        >
+            <Stack.Screen name="Gotta Catch Them All">
+                {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
+            </Stack.Screen>
+
+            <Stack.Screen
+                name="Details"
+                component={DetailsScreen}
+                options={({ route }) => {
+                    const pokemonType = route.params.pokemon.types[0].type.name;
+                    const backgroundColor = getTypeStyle(pokemonType);
+                    let pokemonName = route.params.pokemon.name;
+                    pokemonName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+
+                    return {
+                        title: pokemonName,
+                    };
+                }}
+            />
+        </Stack.Navigator>
+    );
+};
 
 
 function ProfileStack() {
@@ -176,7 +199,7 @@ export default function App() {
 
             <Drawer.Navigator>
                 <Drawer.Screen name="Pokemon">
-                    {(props) => <PokemonTabNavigator {...props} pokemonList={pokemonList} typeData={typeData} />}
+                    {(props) => <PokemonStackNavigator {...props} pokemonList={pokemonList} typeData={typeData} />}
                 </Drawer.Screen>
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />
