@@ -197,7 +197,7 @@ export default function App() {
         };
 
         // Fetch the initial 100 pokemon on app start
-        fetchPokemonData(0, 500);
+        fetchPokemonData(0, 20);
     }, []);
 
 

@@ -77,7 +77,7 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution,
                 <Text style={styles.pokemonName}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
                 <View style={styles.typesContainer}>
                     {pokemon.types.map((type) => (
-                        <Text style={[styles.typesText, {backgroundColor: getTypeStyle(type.type.name).backgroundColor} ]}>{type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}</Text>
+                        <Text style={[styles.typesText, {backgroundColor: getTypeStyle(type.type.name).backgroundColor} ]} key={type.type.name}>{type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}</Text>
                     ))}
                 </View>
                 <View style={styles.idContainer}>
