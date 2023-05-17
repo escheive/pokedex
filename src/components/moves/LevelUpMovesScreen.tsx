@@ -4,8 +4,6 @@ import { View, FlatList, Text, StyleSheet } from 'react-native';
 
 const LevelUpMovesScreen = ({pokemon}) => {
 
-    console.log(pokemon.moves[0].move.name)
-
     return (
         <View style={styles.screenContainer}>
             <FlatList

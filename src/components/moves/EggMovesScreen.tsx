@@ -8,10 +8,8 @@ const EggMovesScreen = ({pokemon}) => {
     return (
         <View style={styles.screenContainer}>
             <FlatList
-                data={pokemon.moves.filter(move => move.method === 'level-up')}
+                data={pokemon.moves.filter(move => move.version_group_details[0].move_learn_method.name === 'egg')}
                 keyExtractor={(move) => move.move.name}
-                numColumns={2}
-                columnWrapperStyle={styles.columnWrapper}
                 renderItem={({ item }) => (
                     <View style={styles.individualMoveContainer}>
                     <Text style={styles.moves}>{item.move.name.charAt(0).toUpperCase() + item.move.name.slice(1)}</Text>
@@ -24,6 +22,10 @@ const EggMovesScreen = ({pokemon}) => {
 
 
 const styles = StyleSheet.create({
+    screenContainer: {
+        height: '100%',
+        marginTop: 20,
+    },
     individualMoveContainer: {
         flex: 1,
         justifyContent: 'center',
