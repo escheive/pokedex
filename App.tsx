@@ -80,7 +80,7 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route }) => {
                     if (route.name === 'Info') {
                         iconName = focused ? 'ios-information-circle' : 'ios-information-circle-outline';
                     } else if (route.name === 'Moves') {
-                        iconName = focused ? 'ios-play-circle' : 'ios-play-circle-outline';
+                        iconName = focused ? 'shield' : 'shield-outline';
                     }
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
@@ -179,7 +179,7 @@ export default function App() {
                 setIsLoading(false);
 
                 // Fetch the remaining pokemon in the background
-                const remainingPokemons = 1010 - end; // Total number of pokemon - initial batch
+                const remainingPokemons = 100 - end; // Total number of pokemon - initial batch
                 const batchSize = 30;
 
                 // If there are still unfetched pokemon, keep going
@@ -187,7 +187,7 @@ export default function App() {
                     // nextStart will be set to the current end so that we can start with the very next pokemon
                     const nextStart = end;
                     // nextEnd will be calculated based on current end and batchSize
-                    const nextEnd = Math.min(end + batchSize, 1010);
+                    const nextEnd = Math.min(end + batchSize, 100);
                     // fetch the pokemon using the updated variables
                     fetchPokemonData(nextStart, nextEnd);
                 }
