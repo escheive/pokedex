@@ -365,101 +365,29 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                         pokemonColors={pokemonColors}
                     />
 
-                    <View style={styles.navContainer}>
-                        <TouchableOpacity
-                            style={[
-                                styles.navItem,
-                                selectedTab === 'stats' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
-                                selectedTab !== 'stats' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
-                            ]}
-                            onPress={() => setSelectedTab('stats')}
-                        >
-                            <Text style={[styles.navItemText, selectedTab === 'stats' && styles.selectedNavItemText]}>Stats</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[
-                                styles.navItem,
-                                selectedTab === 'about' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
-                                selectedTab !== 'about' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
-                            ]}
-                            onPress={() => setSelectedTab('about')}
-                        >
-                            <Text style={[styles.navItemText, selectedTab === 'about' && styles.selectedNavItemText]}>About</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[
-                                styles.navItem,
-                                selectedTab === 'moves' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
-                                selectedTab !== 'moves' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
-                            ]}
-                            onPress={() => setSelectedTab('moves')}
-                        >
-                            <Text style={[styles.navItemText, selectedTab === 'moves' && styles.selectedNavItemText]}>Moves</Text>
-                        </TouchableOpacity>
+
+                    <View style={styles.movesContainer}>
+                        <FlatList
+                            data={pokemon.moves.slice(0, displayedMovesCount)}
+                            keyExtractor={(move) => move.move.name}
+                            numColumns={2}
+                            columnWrapperStyle={styles.columnWrapper}
+                            renderItem={({ item }) => (
+                                <View style={styles.individualMoveContainer}>
+                                    <Text style={styles.moves} key={item.move.name}>{item.move.name.charAt(0).toUpperCase() + item.move.name.slice(1)}</Text>
+                                </View>
+                            )}
+                        />
                     </View>
 
-                    <View style={styles.tabContent}>
-                        {selectedTab === 'stats' && <PokemonStats stats={pokemon.stats} />}
+                    {displayedMovesCount < pokemon.moves.length && (
+                        <TouchableOpacity
+                            onPress={() => setDisplayedMovesCount(displayedMovesCount + 20)}
+                        >
+                            <Text style={styles.loadMoreMoves}>More moves</Text>
+                        </TouchableOpacity>
+                    )}
 
-                        {selectedTab === 'about' && (
-                        <>
-                        <View style={styles.pokedexEntryContainer}>
-                            <View style={styles.column}>
-                                <Text style={styles.entryTitle}>Species:</Text>
-                                <Text style={styles.entryTitle}>Habitat:</Text>
-                                <Text style={styles.entryTitle}>Height:</Text>
-                                <Text style={styles.entryTitle}>Weight:</Text>
-                            </View>
-                            <View style={styles.column}>
-                                <Text style={styles.entryInfo}>{pokedexEntry.genus}</Text>
-                                <Text style={styles.entryInfo}>{pokedexEntry.habitat}</Text>
-                                <Text style={styles.entryInfo}>{Math.floor((pokemon.height * 3.937) / 12)} feet {Math.round((pokemon.height * 3.937) % 12)} inches</Text>
-                                <Text style={styles.entryInfo}>{(pokemon.weight / 4.536).toFixed(0)} lbs</Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.abilityContainer}>
-                            <Text style={styles.abilitiesTitle}>Abilities:</Text>
-                            {pokemonAbilities !== null && (
-                                pokemonAbilities.map((ability) => (
-                                    <View key={ability.name} style={styles.ability}>
-                                        <Text style={styles.abilityName}>{ability.name}</Text>
-                                        <Text style={styles.abilityDefinition}>{ability.definition}</Text>
-                                    </View>
-                                ))
-                            )}
-                        </View>
-                        </>
-
-                        )}
-
-                        {selectedTab === 'moves' && (
-                        <>
-                            <View style={styles.movesContainer}>
-                                <FlatList
-                                    data={pokemon.moves.slice(0, displayedMovesCount)}
-                                    keyExtractor={(move) => move.move.name}
-                                    numColumns={2}
-                                    columnWrapperStyle={styles.columnWrapper}
-                                    renderItem={({ item }) => (
-                                        <View style={styles.individualMoveContainer}>
-                                            <Text style={styles.moves} key={item.move.name}>{item.move.name.charAt(0).toUpperCase() + item.move.name.slice(1)}</Text>
-                                        </View>
-                                    )}
-                                />
-                            </View>
-
-                            {displayedMovesCount < pokemon.moves.length && (
-                                <TouchableOpacity
-                                    onPress={() => setDisplayedMovesCount(displayedMovesCount + 20)}
-                                >
-                                    <Text style={styles.loadMoreMoves}>More moves</Text>
-                                </TouchableOpacity>
-                            )}
-                        </>
-                        )}
-
-                    </View>
 
                     <View style={{ marginTop: 20 }}>
 
