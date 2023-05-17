@@ -155,6 +155,22 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
             },
         });
 
+
+//         <View style={styles.pokedexCardColumnsContainer}>
+//                             <View style={styles.pokedexCardColumn}>
+//                                 <Text style={styles.pokedexCardEntryTitle}>Height</Text>
+//                                 <Text style={styles.pokedexCardEntryInfo}>{Math.floor((pokemon.height * 3.937) / 12)}'{Math.round((pokemon.height * 3.937) % 12)}" ({pokemon.height / 10} m)</Text>
+//                                 <Text style={styles.pokedexCardEntryTitle}>Weight</Text>
+//                                 <Text style={styles.pokedexCardEntryInfo}>{(pokemon.weight / 4.536).toFixed(0)} lbs ({pokemon.weight / 10} kg)</Text>
+//                             </View>
+//                             <View style={styles.pokedexCardColumn}>
+//                                 <Text style={styles.pokedexCardEntryTitle}>Species</Text>
+//                                 <Text style={styles.pokedexCardEntryInfo}>{pokedexEntry.genus}</Text>
+//                                 <Text style={styles.pokedexCardEntryTitle}>Habitat</Text>
+//                                 <Text style={styles.pokedexCardEntryInfo}>{pokedexEntry.habitat}</Text>
+//                             </View>
+//                         </View>
+
     return (
         <View style={styles.card}>
             <View style={styles.imageContainer}>
@@ -192,20 +208,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, handlePress, getTypeBackgroundStyl
 
                 <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
 
-                <View style={styles.pokedexCardColumnsContainer}>
-                    <View style={styles.pokedexCardColumn}>
-                        <Text style={styles.pokedexCardEntryTitle}>Height</Text>
-                        <Text style={styles.pokedexCardEntryInfo}>{Math.floor((pokemon.height * 3.937) / 12)}'{Math.round((pokemon.height * 3.937) % 12)}" ({pokemon.height / 10} m)</Text>
-                        <Text style={styles.pokedexCardEntryTitle}>Weight</Text>
-                        <Text style={styles.pokedexCardEntryInfo}>{(pokemon.weight / 4.536).toFixed(0)} lbs ({pokemon.weight / 10} kg)</Text>
-                    </View>
-                    <View style={styles.pokedexCardColumn}>
-                        <Text style={styles.pokedexCardEntryTitle}>Species</Text>
-                        <Text style={styles.pokedexCardEntryInfo}>{pokedexEntry.genus}</Text>
-                        <Text style={styles.pokedexCardEntryTitle}>Habitat</Text>
-                        <Text style={styles.pokedexCardEntryInfo}>{pokedexEntry.habitat}</Text>
-                    </View>
-                </View>
+
             </View>
         </View>
     );

@@ -294,10 +294,11 @@ const styles = StyleSheet.create({
     },
     pokemonType: {
         fontSize: 16,
+        fontWeight: 'bold',
         paddingHorizontal: 20,
         marginRight: 15,
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: '#555',
         borderRadius: 10,
         textAlign: 'center',
     },
