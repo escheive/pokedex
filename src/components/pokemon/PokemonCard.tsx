@@ -300,18 +300,16 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
                         activeOpacity={1}
                         onPress={() => setSelectedAbility(null)}
                     >
-                        <View style={styles.modalContent}>
+                        <TouchableOpacity
+                            style={styles.modalContent}
+                            activeOpacity={1}
+                            onPress={() => {}}
+                        >
                             <Text style={styles.modalTitle}>{selectedAbility?.name}</Text>
                             <View style={styles.modalDefinitionContainer}>
                                 <Text style={styles.modalDefinition}>{selectedAbility?.definition}</Text>
-                                <TouchableOpacity
-                                    style={styles.closeButton}
-                                    onPress={() => setSelectedAbility(null)}
-                                >
-                                    <Text style={styles.closeButtonText}>Close</Text>
-                                </TouchableOpacity>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     </TouchableOpacity>
                 </Modal>
 
