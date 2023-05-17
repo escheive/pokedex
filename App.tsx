@@ -1,8 +1,12 @@
+// Reanimated Dependencies
+import 'react-native-gesture-handler';
+// Dependencies
 import React, { useState, useEffect } from 'react';
 import { Text, View, Button, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Pokemon } from './types';
 // Screens
 import PokemonScreen from './src/screens/PokemonScreen';
@@ -19,6 +23,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
+
+
+const DrawerNavigator = () => {
+    return (
+        <Drawer.Navigator>
+            <Drawer.Screen name="Profile" component={ProfileStack} />
+            <Drawer.Screen name="Settings" component={SettingsStack} />
+        </Drawer.Navigator>
+    )
+}
 
 
 
@@ -138,33 +153,38 @@ export default function App() {
 
     return (
         <NavigationContainer>
+            <Drawer.Navigator>
+                <Drawer.Screen name="Home">
+                    {() => (
+                        <Tab.Navigator
+                            screenOptions={({ route }) => ({
+                                headerShown: false,
+                                tabBarIcon: ({ focused, color, size }) => {
+                                    let iconName;
 
-            <Tab.Navigator
-                screenOptions={({ route }) => ({
-                    headerShown: false,
-                    tabBarIcon: ({ focused, color, size }) => {
-                        let iconName;
+                                    if (route.name === 'Pokemon') {
+                                        iconName = focused ? 'ios-paw' : 'ios-paw-outline';
+                                    } else if (route.name === 'Profile') {
+                                        iconName = focused ? 'person' : 'person-outline';
+                                    } else if (route.name === 'Settings') {
+                                        iconName = focused ? 'cog' : 'cog-outline';
+                                    }
 
-                        if (route.name === 'Pokemon') {
-                            iconName = focused ? 'ios-paw' : 'ios-paw-outline';
-                        } else if (route.name === 'Profile') {
-                            iconName = focused ? 'person' : 'person-outline';
-                        } else if (route.name === 'Settings') {
-                            iconName = focused ? 'cog' : 'cog-outline';
-                        }
-
-                        return <Ionicons name={iconName} size={size} color={color} />;
-                    },
-                    'tabBarActiveTintColor': 'black',
-                    'tabBarInactiveTintColor': 'gray',
-                })}
-            >
-                <Tab.Screen name="Pokemon" options={{ tabBarBadge: 3 }}>
-                    {(props) => <PokemonStack {...props} pokemonList={pokemonList} typeData={typeData} />}
-                </Tab.Screen>
-                <Tab.Screen name="Profile" component={ProfileStack} />
-                <Tab.Screen name="Settings" component={SettingsStack} />
-            </Tab.Navigator>
+                                    return <Ionicons name={iconName} size={size} color={color} />;
+                                },
+                                'tabBarActiveTintColor': 'black',
+                                'tabBarInactiveTintColor': 'gray',
+                            })}
+                        >
+                            <Tab.Screen name="Pokedex" options={{ tabBarBadge: 3 }}>
+                                {(props) => <PokemonStack {...props} pokemonList={pokemonList} typeData={typeData} />}
+                            </Tab.Screen>
+                            <Tab.Screen name="Profile" component={ProfileStack} />
+                            <Tab.Screen name="Settings" component={SettingsStack} />
+                        </Tab.Navigator>
+                    )}
+                </Drawer.Screen>
+            </Drawer.Navigator>
 
         </NavigationContainer>
     );

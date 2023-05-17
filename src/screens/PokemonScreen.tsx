@@ -129,7 +129,7 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
                             <Text style={styles.pokemonName}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
                             <View style={styles.pokemonTypesContainer}>
                                 {pokemon.types.map((type) => (
-                                    <Text style={styles.pokemonType}>{type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}</Text>
+                                    <Text style={styles.pokemonType} key={type.type.name}>{type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}</Text>
                                 ))}
                             </View>
                         </View>
