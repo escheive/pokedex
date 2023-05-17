@@ -1,9 +1,10 @@
-import React from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions, Modal } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getTypeStyle } from '../../utils/typeStyle';
 
 const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, getTypeBackgroundStyle, pokemonColors }) => {
+    const [selectedAbility, setSelectedAbility] = useState(null);
 
     // Grab the dimensions of the device for sizing of components
     const windowHeight = Dimensions.get('window').height;
@@ -170,6 +171,33 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
             abilityItem: {
                 fontSize: 16,
             },
+            modalContainer: {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: pokemonColors[0].backgroundColor,
+              },
+              modalTitle: {
+                fontSize: 24,
+                fontWeight: 'bold',
+                color: 'white',
+                marginBottom: 16,
+              },
+              modalDescription: {
+                fontSize: 18,
+                color: 'white',
+                marginBottom: 24,
+              },
+              closeButton: {
+                padding: 8,
+                backgroundColor: 'white',
+                borderRadius: 8,
+              },
+              closeButtonText: {
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: 'black',
+              },
         });
 
 
@@ -187,6 +215,10 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
 //                                 <Text style={styles.pokedexCardEntryInfo}>{pokedexEntry.habitat}</Text>
 //                             </View>
 //                         </View>
+
+    const handleAbilitySelect = (ability) => {
+        setSelectedAbility(ability)
+    };
     console.log(pokemonAbilities)
 
     return (
@@ -227,11 +259,27 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
                 <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
                 <Text style={styles.abilitiesTitle}>Abilities</Text>
                 {pokemonAbilities.map((ability) => (
-                    <View key={ability.name} style={styles.abilityContainer}>
+                    <TouchableOpacity
+                        key={ability.name}
+                        style={styles.abilityContainer}
+                        onPress={() => handleAbilitySelect(ability)}
+                    >
                         <Text style={styles.abilityItem}>{ability.name}</Text>
-
-                    </View>
+                    </TouchableOpacity>
                 ))}
+
+                <Modal visible={selectedAbility !== null} animationType="slide">
+                  <View style={styles.modalContainer}>
+                    <Text style={styles.modalTitle}>{selectedAbility?.name}</Text>
+                    <Text style={styles.modalDescription}>{selectedAbility?.description}</Text>
+                    <TouchableOpacity
+                      style={styles.closeButton}
+                      onPress={() => setSelectedAbility(null)}
+                    >
+                      <Text style={styles.closeButtonText}>Close</Text>
+                    </TouchableOpacity>
+                  </View>
+                </Modal>
 
             </View>
         </View>
