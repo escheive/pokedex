@@ -47,10 +47,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [pokedexEntry, setPokedexEntry] = useState({ "genus": "", "flavorText": ""});
     // useState for the nav below the pokemon card
     const [selectedTab, setSelectedTab] = React.useState('stats');
-    // useState for displaying pokemon moves
-    const [displayedMovesCount, setDisplayedMovesCount] = useState(20); // Set an initial count, such as 10
-    // useState for tracking previous evolution
-    const [prevEvolution, setPrevEvolution] = useState(`${pokemon.id - 1}`)
     // useState for additional pokemon data
     const [additionalData, setAdditionalData] = useState(null);
 
@@ -73,71 +69,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         // Navigate to the details page with the fetched pokemon data
         navigation.navigate('Details', { pokemon });
     }
-
-    const handlePrevEvolution = async (pokemonId) => {
-      // Fetch info for the pokemon species
-      const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`);
-      const species = await speciesResponse.json();
-
-      // Check if the species has evolution chain information
-      if (species.evolution_chain && species.evolution_chain.url) {
-        // Fetch the evolution chain data
-        const evolutionChainResponse = await fetch(species.evolution_chain.url);
-        const evolutionChain = await evolutionChainResponse.json();
-
-        // Find the previous evolution based on the current pokemonId
-        const prevEvolution = findPreviousEvolution(evolutionChain, pokemonId);
-
-        if (prevEvolution) {
-          handlePress(prevEvolution)
-        }
-      }
-    };
-
-    const findPreviousEvolution = (evolutionChain, pokemonId) => {
-        if (evolutionChain.chain.species && evolutionChain.chain.species.url) {
-            const urlParts = evolutionChain.chain.species.url.split('/');
-            const id = parseInt(urlParts[urlParts.length - 2]);
-            console.log(evolutionChain.chain.evolves_to[0].species.name)
-            if (id === pokemonId) {
-                // If the current Pokemon is the base species, return null
-                return null;
-            } else if (id === pokemonId - 1) {
-                return evolutionChain.chain.species.name;
-            } else if (id === pokemonId - 2) {
-                return evolutionChain.chain.evolves_to[0].species.name;
-            } else if (evolutionChain.chain.evolves_to.length > 0) {
-                // If the current Pokemon is not the base species, find its previous evolution
-                for (const evolution of evolutionChain.chain.evolves_to) {
-                    if (evolution.species && evolution.species.url) {
-                        const urlParts = evolution.species.url.split('/');
-                        const id = parseInt(urlParts[urlParts.length - 2]);
-
-
-                        if (id === pokemonId) {
-                            // Found the previous evolution, return its id
-                            return evolutionChain.chain.species.name;
-                        } else if (evolutionChain.chain.evolves_to[0].evolves_to.length > 0) {
-                            console.log('here')
-                            for (const evolution of evolutionChain.chain.evolves_to[0].evolves_to) {
-                                if (evolution.species && evolution.species.url) {
-                                    const urlParts = evolution.species.url.split('/');
-                                    const id = parseInt(urlParts[urlParts.length - 2]);
-
-                                    if (id === pokemonId) {
-                                        return evolutionChain.chain.evolves_to[0].species.name;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Previous evolution not found
-        return null;
-    };
 
 
     // useEffect to check if a pokemon is favorited and fetch ability info when pokemon object changes
