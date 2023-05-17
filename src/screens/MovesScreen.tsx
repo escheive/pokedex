@@ -48,23 +48,8 @@ type DetailsScreenProps = {
 const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
     // Grab our pokemon data that was pulled in our app.tsx from params
     const { pokemon } = route.params;
-    // useState to update if a pokemon was favorited or unfavorited without refreshing
-    const [isFavorite, setIsFavorite] = useState(false);
-    // useState to track pokemonAbilities for each individual pokemon when their page is pulled up
-    const [pokemonAbilities, setPokemonAbilities] = useState([]);
     // Declare an array so that we can assign colors for this pokemon based on its type
     let pokemonColors = [];
-    // Variable to store pokedex entry after fetching
-    const [pokedexEntry, setPokedexEntry] = useState({ "genus": "", "flavorText": ""});
-    // useState for the nav below the pokemon card
-    const [selectedTab, setSelectedTab] = React.useState('level');
-    // useState for displaying pokemon moves
-    const [displayedMovesCount, setDisplayedMovesCount] = useState(20); // Set an initial count, such as 10
-    // useState for tracking previous evolution
-    const [prevEvolution, setPrevEvolution] = useState(`${pokemon.id - 1}`)
-    // useState for additional pokemon data
-    const [additionalData, setAdditionalData] = useState(null);
-
 
     grabPokemonColors = async () => {
         for(const type of pokemon.types) {
@@ -97,28 +82,16 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
         Container: {
             height: '100%',
         },
-        favButton: {
-            backgroundColor: pokemonColors[0],
-            padding: 10,
-            alignItems: 'center',
-            marginBottom: 20,
-        },
-        favButtonText: {
-            fontSize: 20,
-        },
         movesContainer: {
             flex: 1,
             justifyContent: 'center',
             marginBottom: 15,
         },
-        columnWrapper: {
-            justifyContent: 'space-between',
+        tabLabel: {
+            fontSize: 16,
         },
-        individualMoveContainer: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 15,
+        tabIndicator: {
+            backgroundColor: 'black',
         },
     });
 
@@ -130,7 +103,16 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
             />
 
             <View style={styles.movesContainer}>
-                <Tab.Navigator>
+                <Tab.Navigator
+                    screenOptions={{
+                        tabBarIndicatorStyle: styles.tabIndicator,
+                        tabBarLabelStyle: styles.tabLabel,
+                        tabBarActiveTintColor: 'black',
+                        tabBarInactiveTintColor: 'gray',
+                    }}
+                    tabBarPosition="top"
+                    initialRouteName="Level Up"
+                >
                     <Tab.Screen name="Level Up">
                         {() => <LevelUpMovesScreen pokemon={pokemon} />}
                     </Tab.Screen>
