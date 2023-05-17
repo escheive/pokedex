@@ -173,15 +173,28 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 //         console.log(typeInfo)
     });
 
-    // Variables to track the pokemons colors
-//     const stylesArray = getTypeBackgroundStyle(pokemon.types);
-//     pokemonColors = stylesArray.map((style) => style.backgroundColor);
-//     const gradientColors = pokemonColors.length < 2 ? [pokemonColors[0], '#FFFFFF'] : pokemonColors;
+
+    function calculateMaxStats(baseStats, level) {
+      const maxStats = {};
+
+      // Iterate over each stat
+      Object.keys(baseStats).forEach((stat) => {
+        const baseStat = baseStats[stat];
+//         const iv = ivs[stat];
+//         const ev = evs[stat];
+
+        const maxStat = Math.round((((2 * baseStat) * level) / 100) + 5);
+        maxStats[stat] = maxStat;
+      });
+
+      return maxStats;
+    }
 
     // Stylesheet for this screen
     const styles = StyleSheet.create({
         container: {
             height: '100%',
+            backgroundColor: pokemonColors[0].backgroundColor,
         },
         navContainer: {
             flexDirection: 'row',
@@ -205,7 +218,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             fontWeight: 'bold',
         },
         tabContent: {
-            marginHorizontal: 20,
+            marginHorizontal: 10,
         },
         pokedexEntryContainer: {
             flexDirection: 'row',
@@ -298,37 +311,37 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                         <TouchableOpacity
                             style={[
                                 styles.navItem,
-                                selectedTab === 'stats' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
-                                selectedTab !== 'stats' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                                selectedTab === 'base' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
+                                selectedTab !== 'base' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
-                            onPress={() => setSelectedTab('stats')}
+                            onPress={() => setSelectedTab('base')}
                         >
-                            <Text style={[styles.navItemText, selectedTab === 'stats' && styles.selectedNavItemText]}>Stats</Text>
+                            <Text style={[styles.navItemText, selectedTab === 'base' && styles.selectedNavItemText]}>Base</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[
                                 styles.navItem,
-                                selectedTab === 'about' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
-                                selectedTab !== 'about' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                                selectedTab === 'min' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
+                                selectedTab !== 'min' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
-                            onPress={() => setSelectedTab('about')}
+                            onPress={() => setSelectedTab('min')}
                         >
-                            <Text style={[styles.navItemText, selectedTab === 'about' && styles.selectedNavItemText]}>About</Text>
+                            <Text style={[styles.navItemText, selectedTab === 'min' && styles.selectedNavItemText]}>Min</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[
                                 styles.navItem,
-                                selectedTab === 'moves' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
-                                selectedTab !== 'moves' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                                selectedTab === 'max' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
+                                selectedTab !== 'max' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                             ]}
-                            onPress={() => setSelectedTab('moves')}
+                            onPress={() => setSelectedTab('max')}
                         >
-                            <Text style={[styles.navItemText, selectedTab === 'moves' && styles.selectedNavItemText]}>Moves</Text>
+                            <Text style={[styles.navItemText, selectedTab === 'max' && styles.selectedNavItemText]}>Max</Text>
                         </TouchableOpacity>
                     </View>
 
                     <View style={styles.tabContent}>
-                        {selectedTab === 'stats' && <PokemonStats stats={pokemon.stats} />}
+                        {selectedTab === 'base' && <PokemonStats pokemonColors={pokemonColors} pokemon={pokemon} />}
 
                         {selectedTab === 'about' && (
                         <>

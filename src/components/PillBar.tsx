@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
       textShadowColor: 'rgba(0, 0, 0, 0.25)',
       textShadowOffset: { width: 0, height: 1 },
       textShadowRadius: 2,
-      fontSize: 20,
+      fontSize: 18,
   },
 });
 
