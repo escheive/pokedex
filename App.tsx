@@ -27,57 +27,78 @@ const Drawer = createDrawerNavigator();
 
 
 const DrawerNavigator = () => {
+    const { Navigator, Screen } = createDrawerNavigator();
+    const navigation = useNavigation();
+
+    const route = useRoute();
+
+    const getHeaderTitle = (route: Route<string, object | undefined>) => {
+        const routeName = route.name;
+        switch (routeName) {
+            case 'Pokemon':
+                return 'Pokedex';
+            case 'Profile':
+                return 'Profile';
+            case 'Settings':
+                return 'Settings';
+            default:
+                return '';
+        }
+    };
+
+    const handleNavigationStateChange = (route: Route<string, object | undefined>) => {
+        const title = getHeaderTitle(route);
+        navigation.setOptions({ headerTitle: title });
+    };
+
     return (
-        <Drawer.Navigator>
-            <Drawer.Screen name="Profile" component={ProfileStack} />
-            <Drawer.Screen name="Settings" component={SettingsStack} />
-        </Drawer.Navigator>
-    )
-}
-
-
-
-const PokemonStack = ({ pokemonList, typeData }) => {
-
-
-    return (
-        <Stack.Navigator
-            screenOptions={{
-                headerStyle: {
-                    backgroundColor: 'transparent',
-                },
-                headerTitleAlign: 'center',
-            }}
+        <Navigator
+            screenOptions={{ headerShown: true }}
+            drawerContent={(props) => <DrawerContent {...props} />}
+            onNavigationStateChange={handleNavigationStateChange}
         >
-            <Stack.Screen name="Gotta Catch Them All">
-                {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
-            </Stack.Screen>
 
-            <Stack.Screen
-                name="Details"
-                component={DetailsScreen}
-                options={({ route }) => {
-                    const pokemonType = route.params.pokemon.types[0].type.name;
-                    const backgroundColor = getTypeStyle(pokemonType);
-                    let pokemonName = route.params.pokemon.name;
-                    pokemonName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
-
-                    return {
-                        title: pokemonName,
-                        headerStyle: {
-                            backgroundColor: `rgba(${backgroundColor.backgroundColor}, 0.5)`,
-                        },
-                        headerTintColor: 'white',
-                        headerShadowVisible: false,
-                        headerTitleStyle: {
-                            fontWeight: 'bold'
-                        }
-                    };
-                }}
+            <Screen
+                name="Pokemon"
+                component={(props) => <PokemonTabNavigator {...props} pokemonList={pokemonList} typeData={typeData} />}
+                options={({ route }) => ({
+                    headerTitle: route.params.pokemon.name,
+                })}
             />
-        </Stack.Navigator>
+            <Screen name="Profile" component={ProfileScreen} />
+            <Screen name="Settings" component={SettingsScreen} />
+
+        </Navigator>
     );
 };
+
+
+const PokemonTabNavigator = ({ pokemonList, typeData, route }) => {
+    const { Navigator, Screen } = createBottomTabNavigator();
+
+    return (
+        <Navigator
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+                    if (route.name === 'Details') {
+                        iconName = focused ? 'ios-information-circle' : 'ios-information-circle-outline';
+                    } else if (route.name === 'Moves') {
+                        iconName = focused ? 'ios-play-circle' : 'ios-play-circle-outline';
+                    }
+                    return <Ionicons name={iconName} size={size} color={color} />;
+                },
+            })}
+        >
+            <Screen name="PokemonScreen">
+                {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
+            </Screen>
+
+        </Navigator>
+    );
+};
+
+
 
 
 
@@ -150,42 +171,92 @@ export default function App() {
         return <LoadingScreen />;
     }
 
-
     return (
         <NavigationContainer>
+
             <Drawer.Navigator>
-                <Drawer.Screen name="Home">
-                    {() => (
-                        <Tab.Navigator
-                            screenOptions={({ route }) => ({
-                                headerShown: false,
-                                tabBarIcon: ({ focused, color, size }) => {
-                                    let iconName;
-
-                                    if (route.name === 'Pokemon') {
-                                        iconName = focused ? 'ios-paw' : 'ios-paw-outline';
-                                    } else if (route.name === 'Profile') {
-                                        iconName = focused ? 'person' : 'person-outline';
-                                    } else if (route.name === 'Settings') {
-                                        iconName = focused ? 'cog' : 'cog-outline';
-                                    }
-
-                                    return <Ionicons name={iconName} size={size} color={color} />;
-                                },
-                                'tabBarActiveTintColor': 'black',
-                                'tabBarInactiveTintColor': 'gray',
-                            })}
-                        >
-                            <Tab.Screen name="Pokedex" options={{ tabBarBadge: 3 }}>
-                                {(props) => <PokemonStack {...props} pokemonList={pokemonList} typeData={typeData} />}
-                            </Tab.Screen>
-                            <Tab.Screen name="Profile" component={ProfileStack} />
-                            <Tab.Screen name="Settings" component={SettingsStack} />
-                        </Tab.Navigator>
-                    )}
+                <Drawer.Screen name="Pokemon">
+                    {(props) => <PokemonTabNavigator {...props} pokemonList={pokemonList} typeData={typeData} />}
                 </Drawer.Screen>
+                <Drawer.Screen name="Profile" component={ProfileScreen} />
+                <Drawer.Screen name="Settings" component={SettingsScreen} />
             </Drawer.Navigator>
 
         </NavigationContainer>
     );
 }
+
+
+
+//     return (
+//         <NavigationContainer>
+//
+//             <Drawer.Navigator>
+//                 <Drawer.Screen name="Home">
+//                     {() => (
+//
+//                         <Tab.Navigator
+//                             screenOptions={({ route }) => ({
+//                                 headerShown: false,
+//                                 tabBarIcon: ({ focused, color, size }) => {
+//                                     let iconName;
+//
+//                                     if (route.name === 'Pokemon') {
+//                                         iconName = focused ? 'ios-paw' : 'ios-paw-outline';
+//                                     } else if (route.name === 'Profile') {
+//                                         iconName = focused ? 'person' : 'person-outline';
+//                                     } else if (route.name === 'Settings') {
+//                                         iconName = focused ? 'cog' : 'cog-outline';
+//                                     }
+//
+//                                     return <Ionicons name={iconName} size={size} color={color} />;
+//                                 },
+//                                 'tabBarActiveTintColor': 'black',
+//                                 'tabBarInactiveTintColor': 'gray',
+//                             })}
+//                         >
+//                             <Tab.Screen name="Pokedex" options={{ tabBarBadge: 3 }}>
+//                                 {(props) => <PokemonStack {...props} pokemonList={pokemonList} typeData={typeData} />}
+//                             </Tab.Screen>
+//                             <Tab.Screen name="Profile" component={ProfileStack} />
+//                             <Tab.Screen name="Settings" component={SettingsStack} />
+//                         </Tab.Navigator>
+//
+//                     )}
+//                 </Drawer.Screen>
+//             </Drawer.Navigator>
+//
+//         </NavigationContainer>
+//     );
+// }
+
+
+
+// const PokemonStack = ({ pokemonList, typeData }) => {
+//
+//
+//     return (
+//         <Stack.Navigator
+//             screenOptions={{ headerShown: false }}
+//         >
+//             <Stack.Screen name="Gotta Catch Them All">
+//                 {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
+//             </Stack.Screen>
+//
+//             <Stack.Screen
+//                 name="Details"
+//                 component={DetailsScreen}
+//                 options={({ route }) => {
+//                     const pokemonType = route.params.pokemon.types[0].type.name;
+//                     const backgroundColor = getTypeStyle(pokemonType);
+//                     let pokemonName = route.params.pokemon.name;
+//                     pokemonName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+//
+//                     return {
+//                         title: pokemonName,
+//                     };
+//                 }}
+//             />
+//         </Stack.Navigator>
+//     );
+// };
