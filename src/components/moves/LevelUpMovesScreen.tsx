@@ -1,17 +1,40 @@
-
+import React, { useEffect } from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
 
 
-const LevelUpMovesScreen = ({pokemon}) => {
+const LevelUpMovesScreen = ({ pokemon, movesData }) => {
+
+    const levelUpMoves = pokemon.moves.filter((move) => {
+        return move.version_group_details.some(
+            (detail) => detail.move_learn_method.name === 'level-up'
+        );
+    });
+
+    const levelUpMovesData = levelUpMoves.map((move) => {
+        const moveData = movesData.find((data) => data.name === move.move.name);
+        let levelLearnedAt = move.version_group_details.find((move) => move.level_learned_at > 0)
+        levelLearnedAt = levelLearnedAt.level_learned_at;
+        return moveData ? { ...moveData, level: levelLearnedAt } : null;
+    });
+
+    const sortedMovesData = levelUpMovesData.sort((a, b) => a.level - b.level);
 
     return (
         <View style={styles.screenContainer}>
             <FlatList
-                data={pokemon.moves.filter(move => move.version_group_details[0].move_learn_method.name === 'level-up')}
-                keyExtractor={(move) => move.move.name}
+                data={sortedMovesData}
+//                 data={pokemon.moves.filter(move => move.version_group_details[0].move_learn_method.name === 'level-up')}
+                keyExtractor={(move) => move?.id?.toString()}
+                contentContainerStyle={styles.contentContainer}
                 renderItem={({ item }) => (
                     <View style={styles.individualMoveContainer}>
-                        <Text style={styles.moves}>{item.move.name.charAt(0).toUpperCase() + item.move.name.slice(1)}</Text>
+                        <Text style={styles.moves}>{item.level}</Text>
+                        <Text style={styles.moves}>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</Text>
+                        <Text style={styles.moves}>{item.type.name}</Text>
+                        <Text style={styles.moves}>{item.damage_class.name}</Text>
+                        <Text style={styles.moves}>{item.accuracy}</Text>
+                        <Text style={styles.moves}>{item.pp}</Text>
+                        <Text style={styles.moves}>{item.contest_type.name}</Text>
                     </View>
                 )}
             />
@@ -23,13 +46,18 @@ const LevelUpMovesScreen = ({pokemon}) => {
 const styles = StyleSheet.create({
     screenContainer: {
         height: '100%',
-        marginTop: 20,
+        marginHorizontal: 10,
+    },
+    contentContainer: {
+        backgroundColor: 'white',
     },
     individualMoveContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 15,
+        paddingVertical: 10,
+        borderColor: '#ccc',
+        borderBottomWidth: 1,
     },
     moves: {
         textAlign: 'center',

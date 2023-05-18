@@ -1,7 +1,7 @@
 
 // Dependencies
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions, Animated, ActivityIndicator } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 // Components
 import PokemonImage from '../components/pokemon/PokemonImage';
@@ -40,6 +40,8 @@ type DetailsScreenProps = {
 const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
     // Grab our pokemon data that was pulled in our app.tsx from params
     const { pokemon } = route.params;
+    const [movesData, setMovesData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Function to handlePress of the previous evolution button in top left corner
     const handlePress = async (pokemonId) => {
@@ -54,9 +56,30 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
     }
 
 
-    // useEffect to check if a pokemon is favorited and fetch ability info when pokemon object changes
+    // useEffect to fetch pokemon moves data on component mount
     useEffect(() => {
+        const fetchMovesData = async () => {
+            try {
+                const moves = pokemon.moves.map(async (move) => {
+                    const response = await fetch(`https://pokeapi.co/api/v2/move/${move.move.name}/`);
+                    try {
+                        const data = await response.json();
+                        const { name, power, accuracy, pp, type, contest_type, damage_class } = data;
+                        return { name, power, accuracy, pp, type, contest_type, damage_class };
+                    } catch (error) {
+                        console.error('Error parsing JSON:', error)
+                    }
+                });
+                const movesData = await Promise.all(moves);
+                setMovesData(movesData);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching moves data on the MovesScreen:', error)
+                setIsLoading(false);
+            }
+        }
 
+        fetchMovesData();
     }, []);
 
 
@@ -86,29 +109,33 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
             />
 
             <View style={styles.movesContainer}>
-                <Tab.Navigator
-                    screenOptions={{
-                        tabBarIndicatorStyle: styles.tabIndicator,
-                        tabBarLabelStyle: styles.tabLabel,
-                        tabBarActiveTintColor: 'black',
-                        tabBarInactiveTintColor: 'gray',
-                    }}
-                    tabBarPosition="top"
-                    initialRouteName="Level Up"
-                >
-                    <Tab.Screen name="Level Up">
-                        {() => <LevelUpMovesScreen pokemon={pokemon} />}
-                    </Tab.Screen>
-                    <Tab.Screen name="TM">
-                        {() => <TMMovesScreen pokemon={pokemon} />}
-                    </Tab.Screen>
-                    <Tab.Screen name="Egg">
-                        {() => <EggMovesScreen pokemon={pokemon} />}
-                    </Tab.Screen>
-                    <Tab.Screen name="Tutor">
-                        {() => <TutorMovesScreen pokemon={pokemon} />}
-                    </Tab.Screen>
-                </Tab.Navigator>
+                {isLoading ? (
+                    <ActivityIndicator size="large" color="blue" />
+                ) : (
+                    <Tab.Navigator
+                        screenOptions={{
+                            tabBarIndicatorStyle: styles.tabIndicator,
+                            tabBarLabelStyle: styles.tabLabel,
+                            tabBarActiveTintColor: 'black',
+                            tabBarInactiveTintColor: 'gray',
+                        }}
+                        tabBarPosition="top"
+                        initialRouteName="Level Up"
+                    >
+                        <Tab.Screen name="Level Up">
+                            {() => <LevelUpMovesScreen pokemon={pokemon} movesData={movesData} />}
+                        </Tab.Screen>
+                        <Tab.Screen name="TM">
+                            {() => <TMMovesScreen pokemon={pokemon} />}
+                        </Tab.Screen>
+                        <Tab.Screen name="Egg">
+                            {() => <EggMovesScreen pokemon={pokemon} />}
+                        </Tab.Screen>
+                        <Tab.Screen name="Tutor">
+                            {() => <TutorMovesScreen pokemon={pokemon} />}
+                        </Tab.Screen>
+                    </Tab.Navigator>
+                )}
             </View>
 
         </View>
