@@ -48,8 +48,8 @@ const LevelUpMovesScreen = ({ pokemon, movesData, damageClasses }) => {
                         </View>
                         <View style={styles.moveInfoRow}>
                             <Text style={[styles.movesType, { backgroundColor: getTypeStyle(item.type.name).backgroundColor }]}>{capitalizeString(item.type.name)}</Text>
-                            <Text style={[styles.movesInfo, { backgroundColor: damageClasses[item.damage_class.name] }]}>{capitalizeString(item.damage_class.name)}</Text>
-                            <Text style={styles.movesInfo}>{capitalizeString(item.contest_type.name)}</Text>
+                            <Text style={[styles.movesClass, { backgroundColor: damageClasses[item.damage_class.name].background, color: damageClasses[item.damage_class.name].font } ]}>{capitalizeString(item.damage_class.name)}</Text>
+                            <Text style={styles.movesContest}>{capitalizeString(item.contest_type.name)}</Text>
                         </View>
                     </View>
                 )}
@@ -104,10 +104,18 @@ const styles = StyleSheet.create({
         paddingVertical: 3,
         justifyContent: 'center',
     },
-    movesInfo: {
+    movesClass: {
+        width: '20%',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        borderRadius: 12,
+        marginHorizontal: 2,
+    },
+    movesContest: {
         width: '20%',
         textAlign: 'center',
         borderRadius: 12,
+        padding: 1,
         marginHorizontal: 2,
     },
     movesName: {

@@ -38,9 +38,21 @@ type DetailsScreenProps = {
 }
 
 const damageClasses = {
-    "physical": '#C92112',
-    "special": '#4F5870',
-    "status": '#8C888C',
+    "physical":
+        {
+            "background": '#C92112',
+            "font": '#FFA648'
+        },
+    "special":
+        {
+            "background": '#4F5870',
+            "font": 'white'
+        },
+    "status":
+        {
+            "background": '#8C888C',
+            "font": 'white'
+        }
 }
 
 const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
