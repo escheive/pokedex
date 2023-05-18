@@ -37,6 +37,12 @@ type DetailsScreenProps = {
     navigation: any;
 }
 
+const damageClasses = {
+    "physical": '#C92112',
+    "special": '#4F5870',
+    "status": '#8C888C',
+}
+
 const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
     // Grab our pokemon data that was pulled in our app.tsx from params
     const { pokemon } = route.params;
@@ -123,7 +129,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                         initialRouteName="Level Up"
                     >
                         <Tab.Screen name="Level Up">
-                            {() => <LevelUpMovesScreen pokemon={pokemon} movesData={movesData} />}
+                            {() => <LevelUpMovesScreen pokemon={pokemon} movesData={movesData} damageClasses={damageClasses} />}
                         </Tab.Screen>
                         <Tab.Screen name="TM">
                             {() => <TMMovesScreen pokemon={pokemon} />}

@@ -5,7 +5,7 @@ import { capitalizeString } from '../../utils/helpers';
 import { getTypeStyle } from '../../utils/typeStyle';
 
 
-const LevelUpMovesScreen = ({ pokemon, movesData }) => {
+const LevelUpMovesScreen = ({ pokemon, movesData, damageClasses }) => {
 
     const levelUpMoves = pokemon.moves.filter((move) => {
         return move.version_group_details.some(
@@ -48,7 +48,7 @@ const LevelUpMovesScreen = ({ pokemon, movesData }) => {
                         </View>
                         <View style={styles.moveInfoRow}>
                             <Text style={[styles.movesType, { backgroundColor: getTypeStyle(item.type.name).backgroundColor }]}>{capitalizeString(item.type.name)}</Text>
-                            <Text style={styles.movesInfo}>{capitalizeString(item.damage_class.name)}</Text>
+                            <Text style={[styles.movesInfo, { backgroundColor: damageClasses[item.damage_class.name] }]}>{capitalizeString(item.damage_class.name)}</Text>
                             <Text style={styles.movesInfo}>{capitalizeString(item.contest_type.name)}</Text>
                         </View>
                     </View>
@@ -69,6 +69,8 @@ const styles = StyleSheet.create({
     },
     movesLegend: {
         flexDirection: 'row',
+        paddingVertical: 10,
+        backgroundColor: '#ddd',
     },
     moveLevel: {
         width: '15%',
