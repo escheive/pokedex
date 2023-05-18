@@ -222,7 +222,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             alignSelf: 'flex-end',
         },
         favButton: {
-            backgroundColor: pokemonColors[0],
+            backgroundColor: pokemonColors[0].backgroundColor,
             padding: 10,
             alignItems: 'center',
             marginBottom: 20,

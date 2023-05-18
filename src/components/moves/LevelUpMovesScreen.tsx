@@ -22,14 +22,101 @@ const LevelUpMovesScreen = ({ pokemon, movesData, damageClasses }) => {
 
     const sortedMovesData = levelUpMovesData.sort((a, b) => a.level - b.level);
 
+
+    const styles = StyleSheet.create({
+        screenContainer: {
+            height: '100%',
+            paddingHorizontal: 10,
+            backgroundColor: getTypeStyle(pokemon.types[0].type.name).backgroundColor,
+        },
+        contentContainer: {
+            backgroundColor: 'white',
+        },
+        movesLegend: {
+            backgroundColor: '#eee',
+        },
+        movesLegendTopRow: {
+            paddingVertical: 3,
+            flexDirection: 'row',
+        },
+        movesLegendBottomRow: {
+            paddingVertical: 3,
+            flexDirection: 'row',
+        },
+        moveLevel: {
+            width: '15%',
+            textAlign: 'center',
+        },
+        moveName: {
+            width: '40%',
+            textAlign: 'center',
+        },
+        movePP: {
+            width: '15%',
+            textAlign: 'center',
+        },
+        moveAccuracy: {
+            width: '15%',
+            textAlign: 'center',
+        },
+        movePower: {
+            width: '15%',
+            textAlign: 'center',
+        },
+        individualMoveContainer: {
+            flex: 1,
+            justifyContent: 'center',
+            paddingVertical: 10,
+            borderColor: '#ccc',
+            borderBottomWidth: 1,
+        },
+        moveInfoRow: {
+            flexDirection: 'row',
+            paddingVertical: 3,
+            justifyContent: 'center',
+        },
+        movesClass: {
+            width: '20%',
+            textAlign: 'center',
+            borderRadius: 12,
+            marginHorizontal: 2,
+        },
+        movesContest: {
+            width: '20%',
+            textAlign: 'center',
+            borderRadius: 12,
+            padding: 1,
+            marginHorizontal: 2,
+        },
+        movesName: {
+            fontSize: 16,
+            textAlign: 'center',
+            width: '40%',
+        },
+        movesType: {
+            textAlign: 'center',
+            width: '54%',
+            borderRadius: 12,
+            paddingHorizontal: 9,
+            marginHorizontal: 4,
+        }
+    });
+
     return (
         <View style={styles.screenContainer}>
             <View style={styles.movesLegend}>
-                <Text style={styles.moveLevel}>Level</Text>
-                <Text style={styles.moveName}>Move</Text>
-                <Text style={styles.movePP}>PP</Text>
-                <Text style={styles.moveAccuracy}>Accuracy</Text>
-                <Text style={styles.movePower}>Power</Text>
+                <View style={styles.movesLegendTopRow}>
+                    <Text style={styles.moveLevel}>Level</Text>
+                    <Text style={styles.moveName}>Move</Text>
+                    <Text style={styles.movePP}>PP</Text>
+                    <Text style={styles.moveAccuracy}>Accuracy</Text>
+                    <Text style={styles.movePower}>Power</Text>
+                </View>
+                <View style={styles.movesLegendBottomRow}>
+                    <Text style={styles.movesType}>Type</Text>
+                    <Text style={styles.movesClass}>Class</Text>
+                    <Text style={styles.movesContest}>Contest</Text>
+                </View>
             </View>
             <FlatList
                 data={sortedMovesData}
@@ -57,79 +144,5 @@ const LevelUpMovesScreen = ({ pokemon, movesData, damageClasses }) => {
         </View>
     );
 };
-
-
-const styles = StyleSheet.create({
-    screenContainer: {
-        height: '100%',
-        marginHorizontal: 10,
-    },
-    contentContainer: {
-        backgroundColor: 'white',
-    },
-    movesLegend: {
-        flexDirection: 'row',
-        paddingVertical: 10,
-        backgroundColor: '#ddd',
-    },
-    moveLevel: {
-        width: '15%',
-        textAlign: 'center',
-    },
-    moveName: {
-        width: '40%',
-        textAlign: 'center',
-    },
-    movePP: {
-        width: '15%',
-        textAlign: 'center',
-    },
-    moveAccuracy: {
-        width: '15%',
-        textAlign: 'center',
-    },
-    movePower: {
-        width: '15%',
-        textAlign: 'center',
-    },
-    individualMoveContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        paddingVertical: 10,
-        borderColor: '#ccc',
-        borderBottomWidth: 1,
-    },
-    moveInfoRow: {
-        flexDirection: 'row',
-        paddingVertical: 3,
-        justifyContent: 'center',
-    },
-    movesClass: {
-        width: '20%',
-        textAlign: 'center',
-        fontWeight: 'bold',
-        borderRadius: 12,
-        marginHorizontal: 2,
-    },
-    movesContest: {
-        width: '20%',
-        textAlign: 'center',
-        borderRadius: 12,
-        padding: 1,
-        marginHorizontal: 2,
-    },
-    movesName: {
-        fontSize: 16,
-        textAlign: 'center',
-        width: '40%',
-    },
-    movesType: {
-        textAlign: 'center',
-        width: '54%',
-        borderRadius: 12,
-        paddingHorizontal: 9,
-        marginHorizontal: 4,
-    }
-});
 
 export default LevelUpMovesScreen;

@@ -11,6 +11,7 @@ import TMMovesScreen from '../components/moves/TMMovesScreen';
 import TutorMovesScreen from '../components/moves/TutorMovesScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Utils
+import { getTypeStyle } from '../utils/typeStyle';
 
 
 const Tab = createMaterialTopTabNavigator();
