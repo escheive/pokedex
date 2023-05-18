@@ -211,10 +211,13 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
             </Text>
 
             {selectedTab === "max" ? (
-                <Text style={styles.statDisclaimerText}>*Max stats at lvl 100, 31 IVs, 252 Evs, and optimal nature for that stat</Text>
+                <>
+                    <Text style={styles.statDisclaimerText}>*Stats at lvl 100, 31 IVs, 252 Evs, and beneficial nature</Text>
+                    <Text style={styles.statDisclaimerText}>**Please note that a pokemon can only have 510 EVs total</Text>
+                </>
             ) : null}
             {selectedTab === "min" ? (
-                <Text style={styles.statDisclaimerText}>*Min stats at lvl 100, 0 IVs, 0 Evs, and detrimental nature for that stat</Text>
+                <Text style={styles.statDisclaimerText}>*Stats at lvl 100, 0 IVs, 0 Evs, and hindering nature</Text>
             ) : null}
         </View>
     );
