@@ -24,17 +24,21 @@ const LevelUpMovesScreen = ({ pokemon, movesData }) => {
             <FlatList
                 data={sortedMovesData}
 //                 data={pokemon.moves.filter(move => move.version_group_details[0].move_learn_method.name === 'level-up')}
-                keyExtractor={(move) => move?.id?.toString()}
+                keyExtractor={(move) => move?.name}
                 contentContainerStyle={styles.contentContainer}
                 renderItem={({ item }) => (
                     <View style={styles.individualMoveContainer}>
-                        <Text style={styles.moves}>{item.level}</Text>
-                        <Text style={styles.moves}>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</Text>
-                        <Text style={styles.moves}>{item.type.name}</Text>
-                        <Text style={styles.moves}>{item.damage_class.name}</Text>
-                        <Text style={styles.moves}>{item.accuracy}</Text>
-                        <Text style={styles.moves}>{item.pp}</Text>
-                        <Text style={styles.moves}>{item.contest_type.name}</Text>
+                        <View style={styles.moveInfoRow}>
+                            <Text style={styles.moves}>{item.level}</Text>
+                            <Text style={styles.moves}>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</Text>
+                            <Text style={styles.moves}>{item.type.name}</Text>
+                        </View>
+                        <View style={styles.moveInfoRow}>
+                            <Text style={styles.moves}>{item.damage_class.name}</Text>
+                            <Text style={styles.moves}>{item.accuracy}</Text>
+                            <Text style={styles.moves}>{item.pp}</Text>
+                            <Text style={styles.moves}>{item.contest_type.name}</Text>
+                        </View>
                     </View>
                 )}
             />
@@ -58,6 +62,10 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderColor: '#ccc',
         borderBottomWidth: 1,
+    },
+    moveInfoRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
     },
     moves: {
         textAlign: 'center',
