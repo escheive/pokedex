@@ -107,6 +107,8 @@ const styles = StyleSheet.create({
     movesInfo: {
         width: '20%',
         textAlign: 'center',
+        borderRadius: 12,
+        marginHorizontal: 2,
     },
     movesName: {
         fontSize: 16,
@@ -118,6 +120,7 @@ const styles = StyleSheet.create({
         width: '54%',
         borderRadius: 12,
         paddingHorizontal: 9,
+        marginHorizontal: 4,
     }
 });
 
