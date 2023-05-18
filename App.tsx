@@ -2,7 +2,7 @@
 import 'react-native-gesture-handler';
 // Dependencies
 import React, { useState, useEffect } from 'react';
-import { Text, View, Button, StyleSheet } from 'react-native';
+import { Text, View, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -25,6 +25,22 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
+
+
+const BackButton = ({ navigation }) => {
+    const handleGoToMainPokemonScreen = () => {
+        navigation.goBack();
+    };
+
+    return (
+        <Ionicons
+            name="arrow-back"
+            size={24}
+            color="black"
+            onPress={handleGoToMainPokemonScreen}
+        />
+    );
+};
 
 
 const DrawerNavigator = () => {
@@ -52,6 +68,7 @@ const DrawerNavigator = () => {
         navigation.setOptions({ headerTitle: title });
     };
 
+
     return (
         <Navigator
             screenOptions={{ headerShown: true }}
@@ -59,22 +76,42 @@ const DrawerNavigator = () => {
             onNavigationStateChange={handleNavigationStateChange}
         >
 
-            <Screen name="Pokemon" component={PokemonStackNavigator} />
-            <Screen name="Profile" component={ProfileScreen} />
-            <Screen name="Settings" component={SettingsScreen} />
+            <Screen
+                name="Pokemon"
+                component={PokemonStackNavigator}
+            />
+            <Screen
+                name="Profile"
+                component={ProfileScreen}
+            />
+            <Screen
+                name="Settings"
+                component={SettingsScreen}
+            />
 
         </Navigator>
     );
 };
 
 
-const DetailsTabNavigator = ({ pokemonList, typeData, route }) => {
+const DetailsTabNavigator = ({ pokemonList, typeData, route, navigation }) => {
     const { Navigator, Screen } = createBottomTabNavigator();
+
 
     return (
         <Navigator
             screenOptions={({ route }) => ({
-                headerShown: false,
+//                 headerShown: false,
+                headerTitle: '',
+                headerLeft: () => (
+                  <Ionicons
+                    name="arrow-back"
+                    size={24}
+                    color="black"
+                    onPress={() => navigation.goBack()}
+                    style={{ marginLeft: 10 }}
+                  />
+                ),
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
                     if (route.name === 'Info') {
@@ -114,7 +151,7 @@ const PokemonStackNavigator = ({ pokemonList, typeData }) => {
         <Stack.Navigator
             screenOptions={{ headerShown: false }}
         >
-            <Stack.Screen name="Gotta Catch Them All">
+            <Stack.Screen name="Main">
                 {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
             </Stack.Screen>
 
