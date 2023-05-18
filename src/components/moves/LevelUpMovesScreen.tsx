@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
 // Utils
 import { capitalizeString } from '../../utils/helpers';
+import { getTypeStyle } from '../../utils/typeStyle';
 
 
 const LevelUpMovesScreen = ({ pokemon, movesData }) => {
@@ -23,6 +24,13 @@ const LevelUpMovesScreen = ({ pokemon, movesData }) => {
 
     return (
         <View style={styles.screenContainer}>
+            <View style={styles.movesLegend}>
+                <Text style={styles.moveLevel}>Level</Text>
+                <Text style={styles.moveName}>Move</Text>
+                <Text style={styles.movePP}>PP</Text>
+                <Text style={styles.moveAccuracy}>Accuracy</Text>
+                <Text style={styles.movePower}>Power</Text>
+            </View>
             <FlatList
                 data={sortedMovesData}
 //                 data={pokemon.moves.filter(move => move.version_group_details[0].move_learn_method.name === 'level-up')}
@@ -31,15 +39,17 @@ const LevelUpMovesScreen = ({ pokemon, movesData }) => {
                 renderItem={({ item }) => (
                     <View style={styles.individualMoveContainer}>
                         <View style={styles.moveInfoRow}>
-                            <Text style={styles.moves}>{item.level}</Text>
-                            <Text style={styles.moves}>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</Text>
-                            <Text style={styles.moves}>{capitalizeString(item.type.name)}</Text>
+                            <Text style={styles.moveLevel}>{item.level}</Text>
+                            <Text style={styles.movesName}>{capitalizeString(item.name)}</Text>
+                            <Text style={styles.movePP}>{item.pp}</Text>
+                            <Text style={styles.moveAccuracy}>{item.accuracy}</Text>
+                            <Text style={styles.movePower}>{(item.power ? item.power : '-' )}</Text>
+
                         </View>
                         <View style={styles.moveInfoRow}>
-                            <Text style={styles.moves}>{capitalizeString(item.damage_class.name)}</Text>
-                            <Text style={styles.moves}>{item.accuracy}</Text>
-                            <Text style={styles.moves}>{item.pp}</Text>
-                            <Text style={styles.moves}>{capitalizeString(item.contest_type.name)}</Text>
+                            <Text style={[styles.movesType, { backgroundColor: getTypeStyle(item.type.name).backgroundColor }]}>{capitalizeString(item.type.name)}</Text>
+                            <Text style={styles.movesInfo}>{capitalizeString(item.damage_class.name)}</Text>
+                            <Text style={styles.movesInfo}>{capitalizeString(item.contest_type.name)}</Text>
                         </View>
                     </View>
                 )}
@@ -57,6 +67,29 @@ const styles = StyleSheet.create({
     contentContainer: {
         backgroundColor: 'white',
     },
+    movesLegend: {
+        flexDirection: 'row',
+    },
+    moveLevel: {
+        width: '15%',
+        textAlign: 'center',
+    },
+    moveName: {
+        width: '40%',
+        textAlign: 'center',
+    },
+    movePP: {
+        width: '15%',
+        textAlign: 'center',
+    },
+    moveAccuracy: {
+        width: '15%',
+        textAlign: 'center',
+    },
+    movePower: {
+        width: '15%',
+        textAlign: 'center',
+    },
     individualMoveContainer: {
         flex: 1,
         justifyContent: 'center',
@@ -66,12 +99,24 @@ const styles = StyleSheet.create({
     },
     moveInfoRow: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        paddingVertical: 3,
+        justifyContent: 'center',
     },
-    moves: {
+    movesInfo: {
+        width: '20%',
         textAlign: 'center',
-        fontSize: 20,
     },
+    movesName: {
+        fontSize: 16,
+        textAlign: 'center',
+        width: '40%',
+    },
+    movesType: {
+        textAlign: 'center',
+        width: '54%',
+        borderRadius: 12,
+        paddingHorizontal: 9,
+    }
 });
 
 export default LevelUpMovesScreen;
