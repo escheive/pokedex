@@ -110,7 +110,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
         movesContainer: {
             flex: 1,
             justifyContent: 'center',
-            marginBottom: 15,
+            backgroundColor: getTypeStyle(pokemon.types[0].type.name).backgroundColor,
         },
         tabLabel: {
             fontSize: 16,
@@ -137,6 +137,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                             tabBarLabelStyle: styles.tabLabel,
                             tabBarActiveTintColor: getTypeStyle(pokemon.types[0].type.name).backgroundColor,
                             tabBarInactiveTintColor: 'gray',
+                            lazy: true,
                         }}
                         tabBarPosition="top"
                         initialRouteName="Level Up"

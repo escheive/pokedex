@@ -26,8 +26,6 @@ const LevelUpMovesScreen = ({ pokemon, movesData, damageClasses }) => {
     const styles = StyleSheet.create({
         screenContainer: {
             height: '100%',
-            paddingHorizontal: 10,
-            backgroundColor: getTypeStyle(pokemon.types[0].type.name).backgroundColor,
         },
         contentContainer: {
             backgroundColor: 'white',
