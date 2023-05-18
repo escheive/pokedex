@@ -116,7 +116,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
             fontSize: 16,
         },
         tabIndicator: {
-            backgroundColor: 'black',
+            backgroundColor: getTypeStyle(pokemon.types[0].type.name).backgroundColor,
         },
     });
 
@@ -135,7 +135,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                         screenOptions={{
                             tabBarIndicatorStyle: styles.tabIndicator,
                             tabBarLabelStyle: styles.tabLabel,
-                            tabBarActiveTintColor: 'black',
+                            tabBarActiveTintColor: getTypeStyle(pokemon.types[0].type.name).backgroundColor,
                             tabBarInactiveTintColor: 'gray',
                         }}
                         tabBarPosition="top"
