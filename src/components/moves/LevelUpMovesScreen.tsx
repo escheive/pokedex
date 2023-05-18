@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
+// Utils
+import { capitalizeString } from '../../utils/helpers';
 
 
 const LevelUpMovesScreen = ({ pokemon, movesData }) => {
@@ -31,13 +33,13 @@ const LevelUpMovesScreen = ({ pokemon, movesData }) => {
                         <View style={styles.moveInfoRow}>
                             <Text style={styles.moves}>{item.level}</Text>
                             <Text style={styles.moves}>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</Text>
-                            <Text style={styles.moves}>{item.type.name}</Text>
+                            <Text style={styles.moves}>{capitalizeString(item.type.name)}</Text>
                         </View>
                         <View style={styles.moveInfoRow}>
-                            <Text style={styles.moves}>{item.damage_class.name}</Text>
+                            <Text style={styles.moves}>{capitalizeString(item.damage_class.name)}</Text>
                             <Text style={styles.moves}>{item.accuracy}</Text>
                             <Text style={styles.moves}>{item.pp}</Text>
-                            <Text style={styles.moves}>{item.contest_type.name}</Text>
+                            <Text style={styles.moves}>{capitalizeString(item.contest_type.name)}</Text>
                         </View>
                     </View>
                 )}
