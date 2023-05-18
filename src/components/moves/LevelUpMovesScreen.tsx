@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
     individualMoveContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
         paddingVertical: 10,
         borderColor: '#ccc',
         borderBottomWidth: 1,
