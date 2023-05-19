@@ -157,7 +157,6 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                     </Tab.Navigator>
                 )}
             </View>
-
         </View>
     );
 };
