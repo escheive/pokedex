@@ -293,15 +293,16 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 
                     <PokemonStats pokemonColors={pokemonColors} pokemon={pokemon} />
 
-                    <View style={{ marginTop: 20 }}>
 
-                            <TouchableOpacity
-                                style={styles.favButton}
-                                onPress={handleFavoritePress}
-                            >
-                                <Text style={styles.favButtonText}>{isFavorite ? 'Remove from favorites' : 'Add to favorites'}</Text>
-                            </TouchableOpacity>
-                    </View>
+{/*                     <View style={{ marginTop: 20 }}> */}
+
+{/*                             <TouchableOpacity */}
+{/*                                 style={styles.favButton} */}
+{/*                                 onPress={handleFavoritePress} */}
+{/*                             > */}
+{/*                                 <Text style={styles.favButtonText}>{isFavorite ? 'Remove from favorites' : 'Add to favorites'}</Text> */}
+{/*                             </TouchableOpacity> */}
+{/*                     </View> */}
 
                 </>
             )}

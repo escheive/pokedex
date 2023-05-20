@@ -18,9 +18,17 @@ import MovesScreen from './src/screens/MovesScreen';
 import LoadingScreen from './src/components/LoadingScreen';
 // Utils
 import { getTypeStyle } from './src/utils/typeStyle';
+// Database
+import SQLite from 'react-native-sqlite-storage';
 // Assets
 import typeData from './src/assets/typeData';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+
+const database = SQLite.openDatabase({
+    name: 'Pokemon.db',
+    location: 'default',
+});
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -101,17 +109,17 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route, navigation }) => {
     return (
         <Navigator
             screenOptions={({ route }) => ({
-//                 headerShown: false,
+                headerShown: false,
                 headerTitle: '',
-                headerLeft: () => (
-                  <Ionicons
-                    name="arrow-back"
-                    size={24}
-                    color="black"
-                    onPress={() => navigation.goBack()}
-                    style={{ marginLeft: 10 }}
-                  />
-                ),
+//                 headerLeft: () => (
+//                   <Ionicons
+//                     name="arrow-back"
+//                     size={24}
+//                     color="black"
+//                     onPress={() => navigation.goBack()}
+//                     style={{ marginLeft: 10 }}
+//                   />
+//                 ),
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
                     if (route.name === 'Info') {
