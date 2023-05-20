@@ -25,10 +25,72 @@ import typeData from './src/assets/typeData';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
+// Open the database
 const database = SQLite.openDatabase({
     name: 'Pokemon.db',
     location: 'default',
 });
+
+// Execute SQL statement to create a pokemon table
+database.transaction((tx) => {
+    tx.executeSql(
+        `CREATE TABLE IF NOT EXISTS pokemon (
+        id INTEGER PRIMARY KEY,
+        name TEXT NOT NULL,
+        type1 TEXT NOT NULL,
+        type2 TEXT,
+        height REAL,
+        weight REAL,
+        base_experience INTEGER,
+        ability1 TEXT,
+        ability2 TEXT,
+        ability3 TEXT,
+        capture_rate INTEGER,
+        evolution_chain_id INTEGER,
+        image_url TEXT
+        );`,
+        [],
+        () => {
+            console.log('Table "pokemon" created successfully');
+        },
+        (error) => {
+            console.error('Error creating table "pokemon":', error);
+        }
+    );
+});
+
+// Function to insert a Pokemon record into the pokemon table
+const insertPokemon = (pokemonData) => {
+    database.transaction((tx) => {
+        tx.executeSql(
+            `INSERT INTO pokemon (id, name, type1, type2, height, weight, base_experience, ability1, ability2, ability3, capture_rate, evolution_chain_id, image_url)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+            [
+                pokemonData.id,
+                pokemonData.name,
+                pokemonData.type1,
+                pokemonData.type2,
+                pokemonData.height,
+                pokemonData.weight,
+                pokemonData.base_experience,
+                pokemonData.ability1,
+                pokemonData.ability2,
+                pokemonData.ability3,
+                pokemonData.capture_rate,
+                pokemonData.evolution_chain_id,
+                pokemonData.image_url,
+            ],
+            () => {
+                console.log('Pokemon record inserted successfully');
+            },
+            (error) => {
+                console.error('Error inserting Pokemon record:', error);
+            }
+        );
+    });
+};
+
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
