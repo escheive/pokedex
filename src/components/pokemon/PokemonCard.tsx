@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions, Modal } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getTypeStyle } from '../../utils/typeStyle';
+import { capitalizeString } from '../../utils/helpers';
 
 const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, getTypeBackgroundStyle, pokemonColors }) => {
     const [selectedAbility, setSelectedAbility] = useState(null);
@@ -98,7 +99,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
                 backgroundColor: 'gold',
             },
             heading: {
-                fontSize: (30 - (pokemon.name.length + pokemon.types[0].type.name.length) / 4),
+                fontSize: (30 - (pokemon.name.length + pokemon.type1.length) / 4),
                 fontWeight: 'bold',
                 alignSelf: 'flex-start',
             },
@@ -160,7 +161,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
             },
             abilityContainer: {
                 width: '90%',
-                backgroundColor: pokemonColors[0].backgroundColor,
+                backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
                 borderWidth: 1,
                 borderColor: '#ccc',
                 borderRadius: 15,
@@ -190,7 +191,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
                 fontWeight: 'bold',
                 borderTopLeftRadius: 16,
                 borderTopRightRadius: 16,
-                backgroundColor: pokemonColors[0].backgroundColor,
+                backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
                 color: 'white',
                 paddingVertical: 16,
               },
@@ -233,14 +234,14 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
         setSelectedAbility(ability)
     };
 
-    console.log(selectedAbility)
+    console.log(pokemon)
 
     return (
         <View style={styles.card}>
             <View style={styles.imageContainer}>
                 <Image
                     style={styles.image}
-                    source={{ uri: `${pokemon.sprites.other['official-artwork'].front_default}` }}
+                    source={{ uri: `${pokemon.image_url}` }}
                 />
                 <View style={styles.idContainer}>
                     <Text style={styles.idText}>
@@ -259,15 +260,22 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
             <View style={[styles.bottomOfCard, pokedexEntry.isLegendary ? styles.legendaryCard : styles.normalCard]}>
                 <View style={styles.nameContainer}>
                     <Text style={styles.heading}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+
                     <View style={styles.typesContainer}>
-                        {pokemon.types.map((type, index) => (
-                            <View key={type.type.name} style={[styles.type, { backgroundColor: pokemonColors[index].backgroundColor } ]}>
-                                <Text style={{ color: pokemonColors[index].color, fontSize: 18, fontWeight: '600' }}>
-                                    {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
+                        <View style={[styles.type, { backgroundColor: pokemonColors[pokemon.type1].backgroundColor } ]}>
+                            <Text style={{ color: pokemonColors[pokemon.type1].color, fontSize: 18, fontWeight: '600' }}>
+                                {capitalizeString(pokemon.type1)}
+                            </Text>
+                        </View>
+                        {pokemon.type2 ? (
+                            <View style={[styles.type, { backgroundColor: pokemonColors[pokemon.type2].backgroundColor } ]}>
+                                <Text style={{ color: pokemonColors[pokemon.type2].color, fontSize: 18, fontWeight: '600' }}>
+                                    {capitalizeString(pokemon.type2)}
                                 </Text>
                             </View>
-                        ))}
+                        ) : null}
                     </View>
+
                 </View>
 
                 <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>

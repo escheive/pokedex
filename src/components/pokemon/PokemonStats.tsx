@@ -147,6 +147,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
         },
         selectedNavItemText: {
             fontWeight: 'bold',
+            backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
         },
         statDisclaimerText: {
             textAlign: 'center',
@@ -158,7 +159,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
         },
         statsTotalValue: {
             fontWeight: 'bold',
-            color: pokemonColors[0].backgroundColor,
+            color: pokemonColors[pokemon.type1].backgroundColor,
         },
     });
 
@@ -169,8 +170,8 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
                 <TouchableOpacity
                     style={[
                         styles.navItem,
-                        selectedTab === 'base' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
-                        selectedTab !== 'base' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                        selectedTab === 'base' && styles.selectedNavItemText,
+                        selectedTab !== 'base' && (pokemon.type2 ? { backgroundColor: pokemonColors[pokemon.type2].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                     ]}
                     onPress={() => setSelectedTab('base')}
                 >
@@ -179,8 +180,8 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
                 <TouchableOpacity
                     style={[
                         styles.navItem,
-                        selectedTab === 'min' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
-                        selectedTab !== 'min' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                        selectedTab === 'min' && styles.selectedNavItemText,
+                        selectedTab !== 'min' && (pokemon.type2 ? { backgroundColor: pokemonColors[pokemon.type2].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                     ]}
                     onPress={() => setSelectedTab('min')}
                 >
@@ -189,8 +190,8 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
                 <TouchableOpacity
                     style={[
                         styles.navItem,
-                        selectedTab === 'max' && [styles.selectedNavItemText, { backgroundColor: pokemonColors[0].backgroundColor }],
-                        selectedTab !== 'max' && (pokemon.types.length === 2 ? { backgroundColor: pokemonColors[1].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                        selectedTab === 'max' && styles.selectedNavItemText,
+                        selectedTab !== 'max' && (pokemon.type2 ? { backgroundColor: pokemonColors[pokemon.type2].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                     ]}
                     onPress={() => setSelectedTab('max')}
                 >
