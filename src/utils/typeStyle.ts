@@ -102,7 +102,7 @@
 const pokemonColors = {
     "normal": {
         "backgroundColor": 'rgba(128, 128, 128, 0.5)',
-        "color": "white"
+        "color": "white",
     },
     "fire": {
         "backgroundColor": 'rgba(255, 165, 0, 0.5)',
@@ -173,3 +173,5 @@ const pokemonColors = {
         "color": "white"
     },
 }
+
+export { pokemonColors }

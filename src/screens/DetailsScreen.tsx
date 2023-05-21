@@ -10,7 +10,7 @@ import PokemonCard from '../components/pokemon/PokemonCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Utils
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
-import { getTypeStyle } from '../utils/typeStyle';
+import { getTypeStyle, pokemonColors } from '../utils/typeStyle';
 import { fetchAbility, fetchAbilityData, getPokedexEntry, fetchAdditionalData } from '../utils/pokemonDetails';
 
 type TypeProps = {
@@ -41,22 +41,12 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [isFavorite, setIsFavorite] = useState(false);
     // useState to track pokemonAbilities for each individual pokemon when their page is pulled up
     const [pokemonAbilities, setPokemonAbilities] = useState([]);
-    // Declare an array so that we can assign colors for this pokemon based on its type
-    let pokemonColors = [];
     // Variable to store pokedex entry after fetching
     const [pokedexEntry, setPokedexEntry] = useState({ "genus": "", "flavorText": ""});
     // useState for the nav below the pokemon card
     const [selectedTab, setSelectedTab] = React.useState('stats');
     // useState for additional pokemon data
     const [additionalData, setAdditionalData] = useState(null);
-
-
-    grabPokemonColors = async () => {
-        for(const type of pokemon.types) {
-            pokemonColors.push((getTypeStyle(type.type.name)))
-        }
-    }
-    grabPokemonColors();
 
     // Function to handlePress of the previous evolution button in top left corner
     const handlePress = async (pokemonId) => {
@@ -108,14 +98,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             setIsFavorite(added);
         }
     };
-
-
-    // Function to take the pokemons types, run function to get the corresponding color and then create an array of colors based on types
-//     const getTypeBackgroundStyle = (types: TypeProps[]) => {
-//         const stylesArray = types.map((type) => getTypeStyle(type.type.name));
-//         pokemonColors.push(stylesArray[0].backgroundColor)
-//         return stylesArray.filter(style => Object.keys(style).length > 0);
-//     };
 
     // Function to take the pokemons types, and grab the info for that type
     const getTypeInfo = async (typesArr: TypeProps[]) => {
@@ -173,11 +155,13 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
 //         console.log(typeInfo)
     });
 
+    console.log(pokemonColors)
+
     // Stylesheet for this screen
     const styles = StyleSheet.create({
         container: {
             height: '100%',
-            backgroundColor: pokemonColors[0].backgroundColor,
+            backgroundColor: pokemonColors[pokemon.type1].backgroundColor
         },
         navContainer: {
             flexDirection: 'row',
@@ -222,7 +206,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
             alignSelf: 'flex-end',
         },
         favButton: {
-            backgroundColor: pokemonColors[0].backgroundColor,
+            backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
             padding: 10,
             alignItems: 'center',
             marginBottom: 20,
@@ -271,7 +255,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         },
         loadMoreMoves: {
             fontSize: 26,
-            color: pokemonColors[0],
+            color: pokemonColors[pokemon.type1].color,
             textAlign: 'center',
         },
     });
