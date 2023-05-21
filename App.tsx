@@ -24,74 +24,6 @@ import SQLite from 'react-native-sqlite-storage';
 import typeData from './src/assets/typeData';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-
-// Open the database
-const database = SQLite.openDatabase({
-    name: 'Pokemon.db',
-    location: 'default',
-});
-
-// Execute SQL statement to create a pokemon table
-database.transaction((tx) => {
-    tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS pokemon (
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL,
-        type1 TEXT NOT NULL,
-        type2 TEXT,
-        height REAL,
-        weight REAL,
-        base_experience INTEGER,
-        ability1 TEXT,
-        ability2 TEXT,
-        ability3 TEXT,
-        capture_rate INTEGER,
-        evolution_chain_id INTEGER,
-        image_url TEXT
-        );`,
-        [],
-        () => {
-            console.log('Table "pokemon" created successfully');
-        },
-        (error) => {
-            console.error('Error creating table "pokemon":', error);
-        }
-    );
-});
-
-// Function to insert a Pokemon record into the pokemon table
-const insertPokemon = (pokemonData) => {
-    database.transaction((tx) => {
-        tx.executeSql(
-            `INSERT INTO pokemon (id, name, type1, type2, height, weight, base_experience, ability1, ability2, ability3, capture_rate, evolution_chain_id, image_url)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-            [
-                pokemonData.id,
-                pokemonData.name,
-                pokemonData.type1,
-                pokemonData.type2,
-                pokemonData.height,
-                pokemonData.weight,
-                pokemonData.base_experience,
-                pokemonData.ability1,
-                pokemonData.ability2,
-                pokemonData.ability3,
-                pokemonData.capture_rate,
-                pokemonData.evolution_chain_id,
-                pokemonData.image_url,
-            ],
-            () => {
-                console.log('Pokemon record inserted successfully');
-            },
-            (error) => {
-                console.error('Error inserting Pokemon record:', error);
-            }
-        );
-    });
-};
-
-
-
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -267,42 +199,211 @@ function SettingsStack() {
 
 
 
+// Open the database
+const database = SQLite.openDatabase({
+    name: 'Pokemon.db',
+    location: 'default',
+});
+
+const resetPokemonTable = () => {
+  database.transaction((tx) => {
+    tx.executeSql(
+      `DROP TABLE IF EXISTS pokemon;`,
+      [],
+      () => {
+        console.log('Table "pokemon" dropped successfully');
+        createPokemonTable();
+      },
+      (error) => {
+        console.error('Error dropping table "pokemon":', error);
+      }
+    );
+  });
+};
+
+
+// Track if pokemon table is already created
+let isTableCreated = false;
+
+// Execute SQL statement to create a pokemon table
+const createPokemonTable = () => {
+    console.log('createPokemonTable function')
+    return new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `SELECT name FROM sqlite_master WHERE type='table' AND name='Pokemon';`,
+                [],
+                (tx, result) => {
+                    if (result.rows.length === 0) {
+                        console.log('Table truly doesnt exist')
+                        // If table doesnt exist, create it
+                        tx.executeSql(
+                            `CREATE TABLE IF NOT EXISTS Pokemon (
+                            id INTEGER PRIMARY KEY,
+                            name TEXT NOT NULL,
+                            type1 TEXT NOT NULL,
+                            type2 TEXT,
+                            height REAL,
+                            weight REAL,
+                            base_experience INTEGER,
+                            ability1 TEXT,
+                            ability2 TEXT,
+                            ability3 TEXT,
+                            capture_rate INTEGER,
+                            evolution_chain_id INTEGER,
+                            image_url TEXT
+                            );`,
+                            [],
+                            () => {
+                                console.log('Table "Pokemon" created successfully');
+                                isTableCreated = true;
+                                resolve();
+                            },
+                            (error) => {
+                                console.error('Error creating table "Pokemon":', error);
+                                reject(error);
+                            }
+                        );
+                    } else {
+                        console.log('Table does exist?')
+                        // if table already exists
+                        isTableCreated = true;
+                        resolve();
+                    }
+                },
+                (error) => {
+                    console.error('Error checking table "Pokemon":', error);
+                    reject(error);
+                }
+            );
+        });
+    });
+};
+
+// Function to insert a Pokemon record into the pokemon table
+const insertPokemon = async (pokemonData) => {
+    try {
+        await new Promise((resolve, reject) => {
+            database.transaction((tx) => {
+                pokemonData.forEach((pokemon) => {
+                    tx.executeSql(
+                        `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, ability1, ability2, ability3, capture_rate, evolution_chain_id, image_url)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+                        [
+                            pokemon.id,
+                            pokemon.name,
+                            pokemon.types[0].type.name,
+                            pokemon.types[1] ? pokemon.types[1].type.name : null,
+                            pokemon.height,
+                            pokemon.weight,
+                            pokemon.base_experience,
+                            pokemon.abilities[0] ? pokemon.abilities[0].ability.name : null,
+                            pokemon.abilities[1] ? pokemon.abilities[1].ability.name : null,
+                            pokemon.abilities[2] ? pokemon.abilities[2].ability.name : null,
+                            pokemon.capture_rate,
+                            pokemon.species.url,
+                            pokemon.sprites.other['official-artwork'].front_default,
+                        ],
+                        () => {
+                            console.log('Pokemon record inserted successfully');
+                            resolve();
+                        },
+                        (error) => {
+                            console.error('Error inserting Pokemon record:', error);
+                            reject(error);
+                        }
+                    );
+                });
+                resolve();
+            });
+        });
+    } catch (error) {
+        console.error('Error inserting Pokemon data:', error);
+    }
+};
+
+// Function to fetch base pokemon data from the api
+const fetchPokemonFromAPI = async (start, end, callback) => {
+    console.log('fetchingPokemonFromAPI function')
+    try {
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${end - start}&offset=${start}`);
+        const data = await response.json();
+
+        const pokemonUrls = data.results.map((pokemon) => pokemon.url);
+        const pokemonData = await Promise.all(pokemonUrls.map((url) => fetch(url).then((response) => response.json())));
+
+        await insertPokemon(pokemonData);
+
+//         setPokemonList((prevList) => [...prevList, ...pokemonData]);
+//         setIsLoading(false);
+        // Call the callback function with the fetched data
+        callback(pokemonData);
+    } catch (error) {
+        console.error('Error fetching Pokemon data', error);
+    }
+};
+
+
 export default function App() {
     const [isLoading, setIsLoading] = useState(true);
     const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
+
+
+
 
     useEffect(() => {
         // Function to fetch base pokemon data from the api
         const fetchPokemonData = async (start, end) => {
             try {
-                // Grab pokemon data using start and end variables to determine which ones are being fetched
-                const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${end - start}&offset=${start}`);
-                // parse the data
-                const data = await response.json();
+                // Wait for the table creation process to complete
+                await createPokemonTable();
 
-                const pokemonUrls = data.results.map((pokemon) => pokemon.url);
-                const pokemonData = await Promise.all(pokemonUrls.map((url) => fetch(url).then((response) => response.json())));
-                setPokemonList((prevList) => [...prevList, ...pokemonData]);
-                setIsLoading(false);
+                await new Promise((resolve, reject) => {
+                    database.transaction((tx) => {
+                        tx.executeSql(
+                            `SELECT * FROM Pokemon WHERE id BETWEEN ? AND ?;`,
+                            [start, end],
+                            (tx, result) => {
+                                if (result.rows.length > 0) {
+                                    // Data is already present in the database
+                                    const pokemonData = [];
 
-                // Fetch the remaining pokemon in the background
-                const remainingPokemons = 100 - end; // Total number of pokemon - initial batch
-                const batchSize = 30;
+                                    for (let i = 0; i < result.rows.length; i++) {
+                                        pokemonData.push(result.rows.item(i));
+                                    }
 
-                // If there are still unfetched pokemon, keep going
-                if (remainingPokemons > 0) {
-                    // nextStart will be set to the current end so that we can start with the very next pokemon
-                    const nextStart = end;
-                    // nextEnd will be calculated based on current end and batchSize
-                    const nextEnd = Math.min(end + batchSize, 100);
-                    // fetch the pokemon using the updated variables
-                    fetchPokemonData(nextStart, nextEnd);
-                }
+                                    setPokemonList((prevList) => [...prevList, ...pokemonData]);
+                                    console.log('data is present');
+                                    setIsLoading(false);
+                                    resolve();
+                                } else {
+                                    // Table exists but no data found
+                                    setIsLoading(false);
+                                    console.log('Table exists, but no data found');
+                                    // Check if the data is already present
+                                    if (pokemonList.length === 0) {
+                                        fetchPokemonFromAPI(start, end, (fetchedPokemonData) => {
+                                            setPokemonList((prevList) => [...prevList, ...fetchedPokemonData]);
+                                            setIsLoading(false);
+                                        });
+                                    }
+                                    resolve();
+                                }
+                            },
+                            (error) => {
+                                console.error('Error checking Pokemon data:', error);
+                                reject(error);
+                            }
+                        );
+                    });
+                });
             } catch (error) {
-                console.error(`Error fetching pokemon data for range ${start} - ${end}:`, error)
+                console.error('Error fetching Pokemon data:', error);
             }
         };
 
+
+//         resetPokemonTable();
         // Fetch the initial 100 pokemon on app start
         fetchPokemonData(0, 20);
     }, []);
@@ -327,3 +428,5 @@ export default function App() {
         </NavigationContainer>
     );
 }
+
+

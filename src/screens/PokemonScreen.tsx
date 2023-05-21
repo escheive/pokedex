@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Image, Dime
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Pokemon } from '../types';
 import { getTypeStyle } from '../utils/typeStyle';
+import { capitalizeString } from '../utils/helpers';
 
 type Props = {
     navigation: StackNavigationProp<any>;
@@ -113,24 +114,21 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
 
     const renderItem = ({ item: pokemon }: { item: Pokemon }) => {
         const screenWidth = Dimensions.get('window').width;
-        // Width for two columns
-//         const itemWidth = screenWidth / 2 - 15;
         // Width for one column
         const itemWidth = screenWidth - 5;
-//         const typeData = typesData[pokemon.types[0].type.name];
-//         console.log(typeData)
-        const backgroundColor = (getTypeStyle(pokemon.types[0].type.name)).backgroundColor;
+        const backgroundColor = pokemon.type1 ? (getTypeStyle(pokemon.type1)).backgroundColor : '';
         return (
             <View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
                 <TouchableOpacity style={styles.itemCard} onPress={() => handlePress(pokemon)}>
                     <View style={styles.itemDetailsContainer}>
                         <Text style={styles.pokemonId}>{pokemon.id}</Text>
                         <View style={styles.pokemonNameAndTypeContainer}>
-                            <Text style={styles.pokemonName}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+                            <Text style={styles.pokemonName}>{capitalizeString(pokemon.name)}</Text>
                             <View style={styles.pokemonTypesContainer}>
-                                {pokemon.types.map((type) => (
-                                    <Text style={styles.pokemonType} key={type.type.name}>{type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}</Text>
-                                ))}
+                                <Text style={styles.pokemonType}>{capitalizeString(pokemon.type1)}</Text>
+                                {pokemon.type2 && (
+                                    <Text style={styles.pokemonType}>{capitalizeString(pokemon.type2)}</Text>
+                                )}
                             </View>
                         </View>
                     </View>
