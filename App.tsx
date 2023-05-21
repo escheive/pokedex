@@ -161,7 +161,7 @@ const PokemonStackNavigator = ({ pokemonList, typeData }) => {
                 name="Details"
                 component={DetailsTabNavigator}
                 options={({ route }) => {
-                    const pokemonType = route.params.pokemon.types[0].type.name;
+                    const pokemonType = route.params.pokemon.type1;
                     const backgroundColor = getTypeStyle(pokemonType);
                     let pokemonName = route.params.pokemon.name;
                     pokemonName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
