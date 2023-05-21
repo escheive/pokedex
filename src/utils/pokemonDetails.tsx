@@ -141,9 +141,9 @@ export { fetchAbilityData };
 
 
 
-const getPokedexEntry = async (setPokedexEntry, species) => {
+const getPokedexEntry = async (setPokedexEntry, species_url) => {
     try {
-        const pokedexSpeciesDataResponse = await fetch(species.url);
+        const pokedexSpeciesDataResponse = await fetch(species_url);
         const pokedexSpeciesData = await pokedexSpeciesDataResponse.json();
 
         const isLegendary = pokedexSpeciesData.is_legendary;

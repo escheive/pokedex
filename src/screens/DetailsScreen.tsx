@@ -60,9 +60,11 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         navigation.navigate('Info', { pokemon });
     }
 
+    console.log(pokemon.species_url)
+
     // useEffect to check if a pokemon is favorited and fetch ability info when pokemon object changes
     useEffect(() => {
-        getPokedexEntry(setPokedexEntry, pokemon.species)
+        getPokedexEntry(setPokedexEntry, pokemon.species_url)
 
         checkIfFavorite();
 
