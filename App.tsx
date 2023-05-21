@@ -18,6 +18,7 @@ import MovesScreen from './src/screens/MovesScreen';
 import LoadingScreen from './src/components/LoadingScreen';
 // Utils
 import { getTypeStyle } from './src/utils/typeStyle';
+import { capitalizeString } from './src/utils/helpers';
 // Database
 import SQLite from 'react-native-sqlite-storage';
 // Assets
@@ -164,7 +165,7 @@ const PokemonStackNavigator = ({ pokemonList, typeData }) => {
                     const pokemonType = route.params.pokemon.type1;
                     const backgroundColor = getTypeStyle(pokemonType);
                     let pokemonName = route.params.pokemon.name;
-                    pokemonName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
+                    pokemonName = capitalizeString(pokemonName);
 
                     return {
                         title: pokemonName,
@@ -250,7 +251,7 @@ const createPokemonTable = () => {
                             ability2 TEXT,
                             ability3 TEXT,
                             capture_rate INTEGER,
-                            evolution_chain_id INTEGER,
+                            species_url TEXT,
                             image_url TEXT
                             );`,
                             [],
@@ -287,7 +288,7 @@ const insertPokemon = async (pokemonData) => {
             database.transaction((tx) => {
                 pokemonData.forEach((pokemon) => {
                     tx.executeSql(
-                        `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, ability1, ability2, ability3, capture_rate, evolution_chain_id, image_url)
+                        `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, ability1, ability2, ability3, capture_rate, species_url, image_url)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
                         [
                             pokemon.id,
@@ -334,12 +335,10 @@ const fetchPokemonFromAPI = async (start, end, callback) => {
 
         await insertPokemon(pokemonData);
 
-//         setPokemonList((prevList) => [...prevList, ...pokemonData]);
-//         setIsLoading(false);
         // Call the callback function with the fetched data
         callback(pokemonData);
     } catch (error) {
-        console.error('Error fetching Pokemon data', error);
+        console.error('Error in fetchPokemonFromAPI function', error);
     }
 };
 
@@ -352,6 +351,8 @@ export default function App() {
 
 
     useEffect(() => {
+
+//         resetPokemonTable();
         // Function to fetch base pokemon data from the api
         const fetchPokemonData = async (start, end) => {
             try {
@@ -398,12 +399,10 @@ export default function App() {
                     });
                 });
             } catch (error) {
-                console.error('Error fetching Pokemon data:', error);
+                console.error('Error in fetchedPokemonData function:', error);
             }
         };
 
-
-//         resetPokemonTable();
         // Fetch the initial 100 pokemon on app start
         fetchPokemonData(0, 20);
     }, []);

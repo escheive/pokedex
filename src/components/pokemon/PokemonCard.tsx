@@ -234,7 +234,6 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
         setSelectedAbility(ability)
     };
 
-    console.log(pokemon)
 
     return (
         <View style={styles.card}>
@@ -259,7 +258,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
 
             <View style={[styles.bottomOfCard, pokedexEntry.isLegendary ? styles.legendaryCard : styles.normalCard]}>
                 <View style={styles.nameContainer}>
-                    <Text style={styles.heading}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+                    <Text style={styles.heading}>{capitalizeString(pokemon.name)}</Text>
 
                     <View style={styles.typesContainer}>
                         <View style={[styles.type, { backgroundColor: pokemonColors[pokemon.type1].backgroundColor } ]}>

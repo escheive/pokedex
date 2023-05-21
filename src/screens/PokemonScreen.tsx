@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Image, Dimensions, Switch, TextInput } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Pokemon } from '../types';
-import { getTypeStyle } from '../utils/typeStyle';
+import { getTypeStyle, pokemonColors } from '../utils/typeStyle';
 import { capitalizeString } from '../utils/helpers';
 
 type Props = {
@@ -116,7 +116,7 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
         const screenWidth = Dimensions.get('window').width;
         // Width for one column
         const itemWidth = screenWidth - 5;
-        const backgroundColor = pokemon.type1 ? (getTypeStyle(pokemon.type1)).backgroundColor : '';
+        const backgroundColor = pokemon.type1 ? pokemonColors[pokemon.type1].backgroundColor : '';
         return (
             <View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
                 <TouchableOpacity style={styles.itemCard} onPress={() => handlePress(pokemon)}>

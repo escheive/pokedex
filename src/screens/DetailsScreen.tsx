@@ -60,7 +60,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         navigation.navigate('Info', { pokemon });
     }
 
-
     // useEffect to check if a pokemon is favorited and fetch ability info when pokemon object changes
     useEffect(() => {
         getPokedexEntry(setPokedexEntry, pokemon.species)
@@ -154,8 +153,6 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
     getPokemonTypeInfo(pokemon).then((typeInfo) => {
 //         console.log(typeInfo)
     });
-
-    console.log(pokemonColors)
 
     // Stylesheet for this screen
     const styles = StyleSheet.create({
