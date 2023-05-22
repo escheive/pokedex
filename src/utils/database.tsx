@@ -1,7 +1,7 @@
 
 // Execute SQL statement to create a pokemon table
 const createPokemonTable = (database) => {
-    console.log('createPokemonTable function')
+    console.log('createPokemonTable function hit')
     return new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
@@ -9,7 +9,7 @@ const createPokemonTable = (database) => {
                 [],
                 (tx, result) => {
                     if (result.rows.length === 0) {
-                        console.log('Table truly doesnt exist')
+                        console.log('Pokemon table doesnt exist, creating one');
                         // If table doesnt exist, create it
                         tx.executeSql(
                             `CREATE TABLE IF NOT EXISTS Pokemon (
@@ -39,9 +39,7 @@ const createPokemonTable = (database) => {
                             }
                         );
                     } else {
-                        console.log('Table does exist?')
-                        // if table already exists
-                        isTableCreated = true;
+                        console.log('Table does exist already')
                         resolve();
                     }
                 },
@@ -57,6 +55,7 @@ const createPokemonTable = (database) => {
 
 // Function to drop pokemon table
 const resetPokemonTable = (database) => {
+    console.log('resetPokemonTable function hit');
     database.transaction((tx) => {
         tx.executeSql(
             `DROP TABLE IF EXISTS pokemon;`,
@@ -75,6 +74,7 @@ const resetPokemonTable = (database) => {
 
 // Function to insert a Pokemon record into the pokemon table
 const insertPokemon = async (database, pokemonData) => {
+    console.log('insertPokemon function hit')
     try {
         await new Promise((resolve, reject) => {
             database.transaction((tx) => {
@@ -98,7 +98,6 @@ const insertPokemon = async (database, pokemonData) => {
                             pokemon.sprites.other['official-artwork'].front_default,
                         ],
                         () => {
-                            console.log('Pokemon record inserted successfully');
                             resolve();
                         },
                         (error) => {
@@ -107,6 +106,7 @@ const insertPokemon = async (database, pokemonData) => {
                         }
                     );
                 });
+                console.log('Pokemon records inserted successfully');
                 resolve();
             });
         });

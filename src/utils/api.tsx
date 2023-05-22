@@ -1,7 +1,7 @@
 
 // Function to fetch base pokemon data from the api
 const fetchPokemonFromAPI = async (start, end) => {
-    console.log('fetchingPokemonFromAPI function')
+    console.log('fetchingPokemonFromAPI function hit')
     try {
         const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${end - start}&offset=${start}`);
         const data = await response.json();
@@ -26,6 +26,7 @@ export { fetchPokemonFromAPI };
 
 // Function to fetch base pokemon data from database or api
 const fetchPokemonData = async ( database, createPokemonTable, insertPokemon, setIsLoading, setPokemonList ) => {
+    console.log('fetchPokemonData function hit');
     try {
         // Wait for the table creation process to complete
         await createPokemonTable(database);

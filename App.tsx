@@ -201,33 +201,25 @@ function SettingsStack() {
 };
 
 
+// Function to create a table for abilities
+const createAbilitiesTable = async () => {
+    try {
+        await database.transaction(async(tx) => {
+            await tx.executeSql(`
+                CREATE TABLE IF NOT EXISTS Abilities (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    abilityName TEXT,
+                    abilityDescription TEXT,
+                    pokemonWithAbility TEXT
+                );
+            `);
+        })
 
-// // Open the database
-// const database = SQLite.openDatabase({
-//     name: 'Pokemon.db',
-//     location: 'default',
-// });
-
-
-// // Function to create a table for abilities
-// const createAbilitiesTable = async () => {
-//     try {
-//         await database.transaction(async(tx) => {
-//             await tx.executeSql(`
-//                 CREATE TABLE IF NOT EXISTS Abilities (
-//                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-//                     abilityName TEXT,
-//                     abilityDescription TEXT,
-//                     pokemonWithAbility TEXT
-//                 );
-//             `);
-//         })
-//
-//         console.log('Abilities table created successfully');
-//     } catch (error) {
-//         console.error('Error creating Abilities table in the createAbilitiesTable function:', error);
-//     }
-// };
+        console.log('Abilities table created successfully');
+    } catch (error) {
+        console.error('Error creating Abilities table in the createAbilitiesTable function:', error);
+    }
+};
 
 
 
