@@ -60,7 +60,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         navigation.navigate('Info', { pokemon });
     }
 
-    console.log(pokemon.species_url)
+    console.log(pokemon)
 
     // useEffect to check if a pokemon is favorited and fetch ability info when pokemon object changes
     useEffect(() => {
@@ -71,7 +71,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         fetchAbilityData(pokemonAbilities, pokemon.abilities, setPokemonAbilities);
 
         const fetchDetails = async () => {
-            const data = await fetchAdditionalData(pokemon.id, pokemon.abilities); // Fetch additional data using this pokemons id
+            const data = await fetchAdditionalData(pokemon); // Fetch additional data using this pokemons id
             setAdditionalData(data);
         }
         fetchDetails();

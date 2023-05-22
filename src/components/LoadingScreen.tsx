@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, Image, ImageBackground } from 'react-native';
 
-const LoadingScreen = () => {
+const LoadingScreen = ({isLoading}) => {
     return (
         <ImageBackground
             source={require('../assets/loading_screen_bg.png')}
@@ -12,7 +12,8 @@ const LoadingScreen = () => {
                     source={{ uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png' }}
                     style={styles.logo}
                 />
-                <Text style={styles.loadingText}>Loading...</Text>
+
+                <Text style={styles.loadingText}>{isLoading}</Text>
                 <ActivityIndicator size="large" color="#FFCB05" />
                 <Text style={styles.quoteText}>
                     "Gotta catch 'em all!"

@@ -1,12 +1,14 @@
+import { capitalizeString } from './helpers';
+
 
 // Function to fetch additional data about a pokemon
-const fetchAdditionalData = async (pokemonId, pokemonAbilities) => {
+const fetchAdditionalData = async (pokemon) => {
 
     try {
         // Declare an empty object to store all returned data
         const pokedexObject = {};
         // Fetch pokedex information for the pokemon
-        const pokedexInfoResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`);
+        const pokedexInfoResponse = await fetch(pokemon.species_url);
         // Parse the fetched data
         const pokedexInfoData = await pokedexInfoResponse.json();
 
@@ -24,13 +26,15 @@ const fetchAdditionalData = async (pokemonId, pokemonAbilities) => {
         let habitat = "None";
         // If pokemon has a habitat, update the variable with the habitat name capitalized
         if (pokedexInfoData.habitat !== null) {
-            habitat = pokedexInfoData.habitat.name.charAt(0).toUpperCase() + pokedexInfoData.habitat.name.slice(1)
+//             habitat = pokedexInfoData.habitat.name.charAt(0).toUpperCase() + pokedexInfoData.habitat.name.slice(1)
+            habitat = capitalizeString(pokedexInfoData.habitat.name)
         }
 
         // If the pokemon has a previous evolution, we will add the name to our pokedexObject
         if (pokedexInfoData.evolves_from_species !== null) {
             // Assign a variable for the previous evolutions name and capitalize it
-            const previousEvolutionName = pokedexInfoData.evolves_from_species.name.charAt(0).toUpperCase() + pokedexInfoData.evolves_from_species.name.slice(1);
+//             const previousEvolutionName = pokedexInfoData.evolves_from_species.name.charAt(0).toUpperCase() + pokedexInfoData.evolves_from_species.name.slice(1);
+            const previousEvolutionName = capitalizeString(pokedexInfoData.evolves_from_species.name);
             // Deconstruct the previous evolutions pokedex url by the /
             const parts = pokedexInfoData.evolves_from_species.url.split("/")
             // The url contains the pokemons id, so this will grab that id number
@@ -47,7 +51,7 @@ const fetchAdditionalData = async (pokemonId, pokemonAbilities) => {
 
 
         // Grab all the urls from our pokemons ability data to fetch descriptions
-        const abilityUrls = pokemonAbilities.map((ability) => ability.ability.url)
+        const pokemonAbilities = []
 
         // Function that fetches descriptions about the pokemons abilities
         async function fetchAbilityData() {
