@@ -1,12 +1,14 @@
+// Dependencies
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { pokemonColors } from '../utils/typeStyle';
 
 // Creating a component that when given a percentage will return a bar filled that much
-const PillBar = ({ percentage, stat, statName, pokemon }) => {
+const PillBar = ({ percentage, stat, statName }) => {
 
+    // variable to track how big the pillBar for this stat will be
     const filledWidth = `${percentage}%`;
 
+    // Function to grab the colors for each stat
     const getFillColor = (statName) => {
         switch (statName) {
             case 'hp':
@@ -26,6 +28,7 @@ const PillBar = ({ percentage, stat, statName, pokemon }) => {
         }
     };
 
+    // Variable that will determine color for each pillBar
     const fillColor = getFillColor(statName);
 
 
@@ -68,6 +71,7 @@ const PillBar = ({ percentage, stat, statName, pokemon }) => {
 
 
     return (
+
         <View style={styles.container}>
             <View style={styles.pillContainer}>
                 <View style={styles.pill}>
@@ -76,8 +80,8 @@ const PillBar = ({ percentage, stat, statName, pokemon }) => {
                     </View>
                 </View>
             </View>
-
         </View>
+
     );
 };
 
