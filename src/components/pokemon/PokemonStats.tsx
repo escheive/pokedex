@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 // Components
 import PillBar from '../PillBar';
+// Utils
+import { capitalizeString } from '../../utils/helpers';
 
 // All the possible stat names
 const pokemonStatNames = ['hp', 'atk', 'def', 'sp_atk', 'sp_def', 'spd'];
@@ -81,7 +83,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
 
         return  (
             <View style={styles.statItem}>
-                <Text style={styles.statName}>{item}:</Text>
+                <Text style={styles.statName}>{capitalizeString(item)}:</Text>
                 <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={item} pokemon={pokemon} />
             </View>
         );
