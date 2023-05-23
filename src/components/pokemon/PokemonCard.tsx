@@ -237,6 +237,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
     };
 
 
+
     return (
         <View style={styles.card}>
             <View style={styles.imageContainer}>
@@ -303,9 +304,9 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
                             activeOpacity={1}
                             onPress={() => {}}
                         >
-                            <Text style={styles.modalTitle}>{selectedAbility?.name}</Text>
+                            <Text style={styles.modalTitle}>{selectedAbility?.abilityName}</Text>
                             <View style={styles.modalDefinitionContainer}>
-                                <Text style={styles.modalDefinition}>{selectedAbility?.definition}</Text>
+                                <Text style={styles.modalDefinition}>{selectedAbility?.shortAbilityDescription}</Text>
                             </View>
                         </TouchableOpacity>
                     </TouchableOpacity>

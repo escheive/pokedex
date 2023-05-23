@@ -296,15 +296,14 @@ export default function App() {
             await new Promise((resolve, reject) => {
                 database.transaction((tx) => {
                     abilityData.forEach((ability) => {
-                        console.log(ability)
                         tx.executeSql(
                             `INSERT OR IGNORE INTO Abilities (id, abilityName, shortAbilityDescription, longAbilityDescription, pokemonWithAbility)
                             VALUES (?, ?, ?, ?, ?);`,
                             [
                                 ability.id,
                                 ability.name,
-                                ability.short_effect,
-                                ability.effect,
+                                ability.shortDescription,
+                                ability.longDescription,
                                 ability.pokemonWithAbility
                             ],
                             () => {

@@ -77,11 +77,11 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
 
 //         fetchAbilityData(pokemonAbilities, pokemon.abilities, setPokemonAbilities);
 
-        const fetchDetails = async () => {
-            const data = await fetchAdditionalData(pokemon); // Fetch additional data using this pokemons id
-            setAdditionalData(data);
-        }
-        fetchDetails();
+//         const fetchDetails = async () => {
+//             const data = await fetchAdditionalData(pokemon); // Fetch additional data using this pokemons id
+//             setAdditionalData(data);
+//         }
+//         fetchDetails();
     }, [pokemon.id]);
 
     // Function to check if a pokemon is favorited and update the page accordingly
