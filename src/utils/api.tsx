@@ -71,6 +71,8 @@ const fetchPokemonData = async ( database, createPokemonTable, insertPokemon, se
             }
         }
 
+        console.log('Successfully fetched data in the fetchPokemonData function');
+
         setPokemonList((prevList) => {
             const mergedList = [...prevList, ...fetchedPokemonData];
             const uniqueList = Array.from(
@@ -80,7 +82,7 @@ const fetchPokemonData = async ( database, createPokemonTable, insertPokemon, se
             return uniqueList
         });
 
-        setIsLoading(false);
+//         setIsLoading(false);
     } catch (error) {
         console.error('Error fetching and inserting Pokemon data in the fetchPokemonData function:', error);
     }

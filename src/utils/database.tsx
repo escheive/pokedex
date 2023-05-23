@@ -30,7 +30,6 @@ const createPokemonTable = (database) => {
                             [],
                             () => {
                                 console.log('Table "Pokemon" created successfully');
-                                isTableCreated = true;
                                 resolve();
                             },
                             (error) => {

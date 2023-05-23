@@ -34,13 +34,13 @@ type DetailsScreenProps = {
     navigation: any;
 }
 
-const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
+const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreenProps) => {
     // Grab our pokemon data that was pulled in our app.tsx from params
     const { pokemon } = route.params;
     // useState to update if a pokemon was favorited or unfavorited without refreshing
     const [isFavorite, setIsFavorite] = useState(false);
     // useState to track pokemonAbilities for each individual pokemon when their page is pulled up
-    const [pokemonAbilities, setPokemonAbilities] = useState([]);
+    const [thisPokemonsAbilities, setThisPokemonsAbilities] = useState([]);
     // Variable to store pokedex entry after fetching
     const [pokedexEntry, setPokedexEntry] = useState({ "genus": "", "flavorText": ""});
     // useState for the nav below the pokemon card
@@ -60,15 +60,22 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
         navigation.navigate('Info', { pokemon });
     }
 
-    console.log(pokemon)
-
     // useEffect to check if a pokemon is favorited and fetch ability info when pokemon object changes
     useEffect(() => {
-        getPokedexEntry(setPokedexEntry, pokemon.species_url)
+//         getPokedexEntry(setPokedexEntry, pokemon.species_url)
 
         checkIfFavorite();
 
-        fetchAbilityData(pokemonAbilities, pokemon.abilities, setPokemonAbilities);
+        const findThisPokemonsAbilities = async () => {
+            const pokeAbilities = await allPokemonAbilities.filter((ability) => {
+                const pokemonWithAbility = JSON.parse(ability.pokemonWithAbility);
+                return pokemonWithAbility.includes(pokemon.name)
+            })
+            setThisPokemonsAbilities(pokeAbilities)
+        }
+        findThisPokemonsAbilities().then(() => console.log(thisPokemonsAbilities))
+
+//         fetchAbilityData(pokemonAbilities, pokemon.abilities, setPokemonAbilities);
 
         const fetchDetails = async () => {
             const data = await fetchAdditionalData(pokemon); // Fetch additional data using this pokemons id
@@ -269,7 +276,7 @@ const DetailsScreen = ({ route, navigation }: DetailsScreenProps) => {
                     <PokemonCard
                         pokemon={pokemon}
                         pokedexEntry={pokedexEntry}
-                        pokemonAbilities={pokemonAbilities}
+                        thisPokemonsAbilities={thisPokemonsAbilities}
                         handlePress={handlePress}
                         pokemonColors={pokemonColors}
                     />

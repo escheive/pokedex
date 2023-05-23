@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getTypeStyle } from '../../utils/typeStyle';
 import { capitalizeString } from '../../utils/helpers';
 
-const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, getTypeBackgroundStyle, pokemonColors }) => {
+const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress, getTypeBackgroundStyle, pokemonColors }) => {
     const [selectedAbility, setSelectedAbility] = useState(null);
 
     // Grab the dimensions of the device for sizing of components
@@ -171,6 +171,8 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
             },
             abilityItem: {
                 fontSize: 16,
+                color: pokemonColors[pokemon.type1].color,
+                fontWeight: 'bold',
             },
             modalContainer: {
                 flex: 1,
@@ -279,13 +281,14 @@ const PokemonCard = ({ pokemon, pokedexEntry, pokemonAbilities, handlePress, get
 
                 <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
                 <Text style={styles.abilitiesTitle}>Abilities</Text>
-                {pokemonAbilities.map((ability) => (
+
+                {thisPokemonsAbilities.map((ability) => (
                     <TouchableOpacity
-                        key={ability.name}
+                        key={ability.abilityName}
                         style={styles.abilityContainer}
                         onPress={() => handleAbilitySelect(ability)}
                     >
-                        <Text style={styles.abilityItem}>{ability.name}</Text>
+                        <Text style={styles.abilityItem}>{capitalizeString(ability.abilityName)}</Text>
                     </TouchableOpacity>
                 ))}
 

@@ -99,7 +99,7 @@ const DrawerNavigator = () => {
 };
 
 
-const DetailsTabNavigator = ({ pokemonList, typeData, route, navigation }) => {
+const DetailsTabNavigator = ({ pokemonList, typeData, route, navigation, allPokemonAbilities }) => {
     const { Navigator, Screen } = createBottomTabNavigator();
 
 
@@ -130,18 +130,24 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route, navigation }) => {
         >
             <Screen
                 name='Info'
-                component={DetailsScreen}
-                initialParams={{ pokemon: route.params.pokemon }}
+//                 component={DetailsScreen}
+                initialParams={{
+                    pokemon: route.params.pokemon,
+                }}
                 options={{
                     title: 'Details',
                 }}
-            />
+            >
+                {props => <DetailsScreen {...props} allPokemonAbilities={allPokemonAbilities} />}
+            </Screen>
             <Screen
                 name="Moves"
                 component={MovesScreen}
-                initialParams={{ pokemon: route.params.pokemon }}
+                initialParams={{
+                    pokemon: route.params.pokemon,
+                }}
                 options={{
-                    title: 'Moves'
+                    title: 'Moves',
                 }}
             />
 
@@ -150,7 +156,7 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route, navigation }) => {
 };
 
 
-const PokemonStackNavigator = ({ pokemonList, typeData }) => {
+const PokemonStackNavigator = ({ pokemonList, typeData, allPokemonAbilities }) => {
 
     return (
         <Stack.Navigator
@@ -162,7 +168,6 @@ const PokemonStackNavigator = ({ pokemonList, typeData }) => {
 
             <Stack.Screen
                 name="Details"
-                component={DetailsTabNavigator}
                 options={({ route }) => {
                     const pokemonType = route.params.pokemon.type1;
                     const backgroundColor = getTypeStyle(pokemonType);
@@ -173,7 +178,9 @@ const PokemonStackNavigator = ({ pokemonList, typeData }) => {
                         title: pokemonName,
                     };
                 }}
-            />
+            >
+                {props => <DetailsTabNavigator {...props} allPokemonAbilities={allPokemonAbilities} />}
+            </Stack.Screen>
         </Stack.Navigator>
     );
 };
@@ -201,42 +208,234 @@ function SettingsStack() {
 };
 
 
-// Function to create a table for abilities
-const createAbilitiesTable = async () => {
-    try {
-        await database.transaction(async(tx) => {
-            await tx.executeSql(`
-                CREATE TABLE IF NOT EXISTS Abilities (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    abilityName TEXT,
-                    abilityDescription TEXT,
-                    pokemonWithAbility TEXT
-                );
-            `);
-        })
 
-        console.log('Abilities table created successfully');
-    } catch (error) {
-        console.error('Error creating Abilities table in the createAbilitiesTable function:', error);
-    }
-};
+
+// Open the database
+const database = SQLite.openDatabase({
+    name: 'Pokemon.db',
+    location: 'default',
+});
+
 
 
 
 export default function App() {
     const [isLoading, setIsLoading] = useState("Loading...");
     const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
+    const [allPokemonAbilities, setAllPokemonAbilities] = useState([]);
 
-    // Open the database
-    const database = SQLite.openDatabase({
-        name: 'Pokemon.db',
-        location: 'default',
-    });
+
+    // Function to check and create an Abilities table
+    const createAbilitiesTable = () => {
+        console.log('createAbilitiesTable function hit')
+        return new Promise((resolve, reject) => {
+            database.transaction((tx) => {
+                tx.executeSql(
+                    `SELECT name FROM sqlite_master WHERE type='table' AND name='Abilities';`,
+                    [],
+                    (tx, result) => {
+                        if (result.rows.length === 0) {
+                            console.log('Abilities table doesnt exist, creating one');
+                            // If table doesnt exist, create it
+                            tx.executeSql(
+                                `CREATE TABLE IF NOT EXISTS Abilities (
+                                id INTEGER PRIMARY KEY,
+                                abilityName TEXT,
+                                shortAbilityDescription TEXT,
+                                longAbilityDescription TEXT,
+                                pokemonWithAbility TEXT
+                                );`,
+                                [],
+                                () => {
+                                    console.log('Table "Abilities" created successfully');
+                                    resolve();
+                                },
+                                (error) => {
+                                    console.error('Error creating table "Abilities":', error);
+                                    reject(error);
+                                }
+                            );
+                        } else {
+                            console.log('Abilities table already exists')
+                            resolve();
+                        }
+                    },
+                    (error) => {
+                        console.error('Error checking table "Abilities":', error);
+                        reject(error);
+                    }
+                );
+            });
+        });
+    };
+
+
+    // Function to drop Abilities table
+    const resetAbilitiesTable = () => {
+        console.log('resetAbilitiesTable function hit');
+        database.transaction((tx) => {
+            tx.executeSql(
+                `DROP TABLE IF EXISTS Abilities;`,
+                [],
+                () => {
+                    console.log('Table "Abilities" dropped successfully');
+                    createPokemonTable();
+                },
+                (error) => {
+                    console.error('Error dropping table "Abilities":', error);
+                }
+            );
+        });
+    };
+
+
+    // Function to insert ability data into the Abilities db table
+    const insertAbility = async (abilityData) => {
+        console.log('insertAbility function hit');
+        try {
+            await new Promise((resolve, reject) => {
+                database.transaction((tx) => {
+                    abilityData.forEach((ability) => {
+                        console.log(ability)
+                        tx.executeSql(
+                            `INSERT OR IGNORE INTO Abilities (id, abilityName, shortAbilityDescription, longAbilityDescription, pokemonWithAbility)
+                            VALUES (?, ?, ?, ?, ?);`,
+                            [
+                                ability.id,
+                                ability.name,
+                                ability.short_effect,
+                                ability.effect,
+                                ability.pokemonWithAbility
+                            ],
+                            () => {
+                                console.log('Ability data inserted successfully');
+                                resolve();
+                            },
+                            (error) => {
+                                console.error('Error inserting Ability record', error);
+                                reject(error);
+                            }
+                        );
+                    });
+                    console.log('Ability records inserted successfully');
+                    resolve();
+                });
+            });
+        } catch (error) {
+            console.error('Error inserting Ability data:', error);
+        }
+    };
+
+
+    // Function to fetch base abilities data from the api
+    const fetchAbilitiesFromAPI = async (start, end) => {
+        console.log('fetchingAbilitiesFromAPI function hit')
+        try {
+            const response = await fetch(`https://pokeapi.co/api/v2/ability?limit=${end - start}&offset=${start}`);
+            const data = await response.json();
+
+            const abilityUrls = data.results.map((ability) => ability.url);
+            const abilityData = await Promise.all(abilityUrls.map((url) => fetch(url).then((response) => response.json())));
+
+            const modifiedAbilityData = await Promise.all(abilityData.map(async(ability) => {
+                let modifiedAbility = ability;
+
+                if (ability.effect_entries.length > 0) {
+                    const englishEffectEntries = ability.effect_entries.find((description) => description.language.name === "en");
+
+                    modifiedAbility.shortDescription = englishEffectEntries.short_effect;
+                    modifiedAbility.longDescription = englishEffectEntries.effect;
+
+                };
+
+                if (ability.pokemon.length > 0) {
+                    const pokemonWithAbility = await ability.pokemon.map((pokemon) => pokemon.pokemon.name)
+                    modifiedAbility.pokemonWithAbility = JSON.stringify(pokemonWithAbility);
+                }
+
+                return modifiedAbility;
+            }));
+            return modifiedAbilityData;
+
+        } catch (error) {
+            console.error('Error in fetchAbilitiesFromAPI function', error);
+        }
+    };
+
+
+    // Function to fetch ability data from database or api
+    const fetchAbilitiesData = async () => {
+        console.log('fetchAbilitiesData function hit');
+        try {
+            // Wait for the table creation process to complete
+            await createAbilitiesTable();
+
+            const totalCount = 298;
+            const batchSize = 20;
+            const batches = Math.ceil(totalCount / batchSize);
+            const fetchedAbilitiesData = [];
+
+            const start = 0;
+            const end = 298;
+
+
+//             for (let batch=0; batch < batches; batch++) {
+//                 const start = batch * batchSize;
+//                 const end = start + batchSize;
+
+
+                const hasData = await new Promise((resolve, reject) => {
+                    setIsLoading("Loading Abilities");
+                    database.transaction((tx) => {
+                        tx.executeSql(
+                            `SELECT * FROM Abilities WHERE id BETWEEN ? AND ?;`,
+                            [start, end],
+                            (tx, result) => {
+                                if (result.rows.length > 0) {
+                                    for (let i=0; i<result.rows.length; i++) {
+                                        fetchedAbilitiesData.push(result.rows.item(i));
+                                    }
+                                }
+                                resolve(result.rows.length > 0);
+                            },
+                            (error) => {
+                                console.error('Error checking Ability data in the fetchAbilitiesData function, hasData subsection:', error);
+                                reject(error);
+                            }
+                        );
+                    });
+                });
+
+                if (!hasData) {
+                    // set loading phase so that loading screen updates
+                    setIsLoading("Fetching Abilities data from the API");
+                    const fetchedData = await fetchAbilitiesFromAPI(start, end);
+                    fetchedAbilitiesData.push(...fetchedData);
+                    await insertAbility(fetchedData);
+                }
+//             }
+
+            setAllPokemonAbilities(fetchedAbilitiesData);
+
+            console.log('Successfully fetched data in the fetchAbilitiesData function');
+
+//             setIsLoading(false);
+        } catch (error) {
+            console.error('Error fetching and inserting Abilities data in the fetchAbilitiesData function:', error);
+        }
+    };
+
+
 
     useEffect(() => {
 
+//         resetAbilitiesTable();
 //         resetPokemonTable();
-        fetchPokemonData(database, createPokemonTable, insertPokemon, setIsLoading, setPokemonList);
+        fetchPokemonData(database, createPokemonTable, insertPokemon, setIsLoading, setPokemonList)
+            .then(() => fetchAbilitiesData())
+//             .then(() => console.log(pokemonAbilities))
+            .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
+            .finally(() => setIsLoading(false));
     }, []);
 
 
@@ -250,7 +449,7 @@ export default function App() {
 
             <Drawer.Navigator>
                 <Drawer.Screen name="Pokemon">
-                    {(props) => <PokemonStackNavigator {...props} pokemonList={pokemonList} typeData={typeData} />}
+                    {(props) => <PokemonStackNavigator {...props} pokemonList={pokemonList} typeData={typeData} allPokemonAbilities={allPokemonAbilities} />}
                 </Drawer.Screen>
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />
