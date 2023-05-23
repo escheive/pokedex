@@ -80,7 +80,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
         return  (
             <View style={styles.statItem}>
                 <Text style={styles.statName}>{item}:</Text>
-                <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={item} />
+                <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={item} pokemon={pokemon} />
             </View>
         );
     };

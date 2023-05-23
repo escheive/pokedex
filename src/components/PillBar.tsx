@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { pokemonColors } from '../utils/typeStyle';
 
 // Creating a component that when given a percentage will return a bar filled that much
-const PillBar = ({ percentage, stat, statName }) => {
+const PillBar = ({ percentage, stat, statName, pokemon }) => {
 
     const filledWidth = `${percentage}%`;
 
@@ -27,10 +28,49 @@ const PillBar = ({ percentage, stat, statName }) => {
 
     const fillColor = getFillColor(statName);
 
+
+    const styles = StyleSheet.create({
+        container: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            flexShrink: 1,
+        },
+        pillContainer: {
+            height: 30,
+            width: '100%',
+            borderRadius: 10,
+            overflow: 'hidden',
+            position: 'relative',
+        },
+        pill: {
+            height: '100%',
+            borderRadius: 10,
+            flexDirection: 'row',
+            width: filledWidth,
+            backgroundColor: fillColor,
+        },
+        textContainer: {
+            flex: 1,
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            paddingRight: 10,
+        },
+        text: {
+            fontWeight: 'bold',
+            textShadowColor: 'rgba(0, 0, 0, 0.25)',
+            textShadowOffset: { width: 0, height: 1 },
+            textShadowRadius: 2,
+            fontSize: 18,
+        },
+    });
+
+
     return (
         <View style={styles.container}>
             <View style={styles.pillContainer}>
-                <View style={[styles.pill, { width: filledWidth, backgroundColor: fillColor }]}>
+                <View style={styles.pill}>
                     <View style={styles.textContainer}>
                         <Text style={styles.text}>{stat}</Text>
                     </View>
@@ -41,39 +81,5 @@ const PillBar = ({ percentage, stat, statName }) => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-        flexShrink: 1,
-    },
-    pillContainer: {
-        height: 30,
-        width: '100%',
-        borderRadius: 10,
-        overflow: 'hidden',
-        position: 'relative',
-        },
-        pill: {
-        height: '100%',
-        borderRadius: 10,
-        flexDirection: 'row',
-    },
-    textContainer: {
-        flex: 1,
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        paddingRight: 10,
-    },
-    text: {
-        fontWeight: 'bold',
-        textShadowColor: 'rgba(0, 0, 0, 0.25)',
-        textShadowOffset: { width: 0, height: 1 },
-        textShadowRadius: 2,
-        fontSize: 18,
-    },
-});
 
 export default PillBar;
