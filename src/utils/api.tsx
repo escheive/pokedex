@@ -8,23 +8,8 @@ const fetchPokemonFromAPI = async (start, end) => {
 
         const pokemonUrls = data.results.map((pokemon) => pokemon.url);
         const pokemonData = await Promise.all(pokemonUrls.map((url) =>fetch(url).then((response) => response.json())));
-//         const pokemonData = await Promise.all(
-//             pokemonUrls.map((url) =>
-//                 fetch(url)
-//                     .then((response) => response.json())
-//                     .then((pokemon) => {
-//                         pokemon.stats = JSON.stringify(pokemon.stats);
-//                         return pokemon;
-//                     })
-//             )
-//         );
 
         return pokemonData;
-
-//         await insertPokemon(pokemonData);
-
-        // Call the callback function with the fetched data
-//         callback(pokemonData);
     } catch (error) {
         console.error('Error in fetchPokemonFromAPI function', error);
     }
@@ -91,8 +76,6 @@ const fetchPokemonData = async ( database, createPokemonTable, insertPokemon, se
             );
             return uniqueList
         });
-
-//         setIsLoading(false);
     } catch (error) {
         console.error('Error fetching and inserting Pokemon data in the fetchPokemonData function:', error);
     }

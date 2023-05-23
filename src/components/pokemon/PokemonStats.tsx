@@ -1,8 +1,10 @@
+// Dependencies
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 // Components
 import PillBar from '../PillBar';
 
+// All the possible stat names
 const pokemonStatNames = ['hp', 'atk', 'def', 'sp_atk', 'sp_def', 'spd'];
 
 
