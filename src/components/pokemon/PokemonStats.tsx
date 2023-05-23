@@ -3,6 +3,8 @@ import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity } from '
 // Components
 import PillBar from '../PillBar';
 
+const pokemonStatNames = ['hp', 'atk', 'def', 'sp_atk', 'sp_def', 'spd'];
+
 
 const shortenStatName = (name) => {
     switch (name) {
@@ -24,37 +26,37 @@ const shortenStatName = (name) => {
 };
 
 
-// Function to calculate min and max of the pokemons stats
-function calculateMinMaxStats(baseStats, level, ivs, evs, nature) {
-    const maxStats = {};
-
-    // Iterate over each stat
-    Object.keys(baseStats).forEach((stat) => {
-        // baseStat variable will be equal to the numerical value of the base_stat
-        const baseStat = baseStats[stat].base_stat;
-        const statName = baseStats[stat].stat.name;
-        // Effort values and individual values default to 0
-        const iv = ivs || 0;
-        const ev = evs || 0;
-
-        let maxStat = Math.floor(((2 * baseStat + iv + Math.floor(ev / 4)) * level) / 100) + 5;
-
-        if (statName !== "hp") {
-            if (nature === 'max') {
-                maxStat = Math.floor(maxStat * 1.1)
-            } else {
-                maxStat = Math.floor(maxStat * 0.9)
-            }
-        } else {
-            maxStat += level + 5
-        }
-
-        maxStats[statName] = maxStat;
-    });
-
-
-    return maxStats;
-}
+// // Function to calculate min and max of the pokemons stats
+// function calculateMinMaxStats(baseStats, level, ivs, evs, nature) {
+//     const maxStats = {};
+//
+//     // Iterate over each stat
+//     Object.keys(baseStats).forEach((stat) => {
+//         // baseStat variable will be equal to the numerical value of the base_stat
+//         const baseStat = baseStats[stat].base_stat;
+//         const statName = baseStats[stat].stat.name;
+//         // Effort values and individual values default to 0
+//         const iv = ivs || 0;
+//         const ev = evs || 0;
+//
+//         let maxStat = Math.floor(((2 * baseStat + iv + Math.floor(ev / 4)) * level) / 100) + 5;
+//
+//         if (statName !== "hp") {
+//             if (nature === 'max') {
+//                 maxStat = Math.floor(maxStat * 1.1)
+//             } else {
+//                 maxStat = Math.floor(maxStat * 0.9)
+//             }
+//         } else {
+//             maxStat += level + 5
+//         }
+//
+//         maxStats[statName] = maxStat;
+//     });
+//
+//
+//     return maxStats;
+// }
 
 const PokemonStats = ({ pokemonColors, pokemon }) => {
     // useState for selected stat value tab
@@ -81,13 +83,46 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
     }, [selectedTab, pokemon.stats]);
 
 
-    const renderStatItem = ({ item }) => {
-        let statValue = item.base_stat;
 
-        if (selectedTab === 'min' && calculatedStats[item.stat.name]) {
-            statValue = calculatedStats[item.stat.name];
-        } else if (selectedTab === 'max' && calculatedStats[item.stat.name]) {
-            statValue = calculatedStats[item.stat.name];
+    // Function to calculate min and max of the pokemons stats
+    function calculateMinMaxStats(baseStats, level, ivs, evs, nature) {
+        const maxStats = {};
+
+        // Iterate over each stat
+        for (statName in pokemonStatNames) {
+            // baseStat variable will be equal to the numerical value of the base_stat
+            const statValue = pokemon[statName];
+            // Effort values and individual values default to 0
+            const iv = ivs || 0;
+            const ev = evs || 0;
+
+            let maxStat = Math.floor(((2 * statValue + iv + Math.floor(ev / 4)) * level) / 100) + 5;
+
+            if (statName !== "hp") {
+                if (nature === 'max') {
+                    maxStat = Math.floor(maxStat * 1.1)
+                } else {
+                    maxStat = Math.floor(maxStat * 0.9)
+                }
+            } else {
+                maxStat += level + 5
+            }
+
+            maxStats[statName] = maxStat;
+        };
+
+
+        return maxStats;
+    }
+
+    const renderStatItem = ({ item }) => {
+        let statValue = pokemon[item];
+        console.log(statValue)
+
+        if (selectedTab === 'min' && calculatedStats[item]) {
+            statValue = calculatedStats[item];
+        } else if (selectedTab === 'max' && calculatedStats[item]) {
+            statValue = calculatedStats[item];
         }
 
         if (statValue > highestStat) {
@@ -100,12 +135,34 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
             const total = statsArray.reduce((sum, stat) => sum + stat, 0);
             setStatsTotal(total)
         }
+//         let statValue = item.base_stat;
+//
+//         if (selectedTab === 'min' && calculatedStats[item.stat.name]) {
+//             statValue = calculatedStats[item.stat.name];
+//         } else if (selectedTab === 'max' && calculatedStats[item.stat.name]) {
+//             statValue = calculatedStats[item.stat.name];
+//         }
+//
+//         if (statValue > highestStat) {
+//             setHighestStat(statValue)
+//         }
+//
+//         statsArray.push(statValue)
+//
+//         if (statsArray.length === 6) {
+//             const total = statsArray.reduce((sum, stat) => sum + stat, 0);
+//             setStatsTotal(total)
+//         }
 
         return  (
             <View style={styles.statItem}>
-                <Text style={styles.statName}>{shortenStatName(item.stat.name)}:</Text>
-                <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={item.stat.name} />
+                <Text style={styles.statName}>{item}:</Text>
+                <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={item} />
             </View>
+//             <View style={styles.statItem}>
+//                 <Text style={styles.statName}>{shortenStatName(item.stat.name)}:</Text>
+//                 <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={item.stat.name} />
+//             </View>
         );
     };
 
@@ -200,9 +257,9 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
             </View>
 
             <FlatList
-                data={pokemon.stats}
+                data={pokemonStatNames}
                 renderItem={renderStatItem}
-                keyExtractor={(item) => item.stat.name}
+                keyExtractor={(pokemonStatName) => pokemonStatName}
                 contentContainerStyle={styles.container}
             />
 

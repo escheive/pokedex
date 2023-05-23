@@ -7,7 +7,17 @@ const fetchPokemonFromAPI = async (start, end) => {
         const data = await response.json();
 
         const pokemonUrls = data.results.map((pokemon) => pokemon.url);
-        const pokemonData = await Promise.all(pokemonUrls.map((url) => fetch(url).then((response) => response.json())));
+        const pokemonData = await Promise.all(pokemonUrls.map((url) =>fetch(url).then((response) => response.json())));
+//         const pokemonData = await Promise.all(
+//             pokemonUrls.map((url) =>
+//                 fetch(url)
+//                     .then((response) => response.json())
+//                     .then((pokemon) => {
+//                         pokemon.stats = JSON.stringify(pokemon.stats);
+//                         return pokemon;
+//                     })
+//             )
+//         );
 
         return pokemonData;
 

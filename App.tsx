@@ -429,14 +429,13 @@ export default function App() {
     useEffect(() => {
 
 //         resetAbilitiesTable();
-//         resetPokemonTable();
+//         resetPokemonTable(database);
         fetchPokemonData(database, createPokemonTable, insertPokemon, setIsLoading, setPokemonList)
             .then(() => fetchAbilitiesData())
 //             .then(() => console.log(pokemonAbilities))
             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
             .finally(() => setIsLoading(false));
     }, []);
-
 
 
     if (isLoading) {

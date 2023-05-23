@@ -20,6 +20,12 @@ const createPokemonTable = (database) => {
                             height REAL,
                             weight REAL,
                             base_experience INTEGER,
+                            hp INTEGER,
+                            atk INTEGER,
+                            def INTEGER,
+                            sp_atk INTEGER,
+                            sp_def INTEGER,
+                            spd INTEGER,
                             ability1 TEXT,
                             ability2 TEXT,
                             ability3 TEXT,
@@ -79,8 +85,8 @@ const insertPokemon = async (database, pokemonData) => {
             database.transaction((tx) => {
                 pokemonData.forEach((pokemon) => {
                     tx.executeSql(
-                        `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, ability1, ability2, ability3, capture_rate, species_url, image_url)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+                        `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, hp, atk, def, sp_atk, sp_def, spd, ability1, ability2, ability3, capture_rate, species_url, image_url)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
                         [
                             pokemon.id,
                             pokemon.name,
@@ -89,6 +95,12 @@ const insertPokemon = async (database, pokemonData) => {
                             pokemon.height,
                             pokemon.weight,
                             pokemon.base_experience,
+                            pokemon.stats[0].base_stat,
+                            pokemon.stats[1].base_stat,
+                            pokemon.stats[2].base_stat,
+                            pokemon.stats[3].base_stat,
+                            pokemon.stats[4].base_stat,
+                            pokemon.stats[5].base_stat,
                             pokemon.abilities[0] ? pokemon.abilities[0].ability.name : null,
                             pokemon.abilities[1] ? pokemon.abilities[1].ability.name : null,
                             pokemon.abilities[2] ? pokemon.abilities[2].ability.name : null,
