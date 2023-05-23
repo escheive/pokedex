@@ -10,15 +10,15 @@ const PillBar = ({ percentage, stat, statName }) => {
         switch (statName) {
             case 'hp':
                 return 'rgba(255, 0, 0, 0.5)'; // Red color for HP
-            case 'attack':
+            case 'atk':
                 return 'rgba(255, 165, 0, 0.5)'; // Orange color for attack
-            case 'defense':
+            case 'def':
                 return 'rgba(70, 140, 255, 0.5)'; // Blue color for defense
-            case 'special-attack':
+            case 'sp_atk':
                 return 'rgba(128, 0, 128, 0.5)'; // Purple color for special attack
-            case 'special-defense':
+            case 'sp_def':
                 return 'rgba(0, 128, 0, 0.5)'; // Green color for special defense
-            case 'speed':
+            case 'spd':
                 return 'rgba(255, 105, 180, 0.5)'; // Pink color for speed
             default:
                 return '#eee'; // Default color for unknown stats
