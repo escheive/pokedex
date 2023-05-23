@@ -5,6 +5,7 @@ import PillBar from '../PillBar';
 
 const pokemonStatNames = ['hp', 'atk', 'def', 'sp_atk', 'sp_def', 'spd'];
 
+
 const PokemonStats = ({ pokemonColors, pokemon }) => {
     // useState for selected stat value tab
     const [selectedTab, setSelectedTab] = useState('base');
@@ -12,22 +13,21 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
     const [highestStat, setHighestStat] = useState(0);
     const [statsTotal, setStatsTotal] = useState(0);
 
-    let statsArray = [];
+    const pokemonStats = [];
+    for (let statName of pokemonStatNames) {
+        pokemonStats.push({name: statName, value: pokemon[statName]})
+    }
 
     useEffect(() => {
         // Based on your tab, calculate stats
         if (selectedTab === 'base') {
-            setCalculatedStats({});
+            setCalculatedStats(calculateMinMaxStats());
         } else if (selectedTab === 'min') {
             setCalculatedStats(calculateMinMaxStats(100, 0, 0, 'min'));
         } else if (selectedTab === 'max') {
             setCalculatedStats(calculateMinMaxStats(100, 31, 252, 'max'));
         }
-
-        statsArray = [];
-        // This resets highestStat on tab switch so when you go back to a lower level it doesnt keep that same high limit
-        setHighestStat(0);
-    }, [selectedTab, pokemon.stats]);
+    }, [selectedTab, pokemon]);
 
 
 
@@ -36,52 +36,45 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
         const maxStats = {};
 
         // Iterate over each stat
-        for (let statName of pokemonStatNames) {
-            // baseStat variable will be equal to the numerical value of the base_stat
-            const statValue = pokemon[statName];
-            console.log(statName)
+        for (let stat of pokemonStats) {
             // Effort values and individual values default to 0
             const iv = ivs || 0;
             const ev = evs || 0;
+            let maxStat = stat.value;
 
-            let maxStat = Math.floor(((2 * statValue + iv + Math.floor(ev / 4)) * level) / 100) + 5;
+            if (level === 100) {
+                maxStat = Math.floor(((2 * stat.value + iv + Math.floor(ev / 4)) * level) / 100) + 5;
 
-            if (statName !== "hp") {
-                if (nature === 'max') {
-                    maxStat = Math.floor(maxStat * 1.1)
+                if (stat.name !== "hp") {
+                    if (nature === 'max') {
+                        maxStat = Math.floor(maxStat * 1.1)
+                    } else {
+                        maxStat = Math.floor(maxStat * 0.9)
+                    }
                 } else {
-                    maxStat = Math.floor(maxStat * 0.9)
+                    maxStat += level + 5
                 }
-            } else {
-                maxStat += level + 5
             }
 
-            maxStats[statName] = maxStat;
+            maxStats[stat.name] = maxStat;
         };
 
+        const statsArray = Object.values(maxStats);
+        const total = statsArray.reduce((sum, stat) => sum + stat, 0);
+        setStatsTotal(total);
+        const maxStat = Math.max(...statsArray);
+        setHighestStat(maxStat);
 
         return maxStats;
     }
 
     const renderStatItem = ({ item }) => {
         let statValue = pokemon[item];
-        console.log(statValue)
 
         if (selectedTab === 'min' && calculatedStats[item]) {
             statValue = calculatedStats[item];
         } else if (selectedTab === 'max' && calculatedStats[item]) {
             statValue = calculatedStats[item];
-        }
-
-        if (statValue > highestStat) {
-            setHighestStat(statValue)
-        }
-
-        statsArray.push(statValue)
-
-        if (statsArray.length === 6) {
-            const total = statsArray.reduce((sum, stat) => sum + stat, 0);
-            setStatsTotal(total)
         }
 
         return  (
