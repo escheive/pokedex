@@ -73,7 +73,7 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
             })
             setThisPokemonsAbilities(pokeAbilities)
         }
-        findThisPokemonsAbilities().then(() => console.log(thisPokemonsAbilities))
+        findThisPokemonsAbilities()
 
 //         fetchAbilityData(pokemonAbilities, pokemon.abilities, setPokemonAbilities);
 
@@ -106,62 +106,6 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
             setIsFavorite(added);
         }
     };
-
-    // Function to take the pokemons types, and grab the info for that type
-    const getTypeInfo = async (typesArr: TypeProps[]) => {
-        const typePromises = typesArr.map(async (type) => {
-            const response = await fetch(type.type.url);
-            let typeInfo = await response.json();
-            typeInfo = typeInfo.damage_relations;
-            const strengthsAndWeaknesses = {
-                strengths: typeInfo.double_damage_to,
-                weaknesses: typeInfo.double_damage_from,
-                noDamageFrom: typeInfo.no_damage_from,
-                noDamageTo: typeInfo.no_damage_to
-            }
-            return strengthsAndWeaknesses;
-        });
-        const damageRelations = await Promise.all(typePromises);
-        return damageRelations;
-    };
-
-    const getTypeInfoAndCalculateDamage = async (typesArr: TypeProps[]) => {
-        const damageRelations = await getTypeInfo(typesArr);
-        let strengths = [];
-        let weaknesses = [];
-        let noDamageTo = [];
-        let noDamageFrom = [];
-
-        for (const type of damageRelations) {
-//             console.log(type.strengths.map((strength) => strength.name))
-            typeStrengths = type.strengths ? await type.strengths.map((strength) => strengths.push(strength.name)) : [];
-//             strengths.push(typeStrengths)
-//             console.log(strengths)
-            weaknesses = type.weaknesses ? await type.weaknesses.map((weakness) => weakness.name) : [];
-            noDamageFrom = type.no_damage_from ? await type.no_damage_from.map((noDamageFrom) => noDamageFrom.name) : [];
-            noDamageTo = type.no_damage_to ? await type.no_damage_to.map((noDamageTo) => noDamageTo.name) : [];
-        }
-
-        return {
-            strengths,
-            weaknesses,
-            noDamageFrom,
-            noDamageTo
-        };
-    };
-
-    async function getPokemonTypeInfo(pokemon) {
-        try {
-            const typeInfo = await getTypeInfoAndCalculateDamage(pokemon.types);
-            return typeInfo;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    getPokemonTypeInfo(pokemon).then((typeInfo) => {
-//         console.log(typeInfo)
-    });
 
     // Stylesheet for this screen
     const styles = StyleSheet.create({
