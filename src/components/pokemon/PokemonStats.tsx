@@ -72,9 +72,9 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
         if (selectedTab === 'base') {
             setCalculatedStats({});
         } else if (selectedTab === 'min') {
-            setCalculatedStats(calculateMinMaxStats(pokemon.stats, 100, 0, 0, 'min'));
+            setCalculatedStats(calculateMinMaxStats(100, 0, 0, 'min'));
         } else if (selectedTab === 'max') {
-            setCalculatedStats(calculateMinMaxStats(pokemon.stats, 100, 31, 252, 'max'));
+            setCalculatedStats(calculateMinMaxStats(100, 31, 252, 'max'));
         }
 
         statsArray = [];
@@ -85,13 +85,14 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
 
 
     // Function to calculate min and max of the pokemons stats
-    function calculateMinMaxStats(baseStats, level, ivs, evs, nature) {
+    function calculateMinMaxStats(level, ivs, evs, nature) {
         const maxStats = {};
 
         // Iterate over each stat
-        for (statName in pokemonStatNames) {
+        for (let statName of pokemonStatNames) {
             // baseStat variable will be equal to the numerical value of the base_stat
             const statValue = pokemon[statName];
+            console.log(statName)
             // Effort values and individual values default to 0
             const iv = ivs || 0;
             const ev = evs || 0;
