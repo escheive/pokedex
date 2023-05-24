@@ -21,23 +21,30 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
                 alignItems: 'center',
                 justifyContent: 'flex-start',
                 height: windowHeight * 0.75,
-                borderWidth: 10,
-                borderColor: '#5C6B7C',
                 overflow: 'hidden',
                 marginBottom: 20,
                 fontFamily: 'Arial, sans-serif',
             },
             imageContainer: {
-                backgroundColor: 'white',
+                backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
+                height: '40%',
+                width: '100%',
+//                 flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+            },
+            imageBottomBackground: {
+                position: 'absolute',
+                bottom: 0,
                 height: '50%',
                 width: '100%',
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center'
+                backgroundColor: 'white',
+                borderTopRightRadius: 24,
+                borderTopLeftRadius: 24,
             },
             image: {
-                width: '100%',
-                height: '100%',
+                width: '80%',
+                height: '90%',
                 resizeMode: 'contain',
             },
             nextPokemonButton: {
@@ -55,7 +62,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
                 top: 10,
                 right: 10,
                 borderRadius: 50,
-                backgroundColor: '#5C6B7C',
+                backgroundColor: 'white',
                 padding: 1,
                 width: 60,
                 height: 60,
@@ -63,50 +70,24 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
                 alignItems: 'center',
             },
             idText: {
-                color: 'white',
                 fontSize: 22,
                 fontWeight: 'bold',
-            },
-            evolutionContainer: {
-                position: 'absolute',
-                top: 10,
-                left: 10,
-                borderRadius: 50,
-                backgroundColor: '#5C6B7C',
-                padding: 1,
-                width: 60,
-                height: 60,
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
-            evolutionImage: {
-                width: '100%',
-                height: '100%',
-                resizeMode: 'contain',
             },
             bottomOfCard: {
                 flexDirection: 'column',
                 alignItems: 'center',
-                padding: 20,
-                paddingTop: 15,
-                height: '50%',
+                paddingHorizontal: 20,
                 width: '100%',
             },
-            normalCard: {
-                backgroundColor: '#E0E0E0',
-            },
-            legendaryCard: {
-                backgroundColor: 'gold',
-            },
             heading: {
-                fontSize: (30 - (pokemon.name.length + pokemon.type1.length) / 4),
+                fontSize: (48 - (pokemon.name.length / 4)),
                 fontWeight: 'bold',
-                alignSelf: 'flex-start',
+                alignSelf: 'center',
             },
             nameContainer: {
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'flex-start',
+                justifyContent: 'center',
                 width: '100%',
                 paddingBottom: 8,
             },
@@ -242,6 +223,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
     return (
         <View style={styles.card}>
             <View style={styles.imageContainer}>
+                <View style={styles.imageBottomBackground}></View>
                 <Image
                     style={styles.image}
                     source={{ uri: `${pokemon.image_url}` }}
@@ -251,34 +233,25 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
                         {pokemon.id > 100 ? pokemon.id : pokemon.id > 10 ? '0' + pokemon.id : '00' + pokemon.id}
                     </Text>
                 </View>
-
-                <TouchableOpacity style={styles.prevPokemonButton} onPress={() => handlePress(pokemon.id - 1 > 0 ? pokemon.id - 1 : 1010)}>
-                    <Ionicons name="chevron-back-outline" size={50} color="black" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.nextPokemonButton} onPress={() => handlePress(pokemon.id + 1 <= 1010 ? pokemon.id + 1 : 1)}>
-                    <Ionicons name="chevron-forward-outline" size={50} color="black" />
-                </TouchableOpacity>
             </View>
 
             <View style={[styles.bottomOfCard, pokedexEntry.isLegendary ? styles.legendaryCard : styles.normalCard]}>
                 <View style={styles.nameContainer}>
                     <Text style={styles.heading}>{capitalizeString(pokemon.name)}</Text>
-
-                    <View style={styles.typesContainer}>
-                        <View style={[styles.type, { backgroundColor: pokemonColors[pokemon.type1].backgroundColor } ]}>
-                            <Text style={{ color: pokemonColors[pokemon.type1].color, fontSize: 18, fontWeight: '600' }}>
-                                {capitalizeString(pokemon.type1)}
+                </View>
+                <View style={styles.typesContainer}>
+                    <View style={[styles.type, { backgroundColor: pokemonColors[pokemon.type1].backgroundColor } ]}>
+                        <Text style={{ color: pokemonColors[pokemon.type1].color, fontSize: 18, fontWeight: '600' }}>
+                            {capitalizeString(pokemon.type1)}
+                        </Text>
+                    </View>
+                    {pokemon.type2 ? (
+                        <View style={[styles.type, { backgroundColor: pokemonColors[pokemon.type2].backgroundColor } ]}>
+                            <Text style={{ color: pokemonColors[pokemon.type2].color, fontSize: 18, fontWeight: '600' }}>
+                                {capitalizeString(pokemon.type2)}
                             </Text>
                         </View>
-                        {pokemon.type2 ? (
-                            <View style={[styles.type, { backgroundColor: pokemonColors[pokemon.type2].backgroundColor } ]}>
-                                <Text style={{ color: pokemonColors[pokemon.type2].color, fontSize: 18, fontWeight: '600' }}>
-                                    {capitalizeString(pokemon.type2)}
-                                </Text>
-                            </View>
-                        ) : null}
-                    </View>
-
+                    ) : null}
                 </View>
 
                 <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>

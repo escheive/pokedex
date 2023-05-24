@@ -115,7 +115,7 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
     const styles = StyleSheet.create({
         container: {
             height: '100%',
-            backgroundColor: pokemonColors[pokemon.type1].backgroundColor
+            backgroundColor: 'white',
         },
         navContainer: {
             flexDirection: 'row',

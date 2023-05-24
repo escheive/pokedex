@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 const EvolutionChain = ({ pokemon }) => {
     const [evolutionChain, setEvolutionChain] = useState([]);
@@ -52,20 +52,38 @@ const EvolutionChain = ({ pokemon }) => {
         return evolutionChain;
     };
 
+    const styles = StyleSheet.create({
+        container: {
+            alignItems: 'center',
+            width: '100%',
+        },
+        evolutionsContainer: {
+            flexDirection: 'row',
+        }
+    })
+
     return (
-        <View>
+        <View style={styles.container}>
             <Text>Evolution Chain</Text>
-            <View>
+            <View style={styles.evolutionsContainer}>
                 {evolutionChain.map((pokemon, index) => (
                     <View key={index}>
-                        <Text>{pokemon.name}</Text>
-                        {pokemon.evolutionDetails.length > 0 && (
+                        <Text key={pokemon.name}>{pokemon.name}</Text>
+
+                        {pokemon.name === "eevee" ? (
                             <View>
                                 {pokemon.evolutionDetails.map((evolution, index) => (
-                                    <Text>{evolution.trigger} -&gt; {evolution.name}</Text>
+                                    <Text key={evolution.name}>-&gt; {evolution.name}</Text>
                                 ))}
                             </View>
-                        )}
+                        ) : ( pokemon.evolutionDetails.length > 0 && (
+                            <View>
+                                {pokemon.evolutionDetails.map((evolution, index) => (
+                                    <Text key={evolution.name}>{evolution.trigger} -&gt; {evolution.name}</Text>
+                                ))}
+                            </View>
+                        ))}
+
                     </View>
                 ))}
             </View>
