@@ -126,7 +126,7 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
                 return pokemon.name.toLowerCase().includes(searchQuery.toLowerCase());
             }
             return matchesSelectedVersions;
-            
+
         });
 
         return filteredList

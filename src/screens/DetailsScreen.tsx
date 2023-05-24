@@ -7,6 +7,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import PokemonStats from '../components/pokemon/PokemonStats';
 import PillBar from '../components/PillBar';
 import PokemonCard from '../components/pokemon/PokemonCard';
+import EvolutionChain from '../components/pokemon/EvolutionChain';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Utils
 import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
@@ -83,6 +84,9 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
 //         }
 //         fetchDetails();
     }, [pokemon.id]);
+
+
+
 
     // Function to check if a pokemon is favorited and update the page accordingly
     const checkIfFavorite = async () => {
@@ -226,6 +230,8 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
                     />
 
                     <PokemonStats pokemonColors={pokemonColors} pokemon={pokemon} />
+
+                    <EvolutionChain pokemon={pokemon} />
 
 
 {/*                     <View style={{ marginTop: 20 }}> */}
