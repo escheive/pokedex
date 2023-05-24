@@ -14,20 +14,21 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
     // Stylesheet for this screen
         const styles = StyleSheet.create({
             container: {
-                height: '100%',
+//                 height: '100%',
             },
             card: {
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'flex-start',
-                height: windowHeight * 0.75,
-                overflow: 'hidden',
+//                 height: windowHeight * 0.80,
                 marginBottom: 20,
+                overflow: 'hidden',
                 fontFamily: 'Arial, sans-serif',
             },
             imageContainer: {
                 backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
-                height: '50%',
+//                 height: '50%',
+                height: windowHeight * 0.30,
                 width: '100%',
                 paddingTop: 32,
 //                 flex: 1,
