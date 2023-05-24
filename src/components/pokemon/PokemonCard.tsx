@@ -233,6 +233,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
 //                         </View>
 
     const handleAbilitySelect = (ability) => {
+        ability.abilityName = capitalizeString(ability.abilityName)
         setSelectedAbility(ability)
     };
 

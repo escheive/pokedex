@@ -25,7 +25,6 @@ const versionOptions = [
 
 const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
-    const [excludeMetapod, setExcludeMetapod] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
     // function to handle user press on a pokemon
@@ -83,30 +82,54 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
       setSelectedVersions(updatedVersions);
     };
 
+//     // function to handle the filtering of pokemon
+//     const filterPokemonByVersions = (pokemonList: Pokemon[], searchQuery: string) => {
+//         if (selectedVersions.length === 0 && !searchQuery) {
+//             return pokemonList;
+//         }
+//
+//         return pokemonList.filter((pokemon) => {
+//             const generationKey = selectedVersions.find((v) => groupedVersions.hasOwnProperty(v));
+//             if (generationKey) {
+//                 const range = groupedVersions[generationKey];
+//                 return pokemon.id >= range.start && pokemon.id <= range.end;
+//             }
+//
+//             if (searchQuery) {
+//                 const lowerCaseQuery = searchQuery.toLowerCase();
+//                 return pokemon.name.toLowerCase().includes(lowerCaseQuery);
+//             }
+//
+//             return false;
+//         });
+//     };
+
     // function to handle the filtering of pokemon
     const filterPokemonByVersions = (pokemonList: Pokemon[], searchQuery: string) => {
         if (selectedVersions.length === 0 && !searchQuery) {
             return pokemonList;
         }
 
-        return pokemonList.filter((pokemon) => {
-            const generationKey = selectedVersions.find((v) => groupedVersions.hasOwnProperty(v));
-            if (generationKey) {
-                const range = groupedVersions[generationKey];
+        const filteredList = pokemonList.filter((pokemon) => {
+            const matchesSelectedVersions = selectedVersions.some((version) => {
+                const range = groupedVersions[version];
                 return pokemon.id >= range.start && pokemon.id <= range.end;
-            }
+            });
 
-            if (excludeMetapod && pokemon.name === 'metapod') {
-                return false;
+            if (selectedVersions.length > 0) {
+                if (!matchesSelectedVersions) {
+                    return false;
+                }
             }
 
             if (searchQuery) {
-                const lowerCaseQuery = searchQuery.toLowerCase();
-                return pokemon.name.toLowerCase().includes(lowerCaseQuery);
+                return pokemon.name.toLowerCase().includes(searchQuery.toLowerCase());
             }
-
-            return false;
+            return matchesSelectedVersions;
+            
         });
+
+        return filteredList
     };
 
     const filteredPokemon = filterPokemonByVersions(pokemonList, searchQuery);
@@ -187,15 +210,6 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
                         placeholder="Search Pokemon"
                     />
                 </View>
-
-                <View style={styles.excludeContainer}>
-                    <Text>Exclude Metapod:</Text>
-                    <Switch
-                        value={excludeMetapod}
-                        onValueChange={(value) => setExcludeMetapod(value)}
-                    />
-                </View>
-
             </View>
             {renderPokemonList()}
         </View>
@@ -230,11 +244,6 @@ const styles = StyleSheet.create({
     },
     filterButtonText: {
         color: 'white',
-    },
-    excludeContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 10,
     },
     searchContainer: {
         marginVertical: 10,
