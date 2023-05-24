@@ -137,12 +137,18 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
                 paddingVertical: 10,
                 marginBottom: 8,
             },
+            abilitiesContainer: {
+                width: '90%',
+            },
             abilitiesTitle: {
+                textAlign: 'center',
                 fontSize: 18,
-                marginBottom: 10,
+                marginBottom: 20,
+                paddingBottom: 5,
+                borderBottomWidth: 1,
+                borderColor: '#ccc',
             },
             abilityContainer: {
-                width: '90%',
                 backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
                 borderWidth: 1,
                 borderColor: '#ccc',
@@ -256,17 +262,20 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
                 </View>
 
                 <Text style={styles.pokedexEntry}>{pokedexEntry.flavorText}</Text>
-                <Text style={styles.abilitiesTitle}>Abilities</Text>
 
-                {thisPokemonsAbilities.map((ability) => (
-                    <TouchableOpacity
-                        key={ability.abilityName}
-                        style={styles.abilityContainer}
-                        onPress={() => handleAbilitySelect(ability)}
-                    >
-                        <Text style={styles.abilityItem}>{capitalizeString(ability.abilityName)}</Text>
-                    </TouchableOpacity>
-                ))}
+                <View style={styles.abilitiesContainer}>
+                    <Text style={styles.abilitiesTitle}>Abilities</Text>
+
+                    {thisPokemonsAbilities.map((ability) => (
+                        <TouchableOpacity
+                            key={ability.abilityName}
+                            style={styles.abilityContainer}
+                            onPress={() => handleAbilitySelect(ability)}
+                        >
+                            <Text style={styles.abilityItem}>{capitalizeString(ability.abilityName)}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
 
                 <Modal visible={selectedAbility !== null} animationType="fade" transparent>
                     <TouchableOpacity
