@@ -27,8 +27,9 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
             },
             imageContainer: {
                 backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
-                height: '40%',
+                height: '50%',
                 width: '100%',
+                paddingTop: 32,
 //                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
