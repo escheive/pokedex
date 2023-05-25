@@ -104,7 +104,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
 
     // Stylesheet for this screen
     const styles = StyleSheet.create({
-        Container: {
+        container: {
             height: '100%',
         },
         movesContainer: {
