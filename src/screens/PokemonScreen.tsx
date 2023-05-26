@@ -123,6 +123,7 @@ const PokemonScreen = ({ navigation, typeData, pokemonList, route }: Props) => {
             }
 
             if (searchQuery) {
+
                 return pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase());
             }
             return matchesSelectedVersions;
