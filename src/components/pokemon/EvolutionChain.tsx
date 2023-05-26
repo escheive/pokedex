@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+// Components
+import OctagonLayout from './OctagonLayout';
 
 const EvolutionChain = ({ pokemon }) => {
     const [evolutionChain, setEvolutionChain] = useState([]);
@@ -62,31 +64,32 @@ const EvolutionChain = ({ pokemon }) => {
         }
     })
 
+    if (evolutionChain.length === 0) {
+        return <Text>Loading...</Text>
+    }
+
+
     return (
         <View style={styles.container}>
             <Text>Evolution Chain</Text>
+        {pokemon.name === "eevee" ? (
+            <OctagonLayout evolutionChain={evolutionChain} />
+        ) : (
             <View style={styles.evolutionsContainer}>
+                <Text key={pokemon.name}>{evolutionChain[0].name}</Text>
                 {evolutionChain.map((pokemon, index) => (
                     <View key={index}>
-                        <Text key={pokemon.name}>{pokemon.name}</Text>
-
-                        {pokemon.name === "eevee" ? (
-                            <View>
-                                {pokemon.evolutionDetails.map((evolution, index) => (
-                                    <Text key={evolution.name}>-&gt; {evolution.name}</Text>
-                                ))}
-                            </View>
-                        ) : ( pokemon.evolutionDetails.length > 0 && (
+                         {pokemon.evolutionDetails.length > 0 && (
                             <View>
                                 {pokemon.evolutionDetails.map((evolution, index) => (
                                     <Text key={evolution.name}>{evolution.trigger} -&gt; {evolution.name}</Text>
                                 ))}
                             </View>
-                        ))}
-
+                         )}
                     </View>
                 ))}
             </View>
+        )}
         </View>
     )
 }
