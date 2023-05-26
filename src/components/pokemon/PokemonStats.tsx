@@ -93,7 +93,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
     const styles = StyleSheet.create({
         container: {
             margin: 10,
-            backgroundColor: '#eee',
+//             backgroundColor: 'white',
             borderRadius: 15,
             padding: 10,
         },

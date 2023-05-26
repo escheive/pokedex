@@ -3,7 +3,7 @@ import 'react-native-gesture-handler';
 // Dependencies
 import React, { useState, useEffect } from 'react';
 import { Text, View, Button, StyleSheet, TouchableOpacity } from 'react-native';
-import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { NavigationContainer, getFocusedRouteNameFromRoute, useRoute, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -20,6 +20,7 @@ import LoadingScreen from './src/components/LoadingScreen';
 import { getTypeStyle } from './src/utils/typeStyle';
 import { capitalizeString } from './src/utils/helpers';
 import { fetchPokemonData, fetchPokemonFromAPI, fetchAbilitiesData, fetchAbilitiesFromAPI } from './src/utils/api';
+import { pokemonColors } from './src/utils/typeStyle';
 // Database
 import SQLite from 'react-native-sqlite-storage';
 // Assets
@@ -68,17 +69,12 @@ const getHeaderTitle = (route: Route<string, object | undefined>) => {
 
 const DrawerNavigator = () => {
     const { Navigator, Screen } = createDrawerNavigator();
-    const navigation = useNavigation();
-    const route = useRoute();
+//     const navigation = useNavigation();
+//     const route = useRoute();
 
 
     const handleNavigationStateChange = (route: Route<string, object | undefined>) => {
         const title = getHeaderTitle(route);
-        if (title === 'Details') {
-            navigation.setOptions({
-                headerShown: false,
-            })
-        } else
         navigation.setOptions({
             headerTitle: title,
         });
@@ -87,7 +83,9 @@ const DrawerNavigator = () => {
     return (
         <Navigator
             initialRouteName="Pokemon"
-            drawerContent={(props) => <DrawerContent {...props} />}
+            screenOptions={{
+                headerShown: true
+            }}
             onNavigationStateChange={handleNavigationStateChange}
         >
             <Screen
@@ -117,7 +115,6 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route, allPokemonAbilities
         <Navigator
             screenOptions={({ route }) => ({
                 headerShown: false,
-
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
                     if (route.name === 'Info') {
@@ -146,10 +143,11 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route, allPokemonAbilities
 };
 
 
-const PokemonStackNavigator = ({ pokemonList, typeData, allPokemonAbilities, navigation, route }) => {
+const PokemonStackNavigator = ({ pokemonList, typeData, allPokemonAbilities }) => {
 
     return (
         <Stack.Navigator
+            initialRouteName="Main"
             screenOptions={{
                 headerShown: false,
             }}
@@ -159,7 +157,20 @@ const PokemonStackNavigator = ({ pokemonList, typeData, allPokemonAbilities, nav
                 {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
             </Stack.Screen>
 
-            <Stack.Screen name="Details">
+            <Stack.Screen
+                name="Details"
+                options={({ route }) => {
+                    const selectedPokemon = route.params.pokemon;
+                    const headerStyle = {
+                        backgroundColor: 'transparent',
+                    };
+                    return {
+                        headerShown: true,
+                        headerStyle,
+                        headerShadowVisible: false,
+                    };
+                }}
+            >
                 {props => <DetailsTabNavigator {...props} allPokemonAbilities={allPokemonAbilities} />}
             </Stack.Screen>
         </Stack.Navigator>
@@ -223,12 +234,24 @@ export default function App() {
     return (
         <NavigationContainer>
 
-            <Drawer.Navigator>
+            <Drawer.Navigator
+                screenOptions={({ route }) => {
+                    const headerTitle = getHeaderTitle(route);
+                    return {
+                        headerTitle: headerTitle,
+                        headerShown: headerTitle !== 'Details',
+                    }
+                }}
+            >
                 <Drawer.Screen
                     name="Pokemon"
-                    options={({ route }) => ({
-                        headerTitle: getHeaderTitle(route)
-                    })}
+//                     options={({ route }) => {
+//                         const headerTitle = getHeaderTitle(route);
+//                         return {
+//                             headerTitle: headerTitle,
+//                             headerShown: headerTitle !== 'Details',
+//                         }
+//                     }}
                 >
                     {(props) => <PokemonStackNavigator {...props} pokemonList={pokemonList} typeData={typeData} allPokemonAbilities={allPokemonAbilities} />}
                 </Drawer.Screen>

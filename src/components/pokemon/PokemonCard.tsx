@@ -13,9 +13,6 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
 
     // Stylesheet for this screen
         const styles = StyleSheet.create({
-            container: {
-//                 height: '100%',
-            },
             card: {
                 flex: 1,
                 alignItems: 'center',
@@ -24,6 +21,7 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress
                 marginBottom: 20,
                 overflow: 'hidden',
                 fontFamily: 'Arial, sans-serif',
+//                 backgroundColor: 'white',
             },
             imageContainer: {
                 backgroundColor: pokemonColors[pokemon.type1].backgroundColor,

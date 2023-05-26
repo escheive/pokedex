@@ -23,7 +23,7 @@ const versionOptions = [
     { key: 'gen9', label: 'Gen 9' },
 ];
 
-const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
+const PokemonScreen = ({ navigation, typeData, pokemonList, route }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -179,6 +179,10 @@ const PokemonScreen = ({ navigation, pokemonList, typeData }: Props) => {
             />
         );
     };
+
+    if (!pokemonList || pokemonList.length === 0) {
+     return <Text>Loading</Text>
+    }
 
 
     return (
