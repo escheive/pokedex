@@ -97,13 +97,13 @@ const OctagonLayout = ({ evolutionChain }) => {
                     <Text>{capitalizeString(evolutions[5].name)}</Text>
                 </View>
 
-                <Ionicons name='arrow-back-sharp' size={32} color='black' style={{ marginRight: -40 }} />
+                <Ionicons name='arrow-back-sharp' size={32} color='gray' style={{ marginRight: -40 }} />
 
                 <View style={styles.centerPokemon}>
                     <View style={styles.arrowsContainer}>
-                        <Ionicons name='arrow-back-sharp' size={32} color='black' style={{ transform: [{ rotate: '45deg' }] }} />
-                        <Ionicons name='arrow-up-sharp' size={32} color='black' />
-                        <Ionicons name='arrow-forward-sharp' size={32} color='black' style={{ transform: [{ rotate: '-45deg' }] }} />
+                        <Ionicons name='arrow-back-sharp' size={32} color='gray' style={{ transform: [{ rotate: '45deg' }] }} />
+                        <Ionicons name='arrow-up-sharp' size={32} color='gray' />
+                        <Ionicons name='arrow-forward-sharp' size={32} color='gray' style={{ transform: [{ rotate: '-45deg' }] }} />
                     </View>
 
                     <Image
@@ -113,13 +113,13 @@ const OctagonLayout = ({ evolutionChain }) => {
                     <Text>{capitalizeString(centerPokemon.name)}</Text>
 
                     <View style={styles.arrowsContainer}>
-                        <Ionicons name='arrow-back-sharp' size={32} color='black' style={{ transform: [{ rotate: '-45deg' }] }} />
-                        <Ionicons name='arrow-down-sharp' size={32} color='black' />
-                        <Ionicons name='arrow-forward-sharp' size={32} color='black' style={{ transform: [{ rotate: '45deg' }] }} />
+                        <Ionicons name='arrow-back-sharp' size={32} color='gray' style={{ transform: [{ rotate: '-45deg' }] }} />
+                        <Ionicons name='arrow-down-sharp' size={32} color='gray' />
+                        <Ionicons name='arrow-forward-sharp' size={32} color='gray' style={{ transform: [{ rotate: '45deg' }] }} />
                     </View>
                 </View>
 
-                <Ionicons name='arrow-forward-sharp' size={32} color='black' style={{ marginLeft: -40 }} />
+                <Ionicons name='arrow-forward-sharp' size={32} color='gray' style={{ marginLeft: -40 }} />
 
                 <View style={styles.evolutionContainer}>
                     <Image
