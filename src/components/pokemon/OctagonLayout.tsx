@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { capitalizeString } from '../../utils/helpers';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const OctagonLayout = ({ evolutionChain }) => {
     const centerPokemon = evolutionChain.find(pokemon => pokemon.name === 'eevee');
@@ -95,13 +96,31 @@ const OctagonLayout = ({ evolutionChain }) => {
                     />
                     <Text>{capitalizeString(evolutions[5].name)}</Text>
                 </View>
+
+                <Ionicons name='arrow-back-sharp' size={32} color='black' style={{ marginRight: -40 }} />
+
                 <View style={styles.centerPokemon}>
+                    <View style={styles.arrowsContainer}>
+                        <Ionicons name='arrow-back-sharp' size={32} color='black' style={{ transform: [{ rotate: '45deg' }] }} />
+                        <Ionicons name='arrow-up-sharp' size={32} color='black' />
+                        <Ionicons name='arrow-forward-sharp' size={32} color='black' style={{ transform: [{ rotate: '-45deg' }] }} />
+                    </View>
+
                     <Image
                         style={styles.image}
                         source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${centerPokemon.id}.png` }}
                     />
                     <Text>{capitalizeString(centerPokemon.name)}</Text>
+
+                    <View style={styles.arrowsContainer}>
+                        <Ionicons name='arrow-back-sharp' size={32} color='black' style={{ transform: [{ rotate: '-45deg' }] }} />
+                        <Ionicons name='arrow-down-sharp' size={32} color='black' />
+                        <Ionicons name='arrow-forward-sharp' size={32} color='black' style={{ transform: [{ rotate: '45deg' }] }} />
+                    </View>
                 </View>
+
+                <Ionicons name='arrow-forward-sharp' size={32} color='black' style={{ marginLeft: -40 }} />
+
                 <View style={styles.evolutionContainer}>
                     <Image
                         style={styles.image}
@@ -135,43 +154,54 @@ const styles = StyleSheet.create({
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 40,
+    alignItems: 'center',
     width: '100%',
   },
   middleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 40,
+    alignItems: 'center',
+    paddingVertical: 40,
     width: '100%',
   },
   bottomRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
   },
   centerPokemon: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: 'black',
+    width: 120,
+    height: 120,
     justifyContent: 'center',
     alignItems: 'center',
   },
   evolutionContainer: {
     position: 'relative',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: 'black',
+    width: 75,
+    height: 75,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  image: {
-    width: 50,
-    height: 50,
-  },
+    image: {
+        width: 75,
+        height: 75,
+    },
+    leftArrowContainer: {
+        flexDirection: 'column',
+        marginRight: -60,
+        height: '100%',
+    },
+    rightArrowContainer: {
+        flexDirection: 'column',
+        marginLeft: -60,
+        height: '100%',
+    },
+    arrowsContainer: {
+        flexDirection: 'row',
+        width: '140%',
+        justifyContent: 'space-between',
+    },
 });
 
 export default OctagonLayout;

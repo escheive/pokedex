@@ -69,7 +69,7 @@ const EvolutionChain = ({ pokemon }) => {
             alignItems: 'center',
             width: '100%',
             marginBottom: 30,
-            paddingHorizontal: 20,
+            padding: 10,
         },
         evolutionsContainer: {
             flexDirection: 'row',
