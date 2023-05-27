@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import { capitalizeString } from '../../utils/helpers';
 
 const OctagonLayout = ({ evolutionChain }) => {
     const centerPokemon = evolutionChain.find(pokemon => pokemon.name === 'eevee');
     const evolutions = centerPokemon.evolutionDetails.filter(pokemon => pokemon.name !== 'eevee');
-    console.log(centerPokemon.name)
+//     console.log(centerPokemon)
     console.log(evolutions)
 
 //     console.log(evolutionChain)
@@ -14,11 +15,19 @@ return (
       <Text>Evolution Chain</Text>
       <View style={styles.evolutionsContainer}>
         <View style={styles.centerPokemon}>
-          <Text>Eevee</Text>
+            <Image
+                style={styles.image}
+                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${centerPokemon.id}.png` }}
+            />
+          <Text>{capitalizeString(centerPokemon.name)}</Text>
         </View>
         {evolutions.map((pokemon, index) => (
           <View key={index} style={styles.evolutionContainer}>
-            <Text>{pokemon.name}</Text>
+            <Image
+                style={styles.image}
+                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
+            />
+            <Text>{capitalizeString(pokemon.name)}</Text>
           </View>
         ))}
       </View>
@@ -55,6 +64,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
   },
+  image: {
+    width: 50,
+    height: 50,
+  }
 });
 
 export default OctagonLayout;

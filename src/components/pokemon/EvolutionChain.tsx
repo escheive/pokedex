@@ -35,14 +35,25 @@ const EvolutionChain = ({ pokemon }) => {
 
         while (currentPokemon) {
             const speciesName = currentPokemon.species.name;
+
+            // Deconstruct the url to grab the id number from it
+            const urlParts = currentPokemon.species.url.split("/");
+            // The url contains the pokemons id, so this will grab that id number
+            const evolutionId = urlParts[urlParts.length-2];
+            console.log(evolutionId)
             const evolutionDetails = currentPokemon.evolves_to.map((evolution) => {
+                // Deconstruct the url to grab the id number from it
+                const urlParts = evolution.species.url.split("/");
+                // The url contains the pokemons id, so this will grab that id number
+                const evolutionId = urlParts[urlParts.length-2];
                 return {
                     name: evolution.species.name,
                     trigger: evolution.evolution_details[0].trigger.name,
+                    id: evolutionId,
                 };
             });
 
-            evolutionChain.push({ name: speciesName, evolutionDetails });
+            evolutionChain.push({ name: speciesName, id: evolutionId, evolutionDetails });
 
             if (currentPokemon.evolves_to.length > 0) {
                 currentPokemon = currentPokemon.evolves_to[0];
