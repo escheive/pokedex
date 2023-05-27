@@ -40,7 +40,6 @@ const EvolutionChain = ({ pokemon }) => {
             const urlParts = currentPokemon.species.url.split("/");
             // The url contains the pokemons id, so this will grab that id number
             const evolutionId = urlParts[urlParts.length-2];
-            console.log(evolutionId)
             const evolutionDetails = currentPokemon.evolves_to.map((evolution) => {
                 // Deconstruct the url to grab the id number from it
                 const urlParts = evolution.species.url.split("/");
@@ -69,9 +68,12 @@ const EvolutionChain = ({ pokemon }) => {
         container: {
             alignItems: 'center',
             width: '100%',
+            marginBottom: 30,
+            paddingHorizontal: 20,
         },
         evolutionsContainer: {
             flexDirection: 'row',
+            marginVertical: 10,
         }
     })
 
@@ -88,17 +90,17 @@ const EvolutionChain = ({ pokemon }) => {
         ) : (
             <View style={styles.evolutionsContainer}>
                 <Text key={pokemon.name}>{evolutionChain[0].name}</Text>
-                {evolutionChain.map((pokemon, index) => (
-                    <View key={index}>
-                         {pokemon.evolutionDetails.length > 0 && (
-                            <View>
-                                {pokemon.evolutionDetails.map((evolution, index) => (
-                                    <Text key={evolution.name}>{evolution.trigger} -&gt; {evolution.name}</Text>
-                                ))}
-                            </View>
-                         )}
-                    </View>
-                ))}
+            {evolutionChain.map((pokemon, index) => (
+                <View key={index}>
+                     {pokemon.evolutionDetails.length > 0 && (
+                        <View>
+                            {pokemon.evolutionDetails.map((evolution, index) => (
+                                <Text key={evolution.name}>{evolution.trigger} -&gt; {evolution.name}</Text>
+                            ))}
+                        </View>
+                     )}
+                </View>
+            ))}
             </View>
         )}
         </View>
