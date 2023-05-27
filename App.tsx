@@ -20,12 +20,20 @@ import LoadingScreen from './src/components/LoadingScreen';
 import { getTypeStyle } from './src/utils/typeStyle';
 import { capitalizeString } from './src/utils/helpers';
 import { fetchPokemonData, fetchPokemonFromAPI, fetchAbilitiesData, fetchAbilitiesFromAPI } from './src/utils/api';
+import { resetPokemonTable, resetAbilitiesTable } from './src/utils/database';
 import { pokemonColors } from './src/utils/typeStyle';
 // Database
 import SQLite from 'react-native-sqlite-storage';
 // Assets
 import typeData from './src/assets/typeData';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+
+// Open the database
+const database = SQLite.openDatabase({
+    name: 'Pokemon.db',
+    location: 'default',
+});
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -202,28 +210,22 @@ function SettingsStack() {
 
 
 
-// Open the database
-const database = SQLite.openDatabase({
-    name: 'Pokemon.db',
-    location: 'default',
-});
-
-
-
-
 export default function App() {
     const [isLoading, setIsLoading] = useState("Loading...");
     const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
     const [allPokemonAbilities, setAllPokemonAbilities] = useState([]);
 
     useEffect(() => {
-
 //         resetAbilitiesTable();
 //         resetPokemonTable(database);
         fetchPokemonData(database, setIsLoading, setPokemonList)
             .then(() => fetchAbilitiesData(database, setIsLoading, setAllPokemonAbilities))
             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
             .finally(() => setIsLoading(false));
+
+        return () => {
+            database.close();
+        };
     }, []);
 
 

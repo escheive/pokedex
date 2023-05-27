@@ -1,4 +1,6 @@
 import { createPokemonTable, insertPokemon, createAbilitiesTable, insertAbility } from './database';
+// Database
+import SQLite from 'react-native-sqlite-storage';
 
 ////////////////////////////////////////////////////////////////
 //++++++++++++++++++ Pokemon Data Functions ++++++++++++++++++//
@@ -14,10 +16,19 @@ const fetchPokemonFromAPI = async (start, end) => {
 
         const pokemonUrls = data.results.map((pokemon) => pokemon.url);
         const pokemonData = await Promise.all(pokemonUrls.map((url) =>fetch(url).then((response) => response.json())));
+//         const pokemonData = [];
+//
+//         for (let i = 0; i < pokemonUrls.length; i += 5) {
+//             const batchUrls = pokemonUrls.slice(i, i + 5);
+//             const batchData = await Promise.all(batchUrls.map((url) =>fetch(url).then((response) => response.json())));
+//             pokemonData.push(...batchData);
+//         }
 
+        console.log('finished fetchedPokemonFromApi function job :) ');
         return pokemonData;
     } catch (error) {
         console.error('Error in fetchPokemonFromAPI function', error);
+        throw error;
     }
 };
 
@@ -25,6 +36,7 @@ const fetchPokemonFromAPI = async (start, end) => {
 // Function to fetch base pokemon data from database or api
 const fetchPokemonData = async ( database, setIsLoading, setPokemonList ) => {
     console.log('fetchPokemonData function hit');
+    setIsLoading("Loading Pokemon...");
     try {
         // Wait for the table creation process to complete
         await createPokemonTable(database);
@@ -32,53 +44,101 @@ const fetchPokemonData = async ( database, setIsLoading, setPokemonList ) => {
         const totalCount = 1010;
         const batchSize = 20;
         const batches = Math.ceil(totalCount / batchSize);
+
         const fetchedPokemonData = [];
+
+
+        const hasData = await new Promise((resolve, reject) => {
+            const start = 0;
+            const end = 1010;
+            database.transaction((tx) => {
+                tx.executeSql(
+                    `SELECT * FROM Pokemon WHERE id BETWEEN ? AND ?;`,
+                    [start, end],
+                    (tx, result) => {
+                        if (result.rows.length > 0) {
+                            for (let i=0; i<result.rows.length; i++) {
+                                fetchedPokemonData.push(result.rows.item(i));
+                            }
+                        }
+                        resolve(result.rows.length > 0);
+                    },
+                    (error) => {
+                        console.error('Error checking Pokemon data in the fetchPokemonData function, hasData subsection:', error);
+                        reject(error);
+                    }
+                );
+            });
+        });
 
         for (let batch=0; batch < batches; batch++) {
             const start = batch * batchSize;
-            const end = start + batchSize;
-
-            const hasData = await new Promise((resolve, reject) => {
-                setIsLoading("Loading Pokemon");
-                database.transaction((tx) => {
-                    tx.executeSql(
-                        `SELECT * FROM Pokemon WHERE id BETWEEN ? AND ?;`,
-                        [start, end],
-                        (tx, result) => {
-                            if (result.rows.length > 0) {
-                                for (let i=0; i<result.rows.length; i++) {
-                                    fetchedPokemonData.push(result.rows.item(i));
-                                }
-                            }
-                            resolve(result.rows.length > 0);
-                        },
-                        (error) => {
-                            console.error('Error checking Pokemon data in the fetchPokemonData function, hasData subsection:', error);
-                            reject(error);
-                        }
-                    );
-                });
-            });
+            const end = start + batchSize
 
             if (!hasData) {
                 // set loading phase so that loading screen updates
-                setIsLoading("Fetching Pokemon data from the API");
-                const fetchedData = await fetchPokemonFromAPI(start, end);
-                fetchedPokemonData.push(...fetchedData);
-                await insertPokemon(database, fetchedData);
+                setIsLoading("Fetching Pokemon data from the API...");
+                try {
+                    const fetchedData = await fetchPokemonFromAPI(start, end);
+//                     fetchedPokemonData.push(...fetchedData);
+                    await insertPokemon(database, fetchedData);
+                } catch (error) {
+                    console.error('Error in the !hasData section of fetchPokemonData function:', error);
+                    throw error;
+                }
             }
         }
 
+//         for (let batch=0; batch < batches; batch++) {
+//             const start = batch * batchSize;
+//             const end = start + batchSize;
+//
+//             const hasData = await new Promise((resolve, reject) => {
+//                 database.transaction((tx) => {
+//                     tx.executeSql(
+//                         `SELECT * FROM Pokemon WHERE id BETWEEN ? AND ?;`,
+//                         [start, end],
+//                         (tx, result) => {
+//                             if (result.rows.length > 0) {
+//                                 for (let i=0; i<result.rows.length; i++) {
+//                                     fetchedPokemonData.push(result.rows.item(i));
+//                                 }
+//                             }
+//                             resolve(result.rows.length > 0);
+//                         },
+//                         (error) => {
+//                             console.error('Error checking Pokemon data in the fetchPokemonData function, hasData subsection:', error);
+//                             reject(error);
+//                         }
+//                     );
+//                 });
+//             });
+//
+//             if (!hasData) {
+//                 // set loading phase so that loading screen updates
+//                 setIsLoading("Fetching Pokemon data from the API...");
+//                 try {
+//                     const fetchedData = await fetchPokemonFromAPI(start, end);
+// //                     fetchedPokemonData.push(...fetchedData);
+//                     await insertPokemon(database, fetchedData);
+//                 } catch (error) {
+//                     console.error('Error in the !hasData section of fetchPokemonData function:', error);
+//                     throw error;
+//                 }
+//             }
+//         }
+
         console.log('Successfully fetched data in the fetchPokemonData function');
 
-        setPokemonList((prevList) => {
-            const mergedList = [...prevList, ...fetchedPokemonData];
-            const uniqueList = Array.from(
-                new Set(mergedList.map((pokemon) => pokemon.id))).map((id) =>
-                    mergedList.find((pokemon) => pokemon.id === id)
-            );
-            return uniqueList
-        });
+        setPokemonList(fetchedPokemonData);
+//         setPokemonList((prevList) => {
+//             const mergedList = [...prevList, ...fetchedPokemonData];
+//             const uniqueList = Array.from(
+//                 new Set(mergedList.map((pokemon) => pokemon.id))).map((id) =>
+//                     mergedList.find((pokemon) => pokemon.id === id)
+//             );
+//             return uniqueList
+//         });
     } catch (error) {
         console.error('Error fetching and inserting Pokemon data in the fetchPokemonData function:', error);
     }

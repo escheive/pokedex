@@ -145,7 +145,7 @@ const PokemonScreen = ({ navigation, typeData, pokemonList, route }: Props) => {
             <View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
                 <TouchableOpacity style={styles.itemCard} onPress={() => handlePress(pokemon)}>
                     <View style={styles.itemDetailsContainer}>
-                        <Text style={[styles.pokemonId, { color: pokemonColors[pokemon.type1].color } ]}>{pokemon.id}</Text>
+                        <Text style={[styles.pokemonId, { color: pokemon.type1 ? pokemonColors[pokemon.type1].color : 'white' }]}>{pokemon.id}</Text>
                         <View style={styles.pokemonNameAndTypeContainer}>
                             <Text style={[styles.pokemonName, { color: pokemonColors[pokemon.type1].color } ]}>{capitalizeString(pokemon.name)}</Text>
                             <View style={styles.pokemonTypesContainer}>

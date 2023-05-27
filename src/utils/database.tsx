@@ -1,4 +1,5 @@
-
+// Database
+import SQLite from 'react-native-sqlite-storage';
 ////////////////////////////////////////////////////////////////
 //++++++++++++++++ Pokemon Database Functions ++++++++++++++++//
 ////////////////////////////////////////////////////////////////
@@ -66,19 +67,23 @@ const createPokemonTable = (database) => {
 // Function to drop pokemon table
 const resetPokemonTable = (database) => {
     console.log('resetPokemonTable function hit');
-    database.transaction((tx) => {
-        tx.executeSql(
-            `DROP TABLE IF EXISTS pokemon;`,
-            [],
-            () => {
-                console.log('Table "pokemon" dropped successfully');
-                createPokemonTable();
-            },
-            (error) => {
-                console.error('Error dropping table "pokemon":', error);
-            }
-        );
-    });
+    try {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `DROP TABLE IF EXISTS pokemon;`,
+                [],
+                () => {
+                    console.log('Table "pokemon" dropped successfully');
+    //                 createPokemonTable(database);
+                },
+                (error) => {
+                    console.error('Error dropping table "pokemon":', error);
+                }
+            );
+        });
+    } catch (error) {
+        console.error('Error with resetPokemonTable function', error);
+    }
 };
 
 
@@ -109,7 +114,6 @@ const insertPokemon = async (database, pokemonData) => {
                             pokemon.abilities[0] ? pokemon.abilities[0].ability.name : null,
                             pokemon.abilities[1] ? pokemon.abilities[1].ability.name : null,
                             pokemon.abilities[2] ? pokemon.abilities[2].ability.name : null,
-                            pokemon.capture_rate,
                             pokemon.species.url,
                             pokemon.sprites.other['official-artwork'].front_default,
                         ],

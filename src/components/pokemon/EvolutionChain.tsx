@@ -86,7 +86,7 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
             alignItems: 'center',
             justifyContent: 'center',
             paddingVertical: 10,
-            backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
+//             backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
         },
         arrowContainer: {
             flexDirection: 'column',
@@ -94,8 +94,8 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
             justifyContent: 'center',
         },
         image: {
-            width: 75,
-            height: 75,
+            width: 85,
+            height: 85,
         }
     })
 

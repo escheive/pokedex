@@ -96,6 +96,13 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
 //             backgroundColor: 'white',
             borderRadius: 15,
             padding: 10,
+            textAlign: 'center',
+        },
+        statsTitleText: {
+            fontSize: 22,
+            fontWeight: 'bold',
+            alignSelf: 'center',
+            marginBottom: 18,
         },
         statItem: {
             flexDirection: 'row',
@@ -149,6 +156,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.statsTitleText}>Stats</Text>
             <View style={styles.navContainer}>
                 <TouchableOpacity
                     style={[
