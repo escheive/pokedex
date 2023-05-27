@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 // Components
 import OctagonLayout from './OctagonLayout';
+// Utils
+import { capitalizeString } from '../../utils/helpers';
 
-const EvolutionChain = ({ pokemon }) => {
+const EvolutionChain = ({ pokemon, pokemonColors }) => {
     const [evolutionChain, setEvolutionChain] = useState([]);
 
     useEffect(() => {
@@ -72,8 +75,27 @@ const EvolutionChain = ({ pokemon }) => {
             padding: 10,
         },
         evolutionsContainer: {
+            width: '100%',
             flexDirection: 'row',
-            marginVertical: 10,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginVertical: 20,
+        },
+        evolutionItemContainer: {
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingVertical: 10,
+            backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
+        },
+        arrowContainer: {
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        image: {
+            width: 75,
+            height: 75,
         }
     })
 
@@ -84,22 +106,43 @@ const EvolutionChain = ({ pokemon }) => {
 
     return (
         <View style={styles.container}>
-            <Text>Evolution Chain</Text>
+            <Text style= {{ fontSize: 24 }}>Evolution Chain</Text>
         {pokemon.name === "eevee" ? (
             <OctagonLayout evolutionChain={evolutionChain} />
         ) : (
             <View style={styles.evolutionsContainer}>
-                <Text key={pokemon.name}>{evolutionChain[0].name}</Text>
-            {evolutionChain.map((pokemon, index) => (
-                <View key={index}>
-                     {pokemon.evolutionDetails.length > 0 && (
-                        <View>
-                            {pokemon.evolutionDetails.map((evolution, index) => (
-                                <Text key={evolution.name}>{evolution.trigger} -&gt; {evolution.name}</Text>
-                            ))}
-                        </View>
-                     )}
+                <View style={styles.evolutionItemContainer}>
+                    <Image
+                        style={styles.image}
+                        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${evolutionChain[0].id}.png` }}
+                    />
+                    <Text key={pokemon.name}>{capitalizeString(evolutionChain[0].name)}</Text>
                 </View>
+
+            {evolutionChain.map((pokemon, index) => (
+                <React.Fragment key={index}>
+
+                    {pokemon.evolutionDetails.length > 0 && pokemon.evolutionDetails.map((evolution, index) => (
+                        <React.Fragment key={evolution.name}>
+
+                            {index < pokemon.evolutionDetails.length && (
+                                <View style={styles.arrowContainer}>
+                                    <Ionicons name='arrow-forward-sharp' size={32} color='gray' />
+                                    <Text>{evolution.trigger}</Text>
+                                </View>
+                            )}
+
+                            <View style={styles.evolutionItemContainer}>
+                                <Image
+                                    style={styles.image}
+                                    source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${evolution.id}.png` }}
+                                />
+                                <Text>{capitalizeString(evolution.name)}</Text>
+                            </View>
+
+                        </React.Fragment>
+                    ))}
+                </React.Fragment>
             ))}
             </View>
         )}
