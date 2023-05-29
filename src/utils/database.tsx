@@ -35,9 +35,10 @@ const createPokemonTable = (database) => {
                             ability1 TEXT,
                             ability2 TEXT,
                             ability3 TEXT,
-                            capture_rate INTEGER,
                             species_url TEXT,
-                            image_url TEXT
+                            image_url TEXT,
+                            isCaptured BOOLEAN DEFAULT false,
+                            isFavorite BOOLEAN DEFAULT false
                             );`,
                             [],
                             () => {
@@ -95,8 +96,8 @@ const insertPokemon = async (database, pokemonData) => {
             database.transaction((tx) => {
                 pokemonData.forEach((pokemon) => {
                     tx.executeSql(
-                        `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, hp, atk, def, sp_atk, sp_def, spd, ability1, ability2, ability3, capture_rate, species_url, image_url)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+                        `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, hp, atk, def, sp_atk, sp_def, spd, ability1, ability2, ability3, species_url, image_url, isCaptured, isFavorite)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
                         [
                             pokemon.id,
                             pokemon.name,
@@ -116,6 +117,8 @@ const insertPokemon = async (database, pokemonData) => {
                             pokemon.abilities[2] ? pokemon.abilities[2].ability.name : null,
                             pokemon.species.url,
                             pokemon.sprites.other['official-artwork'].front_default,
+                            false,
+                            false
                         ],
                         () => {
                             resolve();

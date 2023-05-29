@@ -71,11 +71,12 @@ const fetchPokemonData = async ( database, setIsLoading, setPokemonList ) => {
             });
         });
 
-        for (let batch=0; batch < batches; batch++) {
-            const start = batch * batchSize;
-            const end = start + batchSize
+        if (!hasData) {
 
-            if (!hasData) {
+            for (let batch=0; batch < batches; batch++) {
+                const start = batch * batchSize;
+                const end = start + batchSize
+
                 // set loading phase so that loading screen updates
                 setIsLoading("Fetching Pokemon data from the API...");
                 try {

@@ -214,6 +214,8 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
         },
     });
 
+    console.log(pokemon)
+
     return (
 
         <FlatList style={styles.container}
