@@ -157,11 +157,22 @@ const PokemonScreen = ({ navigation, typeData, setPokemonList, pokemonList, rout
         updatePokemonFavoriteStatus(database, selectedPokemon.id, updatedFavoriteValue);
     }
 
-    const handleCapturePress = (pokemon, database) => {
+    const handleCapturePress = (selectedPokemon, database) => {
         // Update the isCaptured value in the database
-        const updatedCaptureValue = !pokemon.isCaptured;
+        const updatedCaptureValue = !selectedPokemon.isCaptured;
+        // Find the matching Pokemon in the pokemonList array
+        const updatedPokemonList = pokemonList.map((pokemon) => {
+            if (pokemon.id === selectedPokemon.id) {
+                return { ...pokemon, isCaptured: updatedCaptureValue };
+            }
+            return pokemon;
+        });
+
+        // Update pokemonList with the updatedPokemonList
+        setPokemonList(updatedPokemonList);
+
         // Update the database using the database update function
-        updatePokemonCaptureStatus(database, pokemon.id, updatedCaptureValue);
+        updatePokemonCaptureStatus(database, selectedPokemon.id, updatedCaptureValue);
     }
 
 
