@@ -93,9 +93,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.spotifymusicfinderapp"
+    namespace "com.pokevault"
     defaultConfig {
-        applicationId "com.spotifymusicfinderapp"
+        applicationId "com.pokevault"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

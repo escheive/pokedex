@@ -1,4 +1,4 @@
-# pokedexApp
+# PokéVault
 - Creating a pokedex app using the pokeapi and react native for all your pokemon needs!
 
 # Description

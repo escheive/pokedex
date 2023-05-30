@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Image, Dimensions, Switch, TextInput } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Pokemon } from '../types';
@@ -254,10 +254,6 @@ const PokemonScreen = ({ navigation, typeData, setPokemonList, pokemonList, rout
             />
         );
     };
-
-    if (!pokemonList || pokemonList.length === 0) {
-     return <Text>Loading</Text>
-    }
 
 
     return (

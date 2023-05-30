@@ -1,4 +1,4 @@
-package com.spotifymusicfinderapp;
+package com.pokevault;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
