@@ -186,8 +186,40 @@ const PokemonScreen = ({ navigation, typeData, setPokemonList, pokemonList, rout
                 <TouchableOpacity style={styles.itemCard} onPress={() => handlePress(pokemon)}>
                     <View style={styles.itemDetailsContainer}>
                         <Text style={[styles.pokemonId, { color: pokemon.type1 ? pokemonColors[pokemon.type1].color : 'white' }]}>{pokemon.id}</Text>
+
                         <View style={styles.pokemonNameAndTypeContainer}>
-                            <Text style={[styles.pokemonName, { color: pokemonColors[pokemon.type1].color } ]}>{capitalizeString(pokemon.name)}</Text>
+                            <View style={styles.nameContainer}>
+                                <Text style={[styles.pokemonName, { color: pokemonColors[pokemon.type1].color } ]}>{capitalizeString(pokemon.name)}</Text>
+                                <View style={{ flexDirection: 'row' }}>
+                                    {pokemon.isFavorite ? (
+                                        <Ionicons
+                                            name="star"
+                                            size={24} color="#555"
+                                            onPress={() => handleFavoritePress(pokemon, database)}
+                                        />
+                                    ) : (
+                                        <Ionicons
+                                            name="star-outline"
+                                            size={24} color="#555"
+                                            onPress={() => handleFavoritePress(pokemon, database)}
+                                        />
+                                    )}
+                                    {pokemon.isCaptured ? (
+                                        <Ionicons
+                                            name="checkmark-circle-outline"
+                                            size={26} color="#555"
+                                            onPress={() => handleCapturePress(pokemon, database)}
+                                        />
+                                    ) : (
+                                        <Ionicons
+                                            name="ellipse-outline"
+                                            size={26} color="#555"
+                                            onPress={() => handleCapturePress(pokemon, database)}
+                                        />
+                                    )}
+                                </View>
+                            </View>
+
                             <View style={styles.pokemonTypesContainer}>
                                 <Text style={styles.pokemonType}>{capitalizeString(pokemon.type1)}</Text>
                                 {pokemon.type2 && (
@@ -195,34 +227,8 @@ const PokemonScreen = ({ navigation, typeData, setPokemonList, pokemonList, rout
                                 )}
                             </View>
                         </View>
-                        <View>
-                            {pokemon.isFavorite ? (
-                                <Ionicons
-                                    name="star"
-                                    size={24} color="black"
-                                    onPress={() => handleFavoritePress(pokemon, database)}
-                                />
-                            ) : (
-                                <Ionicons
-                                    name="star-outline"
-                                    size={24} color="black"
-                                    onPress={() => handleFavoritePress(pokemon, database)}
-                                />
-                            )}
-                            {pokemon.isCaptured ? (
-                                <Ionicons
-                                    name="checkmark-circle-outline"
-                                    size={24} color="black"
-                                    onPress={() => handleCapturePress(pokemon, database)}
-                                />
-                            ) : (
-                                <Ionicons
-                                    name="ellipse-outline"
-                                    size={24} color="black"
-                                    onPress={() => handleCapturePress(pokemon, database)}
-                                />
-                            )}
-                        </View>
+
+
                     </View>
                     <Image
                         style={styles.image}
@@ -359,16 +365,19 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingRight: 40,
     },
-    pokemonNameAndTypeContainer: {
-//         paddingRight: 10,
+    nameContainer: {
+        flexDirection: 'row',
+//         justifyContent: 'space-between',
+//         marginRight: 15,
     },
     pokemonName: {
         fontSize: 20,
         marginBottom: 10,
+        paddingRight: 15,
     },
     pokemonTypesContainer: {
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
     },
     pokemonType: {
         fontSize: 16,
