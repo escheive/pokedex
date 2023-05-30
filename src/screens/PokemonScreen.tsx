@@ -4,6 +4,9 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Pokemon } from '../types';
 import { getTypeStyle, pokemonColors } from '../utils/typeStyle';
 import { capitalizeString } from '../utils/helpers';
+import { updatePokemonFavoriteStatus, updatePokemonCaptureStatus } from '../utils/database';
+import { fetchPokemonData } from '../utils/api';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type Props = {
     navigation: StackNavigationProp<any>;
@@ -23,7 +26,7 @@ const versionOptions = [
     { key: 'gen9', label: 'Gen 9' },
 ];
 
-const PokemonScreen = ({ navigation, typeData, pokemonList, route }: Props) => {
+const PokemonScreen = ({ navigation, typeData, pokemonList, route, database }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -136,6 +139,21 @@ const PokemonScreen = ({ navigation, typeData, pokemonList, route }: Props) => {
     const filteredPokemon = filterPokemonByVersions(pokemonList, searchQuery);
 
 
+    const handleFavoritePress = (pokemon, database) => {
+        // Update the isFavorite value in the database
+        const updatedFavoriteValue = !pokemon.isFavorite;
+        // Update the database using the database update function
+        updatePokemonFavoriteStatus(database, pokemon.id, updatedFavoriteValue);
+    }
+
+    const handleCapturePress = (pokemon, database) => {
+        // Update the isCaptured value in the database
+        const updatedCaptureValue = !pokemon.isCaptured;
+        // Update the database using the database update function
+        updatePokemonCaptureStatus(database, pokemon.id, updatedCaptureValue);
+    }
+
+
     const renderItem = ({ item: pokemon }: { item: Pokemon }) => {
         const screenWidth = Dimensions.get('window').width;
         // Width for one column
@@ -154,6 +172,34 @@ const PokemonScreen = ({ navigation, typeData, pokemonList, route }: Props) => {
                                     <Text style={styles.pokemonType}>{capitalizeString(pokemon.type2)}</Text>
                                 )}
                             </View>
+                        </View>
+                        <View>
+                            {pokemon.isFavorite ? (
+                                <Ionicons
+                                    name="star"
+                                    size={24} color="black"
+                                    onPress={() => handleFavoritePress(pokemon, database)}
+                                />
+                            ) : (
+                                <Ionicons
+                                    name="star-outline"
+                                    size={24} color="black"
+                                    onPress={() => handleFavoritePress(pokemon, database)}
+                                />
+                            )}
+                            {pokemon.isCaptured ? (
+                                <Ionicons
+                                    name="checkmark-circle-outline"
+                                    size={24} color="black"
+                                    onPress={() => handleCapturePress(pokemon, database)}
+                                />
+                            ) : (
+                                <Ionicons
+                                    name="ellipse-outline"
+                                    size={24} color="black"
+                                    onPress={() => handleCapturePress(pokemon, database)}
+                                />
+                            )}
                         </View>
                     </View>
                     <Image

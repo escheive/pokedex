@@ -151,7 +151,7 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route, allPokemonAbilities
 };
 
 
-const PokemonStackNavigator = ({ pokemonList, typeData, allPokemonAbilities }) => {
+const PokemonStackNavigator = ({ pokemonList, typeData, allPokemonAbilities, database }) => {
 
     return (
         <Stack.Navigator
@@ -162,7 +162,7 @@ const PokemonStackNavigator = ({ pokemonList, typeData, allPokemonAbilities }) =
         >
 
             <Stack.Screen name="Main">
-                {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
+                {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} database={database} />}
             </Stack.Screen>
 
             <Stack.Screen
@@ -223,9 +223,9 @@ export default function App() {
             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
             .finally(() => setIsLoading(false));
 
-        return () => {
-            database.close();
-        };
+//         return () => {
+//             database.close();
+//         };
     }, []);
 
 
@@ -255,7 +255,7 @@ export default function App() {
 //                         }
 //                     }}
                 >
-                    {(props) => <PokemonStackNavigator {...props} pokemonList={pokemonList} typeData={typeData} allPokemonAbilities={allPokemonAbilities} />}
+                    {(props) => <PokemonStackNavigator {...props} pokemonList={pokemonList} typeData={typeData} allPokemonAbilities={allPokemonAbilities} database={database} />}
                 </Drawer.Screen>
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />

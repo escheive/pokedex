@@ -139,7 +139,54 @@ const insertPokemon = async (database, pokemonData) => {
 };
 
 
-export { createPokemonTable, resetPokemonTable, insertPokemon };
+const updatePokemonFavoriteStatus = async (database, pokemonId, isFavorite) => {
+    try {
+        await new Promise((resolve, reject) => {
+            database.transaction((tx) => {
+                tx.executeSql(
+                    `UPDATE Pokemon SET isFavorite = ? WHERE id = ?;`,
+                    [isFavorite, pokemonId],
+                    () => {
+                        console.log(`Pokemon with ID ${pokemonId} favorite status updated`);
+                        resolve();
+                    },
+                    (error) => {
+                        console.error('Error updating Pokemon favorite status:', error);
+                        reject(error);
+                    }
+                );
+            });
+        });
+    } catch (error) {
+        console.error('Error updating favorite status:', error);
+    }
+};
+
+const updatePokemonCaptureStatus = async (database, pokemonId, isCaptured) => {
+    try {
+        await new Promise((resolve, reject) => {
+            database.transaction((tx) => {
+                tx.executeSql(
+                    `UPDATE Pokemon SET isCaptured = ? WHERE id = ?;`,
+                    [isCaptured ? 1 : 0, pokemonId],
+                    () => {
+                        console.log(`Pokemon with ID ${pokemonId} capture status updated`);
+                        resolve();
+                    },
+                    (error) => {
+                        console.error('Error updating Pokemon capture status:', error);
+                        reject(error);
+                    }
+                );
+            });
+        });
+    } catch (error) {
+        console.error('Error updating capture status:', error);
+    }
+};
+
+
+export { createPokemonTable, resetPokemonTable, insertPokemon, updatePokemonFavoriteStatus, updatePokemonCaptureStatus };
 
 
 
@@ -252,3 +299,4 @@ const insertAbility = async (database, abilityData) => {
 
 
 export { createAbilitiesTable, resetAbilitiesTable, insertAbility };
+
