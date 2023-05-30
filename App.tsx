@@ -151,7 +151,7 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route, allPokemonAbilities
 };
 
 
-const PokemonStackNavigator = ({ pokemonList, typeData, allPokemonAbilities, database }) => {
+const PokemonStackNavigator = ({ setPokemonList, pokemonList, typeData, allPokemonAbilities, database }) => {
 
     return (
         <Stack.Navigator
@@ -162,7 +162,7 @@ const PokemonStackNavigator = ({ pokemonList, typeData, allPokemonAbilities, dat
         >
 
             <Stack.Screen name="Main">
-                {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} database={database} />}
+                {props => <PokemonScreen {...props} setPokemonList={setPokemonList} pokemonList={pokemonList} typeData={typeData} database={database} />}
             </Stack.Screen>
 
             <Stack.Screen
@@ -255,7 +255,7 @@ export default function App() {
 //                         }
 //                     }}
                 >
-                    {(props) => <PokemonStackNavigator {...props} pokemonList={pokemonList} typeData={typeData} allPokemonAbilities={allPokemonAbilities} database={database} />}
+                    {(props) => <PokemonStackNavigator {...props} setPokemonList={setPokemonList} pokemonList={pokemonList} typeData={typeData} allPokemonAbilities={allPokemonAbilities} database={database} />}
                 </Drawer.Screen>
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />

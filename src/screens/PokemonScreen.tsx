@@ -26,7 +26,7 @@ const versionOptions = [
     { key: 'gen9', label: 'Gen 9' },
 ];
 
-const PokemonScreen = ({ navigation, typeData, pokemonList, route, database }: Props) => {
+const PokemonScreen = ({ navigation, typeData, setPokemonList, pokemonList, route, database }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -139,11 +139,22 @@ const PokemonScreen = ({ navigation, typeData, pokemonList, route, database }: P
     const filteredPokemon = filterPokemonByVersions(pokemonList, searchQuery);
 
 
-    const handleFavoritePress = (pokemon, database) => {
+    const handleFavoritePress = (selectedPokemon, database) => {
         // Update the isFavorite value in the database
-        const updatedFavoriteValue = !pokemon.isFavorite;
+        const updatedFavoriteValue = !selectedPokemon.isFavorite;
+        // Find the matching Pokemon in the pokemonList array
+        const updatedPokemonList = pokemonList.map((pokemon) => {
+            if (pokemon.id === selectedPokemon.id) {
+                return { ...pokemon, isFavorite: updatedFavoriteValue };
+            }
+            return pokemon;
+        });
+
+        // Update pokemonList with the updatedPokemonList
+        setPokemonList(updatedPokemonList);
+
         // Update the database using the database update function
-        updatePokemonFavoriteStatus(database, pokemon.id, updatedFavoriteValue);
+        updatePokemonFavoriteStatus(database, selectedPokemon.id, updatedFavoriteValue);
     }
 
     const handleCapturePress = (pokemon, database) => {
