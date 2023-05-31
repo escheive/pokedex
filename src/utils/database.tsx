@@ -1,5 +1,14 @@
 // Database
 import SQLite from 'react-native-sqlite-storage';
+
+
+// Open the database
+export const database = SQLite.openDatabase({
+    name: 'Pokemon.db',
+    location: 'default',
+});
+
+
 ////////////////////////////////////////////////////////////////
 //++++++++++++++++ Pokemon Database Functions ++++++++++++++++//
 ////////////////////////////////////////////////////////////////
@@ -139,7 +148,7 @@ const insertPokemon = async (database, pokemonData) => {
 };
 
 
-const updatePokemonFavoriteStatus = async (database, pokemonId, isFavorite) => {
+const updatePokemonFavoriteStatus = async (pokemonId, isFavorite) => {
     try {
         await new Promise((resolve, reject) => {
             database.transaction((tx) => {
@@ -162,7 +171,7 @@ const updatePokemonFavoriteStatus = async (database, pokemonId, isFavorite) => {
     }
 };
 
-const updatePokemonCaptureStatus = async (database, pokemonId, isCaptured) => {
+const updatePokemonCaptureStatus = async (pokemonId, isCaptured) => {
     try {
         await new Promise((resolve, reject) => {
             database.transaction((tx) => {

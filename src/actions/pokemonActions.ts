@@ -1,4 +1,4 @@
-import { updatePokemonFavoriteStatus, updatePokemonCaptureStatus } from '../utils/database';
+import { database, updatePokemonFavoriteStatus, updatePokemonCaptureStatus } from '../utils/database';
 
 // Pokemon action creators
 export const fetchPokemonRequest = () => ({
@@ -17,7 +17,7 @@ export const fetchPokemonFailure = (error) => ({
     payload: error
 });
 
-export const updatePokemonFavoriteStatusAction = (database, id, isFavorite) => {
+export const updatePokemonFavoriteStatusAction = (id, isFavorite) => {
     return (dispatch) => {
         // Update the state by dispatching the action
         dispatch({
@@ -26,7 +26,7 @@ export const updatePokemonFavoriteStatusAction = (database, id, isFavorite) => {
         });
 
         // Update the database using the database update function
-        updatePokemonFavoriteStatus(database, id, isFavorite);
+        updatePokemonFavoriteStatus(id, isFavorite);
     };
 };
 

@@ -33,7 +33,7 @@ import LoadingScreen from './src/components/LoadingScreen';
 import { getTypeStyle } from './src/utils/typeStyle';
 import { capitalizeString } from './src/utils/helpers';
 import { fetchPokemonData, fetchPokemonFromAPI, fetchAbilitiesData, fetchAbilitiesFromAPI } from './src/utils/api';
-import { resetPokemonTable, resetAbilitiesTable } from './src/utils/database';
+import { database, resetPokemonTable, resetAbilitiesTable } from './src/utils/database';
 import { pokemonColors } from './src/utils/typeStyle';
 // Database
 import SQLite from 'react-native-sqlite-storage';
@@ -49,10 +49,10 @@ const store = createStore(rootReducer, applyMiddleware(thunk));
 
 
 // Open the database
-const database = SQLite.openDatabase({
-    name: 'Pokemon.db',
-    location: 'default',
-});
+// const database = SQLite.openDatabase({
+//     name: 'Pokemon.db',
+//     location: 'default',
+// });
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

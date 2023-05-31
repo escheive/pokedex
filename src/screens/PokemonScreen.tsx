@@ -143,15 +143,15 @@ const PokemonScreen = ({ navigation, typeData, setPokemonList, route, database }
     const filteredPokemon = filterPokemonByVersions(pokemonList, searchQuery);
 
 
-    const handleFavoritePress = (selectedPokemon, database) => {
+    const handleFavoritePress = (selectedPokemon) => {
         // Update the isFavorite value in the database
         const updatedFavoriteValue = !selectedPokemon.isFavorite;
 
         // pokemon action to update the pokemon in the pokemonList state
-        dispatch(updatePokemonFavoriteStatusAction(database, selectedPokemon.id, updatedFavoriteValue));
+        dispatch(updatePokemonFavoriteStatusAction(selectedPokemon.id, updatedFavoriteValue));
     }
 
-    const handleCapturePress = (selectedPokemon, database) => {
+    const handleCapturePress = (selectedPokemon) => {
         // Update the isCaptured value in the database
         const updatedCaptureValue = !selectedPokemon.isCaptured;
 
@@ -159,7 +159,7 @@ const PokemonScreen = ({ navigation, typeData, setPokemonList, route, database }
         dispatch(updatePokemon(selectedPokemon.id, selectedPokemon.isFavorite, updatedCaptureValue));
 
         // Update the database using the database update function
-        updatePokemonCaptureStatus(database, selectedPokemon.id, updatedCaptureValue);
+        updatePokemonCaptureStatus(selectedPokemon.id, updatedCaptureValue);
     }
 
 
