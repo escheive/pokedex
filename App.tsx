@@ -25,15 +25,15 @@ import rootReducer from './src/reducers/rootReducer';
 import PokemonScreen from './src/screens/PokemonScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
-import DetailsScreen from './src/screens/DetailsScreen';
-import MovesScreen from './src/screens/MovesScreen';
 // Components
 import LoadingScreen from './src/components/LoadingScreen';
 // Navigation
 import PokemonStackNavigator from './src/navigation/PokemonStackNavigator';
+import ProfileStack from './src/navigation/ProfileStack';
+import SettingsStack from './src/navigation/SettingsStack';
 // Utils
-import { getTypeStyle } from './src/utils/typeStyle';
-import { capitalizeString } from './src/utils/helpers';
+// import { getTypeStyle } from './src/utils/typeStyle';
+// import { capitalizeString } from './src/utils/helpers';
 import { fetchPokemonData, fetchPokemonFromAPI, fetchAbilitiesData, fetchAbilitiesFromAPI } from './src/utils/api';
 import { database, resetPokemonTable, resetAbilitiesTable } from './src/utils/database';
 import { pokemonColors } from './src/utils/typeStyle';
@@ -47,28 +47,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
-
-
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
-
-
-const BackButton = ({ navigation }) => {
-    const handleGoToMainPokemonScreen = () => {
-        navigation.goBack();
-    };
-
-    return (
-        <Ionicons
-            name="arrow-back"
-            size={24}
-            color="black"
-            onPress={handleGoToMainPokemonScreen}
-        />
-    );
-};
-
 
 const getHeaderTitle = (route: Route<string, object | undefined>) => {
         const routeName = getFocusedRouteNameFromRoute(route);
@@ -88,146 +67,10 @@ const getHeaderTitle = (route: Route<string, object | undefined>) => {
         }
     };
 
-
-const DrawerNavigator = () => {
-    const { Navigator, Screen } = createDrawerNavigator();
-//     const navigation = useNavigation();
-//     const route = useRoute();
-
-
-    const handleNavigationStateChange = (route: Route<string, object | undefined>) => {
-        const title = getHeaderTitle(route);
-        navigation.setOptions({
-            headerTitle: title,
-        });
-    };
-
-    return (
-        <Navigator
-            initialRouteName="Pokemon"
-            screenOptions={{
-                headerShown: true
-            }}
-            onNavigationStateChange={handleNavigationStateChange}
-        >
-            <Screen
-                name="Pokemon"
-                component={PokemonStackNavigator}
-            />
-            <Screen
-                name="Profile"
-                component={ProfileScreen}
-            />
-            <Screen
-                name="Settings"
-                component={SettingsScreen}
-            />
-
-        </Navigator>
-    );
-};
-
-
-// const DetailsTabNavigator = ({ typeData, route, navigation }) => {
-//     const { Navigator, Screen } = createBottomTabNavigator();
-//
-//     const selectedPokemon = route.params.pokemon;
-//
-//     return (
-//         <Navigator
-//             screenOptions={({ route }) => ({
-//                 headerShown: false,
-//                 tabBarIcon: ({ focused, color, size }) => {
-//                     let iconName;
-//                     if (route.name === 'Info') {
-//                         iconName = focused ? 'ios-information-circle' : 'ios-information-circle-outline';
-//                     } else if (route.name === 'Moves') {
-//                         iconName = focused ? 'shield' : 'shield-outline';
-//                     }
-//                     return <Ionicons name={iconName} size={size} color={color} />;
-//                 },
-//             })}
-//         >
-//             <Screen
-//                 name='Info'
-//                 initialParams={{ pokemon: selectedPokemon }}
-//             >
-//                 {props => <DetailsScreen {...props} />}
-//             </Screen>
-//             <Screen
-//                 name="Moves"
-//                 component={MovesScreen}
-//                 initialParams={{ pokemon: selectedPokemon }}
-//             />
-//
-//         </Navigator>
-//     );
-// };
-
-
-// const PokemonStackNavigator = ({ typeData }) => {
-//
-//     return (
-//         <Stack.Navigator
-//             initialRouteName="Main"
-//             screenOptions={{
-//                 headerShown: false,
-//             }}
-//         >
-//
-//             <Stack.Screen name="Main">
-//                 {props => <PokemonScreen {...props} typeData={typeData} />}
-//             </Stack.Screen>
-//
-//             <Stack.Screen
-//                 name="Details"
-//                 options={({ route }) => {
-//                     const selectedPokemon = route.params.pokemon;
-//                     const headerStyle = {
-//                         backgroundColor: 'transparent',
-//                     };
-//                     return {
-//                         headerShown: true,
-//                         headerStyle,
-//                         headerShadowVisible: false,
-//                     };
-//                 }}
-//             >
-//                 {props => <DetailsTabNavigator {...props} />}
-//             </Stack.Screen>
-//         </Stack.Navigator>
-//     );
-// };
-
-
-function ProfileStack() {
-
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="User" component={ProfileScreen} />
-            <Stack.Screen name="Details" component={DetailsScreen} />
-        </Stack.Navigator>
-    );
-};
-
-
-
-function SettingsStack() {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="Options" component={SettingsScreen} />
-            <Stack.Screen name="Details" component={DetailsScreen} />
-        </Stack.Navigator>
-    );
-};
-
-
-const App = ({ typeData }) => {
+const App = () => {
     const dispatch = useDispatch();
     const isPokemonLoading = useSelector((state) => state.pokemon.loading);
     const isAbilitiesLoading = useSelector((state) => state.abilities.loading);
-//     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
-//     const allPokemonAbilities = useSelector((state) => state.abilities.abilitiesData);
 
     useEffect(() => {
 //         resetAbilitiesTable();

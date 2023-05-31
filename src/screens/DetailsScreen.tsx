@@ -88,7 +88,7 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
     }, [pokemon.id]);
 
 
-
+    console.log(pokemon)
 
     // Function to check if a pokemon is favorited and update the page accordingly
     const checkIfFavorite = async () => {

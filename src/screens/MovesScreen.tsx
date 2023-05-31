@@ -11,7 +11,7 @@ import TMMovesScreen from '../components/moves/TMMovesScreen';
 import TutorMovesScreen from '../components/moves/TutorMovesScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Utils
-import { getTypeStyle } from '../utils/typeStyle';
+import { pokemonColors } from '../utils/typeStyle';
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -110,13 +110,13 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
         movesContainer: {
             flex: 1,
             justifyContent: 'center',
-            backgroundColor: getTypeStyle(pokemon.types[0].type.name).backgroundColor,
+            backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
         },
         tabLabel: {
             fontSize: 16,
         },
         tabIndicator: {
-            backgroundColor: getTypeStyle(pokemon.types[0].type.name).backgroundColor,
+            backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
         },
     });
 
@@ -135,7 +135,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                         screenOptions={{
                             tabBarIndicatorStyle: styles.tabIndicator,
                             tabBarLabelStyle: styles.tabLabel,
-                            tabBarActiveTintColor: getTypeStyle(pokemon.types[0].type.name).backgroundColor,
+                            tabBarActiveTintColor: pokemonColors[pokemon.type1].backgroundColor,
                             tabBarInactiveTintColor: 'gray',
                             lazy: true,
                         }}
