@@ -325,13 +325,13 @@ const fetchAbilitiesFromAPI = async (start, end) => {
 
 
 // Function to fetch ability data from database or api
-const fetchAbilitiesData = (database) => {
+const fetchAbilitiesData = () => {
     console.log('fetchAbilitiesData function hit');
     return async (dispatch) => {
         dispatch(fetchAbilitiesRequest());
         try {
             // Wait for the table creation process to complete
-            createAbilitiesTable(database)
+            createAbilitiesTable()
               .then(async () => {
 
                 const totalCount = 298;
@@ -367,7 +367,7 @@ const fetchAbilitiesData = (database) => {
                     // set loading phase so that loading screen updates
                     const fetchedData = await fetchAbilitiesFromAPI(start, end);
                     fetchedAbilitiesData.push(...fetchedData);
-                    await insertAbility(database, fetchedData);
+                    await insertAbility(fetchedData);
                 }
 
                 console.log('Successfully fetched data in the fetchAbilitiesData function');

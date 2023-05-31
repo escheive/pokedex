@@ -237,7 +237,7 @@ const App = ({ typeData }) => {
 //         resetAbilitiesTable();
 //         resetPokemonTable(database);
         dispatch(fetchPokemonData())
-            .then(() => dispatch(fetchAbilitiesData(database)))
+            .then(() => dispatch(fetchAbilitiesData()))
             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
     }, [dispatch]);
 
