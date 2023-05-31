@@ -227,7 +227,6 @@ function SettingsStack() {
 };
 
 
-
 const App = ({ typeData, database }) => {
     const dispatch = useDispatch();
 //     const isLoading = useSelector((state) => state.pokemon.loading);

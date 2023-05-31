@@ -16,7 +16,7 @@ export const fetchPokemonFailure = (error) => ({
     payload: error
 });
 
-export const updatePokemon = (id, name) => ({
+export const updatePokemon = (id, isFavorite, isCaptured) => ({
     type: 'UPDATE_POKEMON',
-    payload: { id, name }
+    payload: { id, isFavorite, isCaptured }
 });

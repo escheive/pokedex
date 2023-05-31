@@ -7,6 +7,8 @@ import { capitalizeString } from '../utils/helpers';
 import { updatePokemonFavoriteStatus, updatePokemonCaptureStatus } from '../utils/database';
 import { fetchPokemonData } from '../utils/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useDispatch, useSelector } from 'react-redux';
+import { updatePokemon } from '../actions/pokemonActions';
 
 type Props = {
     navigation: StackNavigationProp<any>;
@@ -26,9 +28,11 @@ const versionOptions = [
     { key: 'gen9', label: 'Gen 9' },
 ];
 
-const PokemonScreen = ({ navigation, typeData, setPokemonList, pokemonList, route, database }: Props) => {
+const PokemonScreen = ({ navigation, typeData, setPokemonList, route, database }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const dispatch = useDispatch();
+    const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
     // function to handle user press on a pokemon
     const handlePress = async (pokemon: Pokemon) => {
@@ -142,16 +146,17 @@ const PokemonScreen = ({ navigation, typeData, setPokemonList, pokemonList, rout
     const handleFavoritePress = (selectedPokemon, database) => {
         // Update the isFavorite value in the database
         const updatedFavoriteValue = !selectedPokemon.isFavorite;
-        // Find the matching Pokemon in the pokemonList array
-        const updatedPokemonList = pokemonList.map((pokemon) => {
-            if (pokemon.id === selectedPokemon.id) {
-                return { ...pokemon, isFavorite: updatedFavoriteValue };
-            }
-            return pokemon;
-        });
+//         // Find the matching Pokemon in the pokemonList array
+//         const updatedPokemonList = pokemonList.map((pokemon) => {
+//             if (pokemon.id === selectedPokemon.id) {
+//                 return { ...pokemon, isFavorite: updatedFavoriteValue };
+//             }
+//             return pokemon;
+//         });
 
-        // Update pokemonList with the updatedPokemonList
-        setPokemonList(updatedPokemonList);
+//         // Update pokemonList with the updatedPokemonList
+//         setPokemonList(updatedPokemonList);
+        dispatch(updatePokemon(selectedPokemon.id, updatedFavoriteValue));
 
         // Update the database using the database update function
         updatePokemonFavoriteStatus(database, selectedPokemon.id, updatedFavoriteValue);
@@ -254,7 +259,6 @@ const PokemonScreen = ({ navigation, typeData, setPokemonList, pokemonList, rout
             />
         );
     };
-
 
     return (
         <View style={styles.container}>

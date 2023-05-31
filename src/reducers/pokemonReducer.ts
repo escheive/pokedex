@@ -32,7 +32,11 @@ const pokemonReducer = (state = initialState, action) => {
         case 'UPDATE_POKEMON':
             const updatedPokemonList = state.pokemonList.map(pokemon => {
                 if (pokemon.id === action.payload.id) {
-                    return { ...pokemon, name: action.payload.name };
+                    return {
+                        ...pokemon,
+                        isFavorite: action.payload.isFavorite != undefined ? action.payload.isFavorite : pokemon.isFavorite,
+                        isCaptured: action.payload.isCaptured != undefined ? action.payload.isCaptured : pokemon.isCaptured
+                    };
                 }
                 return pokemon;
             });
