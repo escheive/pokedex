@@ -228,16 +228,17 @@ function SettingsStack() {
 
 
 
-const App = ({ typeData, allPokemonAbilities, database }) => {
+const App = ({ typeData, database }) => {
     const dispatch = useDispatch();
 //     const isLoading = useSelector((state) => state.pokemon.loading);
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
+    const allPokemonAbilities = useSelector((state) => state.abilities.abilitiesData);
 
     useEffect(() => {
 //         resetAbilitiesTable();
 //         resetPokemonTable(database);
         dispatch(fetchPokemonData(database))
-            .then(() => fetchAbilitiesData(database))
+            .then(() => dispatch(fetchAbilitiesData(database)))
             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
     }, [dispatch]);
 

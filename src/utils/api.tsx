@@ -328,7 +328,7 @@ const fetchAbilitiesFromAPI = async (start, end) => {
 
 
 // Function to fetch ability data from database or api
-const fetchAbilitiesData = async (database, setIsLoading, setAllPokemonAbilities) => {
+const fetchAbilitiesData = (database) => {
     console.log('fetchAbilitiesData function hit');
     return async (dispatch) => {
         dispatch(fetchAbilitiesRequest());
@@ -346,7 +346,6 @@ const fetchAbilitiesData = async (database, setIsLoading, setAllPokemonAbilities
                 const end = 298;
 
                 const hasData = await new Promise((resolve, reject) => {
-                    setIsLoading("Loading Abilities");
                     database.transaction((tx) => {
                         tx.executeSql(
                             `SELECT * FROM Abilities WHERE id BETWEEN ? AND ?;`,
@@ -369,7 +368,6 @@ const fetchAbilitiesData = async (database, setIsLoading, setAllPokemonAbilities
 
                 if (!hasData) {
                     // set loading phase so that loading screen updates
-                    setIsLoading("Fetching Abilities data from the API");
                     const fetchedData = await fetchAbilitiesFromAPI(start, end);
                     fetchedAbilitiesData.push(...fetchedData);
                     await insertAbility(database, fetchedData);
