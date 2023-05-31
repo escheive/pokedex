@@ -30,7 +30,7 @@ import MovesScreen from './src/screens/MovesScreen';
 // Components
 import LoadingScreen from './src/components/LoadingScreen';
 // Navigation
-import PokemonStackNavigator from './src/components/navigation/PokemonStackNavigator';
+import PokemonStackNavigator from './src/navigation/PokemonStackNavigator';
 // Utils
 import { getTypeStyle } from './src/utils/typeStyle';
 import { capitalizeString } from './src/utils/helpers';
@@ -128,41 +128,41 @@ const DrawerNavigator = () => {
 };
 
 
-const DetailsTabNavigator = ({ typeData, route, navigation }) => {
-    const { Navigator, Screen } = createBottomTabNavigator();
-
-    const selectedPokemon = route.params.pokemon;
-
-    return (
-        <Navigator
-            screenOptions={({ route }) => ({
-                headerShown: false,
-                tabBarIcon: ({ focused, color, size }) => {
-                    let iconName;
-                    if (route.name === 'Info') {
-                        iconName = focused ? 'ios-information-circle' : 'ios-information-circle-outline';
-                    } else if (route.name === 'Moves') {
-                        iconName = focused ? 'shield' : 'shield-outline';
-                    }
-                    return <Ionicons name={iconName} size={size} color={color} />;
-                },
-            })}
-        >
-            <Screen
-                name='Info'
-                initialParams={{ pokemon: selectedPokemon }}
-            >
-                {props => <DetailsScreen {...props} />}
-            </Screen>
-            <Screen
-                name="Moves"
-                component={MovesScreen}
-                initialParams={{ pokemon: selectedPokemon }}
-            />
-
-        </Navigator>
-    );
-};
+// const DetailsTabNavigator = ({ typeData, route, navigation }) => {
+//     const { Navigator, Screen } = createBottomTabNavigator();
+//
+//     const selectedPokemon = route.params.pokemon;
+//
+//     return (
+//         <Navigator
+//             screenOptions={({ route }) => ({
+//                 headerShown: false,
+//                 tabBarIcon: ({ focused, color, size }) => {
+//                     let iconName;
+//                     if (route.name === 'Info') {
+//                         iconName = focused ? 'ios-information-circle' : 'ios-information-circle-outline';
+//                     } else if (route.name === 'Moves') {
+//                         iconName = focused ? 'shield' : 'shield-outline';
+//                     }
+//                     return <Ionicons name={iconName} size={size} color={color} />;
+//                 },
+//             })}
+//         >
+//             <Screen
+//                 name='Info'
+//                 initialParams={{ pokemon: selectedPokemon }}
+//             >
+//                 {props => <DetailsScreen {...props} />}
+//             </Screen>
+//             <Screen
+//                 name="Moves"
+//                 component={MovesScreen}
+//                 initialParams={{ pokemon: selectedPokemon }}
+//             />
+//
+//         </Navigator>
+//     );
+// };
 
 
 // const PokemonStackNavigator = ({ typeData }) => {
@@ -261,7 +261,7 @@ const App = ({ typeData }) => {
                 }}
             >
                 <Drawer.Screen name="Pokemon">
-                    {(props) => <PokemonStackNavigator {...props} typeData={typeData} PokemonScreen={PokemonScreen} />}
+                    {(props) => <PokemonStackNavigator {...props} />}
                 </Drawer.Screen>
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />

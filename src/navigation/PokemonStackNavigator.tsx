@@ -1,7 +1,11 @@
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import PokemonScreen from '../screens/PokemonScreen';
+import DetailsTabNavigator from './DetailsTabNavigator';
 
-const PokemonStackNavigator = ({ typeData, PokemonScreen={PokemonScreen} }) => {
-    const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
+
+const PokemonStackNavigator = () => {
 
     return (
         <Stack.Navigator
@@ -12,7 +16,7 @@ const PokemonStackNavigator = ({ typeData, PokemonScreen={PokemonScreen} }) => {
         >
 
             <Stack.Screen name="Main">
-                {props => <PokemonScreen {...props} typeData={typeData} />}
+                {props => <PokemonScreen {...props} />}
             </Stack.Screen>
 
             <Stack.Screen
