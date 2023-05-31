@@ -1,12 +1,11 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux';
-import thunk from 'redux-thunk';
+import { combineReducers } from 'redux';
 import pokemonReducer from './pokemonReducer';
+import abilitiesReducer from './abilitiesReducer';
 
 const rootReducer = combineReducers({
     pokemon: pokemonReducer,
+    abilities: abilitiesReducer,
     // Add other reducers here
 });
 
 export default rootReducer;
-// export default rootReducer;
-// const store = createStore(rootReducer, applyMiddleware(thunk));
