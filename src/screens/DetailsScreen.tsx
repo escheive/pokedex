@@ -214,8 +214,6 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
         },
     });
 
-    console.log(pokemon)
-
     return (
 
         <FlatList style={styles.container}
@@ -234,18 +232,6 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
                     <PokemonStats pokemonColors={pokemonColors} pokemon={pokemon} />
 
                     <EvolutionChain pokemon={pokemon} pokemonColors={pokemonColors} />
-
-
-{/*                     <View style={{ marginTop: 20 }}> */}
-
-{/*                             <TouchableOpacity */}
-{/*                                 style={styles.favButton} */}
-{/*                                 onPress={handleFavoritePress} */}
-{/*                             > */}
-{/*                                 <Text style={styles.favButtonText}>{isFavorite ? 'Remove from favorites' : 'Add to favorites'}</Text> */}
-{/*                             </TouchableOpacity> */}
-{/*                     </View> */}
-
                 </>
             )}
         />
