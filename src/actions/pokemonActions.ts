@@ -1,12 +1,9 @@
 
+// Pokemon action creators
 export const fetchPokemonRequest = () => ({
     type: 'FETCH_POKEMON_REQUEST'
 });
 
-// export const fetchPokemonSuccess = (pokemonList) => ({
-//     type: 'FETCH_POKEMON_SUCCESS',
-//     payload: pokemonList
-// });
 export const fetchPokemonSuccess = (pokemonList) => {
     return {
         type: 'FETCH_POKEMON_SUCCESS',
