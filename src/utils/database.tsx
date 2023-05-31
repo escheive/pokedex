@@ -35,15 +35,11 @@ const createPokemonTable = () => {
                             height REAL,
                             weight REAL,
                             base_experience INTEGER,
-                            hp INTEGER,
-                            atk INTEGER,
-                            def INTEGER,
-                            sp_atk INTEGER,
-                            sp_def INTEGER,
-                            spd INTEGER,
+                            stats TEXT,
                             ability1 TEXT,
                             ability2 TEXT,
                             ability3 TEXT,
+                            moves TEXT,
                             species_url TEXT,
                             image_url TEXT,
                             isCaptured BOOLEAN DEFAULT false,
@@ -105,8 +101,8 @@ const insertPokemon = async (pokemonData) => {
             database.transaction((tx) => {
                 pokemonData.forEach((pokemon) => {
                     tx.executeSql(
-                        `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, hp, atk, def, sp_atk, sp_def, spd, ability1, ability2, ability3, species_url, image_url, isCaptured, isFavorite)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+                        `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, stats, ability1, ability2, ability3, moves, species_url, image_url, isCaptured, isFavorite)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
                         [
                             pokemon.id,
                             pokemon.name,
@@ -115,15 +111,11 @@ const insertPokemon = async (pokemonData) => {
                             pokemon.height,
                             pokemon.weight,
                             pokemon.base_experience,
-                            pokemon.stats[0].base_stat,
-                            pokemon.stats[1].base_stat,
-                            pokemon.stats[2].base_stat,
-                            pokemon.stats[3].base_stat,
-                            pokemon.stats[4].base_stat,
-                            pokemon.stats[5].base_stat,
+                            JSON.stringify(pokemon.stats),
                             pokemon.abilities[0] ? pokemon.abilities[0].ability.name : null,
                             pokemon.abilities[1] ? pokemon.abilities[1].ability.name : null,
                             pokemon.abilities[2] ? pokemon.abilities[2].ability.name : null,
+                            JSON.stringify(pokemon.moves),
                             pokemon.species.url,
                             pokemon.sprites.other['official-artwork'].front_default,
                             false,
