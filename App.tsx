@@ -170,7 +170,7 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route, allPokemonAbilities
 };
 
 
-const PokemonStackNavigator = ({ setPokemonList, pokemonList, typeData, allPokemonAbilities, database }) => {
+const PokemonStackNavigator = ({ setPokemonList, pokemonList, typeData, allPokemonAbilities }) => {
 
     return (
         <Stack.Navigator
@@ -181,7 +181,7 @@ const PokemonStackNavigator = ({ setPokemonList, pokemonList, typeData, allPokem
         >
 
             <Stack.Screen name="Main">
-                {props => <PokemonScreen {...props} setPokemonList={setPokemonList} pokemonList={pokemonList} typeData={typeData} database={database} />}
+                {props => <PokemonScreen {...props} setPokemonList={setPokemonList} pokemonList={pokemonList} typeData={typeData} />}
             </Stack.Screen>
 
             <Stack.Screen
@@ -227,7 +227,7 @@ function SettingsStack() {
 };
 
 
-const App = ({ typeData, database }) => {
+const App = ({ typeData }) => {
     const dispatch = useDispatch();
 //     const isLoading = useSelector((state) => state.pokemon.loading);
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
@@ -236,7 +236,7 @@ const App = ({ typeData, database }) => {
     useEffect(() => {
 //         resetAbilitiesTable();
 //         resetPokemonTable(database);
-        dispatch(fetchPokemonData(database))
+        dispatch(fetchPokemonData())
             .then(() => dispatch(fetchAbilitiesData(database)))
             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
     }, [dispatch]);

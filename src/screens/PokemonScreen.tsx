@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Pokemon } from '../types';
 import { getTypeStyle, pokemonColors } from '../utils/typeStyle';
 import { capitalizeString } from '../utils/helpers';
-import { updatePokemonFavoriteStatus, updatePokemonCaptureStatus } from '../utils/database';
+import { database, updatePokemonFavoriteStatus, updatePokemonCaptureStatus } from '../utils/database';
 import { fetchPokemonData } from '../utils/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,7 +28,7 @@ const versionOptions = [
     { key: 'gen9', label: 'Gen 9' },
 ];
 
-const PokemonScreen = ({ navigation, typeData, setPokemonList, route, database }: Props) => {
+const PokemonScreen = ({ navigation, typeData, setPokemonList, route }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const dispatch = useDispatch();

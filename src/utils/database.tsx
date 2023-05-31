@@ -15,7 +15,7 @@ export const database = SQLite.openDatabase({
 
 
 // Execute SQL statement to create a pokemon table
-const createPokemonTable = (database) => {
+const createPokemonTable = () => {
     console.log('createPokemonTable function hit')
     return new Promise((resolve, reject) => {
         database.transaction((tx) => {
@@ -75,7 +75,7 @@ const createPokemonTable = (database) => {
 
 
 // Function to drop pokemon table
-const resetPokemonTable = (database) => {
+const resetPokemonTable = () => {
     console.log('resetPokemonTable function hit');
     try {
         database.transaction((tx) => {
@@ -98,7 +98,7 @@ const resetPokemonTable = (database) => {
 
 
 // Function to insert a Pokemon record into the pokemon table
-const insertPokemon = async (database, pokemonData) => {
+const insertPokemon = async (pokemonData) => {
     console.log('insertPokemon function hit')
     try {
         await new Promise((resolve, reject) => {
@@ -205,7 +205,7 @@ export { createPokemonTable, resetPokemonTable, insertPokemon, updatePokemonFavo
 
 
 // Function to check and create an Abilities table
-const createAbilitiesTable = (database) => {
+const createAbilitiesTable = () => {
     console.log('createAbilitiesTable function hit')
     return new Promise((resolve, reject) => {
         database.transaction((tx) => {
@@ -251,7 +251,7 @@ const createAbilitiesTable = (database) => {
 
 
 // Function to drop Abilities table
-const resetAbilitiesTable = (database) => {
+const resetAbilitiesTable = () => {
     console.log('resetAbilitiesTable function hit');
     database.transaction((tx) => {
         tx.executeSql(
@@ -271,7 +271,7 @@ const resetAbilitiesTable = (database) => {
 
 
 // Function to insert ability data into the Abilities db table
-const insertAbility = async (database, abilityData) => {
+const insertAbility = async (abilityData) => {
     console.log('insertAbility function hit');
     try {
         await new Promise((resolve, reject) => {

@@ -1,3 +1,4 @@
+import { database } from '../utils/database';
 
 // Abilities action creators
 export const fetchAbilitiesRequest = () => ({

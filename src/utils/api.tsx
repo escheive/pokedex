@@ -1,9 +1,8 @@
-import { createPokemonTable, insertPokemon, createAbilitiesTable, insertAbility } from './database';
+import { database, createPokemonTable, insertPokemon, createAbilitiesTable, insertAbility } from './database';
 // Database
 import SQLite from 'react-native-sqlite-storage';
 // Redux
 import { useDispatch } from 'react-redux';
-// import { rootReducer } from '../reducers/rootReducer';
 import { fetchPokemonRequest, fetchPokemonSuccess, fetchPokemonFailure } from '../actions/pokemonActions';
 import { fetchAbilitiesRequest, fetchAbilitiesSuccess, fetchAbilitiesFailure } from '../actions/abilitiesActions';
 
@@ -151,16 +150,14 @@ const fetchPokemonFromAPI = async (start, end) => {
 // };
 
 
-
-
 // Function to fetch base pokemon data from database or api
-const fetchPokemonData = (database) => {
+const fetchPokemonData = () => {
     console.log('fetchPokemonData function hit');
     return async (dispatch) => {
         dispatch(fetchPokemonRequest());
         try {
             // Wait for the table creation process to complete
-            createPokemonTable(database)
+            createPokemonTable()
               .then(async () => {
                 const totalCount = 1010;
                 const batchSize = 20;
@@ -201,7 +198,7 @@ const fetchPokemonData = (database) => {
                         try {
                             const fetchedData = await fetchPokemonFromAPI(start, end);
         //                     fetchedPokemonData.push(...fetchedData);
-                            await insertPokemon(database, fetchedData);
+                            await insertPokemon(fetchedData);
                         } catch (error) {
                             console.error('Error in the !hasData section of fetchPokemonData function:', error);
                             throw error;
