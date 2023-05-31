@@ -6,9 +6,6 @@ import PillBar from '../PillBar';
 // Utils
 import { capitalizeString } from '../../utils/helpers';
 
-// All the possible stat names
-const pokemonStatNames = ['hp', 'atk', 'def', 'sp_atk', 'sp_def', 'spd'];
-
 
 const PokemonStats = ({ pokemonColors, pokemon }) => {
     // useState for selected stat value tab
@@ -17,10 +14,14 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
     const [highestStat, setHighestStat] = useState(0);
     const [statsTotal, setStatsTotal] = useState(0);
 
-    const pokemonStats = [];
-    for (let statName of pokemonStatNames) {
-        pokemonStats.push({name: statName, value: pokemon[statName]})
-    }
+    // Turn pokemon.stats string into an object
+    const pokemonStats = JSON.parse(pokemon.stats);
+    console.log(pokemonStats)
+
+//     const pokemonStats = [];
+//     for (let statName of pokemonStatNames) {
+//         pokemonStats.push({name: statName, value: pokemon[statName]})
+//     }
 
     useEffect(() => {
         // Based on your tab, calculate stats
@@ -72,8 +73,17 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
         return maxStats;
     }
 
+    const statNameMappings = {
+        hp: 'Hp',
+        attack: 'Atk',
+        defense: 'Def',
+        'special-attack': 'SpAtk',
+        'special-defense': 'SpDef',
+        speed: 'Spd',
+    };
+
     const renderStatItem = ({ item }) => {
-        let statValue = pokemon[item];
+        const shortenedStatName = statNameMappings[item.stat.name] || item.stat.name;
 
         if (selectedTab === 'min' && calculatedStats[item]) {
             statValue = calculatedStats[item];
@@ -83,8 +93,8 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
 
         return  (
             <View style={styles.statItem}>
-                <Text style={styles.statName}>{capitalizeString(item)}:</Text>
-                <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={item} pokemon={pokemon} />
+                <Text style={styles.statName}>{shortenedStatName}:</Text>
+                <PillBar percentage={(item.base_stat / highestStat) * 100} stat={item.base_stat} statName={shortenedStatName} pokemon={pokemon} />
             </View>
         );
     };
@@ -191,9 +201,9 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
             </View>
 
             <FlatList
-                data={pokemonStatNames}
+                data={JSON.parse(pokemon.stats)}
                 renderItem={renderStatItem}
-                keyExtractor={(pokemonStatName) => pokemonStatName}
+                keyExtractor={(stat) => stat.stat.name}
                 contentContainerStyle={styles.container}
             />
 
