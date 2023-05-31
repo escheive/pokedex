@@ -29,21 +29,38 @@ const pokemonReducer = (state = initialState, action) => {
                 error: action.payload,
                 pokemonList: [],
             };
-        case 'UPDATE_POKEMON':
-            const updatedPokemonList = state.pokemonList.map(pokemon => {
-                if (pokemon.id === action.payload.id) {
-                    return {
-                        ...pokemon,
-                        isFavorite: action.payload.isFavorite !== undefined ? action.payload.isFavorite : pokemon.isFavorite,
-                        isCaptured: action.payload.isCaptured !== undefined ? action.payload.isCaptured : pokemon.isCaptured
-                    };
+        case 'UPDATE_POKEMON_FAVORITE_STATUS':
+            const { id, isFavorite } = action.payload;
+            const updatedPokemonList = state.pokemonList.map((pokemon) => {
+                if (pokemon.id === id) {
+                    return { ...pokemon, isFavorite };
                 }
                 return pokemon;
             });
             return {
                 ...state,
-                pokemonList: updatedPokemonList,
+                pokemonList: updatedPokemonList
             };
+        case 'UPDATE_POKEMON_CAPTURE_STATUS':
+            return {
+                ...state,
+                pokemonList: pokemonList
+            }
+//         case 'UPDATE_POKEMON':
+//             const updatedPokemonList = state.pokemonList.map(pokemon => {
+//                 if (pokemon.id === action.payload.id) {
+//                     return {
+//                         ...pokemon,
+//                         isFavorite: action.payload.isFavorite !== undefined ? action.payload.isFavorite : pokemon.isFavorite,
+//                         isCaptured: action.payload.isCaptured !== undefined ? action.payload.isCaptured : pokemon.isCaptured
+//                     };
+//                 }
+//                 return pokemon;
+//             });
+//             return {
+//                 ...state,
+//                 pokemonList: updatedPokemonList,
+//             };
         default:
             return state;
     }

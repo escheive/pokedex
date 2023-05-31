@@ -8,7 +8,7 @@ import { updatePokemonFavoriteStatus, updatePokemonCaptureStatus } from '../util
 import { fetchPokemonData } from '../utils/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatePokemon } from '../actions/pokemonActions';
+import { updatePokemon, updatePokemonFavoriteStatusAction } from '../actions/pokemonActions';
 
 type Props = {
     navigation: StackNavigationProp<any>;
@@ -148,10 +148,7 @@ const PokemonScreen = ({ navigation, typeData, setPokemonList, route, database }
         const updatedFavoriteValue = !selectedPokemon.isFavorite;
 
         // pokemon action to update the pokemon in the pokemonList state
-        dispatch(updatePokemon(selectedPokemon.id, updatedFavoriteValue, selectedPokemon.isCaptured));
-
-        // Update the database using the database update function
-        updatePokemonFavoriteStatus(database, selectedPokemon.id, updatedFavoriteValue);
+        dispatch(updatePokemonFavoriteStatusAction(database, selectedPokemon.id, updatedFavoriteValue));
     }
 
     const handleCapturePress = (selectedPokemon, database) => {
