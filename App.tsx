@@ -8,6 +8,19 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Pokemon } from './types';
+
+
+
+// Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { Provider, connect } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from './src/reducers/rootReducer';
+// import store from './src/reducers/store';
+
+
+
 // Screens
 import PokemonScreen from './src/screens/PokemonScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
@@ -27,6 +40,12 @@ import SQLite from 'react-native-sqlite-storage';
 // Assets
 import typeData from './src/assets/typeData';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
+
+
 
 
 // Open the database
@@ -209,29 +228,23 @@ function SettingsStack() {
 
 
 
-
-export default function App() {
-    const [isLoading, setIsLoading] = useState("Loading...");
-    const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
-    const [allPokemonAbilities, setAllPokemonAbilities] = useState([]);
+const App = ({ typeData, allPokemonAbilities, database }) => {
+    const dispatch = useDispatch();
+//     const isLoading = useSelector((state) => state.pokemon.loading);
+    const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
     useEffect(() => {
 //         resetAbilitiesTable();
 //         resetPokemonTable(database);
-        fetchPokemonData(database, setIsLoading, setPokemonList)
-            .then(() => fetchAbilitiesData(database, setIsLoading, setAllPokemonAbilities))
+        dispatch(fetchPokemonData(database))
+            .then(() => fetchAbilitiesData(database))
             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
-            .finally(() => setIsLoading(false));
-
-//         return () => {
-//             database.close();
-//         };
-    }, []);
+    }, [dispatch]);
 
 
-    if (isLoading) {
-        return <LoadingScreen isLoading={isLoading} />;
-    }
+//     if (isLoading) {
+//         return <LoadingScreen isLoading={isLoading} />;
+//     }
 
     return (
         <NavigationContainer>
@@ -255,7 +268,7 @@ export default function App() {
 //                         }
 //                     }}
                 >
-                    {(props) => <PokemonStackNavigator {...props} setPokemonList={setPokemonList} pokemonList={pokemonList} typeData={typeData} allPokemonAbilities={allPokemonAbilities} database={database} />}
+                    {(props) => <PokemonStackNavigator {...props} pokemonList={pokemonList} typeData={typeData} allPokemonAbilities={allPokemonAbilities} database={database} />}
                 </Drawer.Screen>
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />
@@ -263,6 +276,97 @@ export default function App() {
 
         </NavigationContainer>
     );
+};
+
+export default function AppWrapper() {
+    return (
+        <Provider store={store}>
+            <App database={database} />
+        </Provider>
+    );
 }
+
+//
+// export default function App() {
+//     const [isLoading, setIsLoading] = useState("Loading...");
+//     const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
+//     const [allPokemonAbilities, setAllPokemonAbilities] = useState([]);
+//
+//     useEffect(() => {
+// //         resetAbilitiesTable();
+// //         resetPokemonTable(database);
+//         fetchPokemonData(database, setIsLoading, setPokemonList)
+//             .then(() => fetchAbilitiesData(database, setIsLoading, setAllPokemonAbilities))
+//             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
+//             .finally(() => setIsLoading(false));
+//
+// //         return () => {
+// //             database.close();
+// //         };
+//     }, []);
+//
+//
+//     if (isLoading) {
+//         return <LoadingScreen isLoading={isLoading} />;
+//     }
+//
+//     return (
+//
+//
+//
+//         <Provider store={store}>
+//
+//
+//
+//         <NavigationContainer>
+//
+//             <Drawer.Navigator
+//                 screenOptions={({ route }) => {
+//                     const headerTitle = getHeaderTitle(route);
+//                     return {
+//                         headerTitle: headerTitle,
+//                         headerShown: headerTitle !== 'Details',
+//                     }
+//                 }}
+//             >
+//                 <Drawer.Screen
+//                     name="Pokemon"
+// //                     options={({ route }) => {
+// //                         const headerTitle = getHeaderTitle(route);
+// //                         return {
+// //                             headerTitle: headerTitle,
+// //                             headerShown: headerTitle !== 'Details',
+// //                         }
+// //                     }}
+//                 >
+//                     {(props) => <PokemonStackNavigator {...props} setPokemonList={setPokemonList} pokemonList={pokemonList} typeData={typeData} allPokemonAbilities={allPokemonAbilities} database={database} />}
+//                 </Drawer.Screen>
+//                 <Drawer.Screen name="Profile" component={ProfileScreen} />
+//                 <Drawer.Screen name="Settings" component={SettingsScreen} />
+//             </Drawer.Navigator>
+//
+//         </NavigationContainer>
+//
+//
+//         </Provider>
+//
+//
+//
+//     );
+// }
+
+
+// const mapStateToProps = (state) => ({
+//     isLoading: state.pokemon.loading,
+//     pokemonList: state.pokemon.pokemonList,
+//     // Add other state mappings here
+// });
+//
+// const mapDispatchToProps = (dispatch) => ({
+//     fetchPokemonData: (database) => dispatch(fetchPokemonData(database)),
+// //     setPokemonList: (pokemonList) => dispatch({ type: 'FETCH_POKEMON_REQUEST', payload: pokemonList }),
+// });
+//
+// const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App);
 
 
