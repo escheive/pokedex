@@ -3,8 +3,9 @@ import { createPokemonTable, insertPokemon, createAbilitiesTable, insertAbility 
 import SQLite from 'react-native-sqlite-storage';
 // Redux
 import { useDispatch } from 'react-redux';
-import { rootReducer } from '../reducers/rootReducer';
+// import { rootReducer } from '../reducers/rootReducer';
 import { fetchPokemonRequest, fetchPokemonSuccess, fetchPokemonFailure } from '../actions/pokemonActions';
+import { fetchAbilitiesRequest, fetchAbilitiesSuccess, fetchAbilitiesFailure } from '../actions/abilitiesActions';
 
 ////////////////////////////////////////////////////////////////
 //++++++++++++++++++ Pokemon Data Functions ++++++++++++++++++//
@@ -270,57 +271,125 @@ const fetchAbilitiesFromAPI = async (start, end) => {
 
 
 
+// // Function to fetch ability data from database or api
+// const fetchAbilitiesData = async (database, setIsLoading, setAllPokemonAbilities) => {
+//     console.log('fetchAbilitiesData function hit');
+//     try {
+//         // Wait for the table creation process to complete
+//         await createAbilitiesTable(database);
+//
+//         const totalCount = 298;
+//         const batchSize = 20;
+//         const batches = Math.ceil(totalCount / batchSize);
+//         const fetchedAbilitiesData = [];
+//
+//         const start = 0;
+//         const end = 298;
+//
+//         const hasData = await new Promise((resolve, reject) => {
+//             setIsLoading("Loading Abilities");
+//             database.transaction((tx) => {
+//                 tx.executeSql(
+//                     `SELECT * FROM Abilities WHERE id BETWEEN ? AND ?;`,
+//                     [start, end],
+//                     (tx, result) => {
+//                         if (result.rows.length > 0) {
+//                             for (let i=0; i<result.rows.length; i++) {
+//                                 fetchedAbilitiesData.push(result.rows.item(i));
+//                             }
+//                         }
+//                         resolve(result.rows.length > 0);
+//                     },
+//                     (error) => {
+//                         console.error('Error checking Ability data in the fetchAbilitiesData function, hasData subsection:', error);
+//                         reject(error);
+//                     }
+//                 );
+//             });
+//         });
+//
+//         if (!hasData) {
+//             // set loading phase so that loading screen updates
+//             setIsLoading("Fetching Abilities data from the API");
+//             const fetchedData = await fetchAbilitiesFromAPI(start, end);
+//             fetchedAbilitiesData.push(...fetchedData);
+//             await insertAbility(database, fetchedData);
+//         }
+//
+//         setAllPokemonAbilities(fetchedAbilitiesData);
+//
+//         console.log('Successfully fetched data in the fetchAbilitiesData function');
+//     } catch (error) {
+//         console.error('Error fetching and inserting Abilities data in the fetchAbilitiesData function:', error);
+//     }
+// };
+
+
+
+
 // Function to fetch ability data from database or api
 const fetchAbilitiesData = async (database, setIsLoading, setAllPokemonAbilities) => {
     console.log('fetchAbilitiesData function hit');
-    try {
-        // Wait for the table creation process to complete
-        await createAbilitiesTable(database);
+    return async (dispatch) => {
+        dispatch(fetchAbilitiesRequest());
+        try {
+            // Wait for the table creation process to complete
+            createAbilitiesTable(database)
+              .then(async () => {
 
-        const totalCount = 298;
-        const batchSize = 20;
-        const batches = Math.ceil(totalCount / batchSize);
-        const fetchedAbilitiesData = [];
+                const totalCount = 298;
+                const batchSize = 20;
+                const batches = Math.ceil(totalCount / batchSize);
+                const fetchedAbilitiesData = [];
 
-        const start = 0;
-        const end = 298;
+                const start = 0;
+                const end = 298;
 
-        const hasData = await new Promise((resolve, reject) => {
-            setIsLoading("Loading Abilities");
-            database.transaction((tx) => {
-                tx.executeSql(
-                    `SELECT * FROM Abilities WHERE id BETWEEN ? AND ?;`,
-                    [start, end],
-                    (tx, result) => {
-                        if (result.rows.length > 0) {
-                            for (let i=0; i<result.rows.length; i++) {
-                                fetchedAbilitiesData.push(result.rows.item(i));
+                const hasData = await new Promise((resolve, reject) => {
+                    setIsLoading("Loading Abilities");
+                    database.transaction((tx) => {
+                        tx.executeSql(
+                            `SELECT * FROM Abilities WHERE id BETWEEN ? AND ?;`,
+                            [start, end],
+                            (tx, result) => {
+                                if (result.rows.length > 0) {
+                                    for (let i=0; i<result.rows.length; i++) {
+                                        fetchedAbilitiesData.push(result.rows.item(i));
+                                    }
+                                }
+                                resolve(result.rows.length > 0);
+                            },
+                            (error) => {
+                                console.error('Error checking Ability data in the fetchAbilitiesData function, hasData subsection:', error);
+                                reject(error);
                             }
-                        }
-                        resolve(result.rows.length > 0);
-                    },
-                    (error) => {
-                        console.error('Error checking Ability data in the fetchAbilitiesData function, hasData subsection:', error);
-                        reject(error);
-                    }
-                );
+                        );
+                    });
+                });
+
+                if (!hasData) {
+                    // set loading phase so that loading screen updates
+                    setIsLoading("Fetching Abilities data from the API");
+                    const fetchedData = await fetchAbilitiesFromAPI(start, end);
+                    fetchedAbilitiesData.push(...fetchedData);
+                    await insertAbility(database, fetchedData);
+                }
+
+                console.log('Successfully fetched data in the fetchAbilitiesData function');
+                dispatch(fetchAbilitiesSuccess(fetchedAbilitiesData));
+            })
+              .catch((error) => {
+                console.error('Error fetching and inserting Abilities data in the fetchAbilitiesData function:', error);
+                dispatch(fetchAbilitiesFailure(error));
             });
-        });
-
-        if (!hasData) {
-            // set loading phase so that loading screen updates
-            setIsLoading("Fetching Abilities data from the API");
-            const fetchedData = await fetchAbilitiesFromAPI(start, end);
-            fetchedAbilitiesData.push(...fetchedData);
-            await insertAbility(database, fetchedData);
+        } catch (error) {
+            console.error('Error fetching and inserting Abilities data in the fetchAbilitiesData function:', error);
+            dispatch(fetchAbilitiesFailure(error));
         }
-
-        setAllPokemonAbilities(fetchedAbilitiesData);
-
-        console.log('Successfully fetched data in the fetchAbilitiesData function');
-    } catch (error) {
-        console.error('Error fetching and inserting Abilities data in the fetchAbilitiesData function:', error);
-    }
+    };
 };
+
+
+
 
 export { fetchAbilitiesData, fetchAbilitiesFromAPI };
