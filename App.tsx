@@ -29,6 +29,8 @@ import DetailsScreen from './src/screens/DetailsScreen';
 import MovesScreen from './src/screens/MovesScreen';
 // Components
 import LoadingScreen from './src/components/LoadingScreen';
+// Navigation
+import PokemonStackNavigator from './src/components/navigation/PokemonStackNavigator';
 // Utils
 import { getTypeStyle } from './src/utils/typeStyle';
 import { capitalizeString } from './src/utils/helpers';
@@ -126,7 +128,7 @@ const DrawerNavigator = () => {
 };
 
 
-const DetailsTabNavigator = ({ pokemonList, typeData, route, allPokemonAbilities, navigation }) => {
+const DetailsTabNavigator = ({ typeData, route, navigation }) => {
     const { Navigator, Screen } = createBottomTabNavigator();
 
     const selectedPokemon = route.params.pokemon;
@@ -150,7 +152,7 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route, allPokemonAbilities
                 name='Info'
                 initialParams={{ pokemon: selectedPokemon }}
             >
-                {props => <DetailsScreen {...props} allPokemonAbilities={allPokemonAbilities} />}
+                {props => <DetailsScreen {...props} />}
             </Screen>
             <Screen
                 name="Moves"
@@ -163,39 +165,39 @@ const DetailsTabNavigator = ({ pokemonList, typeData, route, allPokemonAbilities
 };
 
 
-const PokemonStackNavigator = ({ setPokemonList, pokemonList, typeData, allPokemonAbilities }) => {
-
-    return (
-        <Stack.Navigator
-            initialRouteName="Main"
-            screenOptions={{
-                headerShown: false,
-            }}
-        >
-
-            <Stack.Screen name="Main">
-                {props => <PokemonScreen {...props} setPokemonList={setPokemonList} pokemonList={pokemonList} typeData={typeData} />}
-            </Stack.Screen>
-
-            <Stack.Screen
-                name="Details"
-                options={({ route }) => {
-                    const selectedPokemon = route.params.pokemon;
-                    const headerStyle = {
-                        backgroundColor: 'transparent',
-                    };
-                    return {
-                        headerShown: true,
-                        headerStyle,
-                        headerShadowVisible: false,
-                    };
-                }}
-            >
-                {props => <DetailsTabNavigator {...props} allPokemonAbilities={allPokemonAbilities} />}
-            </Stack.Screen>
-        </Stack.Navigator>
-    );
-};
+// const PokemonStackNavigator = ({ typeData }) => {
+//
+//     return (
+//         <Stack.Navigator
+//             initialRouteName="Main"
+//             screenOptions={{
+//                 headerShown: false,
+//             }}
+//         >
+//
+//             <Stack.Screen name="Main">
+//                 {props => <PokemonScreen {...props} typeData={typeData} />}
+//             </Stack.Screen>
+//
+//             <Stack.Screen
+//                 name="Details"
+//                 options={({ route }) => {
+//                     const selectedPokemon = route.params.pokemon;
+//                     const headerStyle = {
+//                         backgroundColor: 'transparent',
+//                     };
+//                     return {
+//                         headerShown: true,
+//                         headerStyle,
+//                         headerShadowVisible: false,
+//                     };
+//                 }}
+//             >
+//                 {props => <DetailsTabNavigator {...props} />}
+//             </Stack.Screen>
+//         </Stack.Navigator>
+//     );
+// };
 
 
 function ProfileStack() {
@@ -224,12 +226,12 @@ const App = ({ typeData }) => {
     const dispatch = useDispatch();
     const isPokemonLoading = useSelector((state) => state.pokemon.loading);
     const isAbilitiesLoading = useSelector((state) => state.abilities.loading);
-    const pokemonList = useSelector((state) => state.pokemon.pokemonList);
-    const allPokemonAbilities = useSelector((state) => state.abilities.abilitiesData);
+//     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
+//     const allPokemonAbilities = useSelector((state) => state.abilities.abilitiesData);
 
     useEffect(() => {
 //         resetAbilitiesTable();
-//         resetPokemonTable(database);
+//         resetPokemonTable();
         dispatch(fetchPokemonData())
             .then(() => dispatch(fetchAbilitiesData()))
             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
@@ -259,7 +261,7 @@ const App = ({ typeData }) => {
                 }}
             >
                 <Drawer.Screen name="Pokemon">
-                    {(props) => <PokemonStackNavigator {...props} pokemonList={pokemonList} typeData={typeData} allPokemonAbilities={allPokemonAbilities} database={database} />}
+                    {(props) => <PokemonStackNavigator {...props} typeData={typeData} PokemonScreen={PokemonScreen} />}
                 </Drawer.Screen>
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />
@@ -276,4 +278,3 @@ export default function AppWrapper() {
         </Provider>
     );
 }
-

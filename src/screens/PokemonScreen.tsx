@@ -28,7 +28,7 @@ const versionOptions = [
     { key: 'gen9', label: 'Gen 9' },
 ];
 
-const PokemonScreen = ({ navigation, typeData, setPokemonList, route }: Props) => {
+const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const dispatch = useDispatch();

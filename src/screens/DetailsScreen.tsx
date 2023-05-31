@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import { useSelector } from 'react-redux';
 // Components
 import PokemonStats from '../components/pokemon/PokemonStats';
 import PillBar from '../components/PillBar';
@@ -38,6 +39,7 @@ type DetailsScreenProps = {
 const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreenProps) => {
     // Grab our pokemon data that was pulled in our app.tsx from params
     const { pokemon } = route.params;
+    const abilitiesData = useSelector((state) => state.abilities.abilitiesData);
     // useState to update if a pokemon was favorited or unfavorited without refreshing
     const [isFavorite, setIsFavorite] = useState(false);
     // useState to track pokemonAbilities for each individual pokemon when their page is pulled up
@@ -68,7 +70,7 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
         checkIfFavorite();
 
         const findThisPokemonsAbilities = async () => {
-            const pokeAbilities = await allPokemonAbilities.filter((ability) => {
+            const pokeAbilities = await abilitiesData.filter((ability) => {
                 const pokemonWithAbility = JSON.parse(ability.pokemonWithAbility);
                 return pokemonWithAbility.includes(pokemon.name)
             })
