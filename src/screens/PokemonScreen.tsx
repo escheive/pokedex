@@ -146,17 +146,9 @@ const PokemonScreen = ({ navigation, typeData, setPokemonList, route, database }
     const handleFavoritePress = (selectedPokemon, database) => {
         // Update the isFavorite value in the database
         const updatedFavoriteValue = !selectedPokemon.isFavorite;
-//         // Find the matching Pokemon in the pokemonList array
-//         const updatedPokemonList = pokemonList.map((pokemon) => {
-//             if (pokemon.id === selectedPokemon.id) {
-//                 return { ...pokemon, isFavorite: updatedFavoriteValue };
-//             }
-//             return pokemon;
-//         });
 
-//         // Update pokemonList with the updatedPokemonList
-//         setPokemonList(updatedPokemonList);
-        dispatch(updatePokemon(selectedPokemon.id, updatedFavoriteValue));
+        // pokemon action to update the pokemon in the pokemonList state
+        dispatch(updatePokemon(selectedPokemon.id, updatedFavoriteValue, selectedPokemon.isCaptured));
 
         // Update the database using the database update function
         updatePokemonFavoriteStatus(database, selectedPokemon.id, updatedFavoriteValue);
@@ -165,16 +157,9 @@ const PokemonScreen = ({ navigation, typeData, setPokemonList, route, database }
     const handleCapturePress = (selectedPokemon, database) => {
         // Update the isCaptured value in the database
         const updatedCaptureValue = !selectedPokemon.isCaptured;
-        // Find the matching Pokemon in the pokemonList array
-        const updatedPokemonList = pokemonList.map((pokemon) => {
-            if (pokemon.id === selectedPokemon.id) {
-                return { ...pokemon, isCaptured: updatedCaptureValue };
-            }
-            return pokemon;
-        });
 
-        // Update pokemonList with the updatedPokemonList
-        setPokemonList(updatedPokemonList);
+        // pokemon action to update the pokemon in the pokemonList state
+        dispatch(updatePokemon(selectedPokemon.id, selectedPokemon.isFavorite, updatedCaptureValue));
 
         // Update the database using the database update function
         updatePokemonCaptureStatus(database, selectedPokemon.id, updatedCaptureValue);

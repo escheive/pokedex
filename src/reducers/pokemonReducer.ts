@@ -34,8 +34,8 @@ const pokemonReducer = (state = initialState, action) => {
                 if (pokemon.id === action.payload.id) {
                     return {
                         ...pokemon,
-                        isFavorite: action.payload.isFavorite != undefined ? action.payload.isFavorite : pokemon.isFavorite,
-                        isCaptured: action.payload.isCaptured != undefined ? action.payload.isCaptured : pokemon.isCaptured
+                        isFavorite: action.payload.isFavorite !== undefined ? action.payload.isFavorite : pokemon.isFavorite,
+                        isCaptured: action.payload.isCaptured !== undefined ? action.payload.isCaptured : pokemon.isCaptured
                     };
                 }
                 return pokemon;
