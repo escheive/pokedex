@@ -222,7 +222,8 @@ function SettingsStack() {
 
 const App = ({ typeData }) => {
     const dispatch = useDispatch();
-//     const isLoading = useSelector((state) => state.pokemon.loading);
+    const isPokemonLoading = useSelector((state) => state.pokemon.loading);
+    const isAbilitiesLoading = useSelector((state) => state.abilities.loading);
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
     const allPokemonAbilities = useSelector((state) => state.abilities.abilitiesData);
 
@@ -234,10 +235,16 @@ const App = ({ typeData }) => {
             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
     }, [dispatch]);
 
+    let loadingText = '';
+    if (isPokemonLoading) {
+        loadingText = 'Loading Pokemon...'
+    } else if (isAbilitiesLoading) {
+        loadingText = 'Loading Abilities...'
+    }
 
-//     if (isLoading) {
-//         return <LoadingScreen isLoading={isLoading} />;
-//     }
+    if (isPokemonLoading || isAbilitiesLoading) {
+        return <LoadingScreen loadingText={loadingText} />;
+    }
 
     return (
         <NavigationContainer>

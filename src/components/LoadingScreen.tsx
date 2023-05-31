@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, Image, ImageBackground } from 'react-native';
 
-const LoadingScreen = ({isLoading}) => {
+const LoadingScreen = ({loadingText}) => {
 
     return (
 
@@ -12,7 +12,7 @@ const LoadingScreen = ({isLoading}) => {
                 style={styles.logo}
             />
 
-            <Text style={styles.loadingText}>{isLoading}</Text>
+            <Text style={styles.loadingText}>{loadingText}</Text>
             <ActivityIndicator size="large" color="#FFCB05" />
             <Text style={styles.quoteText}>
                 "Gotta catch 'em all!"
