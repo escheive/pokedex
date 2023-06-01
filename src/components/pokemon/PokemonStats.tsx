@@ -16,12 +16,6 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
 
     // Turn pokemon.stats string into an object
     const pokemonStats = JSON.parse(pokemon.stats);
-    console.log(pokemonStats)
-
-//     const pokemonStats = [];
-//     for (let statName of pokemonStatNames) {
-//         pokemonStats.push({name: statName, value: pokemon[statName]})
-//     }
 
     useEffect(() => {
         // Based on your tab, calculate stats
@@ -45,12 +39,12 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
             // Effort values and individual values default to 0
             const iv = ivs || 0;
             const ev = evs || 0;
-            let maxStat = stat.value;
+            let maxStat = stat.base_stat;
 
             if (level === 100) {
-                maxStat = Math.floor(((2 * stat.value + iv + Math.floor(ev / 4)) * level) / 100) + 5;
+                maxStat = Math.floor(((2 * stat.base_stat + iv + Math.floor(ev / 4)) * level) / 100) + 5;
 
-                if (stat.name !== "hp") {
+                if (stat.stat.name !== "hp") {
                     if (nature === 'max') {
                         maxStat = Math.floor(maxStat * 1.1)
                     } else {
@@ -61,7 +55,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
                 }
             }
 
-            maxStats[stat.name] = maxStat;
+            maxStats[stat.stat.name] = maxStat;
         };
 
         const statsArray = Object.values(maxStats);
@@ -84,17 +78,18 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
 
     const renderStatItem = ({ item }) => {
         const shortenedStatName = statNameMappings[item.stat.name] || item.stat.name;
+        let statValue = item.base_stat
 
-        if (selectedTab === 'min' && calculatedStats[item]) {
-            statValue = calculatedStats[item];
-        } else if (selectedTab === 'max' && calculatedStats[item]) {
-            statValue = calculatedStats[item];
+        if (selectedTab === 'min' && calculatedStats[item.stat.name]) {
+            statValue = calculatedStats[item.stat.name];
+        } else if (selectedTab === 'max' && calculatedStats[item.stat.name]) {
+            statValue = calculatedStats[item.stat.name];
         }
 
         return  (
             <View style={styles.statItem}>
                 <Text style={styles.statName}>{shortenedStatName}:</Text>
-                <PillBar percentage={(item.base_stat / highestStat) * 100} stat={item.base_stat} statName={shortenedStatName} pokemon={pokemon} />
+                <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={shortenedStatName} pokemon={pokemon} />
             </View>
         );
     };
