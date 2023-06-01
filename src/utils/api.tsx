@@ -46,9 +46,9 @@ const fetchPokemonFromAPI = async (start, end) => {
                 stats: JSON.stringify(modifiedStats),
                 abilities: JSON.stringify(modifiedAbilities),
                 moves: JSON.stringify(moveNames),
-                species_url: pokemon.species.url,
-                image_url: pokemon.sprites.other['official-artwork'].front_default,
-                pixel_image_url: pokemon.sprites.front_default,
+                species_url: pokemonDetails.species.url,
+                image_url: pokemonDetails.sprites.other['official-artwork'].front_default,
+                pixel_image_url: pokemonDetails.sprites.front_default,
             }
         });
 
