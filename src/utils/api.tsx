@@ -18,19 +18,71 @@ const fetchPokemonFromAPI = async (start, end) => {
         const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${end - start}&offset=${start}`);
         const data = await response.json();
 
-        const pokemonUrls = data.results.map((pokemon) => pokemon.url);
-        const pokemonData = await Promise.all(pokemonUrls.map((url) =>fetch(url).then((response) => response.json())));
+        const pokemonData = data.results.map(async (pokemon) => {
+            const response = await fetch(pokemon.url);
+            const pokemonDetails = await response.json();
+            const moveNames = pokemonDetails.moves.map((move) => move.move.name);
+            const modifiedStats = pokemonDetails.stats.map((stat) => {
+                return {
+                    name: stat.stat.name,
+                    value: stat.base_stat
+                };
+            });
+            const modifiedAbilities = pokemonDetails.abilities.map((ability) => {
+                return {
+                    name: ability.ability.name,
+                    isHidden: ability.is_hidden
+                };
+            });
+
+            return {
+                id: pokemonDetails.id,
+                name: pokemonDetails.name,
+                type1: pokemonDetails.types[0].type.name,
+                type2: pokemonDetails.types[1] ? pokemonDetails.types[1].type.name : null,
+                height: pokemonDetails.height,
+                weight: pokemonDetails.weight,
+                base_experience: pokemonDetails.base_experience,
+                stats: JSON.stringify(modifiedStats),
+                abilities: JSON.stringify(modifiedAbilities),
+                moves: JSON.stringify(moveNames),
+                species_url: pokemon.species.url,
+                image_url: pokemon.sprites.other['official-artwork'].front_default,
+            }
+        });
+
+        const transformedPokemonData = await Promise.all(pokemonData);
 
         // Release memory occupied by data.results and pokemonUrls
         data.results = null;
-        pokemonUrls.length = 0;
 
-        return pokemonData;
+        return transformedPokemonData;
     } catch (error) {
         console.error('Error in fetchPokemonFromAPI function', error);
         throw error;
     }
 };
+
+// // Function to fetch base pokemon data from the api
+// const fetchPokemonFromAPI = async (start, end) => {
+//     console.log('fetchingPokemonFromAPI function hit')
+//     try {
+//         const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${end - start}&offset=${start}`);
+//         const data = await response.json();
+//
+//         const pokemonUrls = data.results.map((pokemon) => pokemon.url);
+//         const pokemonData = await Promise.all(pokemonUrls.map((url) =>fetch(url).then((response) => response.json())));
+//
+//         // Release memory occupied by data.results and pokemonUrls
+//         data.results = null;
+//         pokemonUrls.length = 0;
+//
+//         return pokemonData;
+//     } catch (error) {
+//         console.error('Error in fetchPokemonFromAPI function', error);
+//         throw error;
+//     }
+// };
 
 // Function to fetch base pokemon data from database or api
 const fetchPokemonData = () => {
