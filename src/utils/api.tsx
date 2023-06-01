@@ -48,6 +48,7 @@ const fetchPokemonFromAPI = async (start, end) => {
                 moves: JSON.stringify(moveNames),
                 species_url: pokemon.species.url,
                 image_url: pokemon.sprites.other['official-artwork'].front_default,
+                pixel_image_url: pokemon.sprites.front_default,
             }
         });
 
