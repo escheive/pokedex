@@ -15,9 +15,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
     const [statsTotal, setStatsTotal] = useState(0);
 
     // Turn pokemon.stats string into an object
-    console.log(pokemon.stats)
     const pokemonStats = JSON.parse(pokemon.stats);
-    console.log(pokemonStats)
 
     useEffect(() => {
         // Based on your tab, calculate stats
