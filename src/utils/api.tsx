@@ -56,63 +56,12 @@ const fetchPokemonFromAPI = async (start, end) => {
 
         // Release memory occupied by data.results and pokemonUrls
         data.results = null;
-
         return transformedPokemonData;
     } catch (error) {
         console.error('Error in fetchPokemonFromAPI function', error);
         throw error;
     }
 };
-
-// // Function to fetch base pokemon data from the api
-// const fetchPokemonFromAPI = async (start, end) => {
-//     console.log('fetchingPokemonFromAPI function hit')
-//     try {
-//         const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${end - start}&offset=${start}`);
-//         const data = await response.json();
-//
-//         const pokemonUrls = data.results.map((pokemon) => pokemon.url);
-//         const pokemonData = await Promise.all(pokemonUrls.map((url) =>fetch(url).then((response) => response.json())));
-//
-//         // Release memory occupied by data.results and pokemonUrls
-//         data.results = null;
-//         pokemonUrls.length = 0;
-//
-//         return pokemonData;
-//     } catch (error) {
-//         console.error('Error in fetchPokemonFromAPI function', error);
-//         throw error;
-//     }
-// };
-
-//             const hasData = await new Promise((resolve, reject) => {
-//                 const start = 0;
-//                 const end = totalCount;
-//                 database.transaction((tx) => {
-//                     tx.executeSql(
-//                         `SELECT * FROM Pokemon WHERE id BETWEEN ? AND ?;`,
-//                         [start, end],
-//                         (tx, result) => {
-//                             if (result.rows.length > 0) {
-//                                 for (let i=0; i<result.rows.length; i++) {
-//                                     const pokemon = result.rows.item(i);
-//                                     fetchedPokemonData[pokemon.id] = pokemon;
-//                                     if (pokemon.id % 10 === 0) {
-//                                         console.log(pokemon.id)
-//                                     }
-//                                 };
-//                             }
-//                             resolve(result.rows.length > 0);
-// //                             resolve(Object.keys(fetchedPokemonData).length > 0);
-//                         },
-//                         (error) => {
-//                             console.error('Error checking Pokemon data in the fetchPokemonData function, hasData subsection:', error);
-//                             reject(error);
-//                         }
-//                     );
-//                 });
-//             });
-
 
 // Function to fetch base pokemon data from database or api
 const fetchPokemonData = () => {
@@ -142,17 +91,9 @@ const fetchPokemonData = () => {
                                 for (let i=0; i<result.rows.length; i++) {
                                     const pokemon = result.rows.item(i);
                                     fetchedPokemonData[pokemon.id] = pokemon;
-//                                     fetchedPokemonData[pokemon.id] = {
-//                                         id: pokemon.id,
-//                                         name: pokemon.name,
-//                                         type1: pokemon.type1,
-//                                         type2: pokemon.type2,
-//                                         image_url: pokemon.image_url,
-//                                     };
                                 };
                             }
                             resolve(result.rows.length > 0);
-//                             resolve(Object.keys(fetchedPokemonData).length > 0);
                         },
                         (error) => {
                             console.error('Error checking Pokemon data in the fetchPokemonData function, hasData subsection:', error);
@@ -191,75 +132,6 @@ const fetchPokemonData = () => {
         }
     };
 };
-
-
-// // Function to fetch base pokemon data from database or api
-// const fetchPokemonData = () => {
-//     console.log('fetchPokemonData function hit');
-//     return async (dispatch) => {
-//         dispatch(fetchPokemonRequest());
-//         try {
-//             // Wait for the table creation process to complete
-//             createPokemonTable().then(async () => {
-//                 const totalCount = 1010;
-//                 const batchSize = 20;
-//                 const batches = Math.ceil(totalCount / batchSize);
-//
-//                 const fetchedPokemonData = [];
-//
-//                 const hasData = await new Promise((resolve, reject) => {
-//                     const start = 0;
-//                     const end = 1010;
-//                     database.transaction((tx) => {
-//                         tx.executeSql(
-//                             `SELECT * FROM Pokemon WHERE id BETWEEN ? AND ?;`,
-//                             [start, end],
-//                             (tx, result) => {
-//                                 if (result.rows.length > 0) {
-//                                     for (let i=0; i<result.rows.length; i++) {
-//                                         fetchedPokemonData.push(result.rows.item(i));
-//                                     }
-//                                 }
-//                                 resolve(result.rows.length > 0);
-//                             },
-//                             (error) => {
-//                                 console.error('Error checking Pokemon data in the fetchPokemonData function, hasData subsection:', error);
-//                                 reject(error);
-//                             }
-//                         );
-//                     });
-//                 });
-//
-//                 if (!hasData) {
-//
-//                     for (let batch=0; batch < batches; batch++) {
-//                         const start = batch * batchSize;
-//                         const end = start + batchSize
-//
-//                         try {
-//                             const fetchedData = await fetchPokemonFromAPI(start, end);
-//         //                     fetchedPokemonData.push(...fetchedData);
-//                             await insertPokemon(fetchedData);
-//                         } catch (error) {
-//                             console.error('Error in the !hasData section of fetchPokemonData function:', error);
-//                             throw error;
-//                         }
-//                     }
-//                 }
-//
-//                 console.log('Successfully fetched data in the fetchPokemonData function');
-//                 dispatch(fetchPokemonSuccess(fetchedPokemonData));
-//             })
-//               .catch((error) => {
-//                 console.error('Error fetching and inserting Pokemon data in the fetchPokemonData function:', error);
-//                 dispatch(fetchPokemonFailure(error));
-//             });
-//         } catch (error) {
-//             console.error('Error fetching and inserting Pokemon data in the fetchPokemonData function:', error);
-//             dispatch(fetchPokemonFailure(error));
-//         }
-//     };
-// };
 
 export { fetchPokemonData, fetchPokemonFromAPI };
 
