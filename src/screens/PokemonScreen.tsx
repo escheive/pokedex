@@ -155,44 +155,13 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             }
 
             if (searchQuery) {
-
                 return pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase());
             }
             return matchesSelectedVersions;
-
         });
 
         return filteredList
     };
-
-//     // function to handle the filtering of pokemon
-//     const filterPokemonByVersions = (pokemonList, searchQuery) => {
-//         if (selectedVersions.length === 0 && !searchQuery) {
-//             return Object.values(pokemonList);
-//         }
-//
-//         const filteredList = pokemonList.filter((pokemon) => {
-//             const matchesSelectedVersions = selectedVersions.some((version) => {
-//                 const range = groupedVersions[version];
-//                 return pokemon.id >= range.start && pokemon.id <= range.end;
-//             });
-//
-//             if (selectedVersions.length > 0) {
-//                 if (!matchesSelectedVersions) {
-//                     return false;
-//                 }
-//             }
-//
-//             if (searchQuery) {
-//
-//                 return pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase());
-//             }
-//             return matchesSelectedVersions;
-//
-//         });
-//
-//         return filteredList
-//     };
 
     const filteredPokemon = filterPokemonByVersions(pokemonList, searchQuery);
 

@@ -31,12 +31,13 @@ const pokemonReducer = (state = initialState, action) => {
             };
         case 'UPDATE_POKEMON_FAVORITE_STATUS':
             const { id, isFavorite } = action.payload;
-            const updatedPokemonList = state.pokemonList.map((pokemon) => {
-                if (pokemon.id === id) {
-                    return { ...pokemon, isFavorite };
+            const updatedPokemonList = {
+                ...state.pokemonList,
+                [id]: {
+                    ...state.pokemonList[id],
+                    isFavorite
                 }
-                return pokemon;
-            });
+            };
             return {
                 ...state,
                 pokemonList: updatedPokemonList
