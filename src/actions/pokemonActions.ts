@@ -17,33 +17,46 @@ export const fetchPokemonFailure = (error) => ({
     payload: error
 });
 
-export const updatePokemonFavoriteStatusAction = (id, isFavorite) => {
+// export const updatePokemonFavoriteStatusAction = (id, isFavorite) => {
+//     return (dispatch) => {
+//         // Update the state by dispatching the action
+//         dispatch({
+//             type: 'UPDATE_POKEMON_FAVORITE_STATUS',
+//             payload: { id, isFavorite }
+//         });
+//
+//         // Update the database using the database update function
+//         updatePokemonFavoriteStatus(id, isFavorite);
+//     };
+// };
+//
+// export const updatePokemonCaptureStatusAction = (id, isCaptured, database) => {
+//     return (dispatch) => {
+//         // Update the state by dispatching the action
+//         dispatch({
+//             type: 'UPDATE_POKEMON_CAPTURE_STATUS',
+//             payload: { id, isCaptured }
+//         });
+//
+//         // Update the database using the database update function
+//         updatePokemonCaptureStatus(database, id, isCaptured);
+//     };
+// };
+
+export const updatePokemonStatusAction = (id, field, value) => {
     return (dispatch) => {
+
         // Update the state by dispatching the action
         dispatch({
-            type: 'UPDATE_POKEMON_FAVORITE_STATUS',
-            payload: { id, isFavorite }
+            type: 'UPDATE_POKEMON_STATUS',
+            payload: { id, [field]: value }
         });
 
         // Update the database using the database update function
-        updatePokemonFavoriteStatus(id, isFavorite);
+        if (field === 'isFavorite') {
+            updatePokemonFavoriteStatus(id, value)
+        } else if ( field === 'isCaptured') {
+            updatePokemonCaptureStatus(id, value)
+        }
     };
 };
-
-export const updatePokemonCaptureStatusAction = (id, isCaptured, database) => {
-    return (dispatch) => {
-        // Update the state by dispatching the action
-        dispatch({
-            type: 'UPDATE_POKEMON_CAPTURE_STATUS',
-            payload: { id, isCaptured }
-        });
-
-        // Update the database using the database update function
-        updatePokemonCaptureStatus(database, id, isCaptured);
-    };
-};
-
-export const updatePokemon = (id, isFavorite, isCaptured) => ({
-    type: 'UPDATE_POKEMON',
-    payload: { id, isFavorite, isCaptured }
-});
