@@ -36,7 +36,6 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     const dispatch = useDispatch();
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
-
     const fetchPokemonDetails = async (pokemonId) => {
       try {
         const pokemonDetailsQuery = `SELECT * FROM Pokemon WHERE id = ?;`;
@@ -187,7 +186,6 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 
 
     const renderItem = ({ item: pokemon }: { item: Pokemon }) => {
-        console.log(pokemon)
         const screenWidth = Dimensions.get('window').width;
         // Width for one column
         const itemWidth = screenWidth - 5;

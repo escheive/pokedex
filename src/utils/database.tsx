@@ -100,6 +100,8 @@ const insertPokemon = async (pokemonData) => {
     try {
         await new Promise((resolve, reject) => {
             database.transaction((tx) => {
+                let successfulInsertions = 0;
+                const totalInsertions = pokemonData.length;
                 pokemonData.forEach((pokemon) => {
                     tx.executeSql(
                         `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, stats, abilities, moves, species_url, image_url, pixel_image_url, isCaptured, isFavorite)
@@ -107,37 +109,86 @@ const insertPokemon = async (pokemonData) => {
                         [
                             pokemon.id,
                             pokemon.name,
-                            pokemon.types[0].type.name,
-                            pokemon.types[1] ? pokemon.types[1].type.name : null,
+                            pokemon.type1,
+                            pokemon.type2 ? pokemon.type2 : null,
                             pokemon.height,
                             pokemon.weight,
                             pokemon.base_experience,
-                            pokemon.stats,
-                            pokemon.abilities,
-                            pokemon.moves,
-                            pokemon.species.url,
+                            JSON.stringify(pokemon.stats),
+                            JSON.stringify(pokemon.abilities),
+                            JSON.stringify(pokemon.moves),
+                            pokemon.species_url,
                             pokemon.image_url,
                             pokemon.pixel_image_url,
                             false,
                             false
                         ],
                         () => {
-                            resolve();
+//                             successfulInsertions++;
+//                             console.log(successfulInsertions)
+//                             if (successfulInsertions === totalInsertions) {
+                                console.log('Pokemon records inserted successfully');
+                                resolve();
                         },
                         (error) => {
-                            console.error('Error inserting Pokemon record:', error);
+                            console.error('Error inserting Pokemon record:', error)
                             reject(error);
                         }
                     );
                 });
-                console.log('Pokemon records inserted successfully');
-                resolve();
             });
         });
     } catch (error) {
         console.error('Error inserting Pokemon data:', error);
     }
 };
+
+
+// // Function to insert a Pokemon record into the pokemon table
+// const insertPokemon = async (pokemonData) => {
+//     console.log('insertPokemon function hit')
+//     try {
+//         await new Promise((resolve, reject) => {
+//             database.transaction((tx) => {
+//                 pokemonData.forEach((pokemon) => {
+//                     tx.executeSql(
+//                         `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, stats, abilities, moves, species_url, image_url, pixel_image_url, isCaptured, isFavorite)
+//                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+//                         [
+//                             pokemon.id,
+//                             pokemon.name,
+//                             pokemon.types[0].type.name,
+//                             pokemon.types[1] ? pokemon.types[1].type.name : null,
+//                             pokemon.height,
+//                             pokemon.weight,
+//                             pokemon.base_experience,
+//                             JSON.stringify(pokemon.stats),
+//                             JSON.stringify(pokemon.abilities),
+//                             JSON.stringify(pokemon.moves),
+//                             pokemon.species.url,
+//                             pokemon.image_url,
+//                             pokemon.pixel_image_url,
+//                             false,
+//                             false
+//                         ],
+//                         () => {
+//                             console.log('inserted')
+//                             resolve();
+//                         },
+//                         (error) => {
+//                             console.error('Error inserting Pokemon record:', error);
+//                             reject(error);
+//                         }
+//                     );
+//                 });
+//                 console.log('Pokemon records inserted successfully');
+//                 resolve();
+//             });
+//         });
+//     } catch (error) {
+//         console.error('Error inserting Pokemon data:', error);
+//     }
+// };
 
 // // Execute SQL statement to create a pokemon table
 // const createPokemonTable = () => {
