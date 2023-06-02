@@ -323,7 +323,18 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                         ]}
                         onPress={() => toggleFavoritesFilter()}
                     >
-                        <Text style={styles.filterButtonText}>Favorited</Text>
+                        <Text style={styles.filterButtonText}>Favorites</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[
+                            styles.filterButton,
+                            {
+                                backgroundColor: showFavorites ? 'blue' : 'gray',
+                            },
+                        ]}
+                        onPress={() => toggleFavoritesFilter()}
+                    >
+                        <Text style={styles.filterButtonText}>Caught</Text>
                     </TouchableOpacity>
                 </View>
 
