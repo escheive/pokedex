@@ -1,171 +1,123 @@
+// Reanimated Dependencies
+import 'react-native-gesture-handler';
+// Dependencies
 import React, { useState, useEffect } from 'react';
-import { Text, View, Button, StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { Text, View, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { NavigationContainer, getFocusedRouteNameFromRoute, useRoute, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Pokemon } from './types';
+
+
+
+// Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { Provider, connect } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from './src/reducers/rootReducer';
+// import store from './src/reducers/store';
+
+
+
 // Screens
 import PokemonScreen from './src/screens/PokemonScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
-import DetailsScreen from './src/screens/DetailsScreen';
 // Components
 import LoadingScreen from './src/components/LoadingScreen';
+// Navigation
+import PokemonStackNavigator from './src/navigation/PokemonStackNavigator';
+import ProfileStack from './src/navigation/ProfileStack';
+import SettingsStack from './src/navigation/SettingsStack';
 // Utils
-import { getTypeStyle } from './src/utils/typeStyle';
+// import { getTypeStyle } from './src/utils/typeStyle';
+// import { capitalizeString } from './src/utils/helpers';
+import { fetchPokemonData, fetchPokemonFromAPI, fetchAbilitiesData, fetchAbilitiesFromAPI } from './src/utils/api';
+import { database, resetPokemonTable, resetAbilitiesTable } from './src/utils/database';
+import { pokemonColors } from './src/utils/typeStyle';
+// Database
+import SQLite from 'react-native-sqlite-storage';
 // Assets
 import typeData from './src/assets/typeData';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 
 
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
-const PokemonStack = ({ pokemonList, typeData }) => {
+const Drawer = createDrawerNavigator();
 
+const getHeaderTitle = (route: Route<string, object | undefined>) => {
+        const routeName = getFocusedRouteNameFromRoute(route);
+        switch (routeName) {
+            case 'Main':
+                return 'Pokedex';
+            case 'Details':
+                return 'Details';
+            case 'Info':
+                return 'Info';
+            case 'Profile':
+                return 'Profile';
+            case 'Settings':
+                return 'Settings';
+            default:
+                return 'Pokedex';
+        }
+    };
 
-    return (
-        <Stack.Navigator
-            screenOptions={{
-                headerStyle: {
-                    backgroundColor: 'transparent',
-                },
-                headerTitleAlign: 'center',
-            }}
-        >
-            <Stack.Screen name="Gotta Catch Them All">
-                {props => <PokemonScreen {...props} pokemonList={pokemonList} typeData={typeData} />}
-            </Stack.Screen>
-
-            <Stack.Screen
-                name="Details"
-                component={DetailsScreen}
-                options={({ route }) => {
-                    const pokemonType = route.params.pokemon.types[0].type.name;
-                    const backgroundColor = getTypeStyle(pokemonType);
-                    let pokemonName = route.params.pokemon.name;
-                    pokemonName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
-
-                    return {
-                        title: pokemonName,
-                        headerStyle: {
-                            backgroundColor: `rgba(${backgroundColor.backgroundColor}, 0.5)`,
-                        },
-                        headerTintColor: 'white',
-                        headerShadowVisible: false,
-                        headerTitleStyle: {
-                            fontWeight: 'bold'
-                        }
-                    };
-                }}
-            />
-        </Stack.Navigator>
-    );
-};
-
-
-
-function ProfileStack() {
-
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="User" component={ProfileScreen} />
-            <Stack.Screen name="Details" component={DetailsScreen} />
-        </Stack.Navigator>
-    );
-};
-
-
-
-function SettingsStack() {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="Options" component={SettingsScreen} />
-            <Stack.Screen name="Details" component={DetailsScreen} />
-        </Stack.Navigator>
-    );
-};
-
-
-
-export default function App() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
+const App = () => {
+    const dispatch = useDispatch();
+    const isPokemonLoading = useSelector((state) => state.pokemon.loading);
+    const isAbilitiesLoading = useSelector((state) => state.abilities.loading);
 
     useEffect(() => {
-        // Function to fetch base pokemon data from the api
-        const fetchPokemonData = async (start, end) => {
-            try {
-                // Grab pokemon data using start and end variables to determine which ones are being fetched
-                const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${end - start}&offset=${start}`);
-                // parse the data
-                const data = await response.json();
+//         resetAbilitiesTable();
+//         resetPokemonTable();
+        dispatch(fetchPokemonData())
+            .then(() => dispatch(fetchAbilitiesData()))
+            .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
+    }, [dispatch]);
 
-                const pokemonUrls = data.results.map((pokemon) => pokemon.url);
-                const pokemonData = await Promise.all(pokemonUrls.map((url) => fetch(url).then((response) => response.json())));
-                setPokemonList((prevList) => [...prevList, ...pokemonData]);
-                setIsLoading(false);
-
-                // Fetch the remaining pokemon in the background
-                const remainingPokemons = 1010 - end; // Total number of pokemon - initial batch
-                const batchSize = 30;
-
-                // If there are still unfetched pokemon, keep going
-                if (remainingPokemons > 0) {
-                    // nextStart will be set to the current end so that we can start with the very next pokemon
-                    const nextStart = end;
-                    // nextEnd will be calculated based on current end and batchSize
-                    const nextEnd = Math.min(end + batchSize, 1010);
-                    // fetch the pokemon using the updated variables
-                    fetchPokemonData(nextStart, nextEnd);
-                }
-            } catch (error) {
-                console.error(`Error fetching pokemon data for range ${start} - ${end}:`, error)
-            }
-        };
-
-        // Fetch the initial 100 pokemon on app start
-        fetchPokemonData(0, 500);
-    }, []);
-
-
-
-    if (isLoading) {
-        return <LoadingScreen />;
+    let loadingText = '';
+    if (isPokemonLoading) {
+        loadingText = 'Loading Pokemon...'
+    } else if (isAbilitiesLoading) {
+        loadingText = 'Loading Abilities...'
     }
 
+    if (isPokemonLoading || isAbilitiesLoading) {
+        return <LoadingScreen loadingText={loadingText} />;
+    }
 
     return (
         <NavigationContainer>
 
-            <Tab.Navigator
-                screenOptions={({ route }) => ({
-                    headerShown: false,
-                    tabBarIcon: ({ focused, color, size }) => {
-                        let iconName;
-
-                        if (route.name === 'Pokemon') {
-                            iconName = focused ? 'ios-paw' : 'ios-paw-outline';
-                        } else if (route.name === 'Profile') {
-                            iconName = focused ? 'person' : 'person-outline';
-                        } else if (route.name === 'Settings') {
-                            iconName = focused ? 'cog' : 'cog-outline';
-                        }
-
-                        return <Ionicons name={iconName} size={size} color={color} />;
-                    },
-                    'tabBarActiveTintColor': 'black',
-                    'tabBarInactiveTintColor': 'gray',
-                })}
+            <Drawer.Navigator
+                screenOptions={({ route }) => {
+                    const headerTitle = getHeaderTitle(route);
+                    return {
+                        headerTitle: headerTitle,
+                        headerShown: headerTitle !== 'Details',
+                    }
+                }}
             >
-                <Tab.Screen name="Pokemon" options={{ tabBarBadge: 3 }}>
-                    {(props) => <PokemonStack {...props} pokemonList={pokemonList} typeData={typeData} />}
-                </Tab.Screen>
-                <Tab.Screen name="Profile" component={ProfileStack} />
-                <Tab.Screen name="Settings" component={SettingsStack} />
-            </Tab.Navigator>
+                <Drawer.Screen name="Pokemon">
+                    {(props) => <PokemonStackNavigator {...props} />}
+                </Drawer.Screen>
+                <Drawer.Screen name="Profile" component={ProfileScreen} />
+                <Drawer.Screen name="Settings" component={SettingsScreen} />
+            </Drawer.Navigator>
 
         </NavigationContainer>
+    );
+};
+
+export default function AppWrapper() {
+    return (
+        <Provider store={store}>
+            <App database={database} />
+        </Provider>
     );
 }

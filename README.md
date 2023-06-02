@@ -1,4 +1,4 @@
-# pokedexApp
+# PokéVault
 - Creating a pokedex app using the pokeapi and react native for all your pokemon needs!
 
 # Screenshots
@@ -26,3 +26,8 @@
 - I cited react navigation for how to set up my app navigation, https://reactnavigation.org/docs/tab-based-navigation
 - I also cited official react native docs for general react native questions, https://reactnative.dev/
 - Lastly, I used chatGPT to help answer certain questions. I found it very helpful. https://chat.openai.com/
+
+# Issues Encountered
+- When installing drawer navigatior from react-native-navigation, ran into error saying "failed to create a worklet. Did you forget to add reanimated babel plugin in babel.config.js?"
+- - Solution was to clear the cache. I followed the steps from this stackoverflow post, https://stackoverflow.com/questions/67130651/reanimated-2-failed-to-create-a-worklet-maybe-you-forgot-to-add-reanimateds-ba
+- - Ran 'npx react-native start --reset-cache'

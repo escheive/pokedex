@@ -93,9 +93,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.spotifymusicfinderapp"
+    namespace "com.pokevault"
     defaultConfig {
-        applicationId "com.spotifymusicfinderapp"
+        applicationId "com.pokevault"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -152,6 +152,11 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+
+    implementation project(':react-native-reanimated')
+    implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'com.facebook.soloader:soloader:0.9.0+'
+
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
 

@@ -1,9 +1,10 @@
-package com.spotifymusicfinderapp;
+package com.pokevault;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
+import com.swmansion.reanimated.ReanimatedPackage; // Import package for reanimated, used for react-navigation drawer component on app.tsx
 import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
@@ -25,6 +26,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+            packages.add(new ReanimatedPackage());
           return packages;
         }
 
