@@ -1,4 +1,4 @@
-import { database, updatePokemonFavoriteStatus, updatePokemonCaptureStatus } from '../utils/database';
+import { database, updatePokemonFavoriteStatus, updatePokemonCaptureStatus, updatePokemonStatus } from '../utils/database';
 
 // Pokemon action creators
 export const fetchPokemonRequest = () => ({
@@ -53,10 +53,6 @@ export const updatePokemonStatusAction = (id, field, value) => {
         });
 
         // Update the database using the database update function
-        if (field === 'isFavorite') {
-            updatePokemonFavoriteStatus(id, value)
-        } else if ( field === 'isCaptured') {
-            updatePokemonCaptureStatus(id, value)
-        }
+        updatePokemonStatus(id, field, value)
     };
 };

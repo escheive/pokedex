@@ -316,6 +316,38 @@ const insertPokemon = async (pokemonData) => {
 // };
 
 
+const updatePokemonStatus = async (pokemonId, field, value) => {
+    try {
+        await new Promise((resolve, reject) => {
+            database.transaction((tx) => {
+                let query = '';
+
+                if (field === 'isFavorite') {
+                    query = 'UPDATE Pokemon SET isFavorite = ? WHERE id = ?;';
+                } else if (field === 'isCaptured') {
+                    query = 'UPDATE Pokemon SET isCaptured = ? WHERE id = ?;';
+                }
+
+                tx.executeSql(
+                    query,
+                    [value, pokemonId],
+                    () => {
+                        console.log(`Pokemon with ID ${pokemonId} status updated`);
+                        resolve();
+                    },
+                    (error) => {
+                        console.error('Error updating Pokemon status:', error);
+                        reject(error);
+                    }
+                );
+            });
+        });
+    } catch (error) {
+        console.error('Error updating status:', error);
+    }
+};
+
+
 const updatePokemonFavoriteStatus = async (pokemonId, isFavorite) => {
     try {
         await new Promise((resolve, reject) => {
@@ -363,7 +395,7 @@ const updatePokemonCaptureStatus = async (pokemonId, isCaptured) => {
 };
 
 
-export { createPokemonTable, resetPokemonTable, insertPokemon, updatePokemonFavoriteStatus, updatePokemonCaptureStatus };
+export { createPokemonTable, resetPokemonTable, insertPokemon, updatePokemonFavoriteStatus, updatePokemonCaptureStatus, updatePokemonStatus };
 
 
 
