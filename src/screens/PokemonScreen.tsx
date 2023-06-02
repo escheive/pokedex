@@ -32,6 +32,7 @@ const versionOptions = [
 
 const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
+    const [showFavorites, setShowFavorites] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const dispatch = useDispatch();
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
@@ -100,20 +101,23 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     };
 
     const groupedVersions = {
-            gen1: { start: 1, end: 151 },
-            gen2: { start: 152, end: 251 },
-            gen3: { start: 252, end: 386 },
-            gen4: { start: 387, end: 493 },
-            gen5: { start: 494, end: 649 },
-            gen6: { start: 650, end: 721 },
-            gen7: { start: 722, end: 809 },
-            gen8: { start: 810, end: 905 },
-            gen9: { start: 906, end: 1010 },
-          };
+        gen1: { start: 1, end: 151 },
+        gen2: { start: 152, end: 251 },
+        gen3: { start: 252, end: 386 },
+        gen4: { start: 387, end: 493 },
+        gen5: { start: 494, end: 649 },
+        gen6: { start: 650, end: 721 },
+        gen7: { start: 722, end: 809 },
+        gen8: { start: 810, end: 905 },
+        gen9: { start: 906, end: 1010 },
+    };
+
+    const toggleFavoritesFilter = () => {
+        setShowFavorites((prevValue) => !prevValue);
+    }
 
     const handleVersionSelect = (version: string) => {
       let updatedVersions: string[] = [];
-
 
       if (groupedVersions.hasOwnProperty(version)) {
         // If the selected version is a grouped version, handle it accordingly
@@ -135,35 +139,62 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
       setSelectedVersions(updatedVersions);
     };
 
-
     // function to handle the filtering of pokemon
-    const filterPokemonByVersions = (pokemonList, searchQuery) => {
-        if (selectedVersions.length === 0 && !searchQuery) {
-            return Object.values(pokemonList);
+    const filterPokemon = (pokemonList, searchQuery, showFavorites) => {
+        let filteredList = Object.values(pokemonList);
+
+        if (showFavorites) {
+            filteredList = filteredList.filter((pokemon) => pokemon.isFavorite);
         }
 
-        const filteredList = Object.values(pokemonList).filter((pokemon) => {
-            const matchesSelectedVersions = selectedVersions.some((version) => {
-                const range = groupedVersions[version];
-                return pokemon.id >= range.start && pokemon.id <= range.end;
+        if (selectedVersions.length > 0) {
+            filteredList = filteredList.filter((pokemon) => {
+                const matchesSelectedVersions = selectedVersions.some((version) => {
+                    const range = groupedVersions[version];
+                    return pokemon.id >= range.start && pokemon.id <= range.end;
+                });
+                return matchesSelectedVersions;
             });
+        }
 
-            if (selectedVersions.length > 0) {
-                if (!matchesSelectedVersions) {
-                    return false;
-                }
-            }
+        if (searchQuery) {
+            filteredList = filteredList.filter((pokemon) =>
+                pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+            );
+        }
 
-            if (searchQuery) {
-                return pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase());
-            }
-            return matchesSelectedVersions;
-        });
-
-        return filteredList
+        return filteredList;
     };
 
-    const filteredPokemon = filterPokemonByVersions(pokemonList, searchQuery);
+
+//     // function to handle the filtering of pokemon
+//     const filterPokemonByVersions = (pokemonList, searchQuery) => {
+//         if (selectedVersions.length === 0 && !searchQuery) {
+//             return Object.values(pokemonList);
+//         }
+//
+//         const filteredList = Object.values(pokemonList).filter((pokemon) => {
+//             const matchesSelectedVersions = selectedVersions.some((version) => {
+//                 const range = groupedVersions[version];
+//                 return pokemon.id >= range.start && pokemon.id <= range.end;
+//             });
+//
+//             if (selectedVersions.length > 0) {
+//                 if (!matchesSelectedVersions) {
+//                     return false;
+//                 }
+//             }
+//
+//             if (searchQuery) {
+//                 return pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase());
+//             }
+//             return matchesSelectedVersions;
+//         });
+//
+//         return filteredList
+//     };
+
+    const filteredPokemon = filterPokemon(pokemonList, searchQuery, showFavorites);
 
 
     const handleFavoritePress = (selectedPokemon) => {
@@ -283,6 +314,17 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                             <Text style={styles.filterButtonText}>{range.label}</Text>
                         </TouchableOpacity>
                     ))}
+                    <TouchableOpacity
+                        style={[
+                            styles.filterButton,
+                            {
+                                backgroundColor: showFavorites ? 'blue' : 'gray',
+                            },
+                        ]}
+                        onPress={() => toggleFavoritesFilter()}
+                    >
+                        <Text style={styles.filterButtonText}>Favorited</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.searchContainer}>
