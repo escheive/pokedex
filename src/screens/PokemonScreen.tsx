@@ -33,6 +33,7 @@ const versionOptions = [
 const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
     const [showFavorites, setShowFavorites] = useState(false);
+    const [showCaughtPokemon, setShowCaughtPokemon] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const dispatch = useDispatch();
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
@@ -112,10 +113,6 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         gen9: { start: 906, end: 1010 },
     };
 
-    const toggleFavoritesFilter = () => {
-        setShowFavorites((prevValue) => !prevValue);
-    }
-
     const handleVersionSelect = (version: string) => {
       let updatedVersions: string[] = [];
 
@@ -140,11 +137,15 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     };
 
     // function to handle the filtering of pokemon
-    const filterPokemon = (pokemonList, searchQuery, showFavorites) => {
+    const filterPokemon = (pokemonList, searchQuery, showFavorites, showCaughtPokemon) => {
         let filteredList = Object.values(pokemonList);
 
         if (showFavorites) {
             filteredList = filteredList.filter((pokemon) => pokemon.isFavorite);
+        }
+
+        if (showCaughtPokemon) {
+            filteredList = filteredList.filter((pokemon) => pokemon.isCaptured);
         }
 
         if (selectedVersions.length > 0) {
@@ -194,7 +195,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 //         return filteredList
 //     };
 
-    const filteredPokemon = filterPokemon(pokemonList, searchQuery, showFavorites);
+    const filteredPokemon = filterPokemon(pokemonList, searchQuery, showFavorites, showCaughtPokemon);
 
 
     const handleFavoritePress = (selectedPokemon) => {
@@ -321,7 +322,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                                 backgroundColor: showFavorites ? 'blue' : 'gray',
                             },
                         ]}
-                        onPress={() => toggleFavoritesFilter()}
+                        onPress={() => setShowFavorites(!showFavorites)}
                     >
                         <Text style={styles.filterButtonText}>Favorites</Text>
                     </TouchableOpacity>
@@ -329,10 +330,10 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                         style={[
                             styles.filterButton,
                             {
-                                backgroundColor: showFavorites ? 'blue' : 'gray',
+                                backgroundColor: showCaughtPokemon ? 'blue' : 'gray',
                             },
                         ]}
-                        onPress={() => toggleFavoritesFilter()}
+                        onPress={() => setShowCaughtPokemon(!showCaughtPokemon)}
                     >
                         <Text style={styles.filterButtonText}>Caught</Text>
                     </TouchableOpacity>
