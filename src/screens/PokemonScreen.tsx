@@ -36,61 +36,63 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     const dispatch = useDispatch();
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
-    const fetchPokemonDetails = async (pokemonId) => {
-      try {
-        const pokemonDetailsQuery = `SELECT * FROM Pokemon WHERE id = ?;`;
-        const pokemonDetails = await new Promise((resolve, reject) => {
-          database.transaction((tx) => {
-            tx.executeSql(
-              pokemonDetailsQuery,
-              [pokemonId],
-              (tx, result) => {
-                if (result.rows.length > 0) {
-                  const pokemon = result.rows.item(0);
-                  resolve(pokemon);
-                } else {
-                  resolve(null); // No Pokémon found with the provided ID
-                }
-              },
-              (error) => {
-                console.error('Error fetching Pokémon details:', error);
-                reject(error);
-              }
-            );
-          });
-        });
-        return pokemonDetails;
-      } catch (error) {
-        console.error('Error fetching Pokémon details:', error);
-        throw error;
-      }
-    };
+//     console.log(pokemonList)
 
+//     const fetchPokemonDetails = async (pokemonId) => {
+//       try {
+//         const pokemonDetailsQuery = `SELECT * FROM Pokemon WHERE id = ?;`;
+//         const pokemonDetails = await new Promise((resolve, reject) => {
+//           database.transaction((tx) => {
+//             tx.executeSql(
+//               pokemonDetailsQuery,
+//               [pokemonId],
+//               (tx, result) => {
+//                 if (result.rows.length > 0) {
+//                   const pokemon = result.rows.item(0);
+//                   resolve(pokemon);
+//                 } else {
+//                   resolve(null); // No Pokémon found with the provided ID
+//                 }
+//               },
+//               (error) => {
+//                 console.error('Error fetching Pokémon details:', error);
+//                 reject(error);
+//               }
+//             );
+//           });
+//         });
+//         return pokemonDetails;
+//       } catch (error) {
+//         console.error('Error fetching Pokémon details:', error);
+//         throw error;
+//       }
+//     };
 
-    // function to handle user press on a pokemon
-    const handlePress = async (pokemon: Pokemon) => {
-        try {
-            // Fetch the complete details of the clicked Pokemon
-            const pokemonDetails = await fetchPokemonDetails(pokemon.id);
-            if (pokemonDetails) {
-                // Pass the complete Pokemon details to the navigation
-                navigation.navigate('Details', { pokemon: pokemonDetails });
-            } else {
-                // Handle case when pokemon details are not found
-                console.log('Pokemon details not found');
-                // TODO: Show an alert, display an error message, etc.
-            }
-        } catch (error) {
-            // Handle error
-            console.error('Error handling Pokemon press on Pokemon screen:', error)
-            // TODO: Show an alert, display an error message, etc.
-        }
-    };
 
 //     // function to handle user press on a pokemon
 //     const handlePress = async (pokemon: Pokemon) => {
-//         navigation.navigate('Details', { pokemon });
+//         try {
+//             // Fetch the complete details of the clicked Pokemon
+//             const pokemonDetails = await fetchPokemonDetails(pokemon.id);
+//             if (pokemonDetails) {
+//                 // Pass the complete Pokemon details to the navigation
+//                 navigation.navigate('Details', { pokemon: pokemonDetails });
+//             } else {
+//                 // Handle case when pokemon details are not found
+//                 console.log('Pokemon details not found');
+//                 // TODO: Show an alert, display an error message, etc.
+//             }
+//         } catch (error) {
+//             // Handle error
+//             console.error('Error handling Pokemon press on Pokemon screen:', error)
+//             // TODO: Show an alert, display an error message, etc.
+//         }
 //     };
+
+    // function to handle user press on a pokemon
+    const handlePress = async (pokemon: Pokemon) => {
+        navigation.navigate('Details', { pokemon });
+    };
 
     // function to handle search query changes
     const handleSearchQueryChange = (query) => {

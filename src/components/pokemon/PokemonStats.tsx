@@ -15,8 +15,9 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
     const [statsTotal, setStatsTotal] = useState(0);
 
     // Turn pokemon.stats string into an object
-    console.log(pokemon)
+    console.log(pokemon.stats)
     const pokemonStats = JSON.parse(pokemon.stats);
+    console.log(pokemonStats)
 
     useEffect(() => {
         // Based on your tab, calculate stats
@@ -40,12 +41,12 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
             // Effort values and individual values default to 0
             const iv = ivs || 0;
             const ev = evs || 0;
-            let maxStat = stat.base_stat;
+            let maxStat = stat.value;
 
             if (level === 100) {
-                maxStat = Math.floor(((2 * stat.base_stat + iv + Math.floor(ev / 4)) * level) / 100) + 5;
+                maxStat = Math.floor(((2 * stat.value + iv + Math.floor(ev / 4)) * level) / 100) + 5;
 
-                if (stat.stat.name !== "hp") {
+                if (stat.name !== "hp") {
                     if (nature === 'max') {
                         maxStat = Math.floor(maxStat * 1.1)
                     } else {
@@ -56,7 +57,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
                 }
             }
 
-            maxStats[stat.stat.name] = maxStat;
+            maxStats[stat.name] = maxStat;
         };
 
         const statsArray = Object.values(maxStats);
@@ -78,13 +79,13 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
     };
 
     const renderStatItem = ({ item }) => {
-        const shortenedStatName = statNameMappings[item.stat.name] || item.stat.name;
-        let statValue = item.base_stat
+        const shortenedStatName = statNameMappings[item.name] || item.name;
+        let statValue = item.value
 
-        if (selectedTab === 'min' && calculatedStats[item.stat.name]) {
-            statValue = calculatedStats[item.stat.name];
-        } else if (selectedTab === 'max' && calculatedStats[item.stat.name]) {
-            statValue = calculatedStats[item.stat.name];
+        if (selectedTab === 'min' && calculatedStats[item.name]) {
+            statValue = calculatedStats[item.name];
+        } else if (selectedTab === 'max' && calculatedStats[item.name]) {
+            statValue = calculatedStats[item.name];
         }
 
         return  (
@@ -199,7 +200,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
             <FlatList
                 data={JSON.parse(pokemon.stats)}
                 renderItem={renderStatItem}
-                keyExtractor={(stat) => stat.stat.name}
+                keyExtractor={(stat) => stat.name}
                 contentContainerStyle={styles.container}
             />
 
