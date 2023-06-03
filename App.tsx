@@ -7,20 +7,12 @@ import { NavigationContainer, getFocusedRouteNameFromRoute, useRoute, useNavigat
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Pokemon } from './types';
-
-
-
 // Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { Provider, connect } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from './src/reducers/rootReducer';
-// import store from './src/reducers/store';
-
-
-
 // Screens
 import PokemonScreen from './src/screens/PokemonScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
@@ -32,12 +24,11 @@ import PokemonStackNavigator from './src/navigation/PokemonStackNavigator';
 import ProfileStack from './src/navigation/ProfileStack';
 import SettingsStack from './src/navigation/SettingsStack';
 // Utils
-// import { getTypeStyle } from './src/utils/typeStyle';
-// import { capitalizeString } from './src/utils/helpers';
-import { fetchPokemonData, fetchPokemonFromAPI } from './src/services/pokemonService';
-import { fetchAbilitiesData } from './src/services/abilitiesService';
 import { database, resetPokemonTable, resetAbilitiesTable } from './src/utils/database';
 import { pokemonColors } from './src/utils/typeStyle';
+// Services
+import { fetchPokemonData } from './src/services/pokemonService';
+import { fetchAbilitiesData } from './src/services/abilitiesService';
 // Database
 import SQLite from 'react-native-sqlite-storage';
 // Assets
@@ -47,26 +38,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
-
 const Drawer = createDrawerNavigator();
-
-const getHeaderTitle = (route: Route<string, object | undefined>) => {
-        const routeName = getFocusedRouteNameFromRoute(route);
-        switch (routeName) {
-            case 'Main':
-                return 'Pokedex';
-            case 'Details':
-                return 'Details';
-            case 'Info':
-                return 'Info';
-            case 'Profile':
-                return 'Profile';
-            case 'Settings':
-                return 'Settings';
-            default:
-                return 'Pokedex';
-        }
-    };
 
 const App = () => {
     const dispatch = useDispatch();
@@ -96,13 +68,10 @@ const App = () => {
         <NavigationContainer>
 
             <Drawer.Navigator
-                screenOptions={({ route }) => {
-                    const headerTitle = getHeaderTitle(route);
-                    return {
-                        headerTitle: headerTitle,
-                        headerShown: headerTitle !== 'Details',
-                    }
-                }}
+                screenOptions={({ route }) => ({
+                    headerTitle: getFocusedRouteNameFromRoute(route),
+                    headerShown: getFocusedRouteNameFromRoute(route) !== 'Details',
+                })}
             >
                 <Drawer.Screen name="Pokemon">
                     {(props) => <PokemonStackNavigator {...props} />}
