@@ -34,7 +34,8 @@ import SettingsStack from './src/navigation/SettingsStack';
 // Utils
 // import { getTypeStyle } from './src/utils/typeStyle';
 // import { capitalizeString } from './src/utils/helpers';
-import { fetchPokemonData, fetchPokemonFromAPI, fetchAbilitiesData, fetchAbilitiesFromAPI } from './src/utils/api';
+import { fetchPokemonData, fetchPokemonFromAPI } from './src/utils/api';
+import { fetchAbilitiesData } from './src/services/abilitiesService';
 import { database, resetPokemonTable, resetAbilitiesTable } from './src/utils/database';
 import { pokemonColors } from './src/utils/typeStyle';
 // Database
