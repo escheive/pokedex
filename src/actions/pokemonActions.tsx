@@ -23,13 +23,11 @@ export const fetchPokemonFailure = (error) => ({
 // Dispatched when updating pokemon favorite or isCaught status
 export const updatePokemonStatusAction = (id, field, value) => {
     return (dispatch) => {
-
         // Update the state by dispatching the action
         dispatch({
             type: UPDATE_POKEMON_STATUS,
             payload: { id, [field]: value }
         });
-
         // Update the database using the database update function
         updatePokemonStatus(id, field, value)
     };

@@ -1,4 +1,3 @@
-
 import { SET_LOADING_TEXT, SET_QUESTIONS_COMPLETED } from './ActionTypes';
 
 // Dispatched to update the loading text displayed on the loading screen

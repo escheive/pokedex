@@ -1,4 +1,4 @@
-// abilitiesReducer.js
+import { FETCH_ABILITIES_REQUEST, FETCH_ABILITIES_SUCCESS, FETCH_ABILITIES_FAILURE } from '../actions/ActionTypes';
 
 // Define the initial state for abilities
 const initialState = {
@@ -10,29 +10,30 @@ const initialState = {
 
 const abilitiesReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'FETCH_ABILITIES_REQUEST':
+        case FETCH_ABILITIES_REQUEST:
             // Set loading to true and clear any previous error
             return {
                 ...state,
                 loading: true,
                 error: null,
             };
-        case 'FETCH_ABILITIES_SUCCESS':
+        case FETCH_ABILITIES_SUCCESS:
             // Store the fetched abilities data and set loading to false
             return {
                 ...state,
                 abilitiesData: action.payload,
                 loading: false,
             };
-        case 'FETCH_ABILITIES_FAILURE':
+        case FETCH_ABILITIES_FAILURE:
             // Set loading to false and store the error that occurred during the fetch
             return {
                 ...state,
                 loading: false,
                 error: action.payload,
             };
+        // Handle other actions here
         default:
-        return state;
+            return state;
     }
 };
 
