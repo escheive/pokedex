@@ -36,9 +36,9 @@ import typeData from './src/assets/typeData';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
-
 const store = createStore(rootReducer, applyMiddleware(thunk));
 const Drawer = createDrawerNavigator();
+
 
 const App = () => {
     const dispatch = useDispatch();
