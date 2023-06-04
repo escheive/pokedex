@@ -90,6 +90,7 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -119,24 +120,29 @@ const styles = StyleSheet.create({
     width: '20%',
   },
     favoritePokemonContainer: {
-        width: '85%',
+        width: '95%',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         marginTop: 16,
     },
     favoritePokemonItem: {
-        width: '25%',
+        width: '24%',
         alignItems: 'center',
         marginBottom: 16,
+        padding: 8,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: 'gray',
     },
     favoritePokemonImage: {
-        width: 80,
-        height: 80,
+        width: 85,
+        height: 85,
     },
     favoritePokemonName: {
         marginTop: 8,
         textAlign: 'center',
+        fontSize: 16,
     },
 });
 
