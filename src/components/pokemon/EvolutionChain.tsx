@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Components
 import OctagonLayout from './OctagonLayout';
@@ -8,11 +9,12 @@ import { capitalizeString } from '../../utils/helpers';
 
 const EvolutionChain = ({ pokemon, pokemonColors }) => {
     const [evolutionChain, setEvolutionChain] = useState([]);
+    const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
     useEffect(() => {
         const fetchEvolutionChain = async () => {
             try {
-                const response = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.name}`);
+                const response = await fetch(`${pokemon.species_url}`);
                 const data = await response.json();
 
                 const evolutionChainUrl = data.evolution_chain.url;
@@ -43,19 +45,29 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
             const urlParts = currentPokemon.species.url.split("/");
             // The url contains the pokemons id, so this will grab that id number
             const evolutionId = urlParts[urlParts.length-2];
-            const evolutionDetails = currentPokemon.evolves_to.map((evolution) => {
-                // Deconstruct the url to grab the id number from it
-                const urlParts = evolution.species.url.split("/");
-                // The url contains the pokemons id, so this will grab that id number
-                const evolutionId = urlParts[urlParts.length-2];
-                return {
-                    name: evolution.species.name,
-                    trigger: evolution.evolution_details[0].trigger.name,
-                    id: evolutionId,
-                };
-            });
-
-            evolutionChain.push({ name: speciesName, id: evolutionId, evolutionDetails });
+//             const evolutionDetails = currentPokemon.evolves_to.map((evolution) => {
+//                 // Deconstruct the url to grab the id number from it
+//                 const urlParts = evolution.species.url.split("/");
+//                 // The url contains the pokemons id, so this will grab that id number
+//                 const evolutionId = urlParts[urlParts.length-2];
+//                 return pokemonList[evolutionId];
+//             });
+            const pokemon = pokemonList[evolutionId]
+            let trigger = null;
+            if (currentPokemon.evolves_to.length > 0) {
+                trigger = currentPokemon.evolves_to[0].evolution_details[0].trigger.name;
+            }
+            console.log(trigger)
+//             console.log(currentPokemon.evolves_to[0].evolution_details[0].trigger.name);
+            evolutionChain.push({ pokemon: pokemon, trigger: trigger });
+//                 return {
+//                     name: evolution.species.name,
+//                     trigger: evolution.evolution_details[0].trigger.name,
+//                     id: evolutionId,
+//                 };
+//             });
+//
+//             evolutionChain.push({ name: speciesName, id: evolutionId, evolutionDetails });
 
             if (currentPokemon.evolves_to.length > 0) {
                 currentPokemon = currentPokemon.evolves_to[0];
@@ -103,6 +115,7 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
         return <Text>Loading...</Text>
     }
 
+    console.log(evolutionChain)
 
     return (
         <View style={styles.container}>
@@ -111,37 +124,21 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
             <OctagonLayout evolutionChain={evolutionChain} />
         ) : (
             <View style={styles.evolutionsContainer}>
-                <View style={styles.evolutionItemContainer}>
-                    <Image
-                        style={styles.image}
-                        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${evolutionChain[0].id}.png` }}
-                    />
-                    <Text key={pokemon.name}>{capitalizeString(evolutionChain[0].name)}</Text>
-                </View>
-
-            {evolutionChain.map((pokemon, index) => (
+            {evolutionChain.map((evolution, index) => (
                 <React.Fragment key={index}>
-
-                    {pokemon.evolutionDetails.length > 0 && pokemon.evolutionDetails.map((evolution, index) => (
-                        <React.Fragment key={evolution.name}>
-
-                            {index < pokemon.evolutionDetails.length && (
-                                <View style={styles.arrowContainer}>
-                                    <Ionicons name='arrow-forward-sharp' size={32} color='gray' />
-                                    <Text>{evolution.trigger}</Text>
-                                </View>
-                            )}
-
-                            <View style={styles.evolutionItemContainer}>
-                                <Image
-                                    style={styles.image}
-                                    source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${evolution.id}.png` }}
-                                />
-                                <Text>{capitalizeString(evolution.name)}</Text>
-                            </View>
-
-                        </React.Fragment>
-                    ))}
+                    <View style={styles.evolutionItemContainer}>
+                        <Image
+                            style={styles.image}
+                            source={{ uri: `${evolution.pokemon.image_url}` }}
+                        />
+                        <Text>{capitalizeString(evolution.pokemon.name)}</Text>
+                    </View>
+                    {index + 1 < evolutionChain.length && (
+                        <View style={styles.arrowContainer}>
+                            <Ionicons name='arrow-forward-sharp' size={32} color='gray' />
+                            <Text>{evolution.trigger}</Text>
+                        </View>
+                    )}
                 </React.Fragment>
             ))}
             </View>
@@ -149,5 +146,6 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
         </View>
     )
 }
+
 
 export default EvolutionChain;
