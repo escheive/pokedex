@@ -129,11 +129,20 @@ const styles = StyleSheet.create({
     favoritePokemonItem: {
         width: '24%',
         alignItems: 'center',
+        backgroundColor: 'white',
         marginBottom: 16,
         padding: 8,
         borderRadius: 8,
         borderWidth: 1,
         borderColor: 'gray',
+        shadowColor: 'rgba(0, 0, 0, 0.5)',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 1,
+        shadowRadius: 2,
+        elevation: 3,
     },
     favoritePokemonImage: {
         width: 85,
