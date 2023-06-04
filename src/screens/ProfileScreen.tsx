@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, TextInput, Image } from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity, TextInput, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { capitalizeString } from '../utils/helpers';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
@@ -71,16 +71,20 @@ const ProfileScreen = () => {
         ) : (
             <>
                 <Text style={styles.name}>{name}</Text>
-                <Button title="Edit Name" onPress={handleEdit} />
+                <Button title="Edit Nam" onPress={handleEdit} />
             </>
         )}
 
             <View style={styles.favoritePokemonContainer}>
             {favoritePokemon.map((pokemon) => (
-                <View key={pokemon.id} style={styles.favoritePokemonItem}>
+                <TouchableOpacity
+                    key={pokemon.id}
+                    style={styles.favoritePokemonItem}
+                    onPress={() => navigation.navigate('Details', { pokemon: pokemon })}
+                >
                     <Image source={{ uri: `${pokemon.image_url}` }} style={styles.favoritePokemonImage} />
                     <Text style={styles.favoritePokemonName}>{capitalizeString(pokemon.name)}</Text>
-                </View>
+                </TouchableOpacity>
             ))}
             </View>
         </View>
@@ -88,37 +92,37 @@ const ProfileScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  name: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  inputContainer: {
-    alignItems: 'center',
-  },
-  input: {
-    height: 40,
-    width: '80%',
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '20%',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    heading: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 16,
+    },
+    name: {
+        fontSize: 16,
+        textAlign: 'center',
+        marginBottom: 16,
+    },
+    inputContainer: {
+        alignItems: 'center',
+    },
+    input: {
+        height: 40,
+        width: '80%',
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+    },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '20%',
+    },
     favoritePokemonContainer: {
         width: '98%',
         flexDirection: 'row',
