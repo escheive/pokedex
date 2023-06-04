@@ -5,51 +5,51 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { capitalizeString } from '../utils/helpers';
 
 const ProfileScreen = ({ navigation }) => {
-  const [name, setName] = useState('');
-  const pokemonList = useSelector((state) => state.pokemon.pokemonList);
+    const [name, setName] = useState('');
+    const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
-  useEffect(() => {
-    getData();
+    useEffect(() => {
+        getData();
 
-  }, []);
+    }, []);
 
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('name');
-      if (value !== null) {
-        setName(value);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    const getData = async () => {
+        try {
+            const value = await AsyncStorage.getItem('name');
+            if (value !== null) {
+                setName(value);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-  const handleNameChange = async (value) => {
-    try {
-      await AsyncStorage.setItem('name', value);
-      setName(value);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    const handleNameChange = async (value) => {
+        try {
+            await AsyncStorage.setItem('name', value);
+            setName(value);
+        } catch (error) {
+        console.log(error);
+        }
+    };
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [tempName, setTempName] = useState('');
+    const [isEditing, setIsEditing] = useState(false);
+    const [tempName, setTempName] = useState('');
 
-  const handleEdit = () => {
-    setTempName(name);
-    setIsEditing(true);
-  };
+    const handleEdit = () => {
+        setTempName(name);
+        setIsEditing(true);
+    };
 
-  const handleSave = () => {
-    handleNameChange(tempName);
-    setIsEditing(false);
-  };
+    const handleSave = () => {
+        handleNameChange(tempName);
+        setIsEditing(false);
+    };
 
-  const handleCancel = () => {
-    setTempName(name);
-    setIsEditing(false);
-  };
+    const handleCancel = () => {
+        setTempName(name);
+        setIsEditing(false);
+    };
 
     const favoritePokemon = Object.values(pokemonList).filter((pokemon) => pokemon.isFavorite);
 
@@ -81,6 +81,7 @@ const ProfileScreen = ({ navigation }) => {
                     key={pokemon.id}
                     style={styles.favoritePokemonItem}
                     onPress={() => navigation.navigate('Details', { pokemon: pokemon })}
+                    activeOpacity={0.5}
                 >
                     <Image source={{ uri: `${pokemon.image_url}` }} style={styles.favoritePokemonImage} />
                     <Text style={styles.favoritePokemonName}>{capitalizeString(pokemon.name)}</Text>
