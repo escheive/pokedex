@@ -53,13 +53,19 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
 //                 return pokemonList[evolutionId];
 //             });
             const pokemon = pokemonList[evolutionId]
-            let trigger = null;
+            let evolutionTrigger = null;
+            let evolutionLevel = null;
             if (currentPokemon.evolves_to.length > 0) {
-                trigger = currentPokemon.evolves_to[0].evolution_details[0].trigger.name;
+                evolutionTrigger = currentPokemon.evolves_to[0].evolution_details[0].trigger.name;
+
+                if (evolutionTrigger = 'level-up') {
+                    evolutionTrigger = capitalizeString(evolutionTrigger.split("-")[0])
+                    evolutionLevel = currentPokemon.evolves_to[0].evolution_details[0].min_level;
+                    evolutionTrigger = `${evolutionTrigger} ${evolutionLevel}`;
+                }
             }
-            console.log(trigger)
 //             console.log(currentPokemon.evolves_to[0].evolution_details[0].trigger.name);
-            evolutionChain.push({ pokemon: pokemon, trigger: trigger });
+            evolutionChain.push({ pokemon: pokemon, trigger: evolutionTrigger });
 //                 return {
 //                     name: evolution.species.name,
 //                     trigger: evolution.evolution_details[0].trigger.name,
@@ -115,7 +121,7 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
         return <Text>Loading...</Text>
     }
 
-    console.log(evolutionChain)
+//     console.log(evolutionChain)
 
     return (
         <View style={styles.container}>
