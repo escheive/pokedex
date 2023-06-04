@@ -51,18 +51,6 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
     // useState for additional pokemon data
     const [additionalData, setAdditionalData] = useState(null);
 
-    // Function to handlePress of the previous evolution button in top left corner
-    const handlePress = async (pokemonId) => {
-
-        // If the pokemon data is not cached, fetch it
-        const pokemonResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}/`);
-        // parse the returned api response and extract the JSON data
-        const pokemon = await pokemonResponse.json();
-
-        // Navigate to the details page with the fetched pokemon data
-        navigation.navigate('Info', { pokemon });
-    }
-
     // useEffect to check if a pokemon is favorited and fetch ability info when pokemon object changes
     useEffect(() => {
 //         getPokedexEntry(setPokedexEntry, pokemon.species_url)
@@ -224,7 +212,6 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
                         pokemon={pokemon}
                         pokedexEntry={pokedexEntry}
                         thisPokemonsAbilities={thisPokemonsAbilities}
-                        handlePress={handlePress}
                         pokemonColors={pokemonColors}
                     />
 

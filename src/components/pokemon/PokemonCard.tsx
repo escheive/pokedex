@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getTypeStyle } from '../../utils/typeStyle';
 import { capitalizeString } from '../../utils/helpers';
 
-const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, handlePress, getTypeBackgroundStyle, pokemonColors }) => {
+const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, getTypeBackgroundStyle, pokemonColors }) => {
     const [selectedAbility, setSelectedAbility] = useState(null);
 
     // Grab the dimensions of the device for sizing of components
