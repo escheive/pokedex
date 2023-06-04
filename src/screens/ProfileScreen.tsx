@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, TextInput, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { capitalizeString } from '../utils/helpers';
 
 const ProfileScreen = () => {
   const [name, setName] = useState('');
@@ -74,12 +75,14 @@ const ProfileScreen = () => {
             </>
         )}
 
-        {favoritePokemon.map((pokemon) => (
-            <View key={pokemon.id}>
-                <Image source={{ uri: `${pokemon.image_url}` }} style={styles.favoritePokemonImage} />
-                <Text>{pokemon.name}</Text>
+            <View style={styles.favoritePokemonContainer}>
+            {favoritePokemon.map((pokemon) => (
+                <View key={pokemon.id} style={styles.favoritePokemonItem}>
+                    <Image source={{ uri: `${pokemon.image_url}` }} style={styles.favoritePokemonImage} />
+                    <Text style={styles.favoritePokemonName}>{capitalizeString(pokemon.name)}</Text>
+                </View>
+            ))}
             </View>
-        ))}
         </View>
     );
 };
@@ -115,9 +118,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '20%',
   },
+    favoritePokemonContainer: {
+        width: '85%',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        marginTop: 16,
+    },
+    favoritePokemonItem: {
+        width: '25%',
+        alignItems: 'center',
+        marginBottom: 16,
+    },
     favoritePokemonImage: {
-        width: 75,
-        height: 75,
+        width: 80,
+        height: 80,
+    },
+    favoritePokemonName: {
+        marginTop: 8,
+        textAlign: 'center',
     },
 });
 
