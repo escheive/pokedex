@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, TextInput, Image } from 'react-native';
+import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen = () => {
   const [name, setName] = useState('');
-  const [favorites, setFavorites] = useState([]);
+  const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
   useEffect(() => {
     getData();
@@ -49,6 +50,8 @@ const ProfileScreen = () => {
     setIsEditing(false);
   };
 
+    const favoritePokemon = Object.values(pokemonList).filter((pokemon) => pokemon.isFavorite);
+
     return (
         <View style={styles.container}>
             <Text style={styles.heading}>Welcome to your profile!</Text>
@@ -71,10 +74,10 @@ const ProfileScreen = () => {
             </>
         )}
 
-        {favorites.map((pokemon) => (
+        {favoritePokemon.map((pokemon) => (
             <View key={pokemon.id}>
+                <Image source={{ uri: `${pokemon.image_url}` }} style={styles.favoritePokemonImage} />
                 <Text>{pokemon.name}</Text>
-                <Image source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png` }} />
             </View>
         ))}
         </View>
@@ -112,6 +115,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '20%',
   },
+    favoritePokemonImage: {
+        width: 75,
+        height: 75,
+    },
 });
 
 export default ProfileScreen;
