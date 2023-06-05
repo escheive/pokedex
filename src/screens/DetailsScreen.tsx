@@ -1,5 +1,5 @@
 // Dependencies
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
@@ -50,6 +50,13 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
     const [selectedTab, setSelectedTab] = React.useState('stats');
     // useState for additional pokemon data
     const [additionalData, setAdditionalData] = useState(null);
+    const scrollViewRef = useRef();
+
+    const scrollToTop = () => {
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: 0, animated: true });
+        }
+    };
 
     // useEffect to check if a pokemon is favorited and fetch ability info when pokemon object changes
     useEffect(() => {
@@ -202,25 +209,18 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
     });
 
     return (
+        <ScrollView style={styles.container} ref={scrollViewRef}>
+            <PokemonCard
+                pokemon={pokemon}
+                pokedexEntry={pokedexEntry}
+                thisPokemonsAbilities={thisPokemonsAbilities}
+                pokemonColors={pokemonColors}
+            />
 
-        <FlatList style={styles.container}
-            data={[pokemon]}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-                <>
-                    <PokemonCard
-                        pokemon={pokemon}
-                        pokedexEntry={pokedexEntry}
-                        thisPokemonsAbilities={thisPokemonsAbilities}
-                        pokemonColors={pokemonColors}
-                    />
+            <PokemonStats pokemonColors={pokemonColors} pokemon={pokemon} />
 
-                    <PokemonStats pokemonColors={pokemonColors} pokemon={pokemon} />
-
-                    <EvolutionChain pokemon={pokemon} pokemonColors={pokemonColors} navigation={navigation} />
-                </>
-            )}
-        />
+            <EvolutionChain pokemon={pokemon} pokemonColors={pokemonColors} navigation={navigation} scrollToTop={scrollToTop} />
+        </ScrollView>
     );
 };
 

@@ -7,7 +7,7 @@ import OctagonLayout from './OctagonLayout';
 // Utils
 import { capitalizeString } from '../../utils/helpers';
 
-const EvolutionChain = ({ pokemon, pokemonColors, navigation }) => {
+const EvolutionChain = ({ pokemon, pokemonColors, navigation, scrollToTop }) => {
     const [evolutionChain, setEvolutionChain] = useState([]);
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
@@ -85,6 +85,11 @@ const EvolutionChain = ({ pokemon, pokemonColors, navigation }) => {
         return evolutionChain;
     };
 
+    const handleEvolutionPress = (pokemon) => {
+        scrollToTop();
+        navigation.navigate('Info', { pokemon: pokemon })
+    };
+
     const styles = StyleSheet.create({
         container: {
             alignItems: 'center',
@@ -138,7 +143,8 @@ const EvolutionChain = ({ pokemon, pokemonColors, navigation }) => {
                 <React.Fragment key={index}>
                     <TouchableOpacity
                         style={styles.evolutionItemContainer}
-                        onPress={() => navigation.navigate('Info', {pokemon: evolution.pokemon})}
+                        onPress={() => handleEvolutionPress(evolution.pokemon)}
+//                         onPress={() => navigation.navigate('Info', {pokemon: evolution.pokemon})}
                         activeOpacity={0.5}
                     >
                         <Image
