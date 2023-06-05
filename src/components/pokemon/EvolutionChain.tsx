@@ -54,17 +54,17 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
 //             });
             const pokemon = pokemonList[evolutionId]
             let evolutionTrigger = null;
-            let evolutionLevel = null;
             if (currentPokemon.evolves_to.length > 0) {
-                evolutionTrigger = currentPokemon.evolves_to[0].evolution_details[0].trigger.name;
-
-                if (evolutionTrigger = 'level-up') {
-                    evolutionTrigger = capitalizeString(evolutionTrigger.split("-")[0])
-                    evolutionLevel = currentPokemon.evolves_to[0].evolution_details[0].min_level;
+                evolutionTrigger = capitalizeString(currentPokemon.evolves_to[0].evolution_details[0].trigger.name);
+                if (evolutionTrigger === 'Level-up') {
+                    evolutionTrigger = evolutionTrigger.split("-")[0]
+                    const evolutionLevel = currentPokemon.evolves_to[0].evolution_details[0].min_level;
                     evolutionTrigger = `${evolutionTrigger} ${evolutionLevel}`;
+                } else if (evolutionTrigger === 'Use-item') {
+                    const item = capitalizeString(currentPokemon.evolves_to[0].evolution_details[0].item.name);
+                    evolutionTrigger = `${item}`;
                 }
             }
-//             console.log(currentPokemon.evolves_to[0].evolution_details[0].trigger.name);
             evolutionChain.push({ pokemon: pokemon, trigger: evolutionTrigger });
 //                 return {
 //                     name: evolution.species.name,
@@ -111,6 +111,10 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
             alignItems: 'center',
             justifyContent: 'center',
         },
+        evolutionTrigger: {
+            flexWrap: 'wrap',
+            maxWidth: 100,
+        },
         image: {
             width: 85,
             height: 85,
@@ -142,7 +146,7 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
                     {index + 1 < evolutionChain.length && (
                         <View style={styles.arrowContainer}>
                             <Ionicons name='arrow-forward-sharp' size={32} color='gray' />
-                            <Text>{evolution.trigger}</Text>
+                            <Text style={styles.evolutionTrigger}>{evolution.trigger}</Text>
                         </View>
                     )}
                 </React.Fragment>
