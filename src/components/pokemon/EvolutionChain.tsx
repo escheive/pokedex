@@ -104,12 +104,14 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
             alignItems: 'center',
             justifyContent: 'center',
             paddingVertical: 10,
+            width: '20%',
 //             backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
         },
         arrowContainer: {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
+            width: '20%',
         },
         evolutionTrigger: {
             flexWrap: 'wrap',
