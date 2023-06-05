@@ -30,13 +30,14 @@ const DetailsTabNavigator = ({ route, navigation }) => {
                 name='Info'
                 initialParams={{ pokemon: selectedPokemon }}
             >
-                {props => <DetailsScreen {...props} />}
+                {props => <DetailsScreen {...props} navigation={navigation} />}
             </Screen>
             <Screen
                 name="Moves"
-                component={MovesScreen}
                 initialParams={{ pokemon: selectedPokemon }}
-            />
+            >
+                {props => <MovesScreen {...props} />}
+            </Screen>
 
         </Navigator>
     );

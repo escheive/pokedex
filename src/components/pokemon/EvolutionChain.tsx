@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Components
@@ -7,7 +7,7 @@ import OctagonLayout from './OctagonLayout';
 // Utils
 import { capitalizeString } from '../../utils/helpers';
 
-const EvolutionChain = ({ pokemon, pokemonColors }) => {
+const EvolutionChain = ({ pokemon, pokemonColors, navigation }) => {
     const [evolutionChain, setEvolutionChain] = useState([]);
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
@@ -127,8 +127,6 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
         return <Text>Loading...</Text>
     }
 
-//     console.log(evolutionChain)
-
     return (
         <View style={styles.container}>
             <Text style= {{ fontSize: 24 }}>Evolution Chain</Text>
@@ -138,13 +136,17 @@ const EvolutionChain = ({ pokemon, pokemonColors }) => {
             <View style={styles.evolutionsContainer}>
             {evolutionChain.map((evolution, index) => (
                 <React.Fragment key={index}>
-                    <View style={styles.evolutionItemContainer}>
+                    <TouchableOpacity
+                        style={styles.evolutionItemContainer}
+                        onPress={() => navigation.navigate('Info', {pokemon: evolution.pokemon})}
+                        activeOpacity={0.5}
+                    >
                         <Image
                             style={styles.image}
                             source={{ uri: `${evolution.pokemon.image_url}` }}
                         />
                         <Text>{capitalizeString(evolution.pokemon.name)}</Text>
-                    </View>
+                    </TouchableOpacity>
                     {index + 1 < evolutionChain.length && (
                         <View style={styles.arrowContainer}>
                             <Ionicons name='arrow-forward-sharp' size={32} color='gray' />

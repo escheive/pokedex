@@ -217,7 +217,7 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
 
                     <PokemonStats pokemonColors={pokemonColors} pokemon={pokemon} />
 
-                    <EvolutionChain pokemon={pokemon} pokemonColors={pokemonColors} />
+                    <EvolutionChain pokemon={pokemon} pokemonColors={pokemonColors} navigation={navigation} />
                 </>
             )}
         />
