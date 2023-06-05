@@ -76,22 +76,48 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
         speed: 'Spd',
     };
 
-    const renderStatItem = ({ item }) => {
-        const shortenedStatName = statNameMappings[item.name] || item.name;
-        let statValue = item.value
+//     const renderStatItem = ({ item }) => {
+//         const shortenedStatName = statNameMappings[item.name] || item.name;
+//         let statValue = item.value
+//
+//         if (selectedTab === 'min' && calculatedStats[item.name]) {
+//             statValue = calculatedStats[item.name];
+//         } else if (selectedTab === 'max' && calculatedStats[item.name]) {
+//             statValue = calculatedStats[item.name];
+//         }
+//
+//         return  (
+//             <View style={styles.statItem}>
+//                 <Text style={styles.statName}>{shortenedStatName}:</Text>
+//                 <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={shortenedStatName} pokemon={pokemon} />
+//             </View>
+//         );
+//     };
 
-        if (selectedTab === 'min' && calculatedStats[item.name]) {
-            statValue = calculatedStats[item.name];
-        } else if (selectedTab === 'max' && calculatedStats[item.name]) {
-            statValue = calculatedStats[item.name];
-        }
+    const renderStats = () => {
+        const statItems = [];
 
-        return  (
-            <View style={styles.statItem}>
-                <Text style={styles.statName}>{shortenedStatName}:</Text>
-                <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={shortenedStatName} pokemon={pokemon} />
-            </View>
-        );
+        JSON.parse(pokemon.stats).forEach((stat) => {
+            const shortenedStatName = statNameMappings[stat.name] || stat.name;
+            let statValue = stat.value
+
+            if (selectedTab === 'min' && calculatedStats[stat.name]) {
+                statValue = calculatedStats[stat.name];
+            } else if (selectedTab === 'max' && calculatedStats[stat.name]) {
+                statValue = calculatedStats[stat.name];
+            }
+
+            const statItem = (
+                <View style={styles.statItem} key={shortenedStatName}>
+                    <Text style={styles.statName}>{shortenedStatName}:</Text>
+                    <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={shortenedStatName} pokemon={pokemon} />
+                </View>
+            );
+
+            statItems.push(statItem);
+        });
+
+        return statItems;
     };
 
 
@@ -158,6 +184,13 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
         },
     });
 
+//     <FlatList
+//                     data={JSON.parse(pokemon.stats)}
+//                     renderItem={renderStatItem}
+//                     keyExtractor={(stat) => stat.name}
+//                     contentContainerStyle={styles.container}
+//                 />
+
 
     return (
         <View style={styles.container}>
@@ -195,12 +228,9 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
                 </TouchableOpacity>
             </View>
 
-            <FlatList
-                data={JSON.parse(pokemon.stats)}
-                renderItem={renderStatItem}
-                keyExtractor={(stat) => stat.name}
-                contentContainerStyle={styles.container}
-            />
+            <View style={styles.container}>
+                {renderStats()}
+            </View>
 
             <Text style={styles.statsTotalContainer}>
                 <Text style={styles.statsTotalText}>TOTAL </Text>
