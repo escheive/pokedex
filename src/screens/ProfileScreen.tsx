@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button, TouchableOpacity, TextInput, Image } fr
 import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { capitalizeString } from '../utils/helpers';
+import { pokemonColors } from '../utils/typeStyle';
 
 const ProfileScreen = ({ navigation }) => {
     const [name, setName] = useState('');
@@ -71,22 +72,23 @@ const ProfileScreen = ({ navigation }) => {
         ) : (
             <>
                 <Text style={styles.name}>{name}</Text>
-                <Button title="Edit Nam" onPress={handleEdit} />
+                <Button title="Edit Name" onPress={handleEdit} />
             </>
         )}
 
+            <Text style={styles.favoriteSectionTitle}>Favorite Pokemon</Text>
             <View style={styles.favoritePokemonContainer}>
-            {favoritePokemon.map((pokemon) => (
-                <TouchableOpacity
-                    key={pokemon.id}
-                    style={styles.favoritePokemonItem}
-                    onPress={() => navigation.navigate('Details', { pokemon: pokemon })}
-                    activeOpacity={0.5}
-                >
-                    <Image source={{ uri: `${pokemon.image_url}` }} style={styles.favoritePokemonImage} />
-                    <Text style={styles.favoritePokemonName}>{capitalizeString(pokemon.name)}</Text>
-                </TouchableOpacity>
-            ))}
+                {favoritePokemon.map((pokemon) => (
+                    <TouchableOpacity
+                        key={pokemon.id}
+                        style={styles.favoritePokemonItem}
+                        onPress={() => navigation.navigate('Details', { pokemon: pokemon })}
+                        activeOpacity={0.5}
+                    >
+                        <Image source={{ uri: `${pokemon.image_url}` }} style={styles.favoritePokemonImage} />
+                        <Text style={[styles.favoritePokemonName, { backgroundColor: pokemonColors[pokemon.type1].backgroundColor, color: pokemonColors[pokemon.type1].color } ]}>{capitalizeString(pokemon.name)}</Text>
+                    </TouchableOpacity>
+                ))}
             </View>
         </View>
     );
@@ -125,19 +127,38 @@ const styles = StyleSheet.create({
         width: '20%',
     },
     favoritePokemonContainer: {
-        width: '98%',
+        width: '100%',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         marginTop: 16,
+        borderWidth: 2,
+        borderColor: '#eee',
+        padding: 8,
+        borderRadius: 8,
+        shadowColor: 'rgba(0, 0, 0, 0.5)',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+        elevation: 4,
+    },
+    favoriteSectionTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#333',
+        marginTop: 32,
+        marginBottom: 0,
     },
     favoritePokemonItem: {
-        width: '23%',
+        width: '31%',
         alignItems: 'center',
         backgroundColor: 'white',
         marginBottom: 16,
         marginHorizontal: '1%',
-        padding: 8,
+        paddingTop: 16,
         borderRadius: 8,
         borderWidth: 1,
         borderColor: 'gray',
@@ -156,8 +177,13 @@ const styles = StyleSheet.create({
     },
     favoritePokemonName: {
         marginTop: 8,
+        paddingVertical: 2,
         textAlign: 'center',
         fontSize: 16,
+        fontWeight: 'bold',
+        width: '100%',
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8,
     },
 });
 
