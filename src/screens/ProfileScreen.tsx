@@ -86,7 +86,16 @@ const ProfileScreen = ({ navigation }) => {
                         activeOpacity={0.5}
                     >
                         <Image source={{ uri: `${pokemon.image_url}` }} style={styles.favoritePokemonImage} />
-                        <Text style={[styles.favoritePokemonName, { backgroundColor: pokemonColors[pokemon.type1].backgroundColor, color: pokemonColors[pokemon.type1].color } ]}>{capitalizeString(pokemon.name)}</Text>
+                        <Text
+                            style={[
+                                styles.favoritePokemonName,
+                                { backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
+                                color: pokemonColors[pokemon.type1].color }
+                            ]}
+                            adjustFontSizeToFit minimumFontScale={0.75}
+                        >
+                            {capitalizeString(pokemon.name)}
+                        </Text>
                     </TouchableOpacity>
                 ))}
             </View>
@@ -153,7 +162,7 @@ const styles = StyleSheet.create({
         marginBottom: 0,
     },
     favoritePokemonItem: {
-        width: '31%',
+        width: '23%',
         alignItems: 'center',
         backgroundColor: 'white',
         marginBottom: 16,
