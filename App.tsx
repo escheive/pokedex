@@ -1,5 +1,7 @@
 // Reanimated Dependencies
 import 'react-native-gesture-handler';
+// Tensorflow
+import * as tf from '@tensorflow/tfjs';
 // Dependencies
 import React, { useState, useEffect } from 'react';
 import { Text, View, Button, StyleSheet, TouchableOpacity } from 'react-native';

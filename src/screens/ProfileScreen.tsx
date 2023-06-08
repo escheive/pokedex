@@ -92,7 +92,7 @@ const ProfileScreen = ({ navigation }) => {
                                 { backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
                                 color: pokemonColors[pokemon.type1].color }
                             ]}
-                            adjustFontSizeToFit minimumFontScale={0.75}
+                            adjustsFontSizeToFit minimumFontScale={0.5}
                         >
                             {capitalizeString(pokemon.name)}
                         </Text>
@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
     },
     favoritePokemonItem: {
         width: '23%',
+        height: 141,
         alignItems: 'center',
         backgroundColor: 'white',
         marginBottom: 16,
@@ -185,10 +186,11 @@ const styles = StyleSheet.create({
         height: 85,
     },
     favoritePokemonName: {
+        flex: 1,
         marginTop: 8,
-        paddingVertical: 2,
+        paddingVertical: 1,
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: 22,
         fontWeight: 'bold',
         width: '100%',
         borderBottomLeftRadius: 8,
