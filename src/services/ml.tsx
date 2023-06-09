@@ -1,5 +1,38 @@
 import { database } from '../utils/database';
 
+
+// Function to create the matrix table if it doesn't exist
+const createMatrixTable = () => {
+    return new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `SELECT name FROM sqlite_master WHERE type='table' AND name='interaction_matrix';`,
+                [],
+                (tx, result) => {
+                    if (result.rows.length === 0) {
+                        // If table doesnt exist, execute the CREATE TABLE query to create the table
+                        tx.executeSql(
+                            'CREATE TABLE IF NOT EXISTS interaction_matrix (id INTEGER PRIMARY KEY, matrix TEXT)',
+                            [],
+                            () => {
+                                resolve();
+                            },
+                            (error) => {
+                                reject(error);
+                            }
+                        );
+                    } else {
+                        resolve();
+                    }
+                },
+                (error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+};
+
 // Function to retrieve the interaction matrix from Sqlite
 const retrieveMatrixFromStorage = () => {
     return new Promise((resolve, reject) => {
@@ -7,7 +40,7 @@ const retrieveMatrixFromStorage = () => {
             tx.executeSql(
                 'SELECT matrix FROM interaction_matrix LIMIT 1',
                 [],
-                (_, result) => {
+                (tx, result) => {
                     if (result.rows.length > 0) {
                         const matrixJSON = result.rows.item(0).matrix;
                         const matrix = JSON.parse(matrixJSON);
@@ -16,7 +49,7 @@ const retrieveMatrixFromStorage = () => {
                         resolve(null);
                     }
                 },
-                (_, error) => {
+                (tx, error) => {
                     reject(error);
                 }
             );
@@ -34,10 +67,10 @@ const saveMatrixToStorage = (matrix) => {
             tx.executeSql(
                 'REPLACE INTO interaction_matrix (id, matrix) VALUES (?, ?)',
                 [1, matrixJSON],
-                (_, result) => {
+                (tx, result) => {
                     resolve(result);
                 },
-                (_, error) => {
+                (tx, error) => {
                     reject(error);
                 }
             );
