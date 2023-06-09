@@ -70,11 +70,30 @@ const RecommendationSystem = () => {
     // Define and train the recommendation model using TensorFlow.js
     const createAndTrainModel = (data) => {
         // Define the model architecture
-        const model = ...;
+        const model = tf.sequential();
+        model.add(tf.layers.dense({ units: 64, inputShape: [data.shape[1]] }));
+        model.add(tf.layers.dense({ units: 32, activation: 'relu' }));
+        model.add(tf.layers.dense({ units: data.shape[1], activation: 'sigmoid' }));
+
         // Compile the model with appropriate loss and optimizer
-        model.compile(...);
+        model.compile({
+            loss: 'meanSquaredError',
+            optimizer: 'adam',
+        });
+
+        // Convert the input data to TensorFlow tensors
+        const inputData = tf.tensor2d(data);
+
         // Train the model with your preprocessed data
-        model.fit(...);
+        model.fit(inputData, inputData, {
+            epochs: 100,
+            batchSize: 32,
+            callbacks: {
+                onEpochEnd: async (epoch, logs) => {
+                    console.log(`Epoch ${epoch + 1}/${100}, Loss: ${logs.loss}`);
+                },
+            },
+        });
 
         return model;
     };
