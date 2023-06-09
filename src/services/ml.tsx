@@ -36,7 +36,7 @@ const createMatrixTable = () => {
 // Function to retrieve the interaction matrix from Sqlite
 const retrieveMatrixFromStorage = () => {
     return new Promise((resolve, reject) => {
-        db.transaction((tx) => {
+        database.transaction((tx) => {
             tx.executeSql(
                 'SELECT matrix FROM interaction_matrix LIMIT 1',
                 [],
@@ -62,7 +62,7 @@ const saveMatrixToStorage = (matrix) => {
     return new Promise((resolve, reject) => {
         const matrixJSON = JSON.stringify(matrix);
 
-        db.transaction((tx) => {
+        database.transaction((tx) => {
             // Execute the REPLACE query to insert or replace the matrix
             tx.executeSql(
                 'REPLACE INTO interaction_matrix (id, matrix) VALUES (?, ?)',
@@ -77,3 +77,5 @@ const saveMatrixToStorage = (matrix) => {
         });
     });
 };
+
+export default { createMatrixTable, retrieveMatrixFromStorage, saveMatrixToStorage };

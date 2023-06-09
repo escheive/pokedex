@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import * as tf from '@tensorflow/tfjs';
 import { useDispatch, useSelector } from 'react-redux';
+import { createMatrixTable, retrieveMatrixFromStorage, saveMatrixToStorage } from '../services/ml';
 
 const RecommendationSystem = () => {
     const [recommendations, setRecommendations] = useState([]);
@@ -10,6 +11,29 @@ const RecommendationSystem = () => {
     useEffect(() => {
         loadDataAndGenerateRecommendations();
     }, []);
+
+    // Function to create or retrieve the interaction matrix
+    const getInteractionMatrix = () => {
+        // Check if the matrix exists in sqlite
+        const storedMatrix = retrieveMatrixFromStorage();
+
+        if (storedMatrix) {
+            // Matrix exists, return the stored matrix
+            return storedMatrix;
+        } else {
+            // Matrix doesn't exist, create and initialize a new matrix
+            const numPokemon = 1010;
+
+            const newMatrix = Array(1)
+                .fill(0)
+                .map(() => Array(numPokemon).fill(0));
+
+            // Save the new matrix in sqlite for future use
+            saveMatrixToStorage(newMatrix);
+
+            return newMatrix;
+        }
+    }
 
 
     const loadDataAndGenerateRecommendations = async () => {
