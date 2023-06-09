@@ -39,10 +39,8 @@ const RecommendationSystem = () => {
     const loadDataAndGenerateRecommendations = async () => {
         // Load or fetch preprocessed recommendation data
         const data = await loadRecommendationData();
-
         // Train recommendation model
         const model = createAndTrainModel(data);
-
         // Generate recommendations for the user
         const userPreferences = getUserPreferences();
         const recommendedPokemon = generateRecommendations(model, userPreferences);
@@ -53,9 +51,20 @@ const RecommendationSystem = () => {
 
     const loadRecommendationData = async () => {
         // Load or fetch the data for training the recommendation model
-        const data = ...;
+        const interactionMatrix = getInteractionMatrix();
+        // Preprocess the interaction matrix
+        const data = preprocessInteractionMatrix(interactionMatrix);
 
         return data;
+    };
+
+    const preprocessInteractionMatrix = (matrix) => {
+        const normalizedMatrix = matrix.map((row) => {
+            const maxValue = Math.max(...row);
+            const minValue = Math.min(...row);
+            return row.map((value) => (value - minValue) / (maxValue - minValue));
+        });
+        return normalizedMatrix;
     };
 
     // Define and train the recommendation model using TensorFlow.js
