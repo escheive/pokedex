@@ -115,9 +115,29 @@ const RecommendationSystem = () => {
     // Use the trained model to generate recommendations based on user preferences
     const generateRecommendations = (model, userPreferences) => {
         // Convert user preferences to a TensorFlow tensor
-        const recommendations = ...;
+        const inputPreferences = tf.tensor2d(userPreferences, [1, userPreferences.length]);
 
-        return recommendations;
+        // Normalize the preferences
+        const { mean, variance } = tf.moments(inputPreferences, 0);
+        const normalizedPreferences = inputPreferences.sub(mean).div(tf.sqrt(variance));
+
+        // Generate recommendations using the model
+        const recommendations = model.predict(normalizedPreferences);
+
+        // Convert recommendations tensor to a JavaScript array
+        const recommendationsArray = Array.from(recommendations.dataSync());
+
+        // Sort and select the top recommended indices
+        const topIndices = recommendationsArray
+            .map((value, index) => ({ value, index }))
+            .sort((a, b) => b.value - a.value)
+            .map(item => item.index)
+            .slice(0, 10); // 10 is number of recommendations
+
+        // Map the top indices to actual Pokemon objects
+        const recommendedPokemon = topIndices.map(index => pokemonList[index]);
+
+        return recommendedPokemon;
     };
 
     const getUserPreferences = () => {
