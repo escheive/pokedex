@@ -71,7 +71,8 @@ const RecommendationSystem = () => {
     const createAndTrainModel = (data) => {
         // Define the model architecture
         const model = tf.sequential();
-        model.add(tf.layers.dense({ units: 64, inputShape: [data.shape[1]] }));
+        model.add(tf.layers.dense({ units: 128, inputShape: [data.shape[1]] }));
+        model.add(tf.layers.dense({ units: 64, activation: 'relu' }));
         model.add(tf.layers.dense({ units: 32, activation: 'relu' }));
         model.add(tf.layers.dense({ units: data.shape[1], activation: 'sigmoid' }));
 
@@ -84,10 +85,23 @@ const RecommendationSystem = () => {
         // Convert the input data to TensorFlow tensors
         const inputData = tf.tensor2d(data);
 
-        // Train the model with your preprocessed data
-        model.fit(inputData, inputData, {
+        // Split the data into training and validation sets
+        const validationSplit = 0.2 // 20% for validation
+        const validationSample = Math.round(data.shape[0] * validationSplit);
+        const shuffledData = tf.data.array(inputData).shuffle(data.shape[0]);
+        const trainingData = shuffleData.take(data.shape[0] - validationSamples);
+        const validationData = shuffledData.skip(data.shape[0] - validationSamples);
+
+        // Normalize the input data
+        const { mean, variance } = tf.moments(trainingData, 0);
+        const normalizedTrainingData = trainingData.sub(mean).div(tf.sqrt(variance));
+        const normalizedValidationData = validationData.sub(mean).div(tf.sqrt(variance));
+
+        // Train the model with the preprocessed data
+        model.fit(normalizedTrainingData, normalizedTrainingData, {
             epochs: 100,
             batchSize: 32,
+            validationData: [normalizedValidationData, normalizedValidationData],
             callbacks: {
                 onEpochEnd: async (epoch, logs) => {
                     console.log(`Epoch ${epoch + 1}/${100}, Loss: ${logs.loss}`);
