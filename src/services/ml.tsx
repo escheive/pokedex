@@ -3,6 +3,7 @@ import { database } from '../utils/database';
 
 // Function to create the matrix table if it doesn't exist
 const createMatrixTable = () => {
+    console.log('createMatrixTable');
     return new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
@@ -35,21 +36,25 @@ const createMatrixTable = () => {
 
 // Function to retrieve the interaction matrix from Sqlite
 const retrieveMatrixFromStorage = () => {
+    console.log('retrieveMatrixFromStorage');
     return new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
-                'SELECT matrix FROM interaction_matrix LIMIT 1',
+                `SELECT matrix FROM interaction_matrix LIMIT 1`,
                 [],
                 (tx, result) => {
                     if (result.rows.length > 0) {
+                        console.log('success');
                         const matrixJSON = result.rows.item(0).matrix;
                         const matrix = JSON.parse(matrixJSON);
+                        console.log(matrix)
                         resolve(matrix);
                     } else {
                         resolve(null);
                     }
                 },
                 (tx, error) => {
+                    console.error('Error executing sql query in retrieveMatrixFromStorage', error);
                     reject(error);
                 }
             );
@@ -78,4 +83,4 @@ const saveMatrixToStorage = (matrix) => {
     });
 };
 
-export default { createMatrixTable, retrieveMatrixFromStorage, saveMatrixToStorage };
+export { createMatrixTable, retrieveMatrixFromStorage, saveMatrixToStorage };

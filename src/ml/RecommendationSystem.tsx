@@ -13,23 +13,28 @@ const RecommendationSystem = () => {
     }, []);
 
     // Function to create or retrieve the interaction matrix
-    const getInteractionMatrix = () => {
+    const getInteractionMatrix = async () => {
+        console.log('getInteractionMatrix');
+
+        // Create matrix table in sqlite if it doesnt exist
+        await createMatrixTable();
+
         // Check if the matrix exists in sqlite
-        const storedMatrix = retrieveMatrixFromStorage();
+        const storedMatrix = await retrieveMatrixFromStorage();
 
         if (storedMatrix) {
             // Matrix exists, return the stored matrix
             return storedMatrix;
         } else {
             // Matrix doesn't exist, create and initialize a new matrix
-            const numPokemon = 1010;
+            const numPokemon = 40; // Number of pokemon in my matrix
 
             const newMatrix = Array(1)
                 .fill(0)
                 .map(() => Array(numPokemon).fill(0));
 
             // Save the new matrix in sqlite for future use
-            saveMatrixToStorage(newMatrix);
+            await saveMatrixToStorage(newMatrix);
 
             return newMatrix;
         }
@@ -37,6 +42,7 @@ const RecommendationSystem = () => {
 
 
     const loadDataAndGenerateRecommendations = async () => {
+        console.log('loadDataAndGenerateRecommendations');
         // Load or fetch preprocessed recommendation data
         const data = await loadRecommendationData();
         // Train recommendation model
@@ -50,15 +56,21 @@ const RecommendationSystem = () => {
     };
 
     const loadRecommendationData = async () => {
-        // Load or fetch the data for training the recommendation model
-        const interactionMatrix = getInteractionMatrix();
-        // Preprocess the interaction matrix
-        const data = preprocessInteractionMatrix(interactionMatrix);
+        try {
+            console.log('loadRecommendationData');
+            // Load or fetch the data for training the recommendation model
+            const interactionMatrix = await getInteractionMatrix();
+            // Preprocess the interaction matrix
+            const data = preprocessInteractionMatrix(interactionMatrix);
 
-        return data;
+            return data;
+        } catch (error) {
+            console.error('Error loading recommendation data in the loadRecommendationData function', error)
+        }
     };
 
     const preprocessInteractionMatrix = (matrix) => {
+        console.log('preprocessInteractionMatrix', matrix);
         const normalizedMatrix = matrix.map((row) => {
             const maxValue = Math.max(...row);
             const minValue = Math.min(...row);
@@ -155,8 +167,8 @@ const RecommendationSystem = () => {
                 {recommendations.map((pokemon) => (
                     <View>
                         <Image
-                            src={null}
-                        >
+                            src={{ uri: `${pokemon.image_url}` }}
+                        />
                         <Text>{pokemon.name}</Text>
                     </View>
                 ))}

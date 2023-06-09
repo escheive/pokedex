@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { capitalizeString } from '../utils/helpers';
 import { pokemonColors } from '../utils/typeStyle';
+import RecommendationSystem from '../ml/RecommendationSystem';
 
 const ProfileScreen = ({ navigation }) => {
     const [name, setName] = useState('');
@@ -99,6 +100,7 @@ const ProfileScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 ))}
             </View>
+            <RecommendationSystem />
         </View>
     );
 };
