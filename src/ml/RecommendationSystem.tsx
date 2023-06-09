@@ -114,7 +114,7 @@ const RecommendationSystem = () => {
 
     // Use the trained model to generate recommendations based on user preferences
     const generateRecommendations = (model, userPreferences) => {
-        // Use the model for predictions or implement recommendation logic
+        // Convert user preferences to a TensorFlow tensor
         const recommendations = ...;
 
         return recommendations;
@@ -122,7 +122,7 @@ const RecommendationSystem = () => {
 
     const getUserPreferences = () => {
         // Get user preferences or input that will be used for generating recommendations
-        const preferences = ...;
+        const preferences = Object.values(pokemonList).filter((pokemon) => pokemon.isFavorite);
 
         return preferences;
     };
