@@ -47,7 +47,6 @@ const retrieveMatrixFromStorage = () => {
                         console.log('success');
                         const matrixJSON = result.rows.item(0).matrix;
                         const matrix = JSON.parse(matrixJSON);
-                        console.log(matrix)
                         resolve(matrix);
                     } else {
                         resolve(null);
@@ -83,4 +82,25 @@ const saveMatrixToStorage = (matrix) => {
     });
 };
 
-export { createMatrixTable, retrieveMatrixFromStorage, saveMatrixToStorage };
+// Function to save the interaction matrix to Sqlite
+const resetMatrix = () => {
+    console.log('resetMatrix function hit');
+    try {
+        database.transaction((tx) => {
+            tx.executeSql(
+                'DROP TABLE IF EXISTS interaction_matrix',
+                [],
+                () => {
+                    console.log('Interaction_matrix dropped successfully');
+                },
+                (error) => {
+                    console.error('Error dropping interaction_matrix:', error);
+                }
+            );
+        });
+    } catch (error) {
+        console.error('Error with the reset matrix function', error);
+    }
+};
+
+export { createMatrixTable, retrieveMatrixFromStorage, saveMatrixToStorage, resetMatrix };

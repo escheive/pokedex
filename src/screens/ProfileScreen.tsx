@@ -100,7 +100,6 @@ const ProfileScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 ))}
             </View>
-            <RecommendationSystem />
         </View>
     );
 };
