@@ -62,21 +62,6 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [movesData, setMovesData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Function to handlePress of the previous evolution button in top left corner
-    const handlePress = async (pokemonId) => {
-
-        // If the pokemon data is not cached, fetch it
-        const pokemonResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}/`);
-        // parse the returned api response and extract the JSON data
-        const pokemon = await pokemonResponse.json();
-
-        // Navigate to the details page with the fetched pokemon data
-        navigation.navigate('Details', { pokemon });
-    }
-
-    console.log(pokemon.moves)
-
-
     // useEffect to fetch pokemon moves data on component mount
     useEffect(() => {
         const fetchMovesData = async () => {
@@ -124,7 +109,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
 
     return (
 
-        <View style={styles.Container}>
+        <View style={styles.container}>
             <PokemonImage
                 pokemon={pokemon}
             />

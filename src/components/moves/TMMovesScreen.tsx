@@ -25,7 +25,7 @@ const TMMovesScreen = ({pokemon}) => {
 const styles = StyleSheet.create({
     screenContainer: {
             height: '100%',
-            marginTop: 20,
+            marginTop: 20
         },
     individualMoveContainer: {
         flex: 1,

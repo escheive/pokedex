@@ -7,21 +7,22 @@ import { getTypeStyle } from '../../utils/typeStyle';
 
 const LevelUpMovesScreen = ({ pokemon, movesData, damageClasses }) => {
 
-    const levelUpMoves = pokemon.moves.filter((move) => {
-        return move.version_group_details.some(
-            (detail) => detail.move_learn_method.name === 'level-up'
-        );
-    });
+    const levelUpMoves = JSON.parse(pokemon.moves).filter((move) => move.learnMethod === 'level-up');
+
+//     const levelUpMoves = pokemon.moves.filter((move) => {
+//         return move.version_group_details.some(
+//             (detail) => detail.move_learn_method.name === 'level-up'
+//         );
+//     });
 
     const levelUpMovesData = levelUpMoves.map((move) => {
-        const moveData = movesData.find((data) => data.name === move.move.name);
-        let levelLearnedAt = move.version_group_details.find((move) => move.level_learned_at > 0)
-        levelLearnedAt = levelLearnedAt.level_learned_at;
+        const moveData = movesData.find((data) => data.name === move.name);
+        const levelLearnedAt = move.levelLearnedAt;
         return moveData ? { ...moveData, level: levelLearnedAt } : null;
     });
 
     const sortedMovesData = levelUpMovesData.sort((a, b) => a.level - b.level);
-
+    console.log(sortedMovesData)
 
     const styles = StyleSheet.create({
         screenContainer: {
