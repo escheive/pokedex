@@ -18,7 +18,13 @@ const fetchPokemonFromAPI = async (start, end) => {
         const pokemonData = data.results.map(async (pokemon) => {
             const response = await fetch(pokemon.url);
             const pokemonDetails = await response.json();
-            const moveNames = await pokemonDetails.moves.map((move) => move.move.name);
+            const moves = await pokemonDetails.moves.map((move) => {
+                return {
+                    name: move.move.name,
+                    learnMethod: move.version_group_details[0].move_learn_method.name,
+                    levelLearnedAt: move.version_group_details[0].level_learned_at
+                };
+            });
             const modifiedStats = await pokemonDetails.stats.map((stat) => {
                 return {
                     name: stat.stat.name,
@@ -42,7 +48,7 @@ const fetchPokemonFromAPI = async (start, end) => {
                 base_experience: pokemonDetails.base_experience,
                 stats: modifiedStats,
                 abilities: modifiedAbilities,
-                moves: moveNames,
+                moves: moves,
                 species_url: pokemonDetails.species.url,
                 image_url: pokemonDetails.sprites.other['official-artwork'].front_default,
                 pixel_image_url: pokemonDetails.sprites.front_default,

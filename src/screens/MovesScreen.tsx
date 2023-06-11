@@ -82,7 +82,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
         const fetchMovesData = async () => {
             try {
                 const moves = (JSON.parse(pokemon.moves)).map(async (move) => {
-                    const response = await fetch(`https://pokeapi.co/api/v2/move/${move}/`);
+                    const response = await fetch(`https://pokeapi.co/api/v2/move/${move.name}/`);
                     try {
                         const data = await response.json();
                         const { name, power, accuracy, pp, type, contest_type, damage_class } = data;
