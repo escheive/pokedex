@@ -22,7 +22,6 @@ const LevelUpMovesScreen = ({ pokemon, movesData, damageClasses }) => {
     });
 
     const sortedMovesData = levelUpMovesData.sort((a, b) => a.level - b.level);
-    console.log(sortedMovesData)
 
     const styles = StyleSheet.create({
         screenContainer: {
@@ -43,12 +42,13 @@ const LevelUpMovesScreen = ({ pokemon, movesData, damageClasses }) => {
             flexDirection: 'row',
         },
         moveLevel: {
-            width: '15%',
+            width: '10%',
             textAlign: 'center',
         },
         moveName: {
-            width: '40%',
+            width: '45%',
             textAlign: 'center',
+            paddingRight: 30,
         },
         movePP: {
             width: '15%',
@@ -90,7 +90,8 @@ const LevelUpMovesScreen = ({ pokemon, movesData, damageClasses }) => {
         movesName: {
             fontSize: 16,
             textAlign: 'center',
-            width: '40%',
+            paddingRight: 30,
+            width: '45%',
         },
         movesType: {
             textAlign: 'center',
@@ -106,7 +107,7 @@ const LevelUpMovesScreen = ({ pokemon, movesData, damageClasses }) => {
             <View style={styles.movesLegend}>
                 <View style={styles.movesLegendTopRow}>
                     <Text style={styles.moveLevel}>Level</Text>
-                    <Text style={styles.moveName}>Move</Text>
+                    <Text style={styles.moveName}>Name</Text>
                     <Text style={styles.movePP}>PP</Text>
                     <Text style={styles.moveAccuracy}>Accuracy</Text>
                     <Text style={styles.movePower}>Power</Text>
