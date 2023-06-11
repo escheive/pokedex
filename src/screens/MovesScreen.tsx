@@ -134,7 +134,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                             {() => <LevelUpMovesScreen parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} />}
                         </Tab.Screen>
                         <Tab.Screen name="TM">
-                            {() => <TMMovesScreen pokemon={pokemon} />}
+                            {() => <TMMovesScreen parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} />}
                         </Tab.Screen>
                         <Tab.Screen name="Egg">
                             {() => <EggMovesScreen pokemon={pokemon} />}

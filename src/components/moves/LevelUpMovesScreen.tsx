@@ -9,12 +9,6 @@ const LevelUpMovesScreen = ({ parsedMoves, movesData, damageClasses }) => {
 
     const levelUpMoves = parsedMoves.filter((move) => move.learnMethod === 'level-up');
 
-//     const levelUpMoves = pokemon.moves.filter((move) => {
-//         return move.version_group_details.some(
-//             (detail) => detail.move_learn_method.name === 'level-up'
-//         );
-//     });
-
     const levelUpMovesData = levelUpMoves.map((move) => {
         const moveData = movesData.find((data) => data.name === move.name);
         const levelLearnedAt = move.levelLearnedAt;
