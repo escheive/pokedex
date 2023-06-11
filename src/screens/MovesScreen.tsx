@@ -59,6 +59,7 @@ const damageClasses = {
 const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
     // Grab our pokemon data that was pulled in our app.tsx from params
     const { pokemon } = route.params;
+    const parsedMoves = JSON.parse(pokemon.moves);
     const [movesData, setMovesData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -66,7 +67,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
     useEffect(() => {
         const fetchMovesData = async () => {
             try {
-                const moves = (JSON.parse(pokemon.moves)).map(async (move) => {
+                const moves = parsedMoves.map(async (move) => {
                     const response = await fetch(`https://pokeapi.co/api/v2/move/${move.name}/`);
                     try {
                         const data = await response.json();
@@ -130,7 +131,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                         initialRouteName="Level Up"
                     >
                         <Tab.Screen name="Level Up">
-                            {() => <LevelUpMovesScreen pokemon={pokemon} movesData={movesData} damageClasses={damageClasses} />}
+                            {() => <LevelUpMovesScreen parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} />}
                         </Tab.Screen>
                         <Tab.Screen name="TM">
                             {() => <TMMovesScreen pokemon={pokemon} />}

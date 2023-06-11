@@ -5,9 +5,9 @@ import { capitalizeString } from '../../utils/helpers';
 import { getTypeStyle } from '../../utils/typeStyle';
 
 
-const LevelUpMovesScreen = ({ pokemon, movesData, damageClasses }) => {
+const LevelUpMovesScreen = ({ parsedMoves, movesData, damageClasses }) => {
 
-    const levelUpMoves = JSON.parse(pokemon.moves).filter((move) => move.learnMethod === 'level-up');
+    const levelUpMoves = parsedMoves.filter((move) => move.learnMethod === 'level-up');
 
 //     const levelUpMoves = pokemon.moves.filter((move) => {
 //         return move.version_group_details.some(
