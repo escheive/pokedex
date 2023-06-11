@@ -137,10 +137,10 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                             {() => <TMMovesScreen parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} />}
                         </Tab.Screen>
                         <Tab.Screen name="Egg">
-                            {() => <EggMovesScreen pokemon={pokemon} />}
+                            {() => <EggMovesScreen parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} />}
                         </Tab.Screen>
                         <Tab.Screen name="Tutor">
-                            {() => <TutorMovesScreen pokemon={pokemon} />}
+                            {() => <TutorMovesScreen parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} />}
                         </Tab.Screen>
                     </Tab.Navigator>
                 )}
