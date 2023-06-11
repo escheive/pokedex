@@ -74,13 +74,15 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
         navigation.navigate('Details', { pokemon });
     }
 
+    console.log(pokemon.moves)
+
 
     // useEffect to fetch pokemon moves data on component mount
     useEffect(() => {
         const fetchMovesData = async () => {
             try {
-                const moves = pokemon.moves.map(async (move) => {
-                    const response = await fetch(`https://pokeapi.co/api/v2/move/${move.move.name}/`);
+                const moves = (JSON.parse(pokemon.moves)).map(async (move) => {
+                    const response = await fetch(`https://pokeapi.co/api/v2/move/${move}/`);
                     try {
                         const data = await response.json();
                         const { name, power, accuracy, pp, type, contest_type, damage_class } = data;
