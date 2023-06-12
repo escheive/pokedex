@@ -61,7 +61,7 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
             type: {
                 alignItems: 'center',
                 borderWidth: 1,
-                borderColor: '#ccc',
+                borderColor: pokemonColors[pokemon.type1].backgroundColor,
                 borderRadius: 20,
                 paddingHorizontal: 10,
                 marginHorizontal: 4,

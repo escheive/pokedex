@@ -25,10 +25,13 @@ const Moves = ({ parsedMoves, movesData, damageClasses, typeOfMove }) => {
             backgroundColor: 'white',
         },
         movesLegend: {
+            paddingHorizontal: 3,
             backgroundColor: '#eee',
+            paddingVertical: 8,
+            flexDirection: 'row',
         },
         movesLegendTopRow: {
-            paddingVertical: 3,
+            paddingVertical: 8,
             flexDirection: 'row',
         },
         movesLegendBottomRow: {
@@ -108,18 +111,11 @@ const Moves = ({ parsedMoves, movesData, damageClasses, typeOfMove }) => {
     return (
         <ScrollView style={styles.screenContainer}>
             <View style={styles.movesLegend}>
-                <View style={styles.movesLegendTopRow}>
-                    <Text style={styles.moveLevel}>Level</Text>
-                    <Text style={styles.moveName}>Name</Text>
-                    <Text style={styles.movePP}>PP</Text>
-                    <Text style={styles.moveAccuracy}>Accuracy</Text>
-                    <Text style={styles.movePower}>Power</Text>
-                </View>
-                <View style={styles.movesLegendBottomRow}>
-                    <Text style={styles.movesType}>Type</Text>
-                    <Text style={styles.movesClass}>Class</Text>
-                    <Text style={styles.movesContest}>Contest</Text>
-                </View>
+                <Text style={styles.moveLevel}>Level</Text>
+                <Text style={styles.moveName}>Name</Text>
+                <Text style={styles.movePP}>PP</Text>
+                <Text style={styles.moveAccuracy}>Accuracy</Text>
+                <Text style={styles.movePower}>Power</Text>
             </View>
             <View style={styles.contentContainer}>
                 {sortedMovesData.map((item) => (
