@@ -67,7 +67,7 @@ const App = () => {
     }
 
     return (
-        <NavigationContainer>
+        <NavigationContainer style={styles.container}>
 
             <Drawer.Navigator
                 screenOptions={({ route }) => ({
@@ -85,6 +85,13 @@ const App = () => {
         </NavigationContainer>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'white',
+        flex: 1,
+    }
+});
 
 export default function AppWrapper() {
     return (

@@ -24,7 +24,7 @@ const PokemonStackNavigator = () => {
                 options={({ route }) => {
                     const selectedPokemon = route.params.pokemon;
                     const headerStyle = {
-                        backgroundColor: 'transparent',
+                        backgroundColor: 'white',
                     };
                     return {
                         headerShown: true,

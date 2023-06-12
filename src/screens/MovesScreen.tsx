@@ -94,6 +94,7 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
     const styles = StyleSheet.create({
         container: {
             height: '100%',
+            backgroundColor: 'white',
         },
         movesContainer: {
             flex: 1,
