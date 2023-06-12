@@ -17,6 +17,7 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
                 height: windowHeight * 0.18,
                 paddingVertical: 16,
                 paddingHorizontal: 5,
+                borderTopWidth: 1,
                 borderBottomWidth: 1,
                 borderColor: '#ccc',
             },
@@ -26,6 +27,14 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
                 borderRadius: 10,
                 backgroundColor: 'white',
                 flex: 3,
+                shadowColor: '#000',
+                shadowOffset: {
+                    width: 0,
+                    height: 2,
+                },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 2,
             },
             image: {
                 width: '100%',
@@ -44,7 +53,7 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
             },
             idText: {
                 fontSize: 22,
-                marginRight: 5,
+                marginRight: 8,
                 fontWeight: 'bold',
             },
             pokemonName: {
@@ -56,13 +65,15 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
                 marginVertical: 10,
             },
             type: {
+                alignItems: 'center',
                 borderWidth: 1,
                 borderColor: '#ccc',
                 borderRadius: 20,
-                paddingHorizontal: 12,
+                paddingHorizontal: 10,
+                marginHorizontal: 4,
             },
             typesText: {
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: 'bold',
                 marginHorizontal: 2,
             },
@@ -92,7 +103,7 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
                     </View>
                     {pokemon.type2 ? (
                         <View style={[styles.type, { backgroundColor: pokemonColors[pokemon.type2].backgroundColor } ]}>
-                            <Text style={{ color: pokemonColors[pokemon.type2].color, fontSize: 18, fontWeight: '600' }}>
+                            <Text style={[ styles.typesText, { color: pokemonColors[pokemon.type1].color } ]}>
                                 {capitalizeString(pokemon.type2)}
                             </Text>
                         </View>
