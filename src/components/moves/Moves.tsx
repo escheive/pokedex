@@ -38,23 +38,28 @@ const Moves = ({ parsedMoves, movesData, damageClasses, typeOfMove }) => {
         moveLevel: {
             width: '10%',
             textAlign: 'center',
+            fontWeight: 'bold',
         },
         moveName: {
             width: '45%',
             textAlign: 'center',
             paddingRight: 30,
+            fontWeight: 'bold',
         },
         movePP: {
             width: '15%',
             textAlign: 'center',
+            fontWeight: 'bold',
         },
         moveAccuracy: {
             width: '15%',
             textAlign: 'center',
+            fontWeight: 'bold',
         },
         movePower: {
             width: '15%',
             textAlign: 'center',
+            fontWeight: 'bold',
         },
         individualMoveContainer: {
             flex: 1,
@@ -73,6 +78,7 @@ const Moves = ({ parsedMoves, movesData, damageClasses, typeOfMove }) => {
             textAlign: 'center',
             borderRadius: 12,
             marginHorizontal: 2,
+            fontWeight: 'bold',
         },
         movesContest: {
             width: '20%',
@@ -80,15 +86,18 @@ const Moves = ({ parsedMoves, movesData, damageClasses, typeOfMove }) => {
             borderRadius: 12,
             padding: 1,
             marginHorizontal: 2,
+            fontWeight: 'bold',
         },
         movesName: {
             fontSize: 16,
             textAlign: 'center',
             paddingRight: 30,
             width: '45%',
+            fontWeight: 'bold',
         },
         movesType: {
             textAlign: 'center',
+            fontWeight: 'bold',
             width: '54%',
             borderRadius: 12,
             paddingHorizontal: 9,
