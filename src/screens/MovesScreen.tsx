@@ -9,6 +9,7 @@ import LevelUpMovesScreen from '../components/moves/LevelUpMovesScreen';
 import EggMovesScreen from '../components/moves/EggMovesScreen';
 import TMMovesScreen from '../components/moves/TMMovesScreen';
 import TutorMovesScreen from '../components/moves/TutorMovesScreen';
+import Moves from '../components/moves/Moves';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // Utils
 import { pokemonColors } from '../utils/typeStyle';
@@ -142,6 +143,18 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                         </Tab.Screen>
                         <Tab.Screen name="Tutor">
                             {() => <TutorMovesScreen parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} />}
+                        </Tab.Screen>
+                        <Tab.Screen name="Level-Up">
+                            {() => <Moves parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} typeOfMove={'level-up'} />}
+                        </Tab.Screen>
+                        <Tab.Screen name="tm">
+                            {() => <Moves parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} typeOfMove={'machine'} />}
+                        </Tab.Screen>
+                        <Tab.Screen name="egg">
+                            {() => <Moves parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} typeOfMove={'egg'} />}
+                        </Tab.Screen>
+                        <Tab.Screen name="tutor">
+                            {() => <Moves parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} typeOfMove={'tutor'} />}
                         </Tab.Screen>
                     </Tab.Navigator>
                 )}
