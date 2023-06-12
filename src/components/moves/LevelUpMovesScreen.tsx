@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, FlatList, Text, StyleSheet } from 'react-native';
+import { View, FlatList, Text, StyleSheet, ScrollView } from 'react-native';
 // Utils
 import { capitalizeString } from '../../utils/helpers';
 import { getTypeStyle } from '../../utils/typeStyle';
@@ -97,7 +97,7 @@ const LevelUpMovesScreen = ({ parsedMoves, movesData, damageClasses }) => {
     });
 
     return (
-        <View style={styles.screenContainer}>
+        <ScrollView style={styles.screenContainer}>
             <View style={styles.movesLegend}>
                 <View style={styles.movesLegendTopRow}>
                     <Text style={styles.moveLevel}>Level</Text>
@@ -112,13 +112,9 @@ const LevelUpMovesScreen = ({ parsedMoves, movesData, damageClasses }) => {
                     <Text style={styles.movesContest}>Contest</Text>
                 </View>
             </View>
-            <FlatList
-                data={sortedMovesData}
-//                 data={pokemon.moves.filter(move => move.version_group_details[0].move_learn_method.name === 'level-up')}
-                keyExtractor={(move) => move?.name}
-                contentContainerStyle={styles.contentContainer}
-                renderItem={({ item }) => (
-                    <View style={styles.individualMoveContainer}>
+            <View style={styles.contentContainer}>
+                {sortedMovesData.map((item) => (
+                    <View key={item?.name} style={styles.individualMoveContainer}>
                         <View style={styles.moveInfoRow}>
                             <Text style={styles.moveLevel}>{item.level}</Text>
                             <Text style={styles.movesName}>{capitalizeString(item.name)}</Text>
@@ -133,9 +129,9 @@ const LevelUpMovesScreen = ({ parsedMoves, movesData, damageClasses }) => {
                             <Text style={styles.movesContest}>{(item.contest_type ? capitalizeString(item.contest_type.name) : '-')}</Text>
                         </View>
                     </View>
-                )}
-            />
-        </View>
+                ))}
+            </View>
+        </ScrollView>
     );
 };
 
