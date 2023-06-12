@@ -16,6 +16,7 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
                 flexDirection: 'row',
                 height: windowHeight * 0.18,
                 paddingBottom: 20,
+                paddingHorizontal: 5,
                 borderBottomWidth: 1,
                 borderColor: '#ccc',
             },

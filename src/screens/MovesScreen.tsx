@@ -1,7 +1,7 @@
 
 // Dependencies
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions, Animated, ActivityIndicator } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Button, Image, TouchableOpacity, Dimensions, Animated, ActivityIndicator } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 // Components
 import PokemonImage from '../components/pokemon/PokemonImage';
