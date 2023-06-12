@@ -15,7 +15,7 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
             container: {
                 flexDirection: 'row',
                 height: windowHeight * 0.18,
-                paddingBottom: 20,
+                paddingVertical: 16,
                 paddingHorizontal: 5,
                 borderBottomWidth: 1,
                 borderColor: '#ccc',
@@ -32,38 +32,39 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
                 height: '100%',
                 resizeMode: 'contain',
             },
-            nameContainer: {
+            detailsContainer: {
                 flex: 4,
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
                 paddingTop: 5,
             },
+            nameContainer: {
+                flexDirection: 'row',
+            },
+            idText: {
+                fontSize: 22,
+                marginRight: 5,
+                fontWeight: 'bold',
+            },
             pokemonName: {
-                fontSize: 20,
+                fontSize: 22,
+                fontWeight: 'bold',
             },
             typesContainer: {
                 flexDirection: 'row',
                 marginVertical: 10,
             },
-            typesText: {
-                fontSize: 18,
-                fontWeight: 'bold',
-                marginHorizontal: 2,
+            type: {
                 borderWidth: 1,
                 borderColor: '#ccc',
                 borderRadius: 20,
                 paddingHorizontal: 12,
             },
-            idContainer: {
-                borderWidth: 1,
-                borderColor: '#ccc',
-                backgroundColor: 'white',
-                borderRadius: 20,
-                padding: 5,
-            },
-            idText: {
-                fontSize: 18,
+            typesText: {
+                fontSize: 20,
+                fontWeight: 'bold',
+                marginHorizontal: 2,
             },
         });
 
@@ -75,11 +76,17 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
                     source={{ uri: `${pokemon.image_url}` }}
                 />
             </View>
-            <View style={styles.nameContainer}>
-                <Text style={styles.pokemonName}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+            <View style={styles.detailsContainer}>
+                <View style={styles.nameContainer}>
+                    <Text style={styles.idText}>
+                        {pokemon.id > 100 ? `#${pokemon.id}` : pokemon.id > 10 ? '#0' + pokemon.id : '#00' + pokemon.id}
+                    </Text>
+                    <Text style={styles.pokemonName}>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</Text>
+                </View>
+
                 <View style={styles.typesContainer}>
                     <View style={[styles.type, { backgroundColor: pokemonColors[pokemon.type1].backgroundColor } ]}>
-                        <Text style={{ color: pokemonColors[pokemon.type1].color, fontSize: 18, fontWeight: '600' }}>
+                        <Text style={[ styles.typesText, { color: pokemonColors[pokemon.type1].color } ]}>
                             {capitalizeString(pokemon.type1)}
                         </Text>
                     </View>
@@ -90,11 +97,6 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
                             </Text>
                         </View>
                     ) : null}
-                </View>
-                <View style={styles.idContainer}>
-                    <Text style={styles.idText}>
-                        {pokemon.id > 100 ? `#${pokemon.id}` : pokemon.id > 10 ? '#0' + pokemon.id : '#00' + pokemon.id}
-                    </Text>
                 </View>
             </View>
         </View>
