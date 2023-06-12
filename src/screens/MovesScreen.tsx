@@ -127,13 +127,13 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                             tabBarLabelStyle: styles.tabLabel,
                             tabBarActiveTintColor: pokemonColors[pokemon.type1].backgroundColor,
                             tabBarInactiveTintColor: 'gray',
-                            lazy: true,
+                            lazy: false,
                         }}
                         tabBarPosition="top"
                         initialRouteName="Level Up"
                     >
                         <Tab.Screen name="Level Up">
-                            {() => <Moves parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} typeOfMove={'level-up'} />}
+                            {() => <Moves parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} typeOfMove={'level-up'} isLoading={isLoading} />}
                         </Tab.Screen>
                         <Tab.Screen name="TM">
                             {() => <Moves parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} typeOfMove={'machine'} />}
@@ -147,7 +147,6 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                     </Tab.Navigator>
                 )}
             </View>
-
         </View>
     );
 };

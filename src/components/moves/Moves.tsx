@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { View, FlatList, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, FlatList, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 // Utils
 import { capitalizeString } from '../../utils/helpers';
 import { getTypeStyle } from '../../utils/typeStyle';
 
 
-const Moves = ({ parsedMoves, movesData, damageClasses, typeOfMove }) => {
+const Moves = ({ parsedMoves, movesData, damageClasses, typeOfMove, isLoading }) => {
 
     const typeOfMoves = parsedMoves.filter((move) => move.learnMethod === typeOfMove);
 
@@ -118,23 +118,27 @@ const Moves = ({ parsedMoves, movesData, damageClasses, typeOfMove }) => {
                 <Text style={styles.movePower}>Power</Text>
             </View>
             <View style={styles.contentContainer}>
-                {sortedMovesData.map((item) => (
-                    <View key={item?.name} style={styles.individualMoveContainer}>
-                        <View style={styles.moveInfoRow}>
-                            <Text style={styles.moveLevel}>{item.level}</Text>
-                            <Text style={styles.movesName}>{capitalizeString(item.name)}</Text>
-                            <Text style={styles.movePP}>{item.pp}</Text>
-                            <Text style={styles.moveAccuracy}>{item.accuracy}</Text>
-                            <Text style={styles.movePower}>{(item.power ? item.power : '-' )}</Text>
+                {isLoading ? (
+                    <ActivityIndicator size="large" color="blue" />
+                ) : (
+                    sortedMovesData.map((item) => (
+                        <View key={item?.name} style={styles.individualMoveContainer}>
+                            <View style={styles.moveInfoRow}>
+                                <Text style={styles.moveLevel}>{item.level}</Text>
+                                <Text style={styles.movesName}>{capitalizeString(item.name)}</Text>
+                                <Text style={styles.movePP}>{item.pp}</Text>
+                                <Text style={styles.moveAccuracy}>{item.accuracy}</Text>
+                                <Text style={styles.movePower}>{(item.power ? item.power : '-' )}</Text>
 
+                            </View>
+                            <View style={styles.moveInfoRow}>
+                                <Text style={[styles.movesType, { backgroundColor: getTypeStyle(item.type.name).backgroundColor }]}>{capitalizeString(item.type.name)}</Text>
+                                <Text style={[styles.movesClass, { backgroundColor: damageClasses[item.damage_class.name].background, color: damageClasses[item.damage_class.name].font } ]}>{capitalizeString(item.damage_class.name)}</Text>
+                                <Text style={styles.movesContest}>{(item.contest_type ? capitalizeString(item.contest_type.name) : '-')}</Text>
+                            </View>
                         </View>
-                        <View style={styles.moveInfoRow}>
-                            <Text style={[styles.movesType, { backgroundColor: getTypeStyle(item.type.name).backgroundColor }]}>{capitalizeString(item.type.name)}</Text>
-                            <Text style={[styles.movesClass, { backgroundColor: damageClasses[item.damage_class.name].background, color: damageClasses[item.damage_class.name].font } ]}>{capitalizeString(item.damage_class.name)}</Text>
-                            <Text style={styles.movesContest}>{(item.contest_type ? capitalizeString(item.contest_type.name) : '-')}</Text>
-                        </View>
-                    </View>
-                ))}
+                    ))
+                )}
             </View>
         </ScrollView>
     );
