@@ -4,7 +4,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Pokemon } from '../types';
 import { getTypeStyle, pokemonColors } from '../utils/typeStyle';
 import { capitalizeString } from '../utils/helpers';
-import { database, updatePokemonFavoriteStatus, updatePokemonCaptureStatus } from '../utils/database';
 import { fetchPokemonData } from '../utils/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';

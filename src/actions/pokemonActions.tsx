@@ -1,4 +1,5 @@
-import { database, updatePokemonFavoriteStatus, updatePokemonCaptureStatus, updatePokemonStatus } from '../utils/database';
+import { database } from '../utils/database/database';
+import { updatePokemonFavoriteStatus, updatePokemonCaptureStatus, updatePokemonStatus } from '../utils/database/pokemonDatabase';
 import { FETCH_POKEMON_REQUEST, FETCH_POKEMON_SUCCESS, FETCH_POKEMON_FAILURE, UPDATE_POKEMON_STATUS } from './ActionTypes';
 
 // Dispatched when requesting pokemon data

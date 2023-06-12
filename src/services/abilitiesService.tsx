@@ -1,4 +1,5 @@
-import { database, createAbilitiesTable, insertAbility } from '../utils/database/database';
+import { database } from '../utils/database/database';
+import { createAbilitiesTable, insertAbility } from '../utils/database/abilitiesDatabase';
 // Redux
 import { useDispatch } from 'react-redux';
 import { fetchAbilitiesRequest, fetchAbilitiesSuccess, fetchAbilitiesFailure } from '../actions/abilitiesActions';
