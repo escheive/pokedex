@@ -1,4 +1,4 @@
-import { database, createPokemonTable, insertPokemon } from '../utils/database';
+import { database, createPokemonTable, insertPokemon } from '../utils/database/database';
 // Redux
 import { useDispatch } from 'react-redux';
 import { fetchPokemonRequest, fetchPokemonSuccess, fetchPokemonFailure } from '../actions/pokemonActions';

@@ -26,7 +26,7 @@ import PokemonStackNavigator from './src/navigation/PokemonStackNavigator';
 import ProfileStack from './src/navigation/ProfileStack';
 import SettingsStack from './src/navigation/SettingsStack';
 // Utils
-import { database, resetPokemonTable, resetAbilitiesTable } from './src/utils/database';
+import { database, resetPokemonTable, resetAbilitiesTable } from './src/utils/database/database';
 import { pokemonColors } from './src/utils/typeStyle';
 // Services
 import { fetchPokemonData } from './src/services/pokemonService';
