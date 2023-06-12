@@ -15,28 +15,20 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
             container: {
                 flexDirection: 'row',
                 height: windowHeight * 0.18,
-                paddingVertical: 16,
-                paddingHorizontal: 5,
                 borderTopWidth: 1,
                 borderBottomWidth: 1,
                 borderColor: '#ccc',
+                backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
             },
             imageContainer: {
-                borderWidth: 1,
-                borderColor: '#ccc',
-                borderRadius: 10,
-                backgroundColor: 'white',
                 flex: 3,
-                shadowColor: '#000',
-                shadowOffset: {
-                    width: 0,
-                    height: 2,
-                },
-                shadowOpacity: 0.1,
-                shadowRadius: 4,
-                elevation: 2,
+                borderTopRightRadius: 80,
+                borderBottomRightRadius: 80,
+
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
             },
             image: {
+                marginLeft: -5,
                 width: '100%',
                 height: '100%',
                 resizeMode: 'contain',
@@ -55,10 +47,12 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
                 fontSize: 22,
                 marginRight: 8,
                 fontWeight: 'bold',
+                color: pokemonColors[pokemon.type1].color,
             },
             pokemonName: {
                 fontSize: 22,
                 fontWeight: 'bold',
+                color: pokemonColors[pokemon.type1].color,
             },
             typesContainer: {
                 flexDirection: 'row',
