@@ -133,27 +133,15 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
                         initialRouteName="Level Up"
                     >
                         <Tab.Screen name="Level Up">
-                            {() => <LevelUpMovesScreen parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} />}
-                        </Tab.Screen>
-                        <Tab.Screen name="TM">
-                            {() => <TMMovesScreen parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} />}
-                        </Tab.Screen>
-                        <Tab.Screen name="Egg">
-                            {() => <EggMovesScreen parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} />}
-                        </Tab.Screen>
-                        <Tab.Screen name="Tutor">
-                            {() => <TutorMovesScreen parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} />}
-                        </Tab.Screen>
-                        <Tab.Screen name="Level-Up">
                             {() => <Moves parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} typeOfMove={'level-up'} />}
                         </Tab.Screen>
-                        <Tab.Screen name="tm">
+                        <Tab.Screen name="TM">
                             {() => <Moves parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} typeOfMove={'machine'} />}
                         </Tab.Screen>
-                        <Tab.Screen name="egg">
+                        <Tab.Screen name="Egg">
                             {() => <Moves parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} typeOfMove={'egg'} />}
                         </Tab.Screen>
-                        <Tab.Screen name="tutor">
+                        <Tab.Screen name="Tutor">
                             {() => <Moves parsedMoves={parsedMoves} movesData={movesData} damageClasses={damageClasses} typeOfMove={'tutor'} />}
                         </Tab.Screen>
                     </Tab.Navigator>
