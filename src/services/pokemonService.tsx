@@ -173,23 +173,29 @@ const fetchPokemonData = () => {
                 let totalResults = 0;
                 const resultsPerPage = 20;
 
-                do {
+                const fetchDataAndInsert = async () => {
                     try {
                         console.log('Batch:', page);
                         const fetchedData = await fetchPokemonFromAPI(resultsPerPage, page);
                         batchInserts.push(insertPokemon(fetchedData));
+
                         totalResults = 40;
 //                         totalResults = data.count;
                         page++;
+                        if ((page - 1) * resultsPerPage < totalResults) {
+                            await fetchDataAndInsert();
+                        } else {
+                            await Promise.all(batchInserts);
+                            fetchPokemonData()(dispatch);
+                        }
                     } catch (error) {
                         console.error('Error in the !hasData section of fetchPokemonData function:', error);
                         throw error;
                     }
-                } while ((page - 1) * resultsPerPage < totalResults);
+                }
 
-                await Promise.all(batchInserts);
+                await fetchDataAndInsert();
             }
-
             console.log('Successfully fetched data in the fetchPokemonData function');
             dispatch(fetchPokemonSuccess(fetchedPokemonData));
         } catch (error) {
