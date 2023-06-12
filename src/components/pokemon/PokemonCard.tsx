@@ -77,7 +77,9 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, getTypeBack
                 flexDirection: 'column',
                 alignItems: 'center',
                 paddingHorizontal: 20,
+                paddingBottom: 10,
                 width: '100%',
+                backgroundColor: 'white',
             },
             heading: {
                 fontSize: (48 - (pokemon.name.length / 4)),
@@ -149,8 +151,6 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, getTypeBack
             },
             abilityContainer: {
                 backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
-                borderWidth: 1,
-                borderColor: '#ccc',
                 borderRadius: 15,
                 alignItems: 'center',
                 marginBottom: 15,

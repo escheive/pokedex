@@ -110,6 +110,7 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
         container: {
             height: '100%',
             backgroundColor: 'white',
+//             backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
         },
         navContainer: {
             flexDirection: 'row',

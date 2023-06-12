@@ -124,14 +124,15 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
     const styles = StyleSheet.create({
         container: {
             margin: 10,
-//             backgroundColor: 'white',
+            marginBottom: 25,
+//             backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            backgroundColor: 'rgba(170, 170, 170, 0.2)',
             borderRadius: 15,
             padding: 10,
             textAlign: 'center',
         },
         statsTitleText: {
-            fontSize: 22,
-            fontWeight: 'bold',
+            fontSize: 24,
             alignSelf: 'center',
             marginBottom: 18,
         },
@@ -157,7 +158,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
             justifyContent: 'center',
             padding: 3,
             borderRadius: 10,
-            marginHorizontal: 5,
+            marginHorizontal: 8,
         },
         navItemText: {
             color: 'white',
@@ -169,6 +170,9 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
         selectedNavItemText: {
             fontWeight: 'bold',
             color: pokemonColors[pokemon.type1].color,
+        },
+        pillBars: {
+            paddingHorizontal: 5,
         },
         statDisclaimerText: {
             textAlign: 'center',
@@ -228,7 +232,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.container}>
+            <View style={styles.pillBars}>
                 {renderStats()}
             </View>
 

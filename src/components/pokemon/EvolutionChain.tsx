@@ -93,9 +93,12 @@ const EvolutionChain = ({ pokemon, pokemonColors, navigation, scrollToTop }) => 
     const styles = StyleSheet.create({
         container: {
             alignItems: 'center',
-            width: '100%',
+            width: '96%',
+            marginHorizontal: '2%',
+            borderRadius: 15,
             marginBottom: 30,
             padding: 10,
+            backgroundColor: 'rgba(170, 170, 170, 0.2)',
         },
         evolutionsContainer: {
             width: '100%',
