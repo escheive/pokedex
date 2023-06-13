@@ -95,8 +95,8 @@ const insertMove = async (movesData) => {
                 const totalInsertions = MovesData.length;
                 movesData.forEach((move) => {
                     tx.executeSql(
-                        `INSERT OR IGNORE INTO Moves (id, name, type1, type2, height, weight, base_experience, stats, abilities, moves, species_url, image_url, pixel_image_url, isCaptured, isFavorite)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+                        `INSERT OR IGNORE INTO Moves (id, name, accuracy, power, pp, priority, type, contest_type, damage_class, effect_entry, effect_chance, generation, target, meta, machine, learned_by_pokemon)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
                         [
                             move.id,
                             move.name,
@@ -104,25 +104,20 @@ const insertMove = async (movesData) => {
                             move.power,
                             move.pp,
                             move.priority,
-                            move.type,
-                            move.contest_type,
-                            move.damage_class,
-                            move.effect_entries,
-                            move.generation.name,
-                            pokemon.type2 ? pokemon.type2 : null,
-                            pokemon.height,
-                            pokemon.weight,
-                            pokemon.base_experience,
-                            JSON.stringify(pokemon.stats),
-                            JSON.stringify(pokemon.abilities),
-                            JSON.stringify(pokemon.moves),
+                            JSON.stringify(move.type),
+                            JSON.stringify(move.contest_type),
+                            JSON.stringify(move.damage_class),
+                            move.effect_entry,
+                            move.effect_chance,
+                            JSON.stringify(move.generation),
+                            JSON.stringify(move.target),
+                            JSON.stringify(move.meta),
+                            JSON.stringify(move.machine),
+                            JSON.stringify(move.learned_by_pokemon)
                         ],
                         () => {
-//                             successfulInsertions++;
-//                             console.log(successfulInsertions)
-//                             if (successfulInsertions === totalInsertions) {
-                                console.log('Moves records inserted successfully');
-                                resolve();
+                            console.log('Moves records inserted successfully');
+                            resolve();
                         },
                         (error) => {
                             console.error('Error inserting Move record:', error)
