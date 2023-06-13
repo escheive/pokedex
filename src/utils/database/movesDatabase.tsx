@@ -24,19 +24,20 @@ const createMovesTable = () => {
                             `CREATE TABLE IF NOT EXISTS Moves (
                             id INTEGER PRIMARY KEY,
                             name TEXT NOT NULL,
-                            type1 TEXT NOT NULL,
-                            type2 TEXT,
-                            height REAL,
-                            weight REAL,
-                            base_experience INTEGER,
-                            stats TEXT,
-                            abilities TEXT,
-                            moves TEXT,
-                            species_url TEXT,
-                            image_url TEXT,
-                            pixel_image_url TEXT,
-                            isCaptured BOOLEAN DEFAULT false,
-                            isFavorite BOOLEAN DEFAULT false
+                            accuracy INTEGER NOT NULL,
+                            power INTEGER,
+                            pp INTEGER,
+                            priority INTEGER,
+                            type TEXT
+                            contest_type TEXT,
+                            damage_class TEXT,
+                            effect_entry TEXT,
+                            effect_chance INTEGER,
+                            generation TEXT,
+                            target TEXT,
+                            meta TEXT,
+                            machine TEXT,
+                            learned_by_pokemon TEXT
                             );`,
                             [],
                             () => {
