@@ -28,6 +28,17 @@ const fetchSpeciesDataFromApi = async (resultsPerPage, page) => {
                 }
             }
 
+            const machine = {};
+            if (move.machines.length > 0) {
+                const machineResponse = await fetch(move.machines[-1].machine.url);
+                const machineData = await machineResponse.json();
+
+                const machine = {
+                    item: machineData.item,
+                    move: machineData.move
+                }
+            }
+
             return {
                 id: move.id,
                 name: move.name,
@@ -41,17 +52,20 @@ const fetchSpeciesDataFromApi = async (resultsPerPage, page) => {
                 effect_entry: move.effect_entries[0].effect,
                 effect_chance: move.effect_chance,
                 generation: move.generation,
+                target: move.target,
+                meta: move.meta,
+                machine: machine,
                 learned_by_pokemon: learnedBy,
             }
         });
 
-        const transformedPokemonData = await Promise.all(pokemonData);
+        const transformedMovesData = await Promise.all(movesData);
 
         // Release memory occupied by data.results and pokemonUrls
         data.results = null;
-        return transformedPokemonData;
+        return transformedMovesData;
     } catch (error) {
-        console.error('Error in fetchPokemonFromAPI function', error);
+        console.error('Error in fetchMovesFromAPI function', error);
         throw error;
     }
 };
