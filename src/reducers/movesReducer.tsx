@@ -1,4 +1,4 @@
-import { FETCH_ABILITIES_REQUEST, FETCH_ABILITIES_SUCCESS, FETCH_ABILITIES_FAILURE } from '../actions/ActionTypes';
+import { FETCH_MOVES_REQUEST, FETCH_MOVES_SUCCESS, FETCH_MOVES_FAILURE } from '../actions/ActionTypes';
 
 // Define the initial state for moves
 const initialState = {
