@@ -10,9 +10,9 @@ import { fetchMovesRequest, fetchMovesSuccess, fetchMovesFailure } from '../acti
 //+++++++++++++++++++ Moves Data Functions +++++++++++++++++++//
 ////////////////////////////////////////////////////////////////
 
-// Function to fetch base pokemon data from the api
-const fetchSpeciesDataFromApi = async (resultsPerPage, page) => {
-    console.log('fetchingPokemonFromAPI function hit')
+// Function to fetch base moves data from the api
+const fetchMovesFromApi = async (resultsPerPage, page) => {
+    console.log('fetchingMovesFromAPI function hit')
     try {
         const response = await fetch(`https://pokeapi.co/api/v2/move?limit=${resultsPerPage}&offset=${(page - 1) * resultsPerPage}`);
         const data = await response.json();
