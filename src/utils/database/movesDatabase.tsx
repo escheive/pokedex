@@ -36,8 +36,7 @@ const createMovesTable = () => {
                             generation TEXT,
                             target TEXT,
                             meta TEXT,
-                            machine TEXT,
-                            learned_by_pokemon TEXT
+                            machine TEXT
                             );`,
                             [],
                             () => {
@@ -96,8 +95,8 @@ const insertMoves = async (movesData) => {
                 const totalInsertions = movesData.length;
                 movesData.forEach((move) => {
                     tx.executeSql(
-                        `INSERT OR IGNORE INTO Moves (id, name, accuracy, power, pp, priority, type, contest_type, damage_class, effect_entry, effect_chance, generation, target, meta, machine, learned_by_pokemon)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+                        `INSERT OR IGNORE INTO Moves (id, name, accuracy, power, pp, priority, type, contest_type, damage_class, effect_entry, effect_chance, generation, target, meta, machine)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
                         [
                             move.id,
                             move.name,
@@ -113,8 +112,7 @@ const insertMoves = async (movesData) => {
                             JSON.stringify(move.generation),
                             JSON.stringify(move.target),
                             JSON.stringify(move.meta),
-                            JSON.stringify(move.machine),
-                            JSON.stringify(move.learned_by_pokemon)
+                            JSON.stringify(move.machine)
                         ],
                         () => {
                             console.log('Moves records inserted successfully');

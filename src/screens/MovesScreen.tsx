@@ -66,7 +66,6 @@ const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
     const [movesData, setMovesData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-
     // useEffect to fetch pokemon moves data on component mount
     useEffect(() => {
 

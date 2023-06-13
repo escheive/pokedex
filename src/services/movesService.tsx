@@ -21,19 +21,9 @@ const fetchMovesFromApi = async (resultsPerPage, page) => {
             const moveResponse = await fetch(move.url);
             const moveDetails = await moveResponse.json();
 
-            const learnedBy = await moveDetails.learned_by_pokemon && Array.isArray(moveDetails.learned_by_pokemon) ?
-                moveDetails.learned_by_pokemon.map((pokemon) => {
-                    const id = grabIdFromPokeApiUrl(pokemon.url)
-                    return {
-                        name: pokemon.name,
-                        id: id
-                    };
-                }) : [];
-
             let machine = {};
-
             if (moveDetails.machines.length > 0) {
-                const machineResponse = await fetch(moveDetails.machines[moveDetails.machines.length -1].machine.url);
+                const machineResponse = await fetch(moveDetails.machines[moveDetails.machines.length - 1].machine.url);
                 const machineData = await machineResponse.json();
 
                 machine = {
@@ -52,13 +42,12 @@ const fetchMovesFromApi = async (resultsPerPage, page) => {
                 priority: moveDetails.priority,
                 contest_type: moveDetails.contest_type,
                 damage_class: moveDetails.damage_class,
-                effect_entry: moveDetails.effect_entries[0] ? moveDetails.effect_entries[0].effect : null,
+                effect_entry: moveDetails.effect_entries.length > 0 ? moveDetails.effect_entries[0].effect : 'There is no description for this move',
                 effect_chance: moveDetails.effect_chance,
                 generation: moveDetails.generation,
                 target: moveDetails.target,
                 meta: moveDetails.meta,
-                machine: machine,
-                learned_by_pokemon: learnedBy,
+                machine: moveDetails.machines.length > 0 ? machine : null,
             }
         });
 
@@ -81,7 +70,7 @@ const fetchMovesData = () => {
             // Wait for table creation process to complete if table not exist
             await createMovesTable();
 
-            const totalCount = 826; // Total number of moves in PokeApi
+            const totalCount = 918; // Total number of moves in PokeApi
             const batchSize = 20;
             const batches = Math.ceil(totalCount / batchSize);
 
