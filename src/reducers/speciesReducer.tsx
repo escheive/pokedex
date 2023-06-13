@@ -1,4 +1,4 @@
-import { FETCH_ABILITIES_REQUEST, FETCH_ABILITIES_SUCCESS, FETCH_ABILITIES_FAILURE } from '../actions/ActionTypes';
+import { FETCH_SPECIES_REQUEST, FETCH_SPECIES_SUCCESS, FETCH_SPECIES_FAILURE } from '../actions/ActionTypes';
 
 // Define the initial state for species
 const initialState = {
