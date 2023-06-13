@@ -1,30 +1,30 @@
 import { FETCH_ABILITIES_REQUEST, FETCH_ABILITIES_SUCCESS, FETCH_ABILITIES_FAILURE } from '../actions/ActionTypes';
 
-// Define the initial state for moves
+// Define the initial state for species
 const initialState = {
-    movesData: null, // Holds the moves data retrieved from the API
-    loading: false, // Indicates whether moves data is currently being fetched
-    error: null, // Holds any error that occurred during the moves data fetch
+    speciesData: null, // Holds the species data retrieved from the API
+    loading: false, // Indicates whether species data is currently being fetched
+    error: null, // Holds any error that occurred during the species data fetch
 };
 
 
-const movesReducer = (state = initialState, action) => {
+const speciesReducer = (state = initialState, action) => {
     switch (action.type) {
-        case FETCH_MOVES_REQUEST:
+        case FETCH_SPECIES_REQUEST:
             // Set loading to true and clear any previous error
             return {
                 ...state,
                 loading: true,
                 error: null,
             };
-        case FETCH_MOVES_SUCCESS:
-            // Store the fetched moves data and set loading to false
+        case FETCH_SPECIES_SUCCESS:
+            // Store the fetched species data and set loading to false
             return {
                 ...state,
-                movesData: action.payload,
+                speciesData: action.payload,
                 loading: false,
             };
-        case FETCH_MOVES_FAILURE:
+        case FETCH_SPECIES_FAILURE:
             // Set loading to false and store the error that occurred during the fetch
             return {
                 ...state,
@@ -37,4 +37,4 @@ const movesReducer = (state = initialState, action) => {
     }
 };
 
-export default movesReducer;
+export default speciesReducer;
