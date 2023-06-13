@@ -99,7 +99,7 @@ const fetchMovesData = () => {
                                 console.log('Moves table has data');
                                 for (let i = 0; i < result.rows.length; i++) {
                                     const move = result.rows.item(i);
-                                    fetchedMovesData[move.id] = move;
+                                    fetchedMovesData[move.name] = move;
                                 }
                             }
                             resolve(result.rows.length > 0);

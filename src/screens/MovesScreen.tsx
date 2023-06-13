@@ -1,6 +1,7 @@
 
 // Dependencies
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView, View, Text, StyleSheet, Button, Image, TouchableOpacity, Dimensions, Animated, ActivityIndicator } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 // Components
@@ -60,34 +61,43 @@ const damageClasses = {
 const MovesScreen = ({ route, navigation }: DetailsScreenProps) => {
     // Grab our pokemon data that was pulled in our app.tsx from params
     const { pokemon } = route.params;
+    const movesList = useSelector((state) => state.moves.movesData);
     const parsedMoves = JSON.parse(pokemon.moves);
     const [movesData, setMovesData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
+
     // useEffect to fetch pokemon moves data on component mount
     useEffect(() => {
-        const fetchMovesData = async () => {
-            try {
-                const moves = parsedMoves.map(async (move) => {
-                    const response = await fetch(`https://pokeapi.co/api/v2/move/${move.name}/`);
-                    try {
-                        const data = await response.json();
-                        const { name, power, accuracy, pp, type, contest_type, damage_class } = data;
-                        return { name, power, accuracy, pp, type, contest_type, damage_class };
-                    } catch (error) {
-                        console.error('Error parsing JSON:', error)
-                    }
-                });
-                const movesData = await Promise.all(moves);
-                setMovesData(movesData);
-                setIsLoading(false);
-            } catch (error) {
-                console.error('Error fetching moves data on the MovesScreen:', error)
-                setIsLoading(false);
-            }
-        }
 
-        fetchMovesData();
+        const findThisPokemonsMoves = async () => {
+            const pokeMoves = await Promise.all(parsedMoves.map((pokemonMove) => movesList[pokemonMove.name]));
+            setMovesData(pokeMoves)
+            setIsLoading(false);
+        }
+        findThisPokemonsMoves();
+//         const fetchMovesData = async () => {
+//             try {
+//                 const moves = parsedMoves.map(async (move) => {
+//                     const response = await fetch(`https://pokeapi.co/api/v2/move/${move.name}/`);
+//                     try {
+//                         const data = await response.json();
+//                         const { name, power, accuracy, pp, type, contest_type, damage_class } = data;
+//                         return { name, power, accuracy, pp, type, contest_type, damage_class };
+//                     } catch (error) {
+//                         console.error('Error parsing JSON:', error)
+//                     }
+//                 });
+//                 const movesData = await Promise.all(moves);
+//                 setMovesData(movesData);
+//                 setIsLoading(false);
+//             } catch (error) {
+//                 console.error('Error fetching moves data on the MovesScreen:', error)
+//                 setIsLoading(false);
+//             }
+//         }
+//
+//         fetchMovesData();
     }, []);
 
 

@@ -24,7 +24,7 @@ const createMovesTable = () => {
                             `CREATE TABLE IF NOT EXISTS Moves (
                             id INTEGER PRIMARY KEY,
                             name TEXT NOT NULL,
-                            accuracy INTEGER NOT NULL,
+                            accuracy INTEGER,
                             power INTEGER,
                             pp INTEGER,
                             priority INTEGER,

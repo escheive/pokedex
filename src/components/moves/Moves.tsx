@@ -134,7 +134,7 @@ const Moves = ({ parsedMoves, movesData, damageClasses, typeOfMove, isLoading })
                             <View style={styles.moveInfoRow}>
                                 <Text style={[styles.movesType, { backgroundColor: getTypeStyle(item.type.name).backgroundColor }]}>{capitalizeString(item.type.name)}</Text>
                                 <Text style={[styles.movesClass, { backgroundColor: damageClasses[item.damage_class.name].background, color: damageClasses[item.damage_class.name].font } ]}>{capitalizeString(item.damage_class.name)}</Text>
-                                <Text style={styles.movesContest}>{(item.contest_type ? capitalizeString(item.contest_type.name) : '-')}</Text>
+                                <Text style={styles.movesContest}>{(item.contest_type.name ? capitalizeString(item.contest_type.name) : '-')}</Text>
                             </View>
                         </View>
                     ))
