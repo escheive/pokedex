@@ -3,7 +3,7 @@ import { createMovesTable, insertMoves } from '../utils/database/movesDatabase';
 // Redux
 import { useDispatch } from 'react-redux';
 // Utils
-import grabIdFromPokeApiUrl from '../utils/helpers';
+import { grabIdFromPokeApiUrl } from '../utils/helpers';
 import { fetchMovesRequest, fetchMovesSuccess, fetchMovesFailure } from '../actions/movesActions';
 
 ////////////////////////////////////////////////////////////////
@@ -18,43 +18,45 @@ const fetchMovesFromApi = async (resultsPerPage, page) => {
         const data = await response.json();
 
         const movesData = data.results.map(async (move) => {
-            const response = await fetch(move.url);
-            const moveDetails = await response.json();
+            const moveResponse = await fetch(move.url);
+            const moveDetails = await moveResponse.json();
 
-            const learnedBy = moveDetails.learned_by_pokemon.map((pokemon) => {
-                const id = grabIdFromPokeApiUrl(pokemon.url)
-                return {
-                    name: pokemon.name,
-                    id: id
-                }
-            }
+            const learnedBy = await moveDetails.learned_by_pokemon && Array.isArray(moveDetails.learned_by_pokemon) ?
+                moveDetails.learned_by_pokemon.map((pokemon) => {
+                    const id = grabIdFromPokeApiUrl(pokemon.url)
+                    return {
+                        name: pokemon.name,
+                        id: id
+                    };
+                }) : [];
 
-            const machine = {};
-            if (move.machines.length > 0) {
-                const machineResponse = await fetch(move.machines[-1].machine.url);
+            let machine = {};
+
+            if (moveDetails.machines.length > 0) {
+                const machineResponse = await fetch(moveDetails.machines[moveDetails.machines.length -1].machine.url);
                 const machineData = await machineResponse.json();
 
-                const machine = {
+                machine = {
                     item: machineData.item,
                     move: machineData.move
                 }
             }
 
             return {
-                id: move.id,
-                name: move.name,
-                accuracy: move.accuracy,
-                power: move.power,
-                pp: move.pp,
-                type: move.type,
-                priority: move.priority,
-                contest_type: move.contest_type,
-                damage_class: move.damage_class,
-                effect_entry: move.effect_entries[0].effect,
-                effect_chance: move.effect_chance,
-                generation: move.generation,
-                target: move.target,
-                meta: move.meta,
+                id: moveDetails.id,
+                name: moveDetails.name,
+                accuracy: moveDetails.accuracy,
+                power: moveDetails.power,
+                pp: moveDetails.pp,
+                type: moveDetails.type,
+                priority: moveDetails.priority,
+                contest_type: moveDetails.contest_type,
+                damage_class: moveDetails.damage_class,
+                effect_entry: moveDetails.effect_entries[0] ? moveDetails.effect_entries[0].effect : null,
+                effect_chance: moveDetails.effect_chance,
+                generation: moveDetails.generation,
+                target: moveDetails.target,
+                meta: moveDetails.meta,
                 machine: machine,
                 learned_by_pokemon: learnedBy,
             }
@@ -86,7 +88,6 @@ const fetchMovesData = () => {
             const fetchedMovesData = {};
 
             const hasData = await new Promise((resolve, reject) => {
-                console.log('hasData');
                 const start = 1; // Start from move ID 1
                 const end = totalCount;
                 database.transaction((tx) => {
@@ -95,6 +96,7 @@ const fetchMovesData = () => {
                         [start, end],
                         (tx, result) => {
                             if (result.rows.length > 0) {
+                                console.log('Moves table has data');
                                 for (let i = 0; i < result.rows.length; i++) {
                                     const move = result.rows.item(i);
                                     fetchedMovesData[move.id] = move;
@@ -111,7 +113,7 @@ const fetchMovesData = () => {
             });
 
             if (!hasData) {
-                console.log('!hasData');
+                console.log('Moves !hasData');
                 const batchInserts = [];
                 let page = 1;
                 let totalResults = 0;
@@ -120,7 +122,7 @@ const fetchMovesData = () => {
                 const fetchDataAndInsert = async () => {
                     try {
                         console.log('Batch:', page);
-                        const fetchedData = await fetchMovesFromAPI(resultsPerPage, page);
+                        const fetchedData = await fetchMovesFromApi(resultsPerPage, page);
                         batchInserts.push(insertMoves(fetchedData));
 
                         totalResults = totalCount;
@@ -130,7 +132,6 @@ const fetchMovesData = () => {
                         } else {
                             // Wait for all the batch inserts to complete
                             await Promise.all(batchInserts);
-
                             // Rerun the fetchMovesData function to retrieve the data from the database
                             fetchMovesData()(dispatch);
                         }

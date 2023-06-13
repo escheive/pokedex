@@ -28,7 +28,7 @@ const createMovesTable = () => {
                             power INTEGER,
                             pp INTEGER,
                             priority INTEGER,
-                            type TEXT
+                            type TEXT,
                             contest_type TEXT,
                             damage_class TEXT,
                             effect_entry TEXT,
@@ -50,7 +50,7 @@ const createMovesTable = () => {
                             }
                         );
                     } else {
-                        console.log('Table does exist already')
+                        console.log('Moves table does exist already')
                         resolve();
                     }
                 },
@@ -88,12 +88,12 @@ const resetMovesTable = () => {
 
 // Function to insert a Moves record into the Moves table
 const insertMoves = async (movesData) => {
-    console.log('insertMove function hit')
+    console.log('insertMoves function hit')
     try {
         await new Promise((resolve, reject) => {
             database.transaction((tx) => {
                 let successfulInsertions = 0;
-                const totalInsertions = MovesData.length;
+                const totalInsertions = movesData.length;
                 movesData.forEach((move) => {
                     tx.executeSql(
                         `INSERT OR IGNORE INTO Moves (id, name, accuracy, power, pp, priority, type, contest_type, damage_class, effect_entry, effect_chance, generation, target, meta, machine, learned_by_pokemon)

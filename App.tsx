@@ -29,10 +29,12 @@ import SettingsStack from './src/navigation/SettingsStack';
 import { database } from './src/utils/database/database';
 import { resetPokemonTable } from './src/utils/database/pokemonDatabase';
 import { resetAbilitiesTable } from './src/utils/database/abilitiesDatabase';
+import { resetMovesTable } from './src/utils/database/movesDatabase';
 import { pokemonColors } from './src/utils/typeStyle';
 // Services
 import { fetchPokemonData } from './src/services/pokemonService';
 import { fetchAbilitiesData } from './src/services/abilitiesService';
+import { fetchMovesData } from './src/services/movesService';
 // Database
 import SQLite from 'react-native-sqlite-storage';
 // Assets
@@ -52,8 +54,10 @@ const App = () => {
     useEffect(() => {
 //         resetAbilitiesTable();
 //         resetPokemonTable();
+//         resetMovesTable();
         dispatch(fetchPokemonData())
             .then(() => dispatch(fetchAbilitiesData()))
+            .then(() => dispatch(fetchMovesData()))
             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
     }, [dispatch]);
 
