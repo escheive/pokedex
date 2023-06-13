@@ -1,9 +1,10 @@
-import { database, createPokemonTable, insertPokemon } from '../utils/database';
+import { database } from '../utils/database/database';
+import { createMovesTable, insertMoves } from '../utils/database/movesDatabase';
 // Redux
 import { useDispatch } from 'react-redux';
 // Utils
 import grabIdFromPokeApiUrl from '../utils/helpers';
-import { fetchPokemonRequest, fetchPokemonSuccess, fetchPokemonFailure } from '../actions/pokemonActions';
+import { fetchMovesRequest, fetchMovesSuccess, fetchMovesFailure } from '../actions/movesActions';
 
 ////////////////////////////////////////////////////////////////
 //+++++++++++++++++++ Moves Data Functions +++++++++++++++++++//

@@ -87,7 +87,7 @@ const resetMovesTable = () => {
 
 
 // Function to insert a Moves record into the Moves table
-const insertMove = async (movesData) => {
+const insertMoves = async (movesData) => {
     console.log('insertMove function hit')
     try {
         await new Promise((resolve, reject) => {
@@ -134,4 +134,4 @@ const insertMove = async (movesData) => {
 };
 
 
-export { createMovesTable, resetMovesTable ,insertMove };
+export { createMovesTable, resetMovesTable, insertMoves };
