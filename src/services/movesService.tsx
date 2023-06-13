@@ -1,12 +1,60 @@
 import { database, createPokemonTable, insertPokemon } from '../utils/database';
 // Redux
 import { useDispatch } from 'react-redux';
+// Utils
+import grabIdFromPokeApiUrl from '../utils/helpers';
 import { fetchPokemonRequest, fetchPokemonSuccess, fetchPokemonFailure } from '../actions/pokemonActions';
 
 ////////////////////////////////////////////////////////////////
 //+++++++++++++++++++ Moves Data Functions +++++++++++++++++++//
 ////////////////////////////////////////////////////////////////
 
+// Function to fetch base pokemon data from the api
+const fetchSpeciesDataFromApi = async (resultsPerPage, page) => {
+    console.log('fetchingPokemonFromAPI function hit')
+    try {
+        const response = await fetch(`https://pokeapi.co/api/v2/move?limit=${resultsPerPage}&offset=${(page - 1) * resultsPerPage}`);
+        const data = await response.json();
+
+        const movesData = data.results.map(async (move) => {
+            const response = await fetch(move.url);
+            const moveDetails = await response.json();
+
+            const learnedBy = moveDetails.learned_by_pokemon.map((pokemon) => {
+                const id = grabIdFromPokeApiUrl(pokemon.url)
+                return {
+                    name: pokemon.name,
+                    id: id
+                }
+            }
+
+            return {
+                id: move.id,
+                name: move.name,
+                accuracy: move.accuracy,
+                power: move.power,
+                pp: move.pp,
+                type: move.type,
+                priority: move.priority,
+                contest_type: move.contest_type,
+                damage_class: move.damage_class,
+                effect_entry: move.effect_entries[0].effect,
+                effect_chance: move.effect_chance,
+                generation: move.generation,
+                learned_by_pokemon: learnedBy,
+            }
+        });
+
+        const transformedPokemonData = await Promise.all(pokemonData);
+
+        // Release memory occupied by data.results and pokemonUrls
+        data.results = null;
+        return transformedPokemonData;
+    } catch (error) {
+        console.error('Error in fetchPokemonFromAPI function', error);
+        throw error;
+    }
+};
 
 const fetchMovesData = () => {
     console.log('fetchMovesData function hit');
@@ -91,4 +139,4 @@ const fetchMovesData = () => {
     };
 };
 
-export { fetchMovesData };
+export { fetchMovesData, fetchMovesFromApi };

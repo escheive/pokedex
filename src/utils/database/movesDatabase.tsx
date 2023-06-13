@@ -21,7 +21,7 @@ const createMovesTable = () => {
                         console.log('Moves table doesnt exist, creating one');
                         // If table doesnt exist, create it
                         tx.executeSql(
-                            `CREATE TABLE IF NOT EXISTS Pokemon (
+                            `CREATE TABLE IF NOT EXISTS Moves (
                             id INTEGER PRIMARY KEY,
                             name TEXT NOT NULL,
                             type1 TEXT NOT NULL,
@@ -98,9 +98,17 @@ const insertMove = async (movesData) => {
                         `INSERT OR IGNORE INTO Moves (id, name, type1, type2, height, weight, base_experience, stats, abilities, moves, species_url, image_url, pixel_image_url, isCaptured, isFavorite)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
                         [
-                            pokemon.id,
-                            pokemon.name,
-                            pokemon.type1,
+                            move.id,
+                            move.name,
+                            move.accuracy,
+                            move.power,
+                            move.pp,
+                            move.priority,
+                            move.type,
+                            move.contest_type,
+                            move.damage_class,
+                            move.effect_entries,
+                            move.generation.name,
                             pokemon.type2 ? pokemon.type2 : null,
                             pokemon.height,
                             pokemon.weight,
@@ -108,11 +116,6 @@ const insertMove = async (movesData) => {
                             JSON.stringify(pokemon.stats),
                             JSON.stringify(pokemon.abilities),
                             JSON.stringify(pokemon.moves),
-                            pokemon.species_url,
-                            pokemon.image_url,
-                            pokemon.pixel_image_url,
-                            false,
-                            false
                         ],
                         () => {
 //                             successfulInsertions++;
