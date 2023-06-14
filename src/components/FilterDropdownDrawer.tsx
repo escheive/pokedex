@@ -3,29 +3,20 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native
 
 const FilterDropdownDrawer = ({ selectedVersions, setSelectedVersions, groupedVersions }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
+    const [selectedButtons, setSelectedButtons] = useState([]);
     const [drawerWidth] = useState(new Animated.Value(0));
 
     const handleVersionSelect = (version: string) => {
-      let updatedVersions: string[] = [];
+        let updatedVersions: string[] = [];
 
-      if (groupedVersions.hasOwnProperty(version)) {
-        // If the selected version is a grouped version, handle it accordingly
-        const range = groupedVersions[version];
-        if (selectedVersions.includes(version)) {
-          updatedVersions = selectedVersions.filter((v) => v !== version);
+        if (selectedButtons.includes(version)) {
+          updatedVersions = selectedButtons.filter((v) => v !== version);
         } else {
-          updatedVersions = [...selectedVersions, version];
+          updatedVersions = [...selectedButtons, version];
         }
-      } else {
-        // If the selected version is not a grouped version, handle it as usual
-        if (selectedVersions.includes(version)) {
-          updatedVersions = selectedVersions.filter((v) => v !== version);
-        } else {
-          updatedVersions = [...selectedVersions, version];
-        }
-      }
 
-      setSelectedVersions(updatedVersions);
+        setSelectedButtons(updatedVersions)
+        setSelectedVersions(updatedVersions);
     };
 
     const handleDropdownToggle = () => {
@@ -94,7 +85,7 @@ const FilterDropdownDrawer = ({ selectedVersions, setSelectedVersions, groupedVe
                         style={[
                             styles.filterButton,
                             {
-                                backgroundColor: selectedVersions.includes(range.key) ? 'blue' : '#E5E5E5',
+                                backgroundColor: selectedButtons.includes(range.key) ? 'blue' : '#E5E5E5',
                             },
                         ]}
                         onPress={() => handleVersionSelect(range.key)}
@@ -102,6 +93,7 @@ const FilterDropdownDrawer = ({ selectedVersions, setSelectedVersions, groupedVe
                         <Text style={styles.filterButtonText}>{range.label}</Text>
                     </TouchableOpacity>
                 ))}
+
                 <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
                     <Text style={styles.closeButtonText}>Close</Text>
                 </TouchableOpacity>

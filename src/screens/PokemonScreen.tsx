@@ -168,34 +168,6 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         return filteredList;
     };
 
-
-//     // function to handle the filtering of pokemon
-//     const filterPokemonByVersions = (pokemonList, searchQuery) => {
-//         if (selectedVersions.length === 0 && !searchQuery) {
-//             return Object.values(pokemonList);
-//         }
-//
-//         const filteredList = Object.values(pokemonList).filter((pokemon) => {
-//             const matchesSelectedVersions = selectedVersions.some((version) => {
-//                 const range = groupedVersions[version];
-//                 return pokemon.id >= range.start && pokemon.id <= range.end;
-//             });
-//
-//             if (selectedVersions.length > 0) {
-//                 if (!matchesSelectedVersions) {
-//                     return false;
-//                 }
-//             }
-//
-//             if (searchQuery) {
-//                 return pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase());
-//             }
-//             return matchesSelectedVersions;
-//         });
-//
-//         return filteredList
-//     };
-
     const filteredPokemon = filterPokemon(pokemonList, searchQuery, showFavorites, showCaughtPokemon);
 
 
@@ -302,7 +274,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             <View style={styles.filterContainer}>
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
                 <View style={styles.filterButtonContainer}>
-                    <FilterDropdownDrawer selectedVersions={selectedVersions} setSelectedVersions={setSelectedVersions} groupedVersions={groupedVersions} />
+                    <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} groupedVersions={groupedVersions} />
                     <TouchableOpacity
                         style={[
                             styles.filterButton,
@@ -368,7 +340,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     dropdownContent: {
-        zIndex: 3,
         position: 'absolute',
         top: '100%',
         left: 0,
