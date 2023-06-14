@@ -361,7 +361,9 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                     />
                 </View>
             </View>
-            {renderPokemonList()}
+            <View style={styles.pokemonListContainer}>
+                {renderPokemonList()}
+            </View>
         </View>
     );
 };
@@ -375,6 +377,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         marginVertical: 10,
+        zIndex: 2,
     },
     filterTitleText: {
         fontSize: 18,
@@ -390,6 +393,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     dropdownContent: {
+        zIndex: 3,
         position: 'absolute',
         top: '100%',
         left: 0,
@@ -429,6 +433,9 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         alignItems: 'center',
+    },
+    pokemonListContainer: {
+        zIndex: 1,
     },
     itemContainer: {
         marginVertical: 10,
