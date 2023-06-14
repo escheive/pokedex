@@ -161,14 +161,16 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
             marginHorizontal: 8,
         },
         navItemText: {
-            color: 'white',
             fontSize: 20,
+            fontWeight: 500,
+            color: pokemon.type2 ? pokemonColors[pokemon.type2].color : '#F5F5F5'
         },
         selectedNavItem: {
             backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
+            color: pokemonColors[pokemon.type1].color,
         },
         selectedNavItemText: {
-            fontWeight: 'bold',
+            fontWeight: 900,
             color: pokemonColors[pokemon.type1].color,
         },
         pillBars: {
@@ -224,7 +226,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
                     style={[
                         styles.navItem,
                         selectedTab === 'max' && styles.selectedNavItem,
-                        selectedTab !== 'max' && (pokemon.type2 ? { backgroundColor: pokemonColors[pokemon.type2].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                        selectedTab !== 'max' && (pokemon.type2 ? { backgroundColor: pokemonColors[pokemon.type2].backgroundColor, color: pokemonColors[pokemon.type2].color } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                     ]}
                     onPress={() => setSelectedTab('max')}
                 >
