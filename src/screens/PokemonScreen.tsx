@@ -8,6 +8,7 @@ import { fetchPokemonData } from '../utils/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePokemonStatusAction, updatePokemonFavoriteStatusAction } from '../actions/pokemonActions';
+import FilterDropdownDrawer from '../components/FilterDropdownDrawer';
 
 type Props = {
     navigation: StackNavigationProp<any>;
@@ -301,6 +302,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             <View style={styles.filterContainer}>
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
                 <View style={styles.filterButtonContainer}>
+                    <FilterDropdownDrawer />
                     <View style={styles.dropdownContainer}>
                         <TouchableOpacity
                             style={styles.dropdownTrigger}
