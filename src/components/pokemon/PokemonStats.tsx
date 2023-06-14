@@ -153,7 +153,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
             marginBottom: 25,
         },
         navItem: {
-            flex: 1,
+            flex: 7,
             alignItems: 'center',
             justifyContent: 'center',
             padding: 3,
@@ -168,6 +168,7 @@ const PokemonStats = ({ pokemonColors, pokemon }) => {
         selectedNavItem: {
             backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
             color: pokemonColors[pokemon.type1].color,
+            flex: 8,
         },
         selectedNavItemText: {
             fontWeight: 900,
