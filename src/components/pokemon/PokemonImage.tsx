@@ -65,7 +65,7 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
             },
             typesText: {
                 fontSize: 18,
-                fontWeight: 'bold',
+                fontWeight: 800,
                 borderRadius: 20,
                 paddingHorizontal: 10,
             },
@@ -95,7 +95,7 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
                     </View>
                     {pokemon.type2 ? (
                         <View style={[styles.type, { backgroundColor: 'white' } ]}>
-                            <Text style={[ styles.typesText, { color: pokemonColors[pokemon.type1].color, backgroundColor: pokemonColors[pokemon.type2].backgroundColor } ]}>
+                            <Text style={[ styles.typesText, { color: pokemonColors[pokemon.type2].color, backgroundColor: pokemonColors[pokemon.type2].backgroundColor } ]}>
                                 {capitalizeString(pokemon.type2)}
                             </Text>
                         </View>
