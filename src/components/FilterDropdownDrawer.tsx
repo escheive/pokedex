@@ -56,8 +56,11 @@ const FilterDropdownDrawer = ({selectedVersions}) => {
     return (
         <View>
             {/* Your other content */}
-            <TouchableOpacity onPress={handleDropdownToggle}>
-                <Text>Toggle Dropdown</Text>
+            <TouchableOpacity
+                style={styles.dropdownTrigger}
+                onPress={handleDropdownToggle}
+            >
+                <Text style={styles.dropdownTriggerText}>Select Generations</Text>
             </TouchableOpacity>
             <Animated.View
                 style={[
@@ -100,6 +103,13 @@ const FilterDropdownDrawer = ({selectedVersions}) => {
 };
 
 const styles = StyleSheet.create({
+    dropdownTrigger: {
+        padding: 10,
+        backgroundColor: '#F5F5F5',
+        borderColor: '#DDDDDD',
+        borderWidth: 1,
+        borderRadius: 5,
+    },
     filterButton: {
         padding: 5,
         borderRadius: 5,
