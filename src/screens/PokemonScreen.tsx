@@ -34,6 +34,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     const [showFavorites, setShowFavorites] = useState(false);
     const [showCaughtPokemon, setShowCaughtPokemon] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [dropdownVisible, setDropdownVisible] = useState(false);
     const dispatch = useDispatch();
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
@@ -300,20 +301,31 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             <View style={styles.filterContainer}>
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
                 <View style={styles.filterButtonContainer}>
-                    {versionOptions.map((range) => (
-                        <TouchableOpacity
-                            key={range.key}
-                            style={[
-                                styles.filterButton,
-                                {
-                                    backgroundColor: selectedVersions.includes(range.key) ? 'blue' : 'gray',
-                                },
-                            ]}
-                            onPress={() => handleVersionSelect(range.key)}
-                        >
-                            <Text style={styles.filterButtonText}>{range.label}</Text>
-                        </TouchableOpacity>
-                    ))}
+                    <TouchableOpacity
+                        style={styles.dropdownTrigger}
+                        onPress={() => setDropdownVisible(!dropdownVisible)}
+                    >
+                        <Text>Select Generations</Text>
+                    </TouchableOpacity>
+
+                    {dropdownVisible && (
+                        <View style={styles.dropdownContent}>
+                            {versionOptions.map((range) => (
+                                <TouchableOpacity
+                                    key={range.key}
+                                    style={[
+                                        styles.filterButton,
+                                        {
+                                            backgroundColor: selectedVersions.includes(range.key) ? 'blue' : 'gray',
+                                        },
+                                    ]}
+                                    onPress={() => handleVersionSelect(range.key)}
+                                >
+                                    <Text style={styles.filterButtonText}>{range.label}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
                     <TouchableOpacity
                         style={[
                             styles.filterButton,
