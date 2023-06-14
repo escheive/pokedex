@@ -34,10 +34,10 @@ const FilterDropdownDrawer = ({ selectedVersions, setSelectedVersions, groupedVe
         } else {
             openDrawer();
         }
-        setDropdownVisible(!dropdownVisible);
     };
 
     const openDrawer = () => {
+        setDropdownVisible(!dropdownVisible);
         Animated.timing(drawerWidth, {
             toValue: 200,
             duration: 300,
@@ -48,20 +48,17 @@ const FilterDropdownDrawer = ({ selectedVersions, setSelectedVersions, groupedVe
     const closeDrawer = () => {
         Animated.timing(drawerWidth, {
             toValue: 0,
-            duration: 300,
+            duration: 150,
             useNativeDriver: false,
-        }).start();
+        }).start(() => {
+            setDropdownVisible(!dropdownVisible);
+        });
     };
 
     const drawerWidthInterpolation = drawerWidth.interpolate({
         inputRange: [0, 200],
         outputRange: [0, 200],
     });
-
-    const handleOptionSelect = (option) => {
-        console.log('Selected option:', option);
-        handleDropdownToggle(); // Close the drawer after selecting an option
-    };
 
     const versionOptions = [
         { key: 'gen1', label: 'Gen 1' },
@@ -76,7 +73,7 @@ const FilterDropdownDrawer = ({ selectedVersions, setSelectedVersions, groupedVe
     ];
 
     return (
-        <View>
+        <View style={styles.filterDropdownContainer}>
             {/* Your other content */}
             <TouchableOpacity
                 style={styles.dropdownTrigger}
@@ -86,31 +83,18 @@ const FilterDropdownDrawer = ({ selectedVersions, setSelectedVersions, groupedVe
             </TouchableOpacity>
             <Animated.View
                 style={[
-                    {
-                        position: 'absolute',
-                        top: 0,
-                        bottom: 0,
-                        width: drawerWidthInterpolation,
-                        backgroundColor: 'white',
-                        // Add any desired styling for the drawer
-                    },
+                    styles.animatedViewContainer,
+                    { width: drawerWidthInterpolation },
                     dropdownVisible ? { left: 0 } : { left: -200 },
                 ]}
             >
-                {/* Add your options/buttons here */}
-                <TouchableOpacity onPress={() => handleOptionSelect('Option 1')}>
-                    <Text>Option 1</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleOptionSelect('Option 2')}>
-                    <Text>Option 2</Text>
-                </TouchableOpacity>
                 {versionOptions.map((range) => (
                     <TouchableOpacity
                         key={range.key}
                         style={[
                             styles.filterButton,
                             {
-                                backgroundColor: selectedVersions.includes(range.key) ? 'blue' : 'gray',
+                                backgroundColor: selectedVersions.includes(range.key) ? 'blue' : '#E5E5E5',
                             },
                         ]}
                         onPress={() => handleVersionSelect(range.key)}
@@ -118,26 +102,63 @@ const FilterDropdownDrawer = ({ selectedVersions, setSelectedVersions, groupedVe
                         <Text style={styles.filterButtonText}>{range.label}</Text>
                     </TouchableOpacity>
                 ))}
-                {/* ... */}
+                <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
+                    <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
             </Animated.View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    filterDropdownContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'stretch',
+    },
+    animatedViewContainer: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        backgroundColor: 'white',
+    },
     dropdownTrigger: {
         padding: 10,
         backgroundColor: '#F5F5F5',
         borderColor: '#DDDDDD',
         borderWidth: 1,
         borderRadius: 5,
+        width: '60%',
+        alignSelf: 'flex-end',
     },
     filterButton: {
         padding: 5,
         borderRadius: 5,
         marginHorizontal: 5,
         marginVertical: 3,
-    }
+        minHeight: 30,
+        flex: 3,
+    },
+    filterButtonText: {
+        fontSize: 16,
+        color: 'white',
+    },
+    closeButton: {
+        backgroundColor: '#E5E5E5',
+        padding: 6,
+        borderRadius: 5,
+        marginHorizontal: 5,
+        marginVertical: 10,
+        minHeight: 40,
+        flex: 4,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    closeButtonText: {
+        fontSize: 18,
+        color: 'white',
+    },
 })
 
 export default FilterDropdownDrawer;

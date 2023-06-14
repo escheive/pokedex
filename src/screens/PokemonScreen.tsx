@@ -303,33 +303,6 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
                 <View style={styles.filterButtonContainer}>
                     <FilterDropdownDrawer selectedVersions={selectedVersions} setSelectedVersions={setSelectedVersions} groupedVersions={groupedVersions} />
-                    <View style={styles.dropdownContainer}>
-                        <TouchableOpacity
-                            style={styles.dropdownTrigger}
-                            onPress={() => setDropdownVisible(!dropdownVisible)}
-                        >
-                            <Text style={styles.dropdownTriggerText}>Select Generations</Text>
-                        </TouchableOpacity>
-
-                        {dropdownVisible && (
-                            <View style={styles.dropdownContent}>
-                                {versionOptions.map((range) => (
-                                    <TouchableOpacity
-                                        key={range.key}
-                                        style={[
-                                            styles.filterButton,
-                                            {
-                                                backgroundColor: selectedVersions.includes(range.key) ? 'blue' : 'gray',
-                                            },
-                                        ]}
-                                        onPress={() => handleVersionSelect(range.key)}
-                                    >
-                                        <Text style={styles.filterButtonText}>{range.label}</Text>
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        )}
-                    </View>
                     <TouchableOpacity
                         style={[
                             styles.filterButton,
