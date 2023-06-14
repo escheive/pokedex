@@ -114,28 +114,28 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         gen9: { start: 906, end: 1010 },
     };
 
-    const handleVersionSelect = (version: string) => {
-      let updatedVersions: string[] = [];
-
-      if (groupedVersions.hasOwnProperty(version)) {
-        // If the selected version is a grouped version, handle it accordingly
-        const range = groupedVersions[version];
-        if (selectedVersions.includes(version)) {
-          updatedVersions = selectedVersions.filter((v) => v !== version);
-        } else {
-          updatedVersions = [...selectedVersions, version];
-        }
-      } else {
-        // If the selected version is not a grouped version, handle it as usual
-        if (selectedVersions.includes(version)) {
-          updatedVersions = selectedVersions.filter((v) => v !== version);
-        } else {
-          updatedVersions = [...selectedVersions, version];
-        }
-      }
-
-      setSelectedVersions(updatedVersions);
-    };
+//     const handleVersionSelect = (version: string) => {
+//       let updatedVersions: string[] = [];
+//
+//       if (groupedVersions.hasOwnProperty(version)) {
+//         // If the selected version is a grouped version, handle it accordingly
+//         const range = groupedVersions[version];
+//         if (selectedVersions.includes(version)) {
+//           updatedVersions = selectedVersions.filter((v) => v !== version);
+//         } else {
+//           updatedVersions = [...selectedVersions, version];
+//         }
+//       } else {
+//         // If the selected version is not a grouped version, handle it as usual
+//         if (selectedVersions.includes(version)) {
+//           updatedVersions = selectedVersions.filter((v) => v !== version);
+//         } else {
+//           updatedVersions = [...selectedVersions, version];
+//         }
+//       }
+//
+//       setSelectedVersions(updatedVersions);
+//     };
 
     // function to handle the filtering of pokemon
     const filterPokemon = (pokemonList, searchQuery, showFavorites, showCaughtPokemon) => {
@@ -302,7 +302,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             <View style={styles.filterContainer}>
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
                 <View style={styles.filterButtonContainer}>
-                    <FilterDropdownDrawer selectedVersions={selectedVersions} />
+                    <FilterDropdownDrawer selectedVersions={selectedVersions} setSelectedVersions={setSelectedVersions} groupedVersions={groupedVersions} />
                     <View style={styles.dropdownContainer}>
                         <TouchableOpacity
                             style={styles.dropdownTrigger}

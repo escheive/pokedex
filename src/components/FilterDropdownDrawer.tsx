@@ -1,9 +1,32 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 
-const FilterDropdownDrawer = ({selectedVersions}) => {
+const FilterDropdownDrawer = ({ selectedVersions, setSelectedVersions, groupedVersions }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [drawerWidth] = useState(new Animated.Value(0));
+
+    const handleVersionSelect = (version: string) => {
+      let updatedVersions: string[] = [];
+
+      if (groupedVersions.hasOwnProperty(version)) {
+        // If the selected version is a grouped version, handle it accordingly
+        const range = groupedVersions[version];
+        if (selectedVersions.includes(version)) {
+          updatedVersions = selectedVersions.filter((v) => v !== version);
+        } else {
+          updatedVersions = [...selectedVersions, version];
+        }
+      } else {
+        // If the selected version is not a grouped version, handle it as usual
+        if (selectedVersions.includes(version)) {
+          updatedVersions = selectedVersions.filter((v) => v !== version);
+        } else {
+          updatedVersions = [...selectedVersions, version];
+        }
+      }
+
+      setSelectedVersions(updatedVersions);
+    };
 
     const handleDropdownToggle = () => {
         if (dropdownVisible) {
@@ -36,7 +59,6 @@ const FilterDropdownDrawer = ({selectedVersions}) => {
     });
 
     const handleOptionSelect = (option) => {
-        // Handle the selected option here
         console.log('Selected option:', option);
         handleDropdownToggle(); // Close the drawer after selecting an option
     };
