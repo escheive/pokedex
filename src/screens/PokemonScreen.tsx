@@ -302,7 +302,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             <View style={styles.filterContainer}>
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
                 <View style={styles.filterButtonContainer}>
-                    <FilterDropdownDrawer />
+                    <FilterDropdownDrawer selectedVersions={selectedVersions} />
                     <View style={styles.dropdownContainer}>
                         <TouchableOpacity
                             style={styles.dropdownTrigger}
