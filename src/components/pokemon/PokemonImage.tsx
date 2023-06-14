@@ -60,16 +60,14 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
             },
             type: {
                 alignItems: 'center',
-                borderWidth: 1,
-                borderColor: pokemonColors[pokemon.type1].backgroundColor,
                 borderRadius: 20,
-                paddingHorizontal: 10,
                 marginHorizontal: 4,
             },
             typesText: {
                 fontSize: 18,
                 fontWeight: 'bold',
-                marginHorizontal: 2,
+                borderRadius: 20,
+                paddingHorizontal: 10,
             },
         });
 
@@ -90,14 +88,14 @@ const PokemonImage = ({ pokemon, pokedexEntry, handlePress, handlePrevEvolution 
                 </View>
 
                 <View style={styles.typesContainer}>
-                    <View style={[styles.type, { backgroundColor: pokemonColors[pokemon.type1].backgroundColor } ]}>
-                        <Text style={[ styles.typesText, { color: pokemonColors[pokemon.type1].color } ]}>
+                    <View style={styles.type}>
+                        <Text style={[ styles.typesText, { color: pokemonColors[pokemon.type1].color, backgroundColor: pokemonColors[pokemon.type1].backgroundColor } ]}>
                             {capitalizeString(pokemon.type1)}
                         </Text>
                     </View>
                     {pokemon.type2 ? (
-                        <View style={[styles.type, { backgroundColor: pokemonColors[pokemon.type2].backgroundColor } ]}>
-                            <Text style={[ styles.typesText, { color: pokemonColors[pokemon.type1].color } ]}>
+                        <View style={[styles.type, { backgroundColor: 'white' } ]}>
+                            <Text style={[ styles.typesText, { color: pokemonColors[pokemon.type1].color, backgroundColor: pokemonColors[pokemon.type2].backgroundColor } ]}>
                                 {capitalizeString(pokemon.type2)}
                             </Text>
                         </View>
