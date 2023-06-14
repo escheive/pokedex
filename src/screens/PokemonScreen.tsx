@@ -301,31 +301,33 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             <View style={styles.filterContainer}>
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
                 <View style={styles.filterButtonContainer}>
-                    <TouchableOpacity
-                        style={styles.dropdownTrigger}
-                        onPress={() => setDropdownVisible(!dropdownVisible)}
-                    >
-                        <Text>Select Generations</Text>
-                    </TouchableOpacity>
+                    <View style={styles.dropdownContainer}>
+                        <TouchableOpacity
+                            style={styles.dropdownTrigger}
+                            onPress={() => setDropdownVisible(!dropdownVisible)}
+                        >
+                            <Text style={styles.dropdownTriggerText}>Select Generations</Text>
+                        </TouchableOpacity>
 
-                    {dropdownVisible && (
-                        <View style={styles.dropdownContent}>
-                            {versionOptions.map((range) => (
-                                <TouchableOpacity
-                                    key={range.key}
-                                    style={[
-                                        styles.filterButton,
-                                        {
-                                            backgroundColor: selectedVersions.includes(range.key) ? 'blue' : 'gray',
-                                        },
-                                    ]}
-                                    onPress={() => handleVersionSelect(range.key)}
-                                >
-                                    <Text style={styles.filterButtonText}>{range.label}</Text>
-                                </TouchableOpacity>
-                            ))}
-                        </View>
-                    )}
+                        {dropdownVisible && (
+                            <View style={styles.dropdownContent}>
+                                {versionOptions.map((range) => (
+                                    <TouchableOpacity
+                                        key={range.key}
+                                        style={[
+                                            styles.filterButton,
+                                            {
+                                                backgroundColor: selectedVersions.includes(range.key) ? 'blue' : 'gray',
+                                            },
+                                        ]}
+                                        onPress={() => handleVersionSelect(range.key)}
+                                    >
+                                        <Text style={styles.filterButtonText}>{range.label}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        )}
+                    </View>
                     <TouchableOpacity
                         style={[
                             styles.filterButton,
@@ -377,6 +379,28 @@ const styles = StyleSheet.create({
     filterTitleText: {
         fontSize: 18,
     },
+    dropdownContainer: {
+        position: 'relative',
+    },
+    dropdownTrigger: {
+        padding: 10,
+        backgroundColor: '#F5F5F5',
+        borderColor: '#DDDDDD',
+        borderWidth: 1,
+        borderRadius: 5,
+    },
+    dropdownContent: {
+        position: 'absolute',
+        top: '100%',
+        left: 0,
+        width: '100%',
+        backgroundColor: '#FFFFFF',
+        borderColor: '#DDDDDD',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginTop: 5,
+        padding: 10,
+    },
     filterButtonContainer: {
         marginTop: 10,
         flexDirection: 'row',
@@ -384,13 +408,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     filterButton: {
-        paddingVertical: 5,
-        paddingHorizontal: 10,
+        padding: 5,
         borderRadius: 5,
         marginHorizontal: 5,
         marginVertical: 3,
     },
     filterButtonText: {
+        fontSize: 16,
         color: 'white',
     },
     searchContainer: {
