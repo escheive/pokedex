@@ -34,63 +34,11 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
     const [showFavorites, setShowFavorites] = useState(false);
     const [showCaughtPokemon, setShowCaughtPokemon] = useState(false);
+    const [showFavoritesAndCaught, setShowFavoritesAndCaught] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const dispatch = useDispatch();
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
-
-//     console.log(pokemonList)
-
-//     const fetchPokemonDetails = async (pokemonId) => {
-//       try {
-//         const pokemonDetailsQuery = `SELECT * FROM Pokemon WHERE id = ?;`;
-//         const pokemonDetails = await new Promise((resolve, reject) => {
-//           database.transaction((tx) => {
-//             tx.executeSql(
-//               pokemonDetailsQuery,
-//               [pokemonId],
-//               (tx, result) => {
-//                 if (result.rows.length > 0) {
-//                   const pokemon = result.rows.item(0);
-//                   resolve(pokemon);
-//                 } else {
-//                   resolve(null); // No Pokémon found with the provided ID
-//                 }
-//               },
-//               (error) => {
-//                 console.error('Error fetching Pokémon details:', error);
-//                 reject(error);
-//               }
-//             );
-//           });
-//         });
-//         return pokemonDetails;
-//       } catch (error) {
-//         console.error('Error fetching Pokémon details:', error);
-//         throw error;
-//       }
-//     };
-
-
-//     // function to handle user press on a pokemon
-//     const handlePress = async (pokemon: Pokemon) => {
-//         try {
-//             // Fetch the complete details of the clicked Pokemon
-//             const pokemonDetails = await fetchPokemonDetails(pokemon.id);
-//             if (pokemonDetails) {
-//                 // Pass the complete Pokemon details to the navigation
-//                 navigation.navigate('Details', { pokemon: pokemonDetails });
-//             } else {
-//                 // Handle case when pokemon details are not found
-//                 console.log('Pokemon details not found');
-//                 // TODO: Show an alert, display an error message, etc.
-//             }
-//         } catch (error) {
-//             // Handle error
-//             console.error('Error handling Pokemon press on Pokemon screen:', error)
-//             // TODO: Show an alert, display an error message, etc.
-//         }
-//     };
 
     // function to handle user press on a pokemon
     const handlePress = async (pokemon: Pokemon) => {
@@ -137,36 +85,82 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 //       setSelectedVersions(updatedVersions);
 //     };
 
+
     // function to handle the filtering of pokemon
-    const filterPokemon = (pokemonList, searchQuery, showFavorites, showCaughtPokemon) => {
-        let filteredList = Object.values(pokemonList);
-
-        if (showFavorites) {
-            filteredList = filteredList.filter((pokemon) => pokemon.isFavorite);
-        }
-
-        if (showCaughtPokemon) {
-            filteredList = filteredList.filter((pokemon) => pokemon.isCaptured);
-        }
-
-        if (selectedVersions.length > 0) {
-            filteredList = filteredList.filter((pokemon) => {
-                const matchesSelectedVersions = selectedVersions.some((version) => {
-                    const range = groupedVersions[version];
-                    return pokemon.id >= range.start && pokemon.id <= range.end;
-                });
-                return matchesSelectedVersions;
-            });
-        }
-
-        if (searchQuery) {
-            filteredList = filteredList.filter((pokemon) =>
+    const filterPokemon = () => {
+        // Turn pokemonList to an object
+        const filteredList = Object.values(pokemonList)
+            .filter((pokemon) => (showFavorites ? pokemon.isFavorite : true))
+            .filter((pokemon) => (showCaughtPokemon ? pokemon.isCaptured : true))
+            .filter((pokemon) => {
+                if (selectedVersions.length > 0) {
+                    return selectedVersions.some((version) => {
+                        const range = groupedVersions[version];
+                        return pokemon.id >= range.start && pokemon.id <= range.end;
+                    });
+                }
+                return true;
+            })
+            .filter((pokemon) =>
                 pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
             );
-        }
 
         return filteredList;
     };
+
+
+//     // function to handle the filtering of pokemon
+//     const filterPokemon = () => {
+//         // Turn pokemonList to an object
+//         const filteredList = Object.values(pokemonList)
+//             .filter((pokemon) => (showFavorites ? pokemon.isFavorite : true))
+//             .filter((pokemon) => (showCaughtPokemon ? pokemon.isCaptured : true))
+//             .filter((pokemon) => {
+//                 if (selectedVersions.length > 0) {
+//                     return selectedVersions.some((version) => {
+//                         const range = groupedVersions[version];
+//                         return pokemon.id >= range.start && pokemon.id <= range.end;
+//                     });
+//                 }
+//                 return true;
+//             })
+//             .filter((pokemon) =>
+//                 pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+//             );
+//
+//         return filteredList;
+//     };
+
+//     // function to handle the filtering of pokemon
+//     const filterPokemon = (pokemonList, searchQuery, showFavorites, showCaughtPokemon) => {
+//         let filteredList = Object.values(pokemonList);
+//
+//         if (showFavorites) {
+//             filteredList = filteredList.filter((pokemon) => pokemon.isFavorite);
+//         }
+//
+//         if (showCaughtPokemon) {
+//             filteredList = filteredList.filter((pokemon) => pokemon.isCaptured);
+//         }
+//
+//         if (selectedVersions.length > 0) {
+//             filteredList = filteredList.filter((pokemon) => {
+//                 const matchesSelectedVersions = selectedVersions.some((version) => {
+//                     const range = groupedVersions[version];
+//                     return pokemon.id >= range.start && pokemon.id <= range.end;
+//                 });
+//                 return matchesSelectedVersions;
+//             });
+//         }
+//
+//         if (searchQuery) {
+//             filteredList = filteredList.filter((pokemon) =>
+//                 pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+//             );
+//         }
+//
+//         return filteredList;
+//     };
 
     const filteredPokemon = filterPokemon(pokemonList, searchQuery, showFavorites, showCaughtPokemon);
 
@@ -274,7 +268,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             <View style={styles.filterContainer}>
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
                 <View style={styles.filterButtonContainer}>
-                    <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} groupedVersions={groupedVersions} />
+                    <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} groupedVersions={groupedVersions} setShowFavoritesAndCaught={setShowFavoritesAndCaught} />
                     <TouchableOpacity
                         style={[
                             styles.filterButton,

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 
-const FilterDropdownDrawer = ({ selectedVersions, setSelectedVersions, groupedVersions }) => {
+const FilterDropdownDrawer = ({ setSelectedVersions, setShowFavoritesAndCaught }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [selectedButtons, setSelectedButtons] = useState([]);
     const [drawerWidth] = useState(new Animated.Value(0));
@@ -93,7 +93,28 @@ const FilterDropdownDrawer = ({ selectedVersions, setSelectedVersions, groupedVe
                         <Text style={styles.filterButtonText}>{range.label}</Text>
                     </TouchableOpacity>
                 ))}
-
+                <TouchableOpacity
+                    style={[
+                        styles.filterButton,
+                        {
+                            backgroundColor: selectedButtons.includes('favorites') ? 'blue' : 'gray',
+                        },
+                    ]}
+                    onPress={() => handleVersionSelect('favorites')}
+                >
+                    <Text style={styles.filterButtonText}>Favorites</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[
+                        styles.filterButton,
+                        {
+                            backgroundColor: selectedButtons.includes('caught') ? 'blue' : 'gray',
+                        },
+                    ]}
+                    onPress={() => handleVersionSelect('caught')}
+                >
+                    <Text style={styles.filterButtonText}>Caught</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
                     <Text style={styles.closeButtonText}>Close</Text>
                 </TouchableOpacity>
