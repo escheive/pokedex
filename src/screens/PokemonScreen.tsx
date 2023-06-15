@@ -279,38 +279,6 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
                 <View style={styles.filterButtonContainer}>
                     <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} filterOptions={filterOptions} setFilterOptions={setFilterOptions} />
-                    <TouchableOpacity
-                        style={[
-                            styles.filterButton,
-                            {
-                                backgroundColor: filterOptions.showFavorites ? 'blue' : '#C5C5C5',
-                            },
-                        ]}
-                        onPress={() =>
-                            setFilterOptions((prevOptions) => ({
-                                ...prevOptions,
-                                showFavorites: !filterOptions.showFavorites,
-                            }))
-                        }
-                    >
-                        <Text style={styles.filterButtonText}>Favorites</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[
-                            styles.filterButton,
-                            {
-                                backgroundColor: filterOptions.showCapturedPokemon ? 'blue' : '#C5C5C5',
-                            },
-                        ]}
-                        onPress={() =>
-                            setFilterOptions((prevOptions) => ({
-                                ...prevOptions,
-                                showCapturedPokemon: !filterOptions.showCapturedPokemon,
-                            }))
-                        }
-                    >
-                        <Text style={styles.filterButtonText}>Caught</Text>
-                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.searchContainer}>

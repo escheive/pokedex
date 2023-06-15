@@ -101,10 +101,15 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                     style={[
                         styles.filterButton,
                         {
-                            backgroundColor: selectedButtons.includes('favorites') ? 'blue' : 'gray',
+                            backgroundColor: filterOptions.showFavorites ? 'blue' : '#C5C5C5',
                         },
                     ]}
-                    onPress={() => handleVersionSelect('favorites')}
+                    onPress={() =>
+                        setFilterOptions((prevOptions) => ({
+                            ...prevOptions,
+                            showFavorites: !filterOptions.showFavorites,
+                        }))
+                    }
                 >
                     <Text style={styles.filterButtonText}>Favorites</Text>
                 </TouchableOpacity>
@@ -112,10 +117,15 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                     style={[
                         styles.filterButton,
                         {
-                            backgroundColor: selectedButtons.includes('caught') ? 'blue' : 'gray',
+                            backgroundColor: filterOptions.showCapturedPokemon ? 'blue' : '#C5C5C5',
                         },
                     ]}
-                    onPress={() => handleVersionSelect('caught')}
+                    onPress={() =>
+                        setFilterOptions((prevOptions) => ({
+                            ...prevOptions,
+                            showCapturedPokemon: !filterOptions.showCapturedPokemon,
+                        }))
+                    }
                 >
                     <Text style={styles.filterButtonText}>Caught</Text>
                 </TouchableOpacity>
