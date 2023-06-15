@@ -90,7 +90,7 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                             style={[
                                 styles.filterButton,
                                 {
-                                    backgroundColor: selectedButtons.includes(range.key) ? 'blue' : '#E5E5E5',
+                                    backgroundColor: filterOptions.selectedVersions.includes(range.key) ? 'blue' : '#E5E5E5',
                                 },
                             ]}
                             onPress={() => handleVersionSelect(range.key)}
