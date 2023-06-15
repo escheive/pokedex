@@ -39,6 +39,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         showFavorites: false,
         showCapturedPokemon: false,
         selectedVersions: [],
+        selectedTypes: [],
         searchQuery: '',
     });
     const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -96,7 +97,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 
     // function to handle the filtering of pokemon
     const filterPokemon = () => {
-        const { showFavorites, showCapturedPokemon, selectedVersions, searchQuery } = filterOptions;
+        const { showFavorites, showCapturedPokemon, selectedVersions, selectedTypes, searchQuery } = filterOptions;
         // Turn pokemonList to an object
         const filteredList = Object.values(pokemonList)
             .filter((pokemon) => (showFavorites ? pokemon.isFavorite : true))
@@ -107,6 +108,14 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                         const range = groupedVersions[version];
                         return pokemon.id >= range.start && pokemon.id <= range.end;
                     });
+                }
+                return true;
+            })
+            .filter((pokemon) => {
+                if (selectedTypes.length > 0) {
+                    return selectedTypes.some((type) =>
+                        pokemon.type1.includes(type) || pokemon.type2.includes(type)
+                    );
                 }
                 return true;
             })
