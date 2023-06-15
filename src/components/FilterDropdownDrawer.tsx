@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { pokemonColors } from '../utils/typeStyle';
 
 const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOptions }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -14,10 +15,24 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
           updatedVersions = [...filterOptions.selectedVersions, version];
         }
 
-//         setSelectedVersions(updatedVersions);
         setFilterOptions((prevOptions) => ({
             ...prevOptions,
             selectedVersions: updatedVersions,
+        }))
+    };
+
+    const handleTypeSelect = (type: string) => {
+        let updatedTypes: string[] = [];
+
+        if (filterOptions.selectedTypes.includes(type)) {
+          updatedTypes = filterOptions.selectedTypes.filter((t) => t !== type);
+        } else {
+          updatedTypes = [...filterOptions.selectedTypes, type];
+        }
+
+        setFilterOptions((prevOptions) => ({
+            ...prevOptions,
+            selectedTypes: updatedTypes,
         }))
     };
 
@@ -94,6 +109,21 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                             onPress={() => handleVersionSelect(range.key)}
                         >
                             <Text style={styles.filterButtonText}>{range.label}</Text>
+                        </TouchableOpacity>
+                    ))}
+                    {Object.keys(pokemonColors).map((type) => (
+                        <TouchableOpacity
+                            key={type}
+                            style={[
+                                styles.filterButton,
+                                {
+                                    backgroundColor: filterOptions.selectedTypes.includes(type) ? pokemonColors[type].backgroundColor : '#E5E5E5',
+                                    color: pokemonColors[type].color,
+                                },
+                            ]}
+                            onPress={() => handleTypeSelect(type)}
+                        >
+                            <Text style={styles.filterButtonText}>{type}</Text>
                         </TouchableOpacity>
                     ))}
                     <TouchableOpacity

@@ -114,7 +114,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             .filter((pokemon) => {
                 if (selectedTypes.length > 0) {
                     return selectedTypes.some((type) =>
-                        pokemon.type1.includes(type) || pokemon.type2.includes(type)
+                        pokemon.type1 && pokemon.type1.includes(type) || pokemon.type2 && pokemon.type2.includes(type)
                     );
                 }
                 return true;
