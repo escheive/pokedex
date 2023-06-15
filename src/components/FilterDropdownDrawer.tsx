@@ -3,19 +3,17 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native
 
 const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOptions }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
-    const [selectedButtons, setSelectedButtons] = useState([]);
     const [drawerWidth] = useState(new Animated.Value(0));
 
     const handleVersionSelect = (version: string) => {
         let updatedVersions: string[] = [];
 
-        if (selectedButtons.includes(version)) {
-          updatedVersions = selectedButtons.filter((v) => v !== version);
+        if (filterOptions.selectedVersions.includes(version)) {
+          updatedVersions = filterOptions.selectedVersions.filter((v) => v !== version);
         } else {
-          updatedVersions = [...selectedButtons, version];
+          updatedVersions = [...filterOptions.selectedVersions, version];
         }
 
-        setSelectedButtons(updatedVersions)
 //         setSelectedVersions(updatedVersions);
         setFilterOptions((prevOptions) => ({
             ...prevOptions,
