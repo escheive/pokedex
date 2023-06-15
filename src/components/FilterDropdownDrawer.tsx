@@ -83,55 +83,57 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                     dropdownVisible ? { left: 0 } : { left: -200 },
                 ]}
             >
-                {versionOptions.map((range) => (
+                <View style={styles.filtersContainer}>
+                    {versionOptions.map((range) => (
+                        <TouchableOpacity
+                            key={range.key}
+                            style={[
+                                styles.filterButton,
+                                {
+                                    backgroundColor: selectedButtons.includes(range.key) ? 'blue' : '#E5E5E5',
+                                },
+                            ]}
+                            onPress={() => handleVersionSelect(range.key)}
+                        >
+                            <Text style={styles.filterButtonText}>{range.label}</Text>
+                        </TouchableOpacity>
+                    ))}
                     <TouchableOpacity
-                        key={range.key}
                         style={[
                             styles.filterButton,
                             {
-                                backgroundColor: selectedButtons.includes(range.key) ? 'blue' : '#E5E5E5',
+                                backgroundColor: filterOptions.showFavorites ? 'blue' : '#E5E5E5',
                             },
                         ]}
-                        onPress={() => handleVersionSelect(range.key)}
+                        onPress={() =>
+                            setFilterOptions((prevOptions) => ({
+                                ...prevOptions,
+                                showFavorites: !filterOptions.showFavorites,
+                            }))
+                        }
                     >
-                        <Text style={styles.filterButtonText}>{range.label}</Text>
+                        <Text style={styles.filterButtonText}>Favorites</Text>
                     </TouchableOpacity>
-                ))}
-                <TouchableOpacity
-                    style={[
-                        styles.filterButton,
-                        {
-                            backgroundColor: filterOptions.showFavorites ? 'blue' : '#C5C5C5',
-                        },
-                    ]}
-                    onPress={() =>
-                        setFilterOptions((prevOptions) => ({
-                            ...prevOptions,
-                            showFavorites: !filterOptions.showFavorites,
-                        }))
-                    }
-                >
-                    <Text style={styles.filterButtonText}>Favorites</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.filterButton,
-                        {
-                            backgroundColor: filterOptions.showCapturedPokemon ? 'blue' : '#C5C5C5',
-                        },
-                    ]}
-                    onPress={() =>
-                        setFilterOptions((prevOptions) => ({
-                            ...prevOptions,
-                            showCapturedPokemon: !filterOptions.showCapturedPokemon,
-                        }))
-                    }
-                >
-                    <Text style={styles.filterButtonText}>Caught</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
-                    <Text style={styles.closeButtonText}>Close</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[
+                            styles.filterButton,
+                            {
+                                backgroundColor: filterOptions.showCapturedPokemon ? 'blue' : '#E5E5E5',
+                            },
+                        ]}
+                        onPress={() =>
+                            setFilterOptions((prevOptions) => ({
+                                ...prevOptions,
+                                showCapturedPokemon: !filterOptions.showCapturedPokemon,
+                            }))
+                        }
+                    >
+                        <Text style={styles.filterButtonText}>Caught</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
+                        <Text style={styles.closeButtonText}>Close</Text>
+                    </TouchableOpacity>
+                </View>
             </Animated.View>
         </View>
     );
@@ -140,15 +142,15 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
 const styles = StyleSheet.create({
     filterDropdownContainer: {
         flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignItems: 'stretch',
+        position: 'relative',
     },
     animatedViewContainer: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
+        flex: 1,
+    },
+    filtersContainer: {
         backgroundColor: 'white',
+        height: '100%',
+        flex: 1,
     },
     dropdownTrigger: {
         padding: 10,
@@ -156,7 +158,6 @@ const styles = StyleSheet.create({
         borderColor: '#DDDDDD',
         borderWidth: 1,
         borderRadius: 5,
-        width: '60%',
         alignSelf: 'flex-end',
     },
     filterButton: {

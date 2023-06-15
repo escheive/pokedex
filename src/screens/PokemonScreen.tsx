@@ -268,7 +268,6 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                 renderItem={renderItem}
                 keyExtractor={(item) => item.name}
                 contentContainerStyle={styles.listContainer}
-
             />
         );
     };
@@ -277,11 +276,9 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         <View style={styles.container}>
             <View style={styles.filterContainer}>
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
-                <View style={styles.filterButtonContainer}>
-                    <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} filterOptions={filterOptions} setFilterOptions={setFilterOptions} />
-                </View>
 
-                <View style={styles.searchContainer}>
+                <View style={styles.filtersContainer}>
+                    <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} filterOptions={filterOptions} setFilterOptions={setFilterOptions} />
                     <TextInput
                         style={styles.searchInput}
                         value={filterOptions.searchQuery}
@@ -289,8 +286,9 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                         placeholder="Search Pokemon"
                     />
                 </View>
+
             </View>
-            <View style={styles.pokemonListContainer}>
+            <View>
                 {renderPokemonList()}
             </View>
         </View>
@@ -306,7 +304,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         marginVertical: 10,
-        zIndex: 2,
+        zIndex: 2
     },
     filterTitleText: {
         fontSize: 18,
@@ -333,10 +331,9 @@ const styles = StyleSheet.create({
         marginTop: 5,
         padding: 10,
     },
-    filterButtonContainer: {
+    filtersContainer: {
         marginTop: 10,
         flexDirection: 'row',
-        flexWrap: 'wrap',
         justifyContent: 'center',
     },
     filterButton: {
@@ -361,8 +358,6 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         alignItems: 'center',
-    },
-    pokemonListContainer: {
         zIndex: 1,
     },
     itemContainer: {
