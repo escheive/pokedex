@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 
-const FilterDropdownDrawer = ({ setSelectedVersions, setShowFavoritesAndCaught }) => {
+const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOptions }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [selectedButtons, setSelectedButtons] = useState([]);
     const [drawerWidth] = useState(new Animated.Value(0));
@@ -16,7 +16,11 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setShowFavoritesAndCaught }
         }
 
         setSelectedButtons(updatedVersions)
-        setSelectedVersions(updatedVersions);
+//         setSelectedVersions(updatedVersions);
+        setFilterOptions((prevOptions) => ({
+            ...prevOptions,
+            selectedVersions: updatedVersions,
+        }))
     };
 
     const handleDropdownToggle = () => {

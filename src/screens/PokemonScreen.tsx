@@ -32,10 +32,9 @@ const versionOptions = [
 
 const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
-    const [showFavorites, setShowFavorites] = useState(false);
-    const [showCaughtPokemon, setShowCaughtPokemon] = useState(false);
-    const [showFavoritesAndCaught, setShowFavoritesAndCaught] = useState([]);
-    const [searchQuery, setSearchQuery] = useState('');
+//     const [showFavorites, setShowFavorites] = useState(false);
+//     const [showCaughtPokemon, setShowCaughtPokemon] = useState(false);
+//     const [searchQuery, setSearchQuery] = useState('');
     const [filterOptions, setFilterOptions] = useState({
         showFavorites: false,
         showCapturedPokemon: false,
@@ -51,8 +50,6 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         navigation.navigate('Details', { pokemon });
     };
 
-
-
     // function to handle search query changes
     const handleSearchQueryChange = (query) => {
         setFilterOptions((prevOptions) => ({
@@ -60,12 +57,6 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             searchQuery: query,
         }));
     };
-
-
-//     // function to handle search query changes
-//     const handleSearchQueryChange = (query) => {
-//         setSearchQuery(query);
-//     };
 
     const groupedVersions = {
         gen1: { start: 1, end: 151 },
@@ -268,7 +259,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 
     const renderPokemonList = () => {
         if (filteredPokemon.length === 0) {
-            return <Text>There are no results for {searchQuery}</Text>
+            return <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
         }
 
         return (
@@ -287,7 +278,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             <View style={styles.filterContainer}>
                 <Text style={styles.filterTitleText}>Filter by Versions:</Text>
                 <View style={styles.filterButtonContainer}>
-                    <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} groupedVersions={groupedVersions} setShowFavoritesAndCaught={setShowFavoritesAndCaught} />
+                    <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} filterOptions={filterOptions} setFilterOptions={setFilterOptions} />
                     <TouchableOpacity
                         style={[
                             styles.filterButton,
