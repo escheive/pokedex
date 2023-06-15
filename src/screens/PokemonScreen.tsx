@@ -36,6 +36,12 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     const [showCaughtPokemon, setShowCaughtPokemon] = useState(false);
     const [showFavoritesAndCaught, setShowFavoritesAndCaught] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [filterOptions, setFilterOptions] = useState({
+        showFavorites: false,
+        showCapturedPokemon: false,
+        selectedVersions: [],
+        searchQuery: '',
+    });
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const dispatch = useDispatch();
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
@@ -45,10 +51,21 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         navigation.navigate('Details', { pokemon });
     };
 
+
+
     // function to handle search query changes
     const handleSearchQueryChange = (query) => {
-        setSearchQuery(query);
+        setFilterOptions((prevOptions) => ({
+            ...prevOptions,
+            searchQuery: query,
+        }));
     };
+
+
+//     // function to handle search query changes
+//     const handleSearchQueryChange = (query) => {
+//         setSearchQuery(query);
+//     };
 
     const groupedVersions = {
         gen1: { start: 1, end: 151 },
@@ -88,10 +105,11 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 
     // function to handle the filtering of pokemon
     const filterPokemon = () => {
+        const { showFavorites, showCapturedPokemon, selectedVersions, searchQuery } = filterOptions;
         // Turn pokemonList to an object
         const filteredList = Object.values(pokemonList)
             .filter((pokemon) => (showFavorites ? pokemon.isFavorite : true))
-            .filter((pokemon) => (showCaughtPokemon ? pokemon.isCaptured : true))
+            .filter((pokemon) => (showCapturedPokemon ? pokemon.isCaptured : true))
             .filter((pokemon) => {
                 if (selectedVersions.length > 0) {
                     return selectedVersions.some((version) => {
@@ -131,6 +149,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 //         return filteredList;
 //     };
 
+
 //     // function to handle the filtering of pokemon
 //     const filterPokemon = (pokemonList, searchQuery, showFavorites, showCaughtPokemon) => {
 //         let filteredList = Object.values(pokemonList);
@@ -162,7 +181,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 //         return filteredList;
 //     };
 
-    const filteredPokemon = filterPokemon(pokemonList, searchQuery, showFavorites, showCaughtPokemon);
+    const filteredPokemon = filterPokemon();
 
 
     const handleFavoritePress = (selectedPokemon) => {
@@ -296,7 +315,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                 <View style={styles.searchContainer}>
                     <TextInput
                         style={styles.searchInput}
-                        value={searchQuery}
+                        value={filterOptions.searchQuery}
                         onChangeText={handleSearchQueryChange}
                         placeholder="Search Pokemon"
                     />
