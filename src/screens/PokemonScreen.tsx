@@ -203,26 +203,26 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                                         <Ionicons
                                             name="star"
                                             size={24} color="#555"
-                                            onPress={() => handleFavoritePress(pokemon, database)}
+                                            onPress={() => handleFavoritePress(pokemon)}
                                         />
                                     ) : (
                                         <Ionicons
                                             name="star-outline"
                                             size={24} color="#555"
-                                            onPress={() => handleFavoritePress(pokemon, database)}
+                                            onPress={() => handleFavoritePress(pokemon)}
                                         />
                                     )}
                                     {pokemon.isCaptured ? (
                                         <Ionicons
                                             name="checkmark-circle-outline"
                                             size={26} color="#555"
-                                            onPress={() => handleCapturePress(pokemon, database)}
+                                            onPress={() => handleCapturePress(pokemon)}
                                         />
                                     ) : (
                                         <Ionicons
                                             name="ellipse-outline"
                                             size={26} color="#555"
-                                            onPress={() => handleCapturePress(pokemon, database)}
+                                            onPress={() => handleCapturePress(pokemon)}
                                         />
                                     )}
                                 </View>
