@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Modal, ScrollView } from 'react-native';
 import { pokemonColors } from '../utils/typeStyle';
 import LinearGradient from 'react-native-linear-gradient';
-import { darkenColor } from '../utils/helpers';
+import { capitalizeString } from '../utils/helpers';
 
 const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOptions }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -143,7 +143,7 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                                     end={{ x: 1, y: 0.5 }}
                                     style={styles.gradient}
                                 >
-                                    <Text style={styles.filterButtonText}>{type}</Text>
+                                    <Text style={styles.filterButtonText}>{capitalizeString(type)}</Text>
                                 </LinearGradient>
                             </TouchableOpacity>
                         ))}
@@ -201,7 +201,7 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                                         styles.gradient
                                     ]}
                                 >
-                                    <Text style={styles.filterButtonText}>{type}</Text>
+                                    <Text style={styles.filterButtonText}>{capitalizeString(type)}</Text>
                                 </LinearGradient>
                             </TouchableOpacity>
                         );
