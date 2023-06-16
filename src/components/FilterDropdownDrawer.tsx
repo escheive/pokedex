@@ -70,13 +70,13 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
     });
 
     const versionOptions = [
-        { key: 'gen1', label: 'Gen 1', name: `Red/Blue`, colors: ['#FF0000', '#0000FF'] },
-        { key: 'gen2', label: 'Gen 2', name: `Gold/Silver`, colors: ['#DAA520', '#C0C0C0'] },
-        { key: 'gen3', label: 'Gen 3', name: `Ruby/Sapphire`, colors: ['#A00000', '#0000A0'] },
+        { key: 'gen1', label: 'Gen 1', name: `Red/Blue`, colors: ['#FF4444', '#6666FF'] },
+        { key: 'gen2', label: 'Gen 2', name: `Gold/Silver`, colors: ['#EAA520', '#B0B0B0'] },
+        { key: 'gen3', label: 'Gen 3', name: `Ruby/Sapphire`, colors: ['#DD0000', '#0000BB'] },
         { key: 'gen4', label: 'Gen 4', name: `Diamond/Pearl`, colors: ['#AAAAFF', '#FFAAAA'] },
         { key: 'gen5', label: 'Gen 5', name: `Black/White`, colors: ['#000000', '#FFFFFF'] },
         { key: 'gen6', label: 'Gen 6', name: `X/Y`, colors: ['#FF4500', '#2E8B57'] },
-        { key: 'gen7', label: 'Gen 7', name: `Sun/Moon`, colors: ['#FFA500', '#4682B4'] },
+        { key: 'gen7', label: 'Gen 7', name: `Sun/Moon`, colors: ['#FFA200', '#4684B4'] },
         { key: 'gen8', label: 'Gen 8', name: `Sword/Shield`, colors: ['#6BB6FE', '#C41E3A'] },
         { key: 'gen9', label: 'Gen 9', name: `Scarlet/Violet`, colors: ['#992400', '#6A0DAD'] },
     ];
