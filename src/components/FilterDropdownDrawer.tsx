@@ -127,30 +127,36 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                         );
                     })}
 
-                    {Object.keys(pokemonColors).map((type) => (
-                        <TouchableOpacity
-                            key={type}
-                            style={[
-                                styles.filterButton,
-                                {
-                                    borderColor: filterOptions.selectedTypes.includes(type) ? 'black' : null,
-                                    borderWidth: filterOptions.selectedTypes.includes(type) ? 3 : null,
-                                }
-                            ]}
-                            onPress={() => handleTypeSelect(type)}
-                        >
-                            <LinearGradient
-                                colors={[ pokemonColors[type].backgroundColor, pokemonColors[type].alternateBackgroundColor ]}
-                                start={{ x: 0.5, y: 1 }}
-                                end={{ x: 0.5, y: 0 }}
+                    {Object.keys(pokemonColors).map((type) => {
+                        if (filterOptions.selectedTypes.includes(type)) {
+                            return null;
+                        }
+
+                        return (
+                            <TouchableOpacity
+                                key={type}
                                 style={[
-                                    styles.gradient
+                                    styles.filterButton,
+                                    {
+                                        borderColor: filterOptions.selectedTypes.includes(type) ? 'black' : null,
+                                        borderWidth: filterOptions.selectedTypes.includes(type) ? 3 : null,
+                                    }
                                 ]}
+                                onPress={() => handleTypeSelect(type)}
                             >
-                                <Text style={styles.filterButtonText}>{type}</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    ))}
+                                <LinearGradient
+                                    colors={[ pokemonColors[type].backgroundColor, pokemonColors[type].alternateBackgroundColor ]}
+                                    start={{ x: 0.5, y: 1 }}
+                                    end={{ x: 0.5, y: 0 }}
+                                    style={[
+                                        styles.gradient
+                                    ]}
+                                >
+                                    <Text style={styles.filterButtonText}>{type}</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                        );
+                    })}
 
                     <TouchableOpacity
                         style={[
