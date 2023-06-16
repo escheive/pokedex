@@ -152,8 +152,8 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                 )}
 
                 <View style={styles.filtersContainer}>
-                    {(unselectedVersions.length > 0 || unselectedTypes.length > 0) && (
-                        <Text style={styles.activeFiltersTitle}>Pokémon Filters</Text>
+                    {unselectedVersions.length > 0 && (
+                        <Text style={styles.activeFiltersTitle}>Gens</Text>
                     )}
 
                     {versionOptions.map((range) => {
@@ -181,6 +181,10 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                             </TouchableOpacity>
                         );
                     })}
+
+                    {unselectedTypes.length > 0 && (
+                        <Text style={styles.activeFiltersTitle}>Types</Text>
+                    )}
 
                     {Object.keys(pokemonColors).map((type) => {
                         if (filterOptions.selectedTypes.includes(type)) {
@@ -240,11 +244,12 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                     >
                             <Text style={styles.filterButtonText}>Caught</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
-                        <Text style={styles.closeButtonText}>Close</Text>
-                    </TouchableOpacity>
                 </View>
                 </ScrollView>
+
+                <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
+                    <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
             </Modal>
         </View>
     );
@@ -259,7 +264,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 10,
+        marginVertical: 10,
+        marginHorizontal: 10,
         borderBottomWidth: 1,
         borderColor: '#777',
     },
@@ -274,6 +280,7 @@ const styles = StyleSheet.create({
     },
     filtersContainer: {
         flexDirection: 'column',
+        marginBottom: 20,
         flex: 1,
     },
     dropdownTrigger: {
@@ -291,11 +298,11 @@ const styles = StyleSheet.create({
     },
     gradient: {
         borderRadius: 10,
-        padding: 5,
+        padding: 8,
         flex: 1,
     },
     filterButtonText: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 800,
         color: 'white',
         textAlign: 'center',
@@ -306,8 +313,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginHorizontal: 5,
         marginVertical: 10,
-        minHeight: 40,
-        flex: 4,
         alignItems: 'center',
         justifyContent: 'center',
     },
