@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Modal, ScrollView } from 'react-native';
 import { pokemonColors } from '../utils/typeStyle';
 import LinearGradient from 'react-native-linear-gradient';
+import { darkenColor } from '../utils/helpers';
 
 const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOptions }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -90,13 +91,8 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
             >
                 <Text style={styles.dropdownTriggerText}>Select Generations</Text>
             </TouchableOpacity>
-            <Animated.View
-                style={[
-                    styles.animatedViewContainer,
-                    { width: drawerWidthInterpolation },
-                    dropdownVisible ? { left: 0 } : { left: -200 },
-                ]}
-            >
+            <Modal visible={dropdownVisible} animationType="slide">
+                <ScrollView style={styles.modalContainer}>
                 <View style={styles.filtersContainer}>
                     {versionOptions.map((range) => (
                         <TouchableOpacity
@@ -123,6 +119,7 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                             </LinearGradient>
                         </TouchableOpacity>
                     ))}
+
                     {Object.keys(pokemonColors).map((type) => (
                         <TouchableOpacity
                             key={type}
@@ -135,9 +132,20 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                             ]}
                             onPress={() => handleTypeSelect(type)}
                         >
-                            <Text style={styles.filterButtonText}>{type}</Text>
+                            <LinearGradient
+                                colors={[ pokemonColors[type].backgroundColor, pokemonColors[type].alternateBackgroundColor ]}
+                                start={{ x: 0.5, y: 1 }}
+                                end={{ x: 0.5, y: 0 }}
+                                style={[
+                                    styles.gradient,
+
+                                ]}
+                            >
+                                <Text style={styles.filterButtonText}>{type}</Text>
+                            </LinearGradient>
                         </TouchableOpacity>
                     ))}
+
                     <TouchableOpacity
                         style={[
                             styles.filterButton,
@@ -174,7 +182,8 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                         <Text style={styles.closeButtonText}>Close</Text>
                     </TouchableOpacity>
                 </View>
-            </Animated.View>
+                </ScrollView>
+            </Modal>
         </View>
     );
 };
@@ -185,9 +194,16 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     animatedViewContainer: {
+        backgroundColor: 'white',
+        flex: 1,
+    },
+    modalContainer: {
+        flexGrow: 1,
+        backgroundColor: 'white',
+        marginTop: 'auto',
     },
     filtersContainer: {
-        backgroundColor: 'white',
+        padding: 10,
         flexDirection: 'column',
         flex: 1,
     },
@@ -200,14 +216,14 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
     },
     filterButton: {
-        borderRadius: 10,
+        justifyContent: 'center',
+        borderRadius: 15,
         marginHorizontal: 5,
         marginVertical: 3,
-        height: 35,
     },
     gradient: {
+        borderRadius: 10,
         padding: 5,
-        borderRadius: 5,
         flex: 1,
     },
     filterButtonText: {
@@ -234,3 +250,90 @@ const styles = StyleSheet.create({
 })
 
 export default FilterDropdownDrawer;
+
+
+//             <Animated.View
+//                 style={[
+//                     styles.animatedViewContainer,
+//                     { width: drawerWidthInterpolation },
+//                     { opacity: dropdownVisible ? 1 : 0 },
+//                 ]}
+//             >
+//                 <View style={styles.filtersContainer}>
+//                     {versionOptions.map((range) => (
+//                         <TouchableOpacity
+//                             key={range.key}
+//                             style={[
+//                                 styles.filterButton,
+//                                 {
+//                                     borderColor: filterOptions.selectedVersions.includes(range.key) ? 'black' : null,
+//                                     borderWidth: filterOptions.selectedVersions.includes(range.key) ? 3 : null,
+//                                 }
+//                             ]}
+//                             onPress={() => handleVersionSelect(range.key)}
+//                         >
+//                             <LinearGradient
+//                                 colors={ range.colors }
+//                                 start={{ x: 0, y: 0.5 }}
+//                                 end={{ x: 1, y: 0.5 }}
+//                                 style={[
+//                                     styles.gradient,
+//
+//                                 ]}
+//                             >
+//                                 <Text style={styles.filterButtonText}>{range.name}</Text>
+//                             </LinearGradient>
+//                         </TouchableOpacity>
+//                     ))}
+//                     {Object.keys(pokemonColors).map((type) => (
+//                         <TouchableOpacity
+//                             key={type}
+//                             style={[
+//                                 styles.filterButton,
+//                                 {
+//                                     backgroundColor: filterOptions.selectedTypes.includes(type) ? pokemonColors[type].backgroundColor : pokemonColors[type].backgroundColor,
+//                                     color: pokemonColors[type].color,
+//                                 },
+//                             ]}
+//                             onPress={() => handleTypeSelect(type)}
+//                         >
+//                             <Text style={styles.filterButtonText}>{type}</Text>
+//                         </TouchableOpacity>
+//                     ))}
+//                     <TouchableOpacity
+//                         style={[
+//                             styles.filterButton,
+//                             {
+//                                 backgroundColor: filterOptions.showFavorites ? 'blue' : '#E5E5E5',
+//                             },
+//                         ]}
+//                         onPress={() =>
+//                             setFilterOptions((prevOptions) => ({
+//                                 ...prevOptions,
+//                                 showFavorites: !filterOptions.showFavorites,
+//                             }))
+//                         }
+//                     >
+//                         <Text style={styles.filterButtonText}>Favorites</Text>
+//                     </TouchableOpacity>
+//                     <TouchableOpacity
+//                         style={[
+//                             styles.filterButton,
+//                             {
+//                                 backgroundColor: filterOptions.showCapturedPokemon ? 'blue' : '#E5E5E5',
+//                             },
+//                         ]}
+//                         onPress={() =>
+//                             setFilterOptions((prevOptions) => ({
+//                                 ...prevOptions,
+//                                 showCapturedPokemon: !filterOptions.showCapturedPokemon,
+//                             }))
+//                         }
+//                     >
+//                             <Text style={styles.filterButtonText}>Caught</Text>
+//                     </TouchableOpacity>
+//                     <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
+//                         <Text style={styles.closeButtonText}>Close</Text>
+//                     </TouchableOpacity>
+//                 </View>
+//             </Animated.View>

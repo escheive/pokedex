@@ -21,3 +21,21 @@ const grabIdFromPokeApiUrl = (string) => {
 }
 
 export { grabIdFromPokeApiUrl };
+
+// Function to darken a pokemon color
+const darkenColor = (color) => {
+    // Parse the RGBA values
+    const [r, g, b, a] = color.match(/\d+/g).map(Number);
+
+    // Darken the colors by reducing its brightness
+    const darkenedColor = `rgba(
+        ${Math.floor(r * 0.8)},
+        ${Math.floor(g * 0.8)},
+        ${Math.floor(b * 0.8)},
+        ${a},
+    )`;
+
+    return darkenedColor;
+}
+
+export { darkenColor };
