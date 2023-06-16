@@ -126,9 +126,10 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                             style={[
                                 styles.filterButton,
                                 {
-                                    backgroundColor: filterOptions.selectedTypes.includes(type) ? pokemonColors[type].backgroundColor : pokemonColors[type].backgroundColor,
-                                    color: pokemonColors[type].color,
-                                },
+                                    borderColor: filterOptions.selectedTypes.includes(type) ? 'black' : null,
+                                    borderWidth: filterOptions.selectedTypes.includes(type) ? 3 : null,
+
+                                }
                             ]}
                             onPress={() => handleTypeSelect(type)}
                         >
@@ -137,8 +138,7 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                                 start={{ x: 0.5, y: 1 }}
                                 end={{ x: 0.5, y: 0 }}
                                 style={[
-                                    styles.gradient,
-
+                                    styles.gradient
                                 ]}
                             >
                                 <Text style={styles.filterButtonText}>{type}</Text>
@@ -162,6 +162,7 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                     >
                         <Text style={styles.filterButtonText}>Favorites</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity
                         style={[
                             styles.filterButton,
