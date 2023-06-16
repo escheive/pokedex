@@ -6,7 +6,6 @@ import { darkenColor } from '../utils/helpers';
 
 const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOptions }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
-    const [selectedOptions, setSelectedOptions] = useState([]);
     const [drawerWidth] = useState(new Animated.Value(0));
 
     const handleVersionSelect = (version: string) => {
@@ -83,6 +82,14 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
         { key: 'gen9', label: 'Gen 9', name: `Scarlet/Violet`, colors: ['#992400', '#6A0DAD'] },
     ];
 
+    const selectedVersions = versionOptions.filter((range) =>
+        filterOptions.selectedVersions.includes(range.key)
+    );
+
+    const selectedTypes = Object.keys(pokemonColors).filter((type) =>
+        filterOptions.selectedTypes.includes(type)
+    );
+
     return (
         <View style={styles.filterDropdownContainer}>
             {/* Your other content */}
@@ -92,8 +99,46 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
             >
                 <Text style={styles.dropdownTriggerText}>Select Generations</Text>
             </TouchableOpacity>
+
             <Modal visible={dropdownVisible} animationType="slide">
                 <ScrollView style={styles.modalContainer}>
+
+                <View>
+                    {selectedVersions.map((range) => (
+                        <TouchableOpacity
+                            key={range.key}
+                            style={styles.filterButton}
+                            onPress={() => handleVersionSelect(range.key)}
+                        >
+                            <LinearGradient
+                                colors={ range.colors }
+                                start={{ x: 0, y: 0.5 }}
+                                end={{ x: 1, y: 0.5 }}
+                                style={styles.gradient}
+                            >
+                                <Text style={styles.filterButtonText}>{range.name}</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    ))}
+
+                    {selectedTypes.map((type) => (
+                        <TouchableOpacity
+                            key={type}
+                            style={styles.filterButton}
+                            onPress={() => handleTypeSelect(type)}
+                        >
+                            <LinearGradient
+                                colors={[ pokemonColors[type].backgroundColor, pokemonColors[type].alternateBackgroundColor ]}
+                                start={{ x: 0, y: 0.5 }}
+                                end={{ x: 1, y: 0.5 }}
+                                style={styles.gradient}
+                            >
+                                <Text style={styles.filterButtonText}>{type}</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+
                 <View style={styles.filtersContainer}>
                     {versionOptions.map((range) => {
                         if (filterOptions.selectedVersions.includes(range.key)) {
@@ -103,13 +148,7 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                         return (
                             <TouchableOpacity
                                 key={range.key}
-                                style={[
-                                    styles.filterButton,
-                                    {
-                                        borderColor: filterOptions.selectedVersions.includes(range.key) ? 'black' : null,
-                                        borderWidth: filterOptions.selectedVersions.includes(range.key) ? 3 : null,
-                                    }
-                                ]}
+                                style={styles.filterButton}
                                 onPress={() => handleVersionSelect(range.key)}
                             >
                                 <LinearGradient
@@ -135,13 +174,7 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                         return (
                             <TouchableOpacity
                                 key={type}
-                                style={[
-                                    styles.filterButton,
-                                    {
-                                        borderColor: filterOptions.selectedTypes.includes(type) ? 'black' : null,
-                                        borderWidth: filterOptions.selectedTypes.includes(type) ? 3 : null,
-                                    }
-                                ]}
+                                style={styles.filterButton}
                                 onPress={() => handleTypeSelect(type)}
                             >
                                 <LinearGradient
