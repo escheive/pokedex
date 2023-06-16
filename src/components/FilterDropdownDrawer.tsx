@@ -110,7 +110,7 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
             <Modal visible={dropdownVisible} animationType="slide">
                 <ScrollView style={styles.modalContent}>
 
-                    {(selectedVersions.length > 0 || selectedTypes.length > 0) && (
+                    {(selectedVersions.length > 0 || selectedTypes.length > 0 || filterOptions.showFavorites || filterOptions.showCapturedPokemon) && (
                         <View style={styles.activeFiltersContainer}>
                             <Text style={styles.activeFiltersTitle}>Active Filters</Text>
 
@@ -147,6 +147,38 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                                     </LinearGradient>
                                 </TouchableOpacity>
                             ))}
+
+                            {filterOptions.showFavorites && (
+                                <TouchableOpacity
+                                    style={styles.filterButton}
+                                    onPress={() =>
+                                        setFilterOptions((prevOptions) => ({
+                                            ...prevOptions,
+                                            showFavorites: !filterOptions.showFavorites,
+                                        }))
+                                    }
+                                >
+                                    <View style={styles.favoritesFilterButton}>
+                                        <Text style={styles.filterButtonText}>Favorites</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            )}
+
+                            {filterOptions.showCapturedPokemon && (
+                                <TouchableOpacity
+                                    style={styles.filterButton}
+                                    onPress={() =>
+                                        setFilterOptions((prevOptions) => ({
+                                            ...prevOptions,
+                                            showCapturedPokemon: !filterOptions.showCapturedPokemon,
+                                        }))
+                                    }
+                                >
+                                    <View style={styles.caughtFilterButton}>
+                                        <Text style={styles.filterButtonText}>Caught</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            )}
 
                         </View>
                     )}
@@ -212,8 +244,8 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                         })}
                     </View>
 
-                    {(!filterOptions.showFavorites || !filterOptions.showCapturedPokemon) && (
-                        <View style={styles.otherFiltersContainer}>
+                    <View style={styles.otherFiltersContainer}>
+                        {(!filterOptions.showFavorites) && (
                             <TouchableOpacity
                                 style={styles.filterButton}
                                 onPress={() =>
@@ -227,7 +259,9 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                                     <Text style={styles.filterButtonText}>Favorites</Text>
                                 </View>
                             </TouchableOpacity>
+                        )}
 
+                        {(!filterOptions.showCapturedPokemon) && (
                             <TouchableOpacity
                                 style={styles.filterButton}
                                 onPress={() =>
@@ -241,8 +275,8 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                                     <Text style={styles.filterButtonText}>Caught</Text>
                                 </View>
                             </TouchableOpacity>
-                        </View>
-                    )}
+                        )}
+                    </View>
                 </ScrollView>
 
                 <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
