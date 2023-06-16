@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { pokemonColors } from '../utils/typeStyle';
+import LinearGradient from 'react-native-linear-gradient';
 
 const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOptions }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -69,15 +70,15 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
     });
 
     const versionOptions = [
-        { key: 'gen1', label: 'Gen 1' },
-        { key: 'gen2', label: 'Gen 2' },
-        { key: 'gen3', label: 'Gen 3' },
-        { key: 'gen4', label: 'Gen 4' },
-        { key: 'gen5', label: 'Gen 5' },
-        { key: 'gen6', label: 'Gen 6' },
-        { key: 'gen7', label: 'Gen 7' },
-        { key: 'gen8', label: 'Gen 8' },
-        { key: 'gen9', label: 'Gen 9' },
+        { key: 'gen1', label: 'Gen 1', name: `Red/Blue`, colors: ['#FF0000', '#0000FF'] },
+        { key: 'gen2', label: 'Gen 2', name: `Gold/Silver`, colors: ['#DAA520', '#C0C0C0'] },
+        { key: 'gen3', label: 'Gen 3', name: `Ruby/Sapphire`, colors: ['#A00000', '#0000A0'] },
+        { key: 'gen4', label: 'Gen 4', name: `Diamond/Pearl`, colors: ['#AAAAFF', '#FFAAAA'] },
+        { key: 'gen5', label: 'Gen 5', name: `Black/White`, colors: ['#000000', '#FFFFFF'] },
+        { key: 'gen6', label: 'Gen 6', name: `X/Y`, colors: ['#FF4500', '#2E8B57'] },
+        { key: 'gen7', label: 'Gen 7', name: `Sun/Moon`, colors: ['#FFA500', '#4682B4'] },
+        { key: 'gen8', label: 'Gen 8', name: `Sword/Shield`, colors: ['#6BB6FE', '#C41E3A'] },
+        { key: 'gen9', label: 'Gen 9', name: `Scarlet/Violet`, colors: ['#992400', '#6A0DAD'] },
     ];
 
     return (
@@ -100,15 +101,17 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                     {versionOptions.map((range) => (
                         <TouchableOpacity
                             key={range.key}
-                            style={[
-                                styles.filterButton,
-                                {
-                                    backgroundColor: filterOptions.selectedVersions.includes(range.key) ? 'blue' : '#E5E5E5',
-                                },
-                            ]}
+                            style={ styles.filterButton }
                             onPress={() => handleVersionSelect(range.key)}
                         >
-                            <Text style={styles.filterButtonText}>{range.label}</Text>
+                            <LinearGradient
+                                colors={range.colors}
+                                start={{ x: 0, y: 0.5 }}
+                                end={{ x: 1, y: 0.5 }}
+                                style={styles.gradient}
+                            >
+                                <Text style={styles.filterButtonText}>{range.name}</Text>
+                            </LinearGradient>
                         </TouchableOpacity>
                     ))}
                     {Object.keys(pokemonColors).map((type) => (
@@ -117,7 +120,7 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                             style={[
                                 styles.filterButton,
                                 {
-                                    backgroundColor: filterOptions.selectedTypes.includes(type) ? pokemonColors[type].backgroundColor : '#E5E5E5',
+                                    backgroundColor: filterOptions.selectedTypes.includes(type) ? pokemonColors[type].backgroundColor : pokemonColors[type].backgroundColor,
                                     color: pokemonColors[type].color,
                                 },
                             ]}
@@ -156,7 +159,7 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                             }))
                         }
                     >
-                        <Text style={styles.filterButtonText}>Caught</Text>
+                            <Text style={styles.filterButtonText}>Caught</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
                         <Text style={styles.closeButtonText}>Close</Text>
@@ -189,16 +192,21 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
     },
     filterButton: {
-        padding: 5,
         borderRadius: 5,
         marginHorizontal: 5,
         marginVertical: 3,
         minHeight: 30,
         flex: 3,
     },
+    gradient: {
+        borderRadius: 5,
+        padding: 5,
+    },
     filterButtonText: {
         fontSize: 16,
+        fontWeight: 800,
         color: 'white',
+        textAlign: 'center',
     },
     closeButton: {
         backgroundColor: '#E5E5E5',
