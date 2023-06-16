@@ -101,14 +101,23 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                     {versionOptions.map((range) => (
                         <TouchableOpacity
                             key={range.key}
-                            style={ styles.filterButton }
+                            style={[
+                                styles.filterButton,
+                                {
+                                    borderColor: filterOptions.selectedVersions.includes(range.key) ? 'black' : null,
+                                    borderWidth: filterOptions.selectedVersions.includes(range.key) ? 3 : null,
+                                }
+                            ]}
                             onPress={() => handleVersionSelect(range.key)}
                         >
                             <LinearGradient
-                                colors={range.colors}
+                                colors={ range.colors }
                                 start={{ x: 0, y: 0.5 }}
                                 end={{ x: 1, y: 0.5 }}
-                                style={styles.gradient}
+                                style={[
+                                    styles.gradient,
+
+                                ]}
                             >
                                 <Text style={styles.filterButtonText}>{range.name}</Text>
                             </LinearGradient>
@@ -176,11 +185,10 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     animatedViewContainer: {
-        flex: 1,
     },
     filtersContainer: {
         backgroundColor: 'white',
-        height: '100%',
+        flexDirection: 'column',
         flex: 1,
     },
     dropdownTrigger: {
@@ -192,15 +200,15 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
     },
     filterButton: {
-        borderRadius: 5,
+        borderRadius: 10,
         marginHorizontal: 5,
         marginVertical: 3,
-        minHeight: 30,
-        flex: 3,
+        height: 35,
     },
     gradient: {
-        borderRadius: 5,
         padding: 5,
+        borderRadius: 5,
+        flex: 1,
     },
     filterButtonText: {
         fontSize: 16,
