@@ -100,7 +100,6 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
 
     return (
         <View style={styles.filterDropdownContainer}>
-            {/* Your other content */}
             <TouchableOpacity
                 style={styles.dropdownTrigger}
                 onPress={handleDropdownToggle}
@@ -111,44 +110,46 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
             <Modal visible={dropdownVisible} animationType="slide">
                 <ScrollView style={styles.modalContainer}>
 
-                <View style={styles.activeFiltersContainer}>
-                    {(selectedVersions.length > 0 || selectedTypes.length > 0) && (
+                {(selectedVersions.length > 0 || selectedTypes.length > 0) && (
+                    <View style={styles.activeFiltersContainer}>
                         <Text style={styles.activeFiltersTitle}>Active Filters</Text>
-                    )}
-                    {selectedVersions.map((range) => (
-                        <TouchableOpacity
-                            key={range.key}
-                            style={styles.filterButton}
-                            onPress={() => handleVersionSelect(range.key)}
-                        >
-                            <LinearGradient
-                                colors={ range.colors }
-                                start={{ x: 0, y: 0.5 }}
-                                end={{ x: 1, y: 0.5 }}
-                                style={styles.gradient}
-                            >
-                                <Text style={styles.filterButtonText}>{range.name}</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    ))}
 
-                    {selectedTypes.map((type) => (
-                        <TouchableOpacity
-                            key={type}
-                            style={styles.filterButton}
-                            onPress={() => handleTypeSelect(type)}
-                        >
-                            <LinearGradient
-                                colors={[ pokemonColors[type].backgroundColor, pokemonColors[type].alternateBackgroundColor ]}
-                                start={{ x: 0, y: 0.5 }}
-                                end={{ x: 1, y: 0.5 }}
-                                style={styles.gradient}
+                        {selectedVersions.map((range) => (
+                            <TouchableOpacity
+                                key={range.key}
+                                style={styles.filterButton}
+                                onPress={() => handleVersionSelect(range.key)}
                             >
-                                <Text style={styles.filterButtonText}>{type}</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                                <LinearGradient
+                                    colors={ range.colors }
+                                    start={{ x: 0, y: 0.5 }}
+                                    end={{ x: 1, y: 0.5 }}
+                                    style={styles.gradient}
+                                >
+                                    <Text style={styles.filterButtonText}>{range.name}</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                        ))}
+
+                        {selectedTypes.map((type) => (
+                            <TouchableOpacity
+                                key={type}
+                                style={styles.filterButton}
+                                onPress={() => handleTypeSelect(type)}
+                            >
+                                <LinearGradient
+                                    colors={[ pokemonColors[type].backgroundColor, pokemonColors[type].alternateBackgroundColor ]}
+                                    start={{ x: 0, y: 0.5 }}
+                                    end={{ x: 1, y: 0.5 }}
+                                    style={styles.gradient}
+                                >
+                                    <Text style={styles.filterButtonText}>{type}</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                        ))}
+
+                    </View>
+                )}
 
                 <View style={styles.filtersContainer}>
                     {(unselectedVersions.length > 0 || unselectedTypes.length > 0) && (
