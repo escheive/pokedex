@@ -41,6 +41,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         selectedVersions: [],
         selectedTypes: [],
         searchQuery: '',
+        filterByDualTypes: false,
     });
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const dispatch = useDispatch();
@@ -113,9 +114,19 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
             })
             .filter((pokemon) => {
                 if (selectedTypes.length > 0) {
-                    return selectedTypes.some((type) =>
-                        pokemon.type1 && pokemon.type1.includes(type) || pokemon.type2 && pokemon.type2.includes(type)
-                    );
+                    if (filterByDualTypes) {
+                        // Filter for Pokemon with both selected types
+                        return selectedTypes.every((type) =>
+                            (pokemon.type1.includes(type)) ||
+                            (pokemon.type2 && pokemon.type2.includes(type))
+                        );
+                    } else {
+                        // Filter for Pokemon with any of selected types
+                        return selectedTypes.some((type) =>
+                            pokemon.type1.includes(type) ||
+                            pokemon.type2 && pokemon.type2.includes(type)
+                        );
+                    }
                 }
                 return true;
             })
