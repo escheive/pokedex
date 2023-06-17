@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Modal, ScrollView } from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { pokemonColors } from '../utils/typeStyle';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -191,6 +192,19 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                             )}
 
                             <View style={styles.filtersContainer}>
+
+                                <View style={styles.dualTypeFilterContainer}>
+                                    <BouncyCheckbox
+                                        value={filterOptions.filterByDualTypes}
+                                        onPress={() =>
+                                            setFilterOptions((prevOptions) => ({
+                                                ...prevOptions,
+                                                filterByDualTypes: !prevOptions.filterByDualTypes,
+                                            }))
+                                        }
+                                    />
+                                    <Text style={styles.dualTypeFilterText}>Filter by Dual Types</Text>
+                                </View>
 
 
                                 {unselectedVersions.length > 0 && (

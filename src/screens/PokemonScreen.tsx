@@ -98,7 +98,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 
     // function to handle the filtering of pokemon
     const filterPokemon = () => {
-        const { showFavorites, showCapturedPokemon, selectedVersions, selectedTypes, searchQuery } = filterOptions;
+        const { showFavorites, showCapturedPokemon, selectedVersions, selectedTypes, searchQuery, filterByDualTypes } = filterOptions;
         // Turn pokemonList to an object
         const filteredList = Object.values(pokemonList)
             .filter((pokemon) => (showFavorites ? pokemon.isFavorite : true))
@@ -117,8 +117,8 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
                     if (filterByDualTypes) {
                         // Filter for Pokemon with both selected types
                         return selectedTypes.every((type) =>
-                            (pokemon.type1.includes(type)) ||
-                            (pokemon.type2 && pokemon.type2.includes(type))
+                            pokemon.type1.includes(type) ||
+                            pokemon.type2 && pokemon.type2.includes(type)
                         );
                     } else {
                         // Filter for Pokemon with any of selected types
