@@ -116,6 +116,9 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
             <Modal visible={dropdownVisible} animationType="slide" transparent>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
+                        <View style={styles.filterTitleContainer}>
+                            <Text style={styles.filterTitleText}>Filter Pokémon</Text>
+                        </View>
                         <ScrollView>
 
                             {(selectedVersions.length > 0 || selectedTypes.length > 0 || filterOptions.showFavorites || filterOptions.showCapturedPokemon) && (
@@ -195,6 +198,9 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
 
                                 <View style={styles.dualTypeFilterContainer}>
                                     <BouncyCheckbox
+                                        fillColor='#FF5A5A'
+                                        text="Filter Dual Types"
+                                        textStyle={{ textDecorationLine: 'none' }}
                                         value={filterOptions.filterByDualTypes}
                                         onPress={() =>
                                             setFilterOptions((prevOptions) => ({
@@ -203,7 +209,6 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                                             }))
                                         }
                                     />
-                                    <Text style={styles.dualTypeFilterText}>Filter by Dual Types</Text>
                                 </View>
 
 
@@ -333,7 +338,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         backgroundColor: 'white',
-        paddingTop: 10,
+        paddingTop: 5,
         paddingHorizontal: 10,
     },
     filtersContainer: {
@@ -388,6 +393,16 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         paddingHorizontal: 15
+    },
+    filterTitleContainer: {
+        borderRadius: 5,
+        marginVertical: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    filterTitleText: {
+        fontSize: 20,
+        fontWeight: 800,
     },
     closeButton: {
         backgroundColor: '#BBBBBB',
