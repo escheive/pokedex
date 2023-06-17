@@ -107,8 +107,10 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                 <Text style={styles.dropdownTriggerText}>Select Generations</Text>
             </TouchableOpacity>
 
-            <Modal visible={dropdownVisible} animationType="slide">
-                <ScrollView style={styles.modalContent}>
+            <Modal visible={dropdownVisible} animationType="slide" transparent>
+                <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                <ScrollView>
 
                     {(selectedVersions.length > 0 || selectedTypes.length > 0 || filterOptions.showFavorites || filterOptions.showCapturedPokemon) && (
                         <View style={styles.activeFiltersContainer}>
@@ -284,6 +286,8 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                 <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
                     <Text style={styles.closeButtonText}>Close</Text>
                 </TouchableOpacity>
+                </View>
+                </View>
             </Modal>
         </View>
     );
@@ -304,10 +308,16 @@ const styles = StyleSheet.create({
     activeFiltersContainer: {
         marginBottom: 20,
     },
+    modalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+    },
     modalContent: {
         backgroundColor: 'white',
         paddingTop: 10,
-        marginHorizontal: 30,
+        paddingHorizontal: 10,
     },
     filtersContainer: {
         flexDirection: 'column',
@@ -354,18 +364,20 @@ const styles = StyleSheet.create({
         fontWeight: 800,
         color: 'white',
         textAlign: 'center',
+        paddingHorizontal: 15
     },
     closeButton: {
-        backgroundColor: '#E5E5E5',
+        backgroundColor: '#BBBBBB',
         padding: 6,
         borderRadius: 5,
-        marginHorizontal: 5,
-        marginVertical: 10,
+        margin: 5,
+        paddingHorizontal: 10,
         alignItems: 'center',
         justifyContent: 'center',
     },
     closeButtonText: {
-        fontSize: 18,
+        fontSize: 20,
+        fontWeight: 800,
         color: 'white',
     },
 })
