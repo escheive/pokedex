@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Modal, ScrollView } from 'react-native';
 import { pokemonColors } from '../utils/typeStyle';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import { capitalizeString } from '../utils/helpers';
 
@@ -104,189 +105,193 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                 style={styles.dropdownTrigger}
                 onPress={handleDropdownToggle}
             >
-                <Text style={styles.dropdownTriggerText}>Select Generations</Text>
+                <Ionicons
+                    name="funnel-outline"
+                    size={18} color="black"
+                />
+                <Text style={styles.dropdownTriggerText}>Filter Pokémon</Text>
             </TouchableOpacity>
 
             <Modal visible={dropdownVisible} animationType="slide" transparent>
                 <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
-                <ScrollView>
+                    <View style={styles.modalContent}>
+                        <ScrollView>
 
-                    {(selectedVersions.length > 0 || selectedTypes.length > 0 || filterOptions.showFavorites || filterOptions.showCapturedPokemon) && (
-                        <View style={styles.activeFiltersContainer}>
-                            <Text style={styles.activeFiltersTitle}>Active Filters</Text>
+                            {(selectedVersions.length > 0 || selectedTypes.length > 0 || filterOptions.showFavorites || filterOptions.showCapturedPokemon) && (
+                                <View style={styles.activeFiltersContainer}>
+                                    <Text style={styles.activeFiltersTitle}>Active Filters</Text>
 
-                            {selectedVersions.map((range) => (
-                                <TouchableOpacity
-                                    key={range.key}
-                                    style={styles.filterButton}
-                                    onPress={() => handleVersionSelect(range.key)}
-                                >
-                                    <LinearGradient
-                                        colors={ range.colors }
-                                        start={{ x: 0, y: 0.5 }}
-                                        end={{ x: 1, y: 0.5 }}
-                                        style={styles.gradient}
-                                    >
-                                        <Text style={styles.filterButtonText}>{range.name}</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-                            ))}
+                                    {selectedVersions.map((range) => (
+                                        <TouchableOpacity
+                                            key={range.key}
+                                            style={styles.filterButton}
+                                            onPress={() => handleVersionSelect(range.key)}
+                                        >
+                                            <LinearGradient
+                                                colors={ range.colors }
+                                                start={{ x: 0, y: 0.5 }}
+                                                end={{ x: 1, y: 0.5 }}
+                                                style={styles.gradient}
+                                            >
+                                                <Text style={styles.filterButtonText}>{range.name}</Text>
+                                            </LinearGradient>
+                                        </TouchableOpacity>
+                                    ))}
 
-                            {selectedTypes.map((type) => (
-                                <TouchableOpacity
-                                    key={type}
-                                    style={styles.filterButton}
-                                    onPress={() => handleTypeSelect(type)}
-                                >
-                                    <LinearGradient
-                                        colors={[ pokemonColors[type].backgroundColor, pokemonColors[type].alternateBackgroundColor ]}
-                                        start={{ x: 0, y: 0.5 }}
-                                        end={{ x: 1, y: 0.5 }}
-                                        style={styles.gradient}
-                                    >
-                                        <Text style={styles.filterButtonText}>{capitalizeString(type)}</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-                            ))}
+                                    {selectedTypes.map((type) => (
+                                        <TouchableOpacity
+                                            key={type}
+                                            style={styles.filterButton}
+                                            onPress={() => handleTypeSelect(type)}
+                                        >
+                                            <LinearGradient
+                                                colors={[ pokemonColors[type].backgroundColor, pokemonColors[type].alternateBackgroundColor ]}
+                                                start={{ x: 0, y: 0.5 }}
+                                                end={{ x: 1, y: 0.5 }}
+                                                style={styles.gradient}
+                                            >
+                                                <Text style={styles.filterButtonText}>{capitalizeString(type)}</Text>
+                                            </LinearGradient>
+                                        </TouchableOpacity>
+                                    ))}
 
-                            {filterOptions.showFavorites && (
-                                <TouchableOpacity
-                                    style={styles.filterButton}
-                                    onPress={() =>
-                                        setFilterOptions((prevOptions) => ({
-                                            ...prevOptions,
-                                            showFavorites: !filterOptions.showFavorites,
-                                        }))
-                                    }
-                                >
-                                    <View style={styles.favoritesFilterButton}>
-                                        <Text style={styles.filterButtonText}>Favorites</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            )}
-
-                            {filterOptions.showCapturedPokemon && (
-                                <TouchableOpacity
-                                    style={styles.filterButton}
-                                    onPress={() =>
-                                        setFilterOptions((prevOptions) => ({
-                                            ...prevOptions,
-                                            showCapturedPokemon: !filterOptions.showCapturedPokemon,
-                                        }))
-                                    }
-                                >
-                                    <View style={styles.caughtFilterButton}>
-                                        <Text style={styles.filterButtonText}>Caught</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            )}
-
-                        </View>
-                    )}
-
-                    <View style={styles.filtersContainer}>
-
-
-                        {unselectedVersions.length > 0 && (
-                            <Text style={styles.activeFiltersTitle}>Gens</Text>
-                        )}
-
-                        {versionOptions.map((range) => {
-                            if (filterOptions.selectedVersions.includes(range.key)) {
-                                return null;
-                            }
-
-                            return (
-                                <TouchableOpacity
-                                    key={range.key}
-                                    style={styles.filterButton}
-                                    onPress={() => handleVersionSelect(range.key)}
-                                >
-                                    <LinearGradient
-                                        colors={ range.colors }
-                                        start={{ x: 0, y: 0.5 }}
-                                        end={{ x: 1, y: 0.5 }}
-                                        style={[
-                                            styles.gradient,
-
-                                        ]}
-                                    >
-                                        <Text style={styles.filterButtonText}>{range.name}</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-                            );
-                        })}
-
-                        {unselectedTypes.length > 0 && (
-                            <Text style={styles.activeFiltersTitle}>Types</Text>
-                        )}
-
-                        {Object.keys(pokemonColors).map((type) => {
-                            if (filterOptions.selectedTypes.includes(type)) {
-                                return null;
-                            }
-
-                            return (
-                                <TouchableOpacity
-                                    key={type}
-                                    style={styles.filterButton}
-                                    onPress={() => handleTypeSelect(type)}
-                                >
-                                    <View
-                                        style={[
-                                            styles.gradient,
-                                            {
-                                                backgroundColor: pokemonColors[type].alternateBackgroundColor,
+                                    {filterOptions.showFavorites && (
+                                        <TouchableOpacity
+                                            style={styles.filterButton}
+                                            onPress={() =>
+                                                setFilterOptions((prevOptions) => ({
+                                                    ...prevOptions,
+                                                    showFavorites: !filterOptions.showFavorites,
+                                                }))
                                             }
-                                        ]}
+                                        >
+                                            <View style={styles.favoritesFilterButton}>
+                                                <Text style={styles.filterButtonText}>Favorites</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    )}
+
+                                    {filterOptions.showCapturedPokemon && (
+                                        <TouchableOpacity
+                                            style={styles.filterButton}
+                                            onPress={() =>
+                                                setFilterOptions((prevOptions) => ({
+                                                    ...prevOptions,
+                                                    showCapturedPokemon: !filterOptions.showCapturedPokemon,
+                                                }))
+                                            }
+                                        >
+                                            <View style={styles.caughtFilterButton}>
+                                                <Text style={styles.filterButtonText}>Caught</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    )}
+
+                                </View>
+                            )}
+
+                            <View style={styles.filtersContainer}>
+
+
+                                {unselectedVersions.length > 0 && (
+                                    <Text style={styles.activeFiltersTitle}>Gens</Text>
+                                )}
+
+                                {versionOptions.map((range) => {
+                                    if (filterOptions.selectedVersions.includes(range.key)) {
+                                        return null;
+                                    }
+
+                                    return (
+                                        <TouchableOpacity
+                                            key={range.key}
+                                            style={styles.filterButton}
+                                            onPress={() => handleVersionSelect(range.key)}
+                                        >
+                                            <LinearGradient
+                                                colors={ range.colors }
+                                                start={{ x: 0, y: 0.5 }}
+                                                end={{ x: 1, y: 0.5 }}
+                                                style={[
+                                                    styles.gradient,
+
+                                                ]}
+                                            >
+                                                <Text style={styles.filterButtonText}>{range.name}</Text>
+                                            </LinearGradient>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+
+                                {unselectedTypes.length > 0 && (
+                                    <Text style={styles.activeFiltersTitle}>Types</Text>
+                                )}
+
+                                {Object.keys(pokemonColors).map((type) => {
+                                    if (filterOptions.selectedTypes.includes(type)) {
+                                        return null;
+                                    }
+
+                                    return (
+                                        <TouchableOpacity
+                                            key={type}
+                                            style={styles.filterButton}
+                                            onPress={() => handleTypeSelect(type)}
+                                        >
+                                            <View
+                                                style={[
+                                                    styles.gradient,
+                                                    {
+                                                        backgroundColor: pokemonColors[type].alternateBackgroundColor,
+                                                    }
+                                                ]}
+                                            >
+                                                <Text style={styles.filterButtonText}>{capitalizeString(type)}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </View>
+
+                            <View style={styles.otherFiltersContainer}>
+                                {(!filterOptions.showFavorites) && (
+                                    <TouchableOpacity
+                                        style={styles.filterButton}
+                                        onPress={() =>
+                                            setFilterOptions((prevOptions) => ({
+                                                ...prevOptions,
+                                                showFavorites: !filterOptions.showFavorites,
+                                            }))
+                                        }
                                     >
-                                        <Text style={styles.filterButtonText}>{capitalizeString(type)}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            );
-                        })}
+                                        <View style={styles.favoritesFilterButton}>
+                                            <Text style={styles.filterButtonText}>Favorites</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                )}
+
+                                {(!filterOptions.showCapturedPokemon) && (
+                                    <TouchableOpacity
+                                        style={styles.filterButton}
+                                        onPress={() =>
+                                            setFilterOptions((prevOptions) => ({
+                                                ...prevOptions,
+                                                showCapturedPokemon: !filterOptions.showCapturedPokemon,
+                                            }))
+                                        }
+                                    >
+                                        <View style={styles.caughtFilterButton}>
+                                            <Text style={styles.filterButtonText}>Caught</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        </ScrollView>
+
+                        <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
+                            <Text style={styles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
                     </View>
-
-                    <View style={styles.otherFiltersContainer}>
-                        {(!filterOptions.showFavorites) && (
-                            <TouchableOpacity
-                                style={styles.filterButton}
-                                onPress={() =>
-                                    setFilterOptions((prevOptions) => ({
-                                        ...prevOptions,
-                                        showFavorites: !filterOptions.showFavorites,
-                                    }))
-                                }
-                            >
-                                <View style={styles.favoritesFilterButton}>
-                                    <Text style={styles.filterButtonText}>Favorites</Text>
-                                </View>
-                            </TouchableOpacity>
-                        )}
-
-                        {(!filterOptions.showCapturedPokemon) && (
-                            <TouchableOpacity
-                                style={styles.filterButton}
-                                onPress={() =>
-                                    setFilterOptions((prevOptions) => ({
-                                        ...prevOptions,
-                                        showCapturedPokemon: !filterOptions.showCapturedPokemon,
-                                    }))
-                                }
-                            >
-                                <View style={styles.caughtFilterButton}>
-                                    <Text style={styles.filterButtonText}>Caught</Text>
-                                </View>
-                            </TouchableOpacity>
-                        )}
-                    </View>
-                </ScrollView>
-
-                <TouchableOpacity style={styles.closeButton} onPress={handleDropdownToggle}>
-                    <Text style={styles.closeButtonText}>Close</Text>
-                </TouchableOpacity>
-                </View>
                 </View>
             </Modal>
         </View>
@@ -294,8 +299,6 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
 };
 
 const styles = StyleSheet.create({
-    filterDropdownContainer: {
-    },
     activeFiltersTitle: {
         fontSize: 18,
         fontWeight: 'bold',
@@ -325,12 +328,18 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     dropdownTrigger: {
-        padding: 10,
-        backgroundColor: '#F5F5F5',
-        borderColor: '#DDDDDD',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 15,
+        paddingHorizontal: 10,
+        borderColor: 'black',
         borderWidth: 1,
         borderRadius: 5,
-        alignSelf: 'flex-end',
+    },
+    dropdownTriggerText: {
+        paddingHorizontal: 5,
+        color: 'black',
+        fontSize: 16,
     },
     filterButton: {
         justifyContent: 'center',

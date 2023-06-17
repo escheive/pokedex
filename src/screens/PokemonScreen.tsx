@@ -284,16 +284,21 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     return (
         <View style={styles.container}>
             <View style={styles.filterContainer}>
-                <Text style={styles.filterTitleText}>Filter by Versions:</Text>
 
                 <View style={styles.filtersContainer}>
                     <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} filterOptions={filterOptions} setFilterOptions={setFilterOptions} />
-                    <TextInput
-                        style={styles.searchInput}
-                        value={filterOptions.searchQuery}
-                        onChangeText={handleSearchQueryChange}
-                        placeholder="Search Pokemon"
-                    />
+                    <View style={styles.searchInputContainer}>
+                        <Ionicons
+                            name="search"
+                            size={18} color="black"
+                        />
+                        <TextInput
+                            style={styles.searchInput}
+                            value={filterOptions.searchQuery}
+                            onChangeText={handleSearchQueryChange}
+                            placeholder="Search Pokemon"
+                        />
+                    </View>
                 </View>
 
             </View>
@@ -345,25 +350,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
     },
-    filterButton: {
-        padding: 5,
+    searchInputContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: 'black',
         borderRadius: 5,
-        marginHorizontal: 5,
-        marginVertical: 3,
-    },
-    filterButtonText: {
-        fontSize: 16,
-        color: 'white',
-    },
-    searchContainer: {
-        marginVertical: 10,
+        paddingHorizontal: 10,
     },
     searchInput: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        paddingHorizontal: 25,
-        paddingVertical: 5,
+        fontSize: 16,
     },
     listContainer: {
         alignItems: 'center',
