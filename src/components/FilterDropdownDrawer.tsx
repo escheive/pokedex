@@ -184,6 +184,8 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                     )}
 
                     <View style={styles.filtersContainer}>
+
+
                         {unselectedVersions.length > 0 && (
                             <Text style={styles.activeFiltersTitle}>Gens</Text>
                         )}
@@ -229,16 +231,16 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                                     style={styles.filterButton}
                                     onPress={() => handleTypeSelect(type)}
                                 >
-                                    <LinearGradient
-                                        colors={[ pokemonColors[type].backgroundColor, pokemonColors[type].alternateBackgroundColor ]}
-                                        start={{ x: 0.5, y: 1 }}
-                                        end={{ x: 0.5, y: 0 }}
+                                    <View
                                         style={[
-                                            styles.gradient
+                                            styles.gradient,
+                                            {
+                                                backgroundColor: pokemonColors[type].alternateBackgroundColor,
+                                            }
                                         ]}
                                     >
                                         <Text style={styles.filterButtonText}>{capitalizeString(type)}</Text>
-                                    </LinearGradient>
+                                    </View>
                                 </TouchableOpacity>
                             );
                         })}
