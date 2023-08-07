@@ -15,6 +15,9 @@ import { Provider, connect } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from './src/reducers/rootReducer';
+import { persistor, store } from './src/reducers/configureStore';
+// Redux-Persist
+import { PersistGate } from 'redux-persist/integration/react';
 // Screens
 import PokemonScreen from './src/screens/PokemonScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
@@ -43,7 +46,7 @@ import typeData from './src/assets/typeData';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+// const store = createStore(rootReducer, applyMiddleware(thunk));
 const Drawer = createDrawerNavigator();
 
 
@@ -104,7 +107,9 @@ const styles = StyleSheet.create({
 export default function AppWrapper() {
     return (
         <Provider store={store}>
-            <App database={database} />
+            <PersistGate loading={null} persistor={persistor}>
+                <App database={database} />
+            </PersistGate>
         </Provider>
     );
 }

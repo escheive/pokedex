@@ -4,7 +4,8 @@ import { FETCH_POKEGROWER_REQUEST, FETCH_POKEGROWER_SUCCESS, FETCH_POKEGROWER_FA
 const initialState = {
     loading: false, // Indicates whether the data is being fetched or not
     error: null, // Holds any error that occurs during the Pokemon fetch
-    money: 1, // Holds the money value
+    money: 1, // Holds the users money value
+    income: 1, // Holds the user income value which determines money gained
 };
 
 
@@ -35,7 +36,7 @@ const pokeGrowerReducer = (state = initialState, action) => {
             };
         case POKEGROWER_INCREMENT:
             // Increment PokeGrower money
-            const updatedMoney = state.money + 1
+            const updatedMoney = state.money + state.income
             return {
                 ...state,
                 money: updatedMoney
