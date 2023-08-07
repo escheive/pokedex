@@ -6,6 +6,10 @@ const initialState = {
     error: null, // Holds any error that occurs during the Pokemon fetch
     money: 1, // Holds the users money value
     income: 1, // Holds the user income value which determines money gained
+    tickets: 1, // Value for catching new pokemon
+    pokeBalls: 1, // Used to catch new pokemon
+    stage: 1, // Holds value for what stage a user is on
+    prestigePoints: 0,
 };
 
 
@@ -32,9 +36,9 @@ const pokeGrowerReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 error: action.payload,
-                money: 'error',
             };
         case POKEGROWER_INCREMENT:
+            const { money = 0 } = action.payload
             // Increment PokeGrower money
             const updatedMoney = state.money + state.income
             return {
