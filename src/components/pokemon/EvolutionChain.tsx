@@ -11,6 +11,8 @@ const EvolutionChain = ({ pokemon, pokemonColors, navigation, scrollToTop }) => 
     const [evolutionChain, setEvolutionChain] = useState([]);
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
+    console.log(Object.keys(pokemon))
+
     useEffect(() => {
         const fetchEvolutionChain = async () => {
             try {

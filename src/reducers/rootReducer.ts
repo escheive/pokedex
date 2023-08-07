@@ -4,6 +4,7 @@ import abilitiesReducer from './abilitiesReducer';
 import movesReducer from './movesReducer';
 import speciesReducer from './speciesReducer';
 import userReducer from './userReducer';
+import pokeGrowerReducer from './pokeGrowerReducer';
 
 const rootReducer = combineReducers({
     pokemon: pokemonReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     moves: movesReducer,
     speciesReducer,
     user: userReducer,
+    pokeGrower: pokeGrowerReducer,
     // Add other reducers here
 });
 

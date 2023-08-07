@@ -50,6 +50,7 @@ const fetchSpeciesDataFromApi = async (start, end) => {
                 base_happiness: pokemonDetails.base_happiness,
                 capture_rate: pokemonDetails.capture_rate,
                 egg_groups: pokemonDetails.egg_groups,
+                evolution_chain_url: pokemonDetails.evolution_chain.url,
                 flavor_text_entries: flavorTextEntries,
                 genus: genera.genus,
                 generation: pokemonDetails.generation.name,

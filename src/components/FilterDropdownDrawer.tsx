@@ -200,6 +200,8 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                                     <BouncyCheckbox
                                         fillColor='#FF5A5A'
                                         text="Filter Dual Types"
+                                        iconStyle={{ borderRadius: 0 }}
+                                        innerIconStyle={{ borderRadius: 0 }}
                                         textStyle={{ textDecorationLine: 'none' }}
                                         value={filterOptions.filterByDualTypes}
                                         onPress={() =>
@@ -210,7 +212,6 @@ const FilterDropdownDrawer = ({ setSelectedVersions, setFilterOptions, filterOpt
                                         }
                                     />
                                 </View>
-
 
                                 {unselectedVersions.length > 0 && (
                                     <Text style={styles.activeFiltersTitle}>Gens</Text>

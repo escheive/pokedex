@@ -19,6 +19,7 @@ import rootReducer from './src/reducers/rootReducer';
 import PokemonScreen from './src/screens/PokemonScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import PokeGrowerScreen from './src/screens/PokeGrowerScreen';
 // Components
 import LoadingScreen from './src/components/LoadingScreen';
 // Navigation
@@ -86,6 +87,7 @@ const App = () => {
                 </Drawer.Screen>
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />
+                <Drawer.Screen name="PokeGrower" component={PokeGrowerScreen} />
             </Drawer.Navigator>
 
         </NavigationContainer>
