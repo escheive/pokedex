@@ -1,5 +1,4 @@
-import { database } from '../utils/database/database';
-import { FETCH_POKEGROWER_REQUEST, FETCH_POKEGROWER_SUCCESS, FETCH_POKEGROWER_FAILURE, POKEGROWER_INCREMENT } from './ActionTypes';
+import { FETCH_POKEGROWER_REQUEST, FETCH_POKEGROWER_SUCCESS, FETCH_POKEGROWER_FAILURE, POKEGROWER_INCREMENT_CURRENCY } from './pokeGrowerActionTypes';
 
 // Dispatched when requesting pokemon data
 export const fetchPokeGrowerRequest = () => ({
@@ -21,12 +20,12 @@ export const fetchPokeGrowerFailure = (error) => ({
 });
 
 // Dispatched when updating pokemon favorite or isCaught status
-export const pokeGrowerIncrement = (id, field, value) => {
+export const pokeGrowerIncrementCurrency = (currency, amount) => {
     return (dispatch) => {
         // Update the state by dispatching the action
         dispatch({
-            type: POKEGROWER_INCREMENT,
-            payload: { money: value }
+            type: POKEGROWER_INCREMENT_CURRENCY,
+            payload: { currency, amount }
         });
     };
 };

@@ -1,4 +1,4 @@
-import { FETCH_POKEGROWER_REQUEST, FETCH_POKEGROWER_SUCCESS, FETCH_POKEGROWER_FAILURE, POKEGROWER_INCREMENT } from '../actions/ActionTypes';
+import { FETCH_POKEGROWER_REQUEST, FETCH_POKEGROWER_SUCCESS, FETCH_POKEGROWER_FAILURE, POKEGROWER_INCREMENT_CURRENCY } from '../../actions/pokeGrowerActions/pokeGrowerActionTypes';
 
 // Define the initialState for Pokemon
 const initialState = {
@@ -37,13 +37,11 @@ const pokeGrowerReducer = (state = initialState, action) => {
                 loading: false,
                 error: action.payload,
             };
-        case POKEGROWER_INCREMENT:
-            const { money = 0 } = action.payload
-            // Increment PokeGrower money
-            const updatedMoney = state.money + state.income
+        case POKEGROWER_INCREMENT_CURRENCY:
+            const { currency, amount } = action.payload
             return {
                 ...state,
-                money: updatedMoney
+                [currency]: state[currency] + amount,
             };
         // Handle other actions here
         default:

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { pokeGrowerIncrement } from '../actions/pokeGrowerActions';
-import { View, Text, StyleSheet, Button, Image, Modal, TouchableOpacity } from 'react-native';
+import { pokeGrowerIncrementCurrency } from '../actions/pokeGrowerActions/pokeGrowerActions';
+import { purchaseUpgrade } from '../actions/pokeGrowerActions/purchaseUpgradesActions';
+import { View, Text, StyleSheet, Button, Image, Modal, TouchableOpacity, ScrollView } from 'react-native';
 
 
 const PokeGrowerScreen = ({ navigation }) => {
@@ -9,12 +10,20 @@ const PokeGrowerScreen = ({ navigation }) => {
     const [shopOpen, setShopOpen] = useState(false);
     const dispatch = useDispatch();
     const pokeGrowerData = useSelector((state) => state.pokeGrower);
+    const purchasedUpgradeData = useSelector((state) => state.purchasedUpgrades);
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
+
+    const buyMoneyUpgrade = (upgrade, amount, price) => {
+        const cost = price * amount;
+        dispatch(pokeGrowerIncrementCurrency('money', cost))
+        dispatch(purchaseUpgrade(upgrade, amount))
+    }
 
     useEffect(() => {
         setInterval(() => {
-            dispatch(pokeGrowerIncrement());
+            dispatch(pokeGrowerIncrementCurrency('money', pokeGrowerData.income));
         }, 1000);
+
     }, [])
 
     return (
@@ -22,7 +31,7 @@ const PokeGrowerScreen = ({ navigation }) => {
             <View style={styles.currenciesContainer}>
                 <Text style={styles.currency}>{pokeGrowerData.money}</Text>
                 <Text style={styles.currency}>{pokeGrowerData.income}</Text>
-                <Text style={styles.currency}>{pokeGrowerData.income}</Text>
+                <Text style={styles.currency}>{purchasedUpgradeData.pokeballs}</Text>
             </View>
             <View>
                 <Text>{pokemonList[1].name}</Text>
@@ -52,9 +61,28 @@ const PokeGrowerScreen = ({ navigation }) => {
                         onPress={() => {}}
                     >
                         <Text style={styles.shopTitle}>Shop</Text>
-                        <View style={styles.shopItems}>
-                            <Text style={styles.shopItem}>Shop Item 1</Text>
-                        </View>
+                        <ScrollView style={styles.shopItems}>
+                            <View style={styles.shopItem}>
+                                <Text style={styles.shopItemName}>Pokéball</Text>
+                                <View style={styles.buyButtons}>
+                                    <TouchableOpacity style={styles.buyButton} onPress={() => buyMoneyUpgrade('pokeballs', 1, -5)}>
+                                        <Text>X1</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.buyButton}>
+                                        <Text>X10</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.buyButton}>
+                                        <Text>X100</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.buyButton}>
+                                        <Text>X1000</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <View style={styles.shopItem}>
+                                <Text style={styles.shopItemName}></Text>
+                            </View>
+                        </ScrollView>
                     </TouchableOpacity>
                 </TouchableOpacity>
             </Modal>
@@ -120,19 +148,29 @@ const styles = StyleSheet.create({
       shopItems: {
         backgroundColor: '#fff',
         width: '100%',
-        alignItems: 'center',
         paddingHorizontal: 10,
         borderBottomLeftRadius: 16,
         borderBottomRightRadius: 16,
       },
       shopItem: {
-        fontSize: 18,
-        color: 'gray',
-        padding: 10,
+        padding: 5,
         width: '100%',
         borderRadius: 12,
-        textAlign: 'center',
-        marginVertical: 30,
+        textAlign: 'left',
+        marginVertical: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      },
+      shopItemName: {
+        fontSize: 18,
+        color: 'gray',
+      },
+      buyButtons: {
+        flexDirection: 'row',
+      },
+      buyButton: {
+        borderColor: 'black',
+        borderWidth: 1,
       },
 });
 

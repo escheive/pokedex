@@ -4,7 +4,8 @@ import abilitiesReducer from './abilitiesReducer';
 import movesReducer from './movesReducer';
 import speciesReducer from './speciesReducer';
 import userReducer from './userReducer';
-import pokeGrowerReducer from './pokeGrowerReducer';
+import pokeGrowerReducer from './pokeGrowerReducers/pokeGrowerReducer';
+import purchasedUpgradesReducer from './pokeGrowerReducers/purchasedUpgradesReducer'
 
 const rootReducer = combineReducers({
     pokemon: pokemonReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     speciesReducer,
     user: userReducer,
     pokeGrower: pokeGrowerReducer,
+    purchasedUpgrades: purchasedUpgradesReducer,
     // Add other reducers here
 });
 
