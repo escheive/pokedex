@@ -9,7 +9,8 @@ const PokeGrowerScreen = ({ navigation }) => {
     const [userAnswer, setUserAnswer] = useState('');
     const [rulesOpen, setRulesOpen] = useState(false);
     const [randomPokemon, setRandomPokemon] = useState(1);
-    const [isCorrect, setIsCorrect] = useState(null)
+    const [isCorrect, setIsCorrect] = useState(null);
+    const [gameStarted, setGameStarted] = useState(false);
 
     const grabRandomPokemon = () => {
         const randomPokemonId = Math.floor(Math.random() * 39 + 1)
@@ -17,7 +18,7 @@ const PokeGrowerScreen = ({ navigation }) => {
     }
 
     const startGame = () => {
-        // TODO: initiate the guessing game
+        setGameStarted(true)
         grabRandomPokemon();
         console.log('Game has been started');
     }
@@ -100,41 +101,47 @@ const PokeGrowerScreen = ({ navigation }) => {
                 </TouchableOpacity>
             </Modal>
 
-            <TouchableOpacity
-                style={styles.submitButton}
-                onPress={startGame}
-            >
-                <Text style={styles.startButtonText}>Start</Text>
-            </TouchableOpacity>
-
             <View>
-                <Image
-                    alt="Pokemon Image"
-                    style={styles.image}
-                    source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonList[randomPokemon].id}.png` }}
-                />
-                <Text>{pokemonList[randomPokemon].name}</Text>
+                { gameStarted !== true ?
+                    (
+                        <TouchableOpacity
+                            style={styles.submitButton}
+                            onPress={startGame}
+                        >
+                            <Text style={styles.startButtonText}>Start</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <View style={styles.gameplayContainer}>
+                            <Image
+                                alt="Pokemon Image"
+                                style={styles.image}
+                                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonList[randomPokemon].id}.png` }}
+                            />
+                            <Text>{pokemonList[randomPokemon].name}</Text>
+
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Enter answer here"
+                                onChangeText={setUserAnswer}
+                                value={userAnswer}
+                                returnKeyType="done"
+                                onSubmitEditing={handleSubmit}
+                            />
+
+                            <TouchableOpacity
+                                style={styles.submitButton}
+                                onPress={handleSubmit}
+                            >
+                                <Image
+                                    source={{ uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png' }}
+                                    style={styles.pokeballImage}
+                                />
+                                <Text style={styles.submitButtonText}>Catch This Pokémon</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }
             </View>
-
-            <TextInput
-                style={styles.input}
-                placeholder="Enter answer here"
-                onChangeText={setUserAnswer}
-                value={userAnswer}
-                returnKeyType="done"
-                onSubmitEditing={handleSubmit}
-            />
-
-            <TouchableOpacity
-                style={styles.submitButton}
-                onPress={handleSubmit}
-            >
-                <Image
-                    source={{ uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png' }}
-                    style={styles.pokeballImage}
-                />
-                <Text style={styles.submitButtonText}>Catch This Pokémon</Text>
-            </TouchableOpacity>
 
         </View>
     );
@@ -171,6 +178,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 18,
         marginHorizontal: 10,
+    },
+    gameplayContainer: {
+        alignItems: 'center',
     },
     image: {
         width: 75,
