@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, Text, StyleSheet, Button, Image, Modal, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CorrectBanner from '../components/WhosThatPokemon/CorrectBanner';
 
 
 const PokeGrowerScreen = ({ navigation }) => {
     const [userAnswer, setUserAnswer] = useState('');
     const [rulesOpen, setRulesOpen] = useState(false);
     const [randomPokemon, setRandomPokemon] = useState(1);
+    const [isCorrect, setIsCorrect] = useState(null)
 
     const grabRandomPokemon = () => {
         const randomPokemonId = Math.floor(Math.random() * 30)
@@ -23,8 +25,13 @@ const PokeGrowerScreen = ({ navigation }) => {
     const handleSubmit = () => {
         // TODO: handle user answer
         if (userAnswer.toLowerCase() === pokemonList[randomPokemon].name) {
-
+            setIsCorrect(true)
+        } else {
+            setIsCorrect(false)
         }
+        setTimeout(() => {
+            setIsCorrect(null)
+        }, 2000);
         console.log('User submitted: ', userAnswer);
     }
 
@@ -52,6 +59,8 @@ const PokeGrowerScreen = ({ navigation }) => {
                 </View>
 
             </View>
+
+            <CorrectBanner isCorrect={isCorrect} />
 
             <TouchableOpacity
                 style={styles.scoreContainer}
