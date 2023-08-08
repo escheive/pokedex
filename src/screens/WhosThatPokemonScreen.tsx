@@ -31,7 +31,9 @@ const PokeGrowerScreen = ({ navigation }) => {
         }
         setTimeout(() => {
             setIsCorrect(null)
-        }, 2000);
+            grabRandomPokemon();
+        }, 1000);
+
         console.log('User submitted: ', userAnswer);
     }
 
