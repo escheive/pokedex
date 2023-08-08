@@ -13,11 +13,30 @@ const CorrectBanner = ({ isCorrect }) => {
         }
     }, [isCorrect]);
 
+    const styles = StyleSheet.create({
+        bannerContainer: {
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: '25%',
+        },
+        bannerText: {
+            width: '100%',
+            color: 'white',
+            backgroundColor: isCorrect === true ? 'green' : 'red',
+            padding: 8,
+            fontSize: 24,
+            fontWeight: 'bold',
+            textAlign: 'center',
+        },
+    });
+
     return (
         <Modal
             visible={isVisible === true}
             animationType="fade"
             transparent
+            style={styles.modal}
         >
             <View style={styles.bannerContainer}>
                 { isCorrect === true ? (
@@ -30,31 +49,5 @@ const CorrectBanner = ({ isCorrect }) => {
         </Modal>
     )
 }
-
-const styles = StyleSheet.create({
-    bannerContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        padding: 20,
-    },
-    closeButton: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-        padding: 10,
-    },
-    closeButtonText: {
-        color: 'white',
-        fontSize: 16,
-    },
-    bannerText: {
-        color: 'white',
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-});
 
 export default CorrectBanner;
