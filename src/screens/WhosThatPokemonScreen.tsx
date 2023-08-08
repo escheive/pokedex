@@ -15,6 +15,7 @@ const PokeGrowerScreen = ({ navigation }) => {
     const [lives, setLives] = useState(3);
     const [lastScore, setLastScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
+    const [pokemonTintColor, setPokemonTintColor] = useState('black');
 
     const grabRandomPokemon = () => {
         const randomPokemonId = Math.floor(Math.random() * 39 + 1)
@@ -28,7 +29,7 @@ const PokeGrowerScreen = ({ navigation }) => {
     }
 
     const handleSubmit = () => {
-        // TODO: handle user answer
+        setPokemonTintColor(null)
         if (userAnswer.toLowerCase() === pokemonList[randomPokemon].name) {
             setIsCorrect('Correct')
             setLiveScore(liveScore + 1)
@@ -50,13 +51,139 @@ const PokeGrowerScreen = ({ navigation }) => {
         setTimeout(() => {
             setUserAnswer('')
             setIsCorrect(null)
+            setPokemonTintColor('black');
             grabRandomPokemon();
-        }, 1000);
+        }, 1500);
 
         console.log('User submitted: ', userAnswer);
     }
 
     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
+
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+        },
+        scoresContainer: {
+            flexDirection: 'row',
+            width: '100%',
+            justifyContent: 'space-between',
+            backgroundColor: '#ddd',
+        },
+        scoreContainer: {
+            flexDirection: 'row',
+            width: '33%',
+            padding: 12,
+            justifyContent: 'center',
+        },
+        scoreText: {
+            fontSize: 16,
+            fontWeight: 'bold',
+            borderRadius: 16,
+        },
+        howToPlayButton: {
+            flexDirection: 'row',
+            marginVertical: 15,
+        },
+        startButtonText: {
+            color: 'white',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            fontSize: 18,
+            marginHorizontal: 10,
+        },
+        gameContainer: {
+        },
+        gameplayContainer: {
+            alignItems: 'center',
+        },
+        liveScoreContainer: {
+            flexDirection: 'row',
+            width: '100%',
+            justifyContent: 'space-around',
+            borderWidth: 4,
+            marginBottom: 20,
+        },
+        liveScore: {
+            fontSize: 24,
+            padding: 6,
+            borderRadius: 20,
+        },
+        image: {
+            width: 125,
+            height: 125,
+            tintColor: pokemonTintColor,
+        },
+        input: {
+            padding: 10,
+            borderWidth: 1,
+            borderColor: '#ccc',
+            borderRadius: 5,
+            width: 250,
+            marginVertical: 10,
+            textAlign: 'center',
+        },
+        submitButton: {
+            backgroundColor: '#ff3838',
+            padding: 6,
+            borderRadius: 5,
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        pokeballImage: {
+            width: 36,
+            height: 36,
+        },
+        submitButtonText: {
+            color: 'white',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            fontSize: 18,
+            marginHorizontal: 10,
+        },
+        modalContainer: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+        modalContent: {
+            alignItems: 'center',
+            backgroundColor: '#ccc',
+            width: '90%',
+            borderRadius: 16,
+        },
+        modalTitle: {
+            textAlign: 'center',
+            width: '100%',
+            fontSize: 24,
+            fontWeight: 'bold',
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            backgroundColor: '#ff3838',
+            color: 'white',
+            paddingVertical: 16,
+        },
+        modalDefinitionContainer: {
+            backgroundColor: '#fff',
+            width: '100%',
+            alignItems: 'center',
+            paddingHorizontal: 10,
+            borderBottomLeftRadius: 16,
+            borderBottomRightRadius: 16,
+        },
+        modalRule: {
+            fontSize: 18,
+            color: 'gray',
+            padding: 5,
+            width: '100%',
+            borderRadius: 12,
+            textAlign: 'center',
+            marginVertical: 10,
+        },
+    });
 
     return (
         <View style={styles.container}>
@@ -167,130 +294,5 @@ const PokeGrowerScreen = ({ navigation }) => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-    scoresContainer: {
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-between',
-        backgroundColor: '#ddd',
-    },
-    scoreContainer: {
-        flexDirection: 'row',
-        width: '33%',
-        padding: 12,
-        justifyContent: 'center',
-    },
-    scoreText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        borderRadius: 16,
-    },
-    howToPlayButton: {
-        flexDirection: 'row',
-        marginVertical: 15,
-    },
-    startButtonText: {
-        color: 'white',
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 18,
-        marginHorizontal: 10,
-    },
-    gameContainer: {
-    },
-    gameplayContainer: {
-        alignItems: 'center',
-    },
-    liveScoreContainer: {
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-around',
-        borderWidth: 4,
-        marginBottom: 20,
-    },
-    liveScore: {
-        fontSize: 24,
-        padding: 6,
-        borderRadius: 20,
-    },
-    image: {
-        width: 125,
-        height: 125,
-        tintColor: 'black',
-    },
-    input: {
-        padding: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        width: 250,
-        marginVertical: 10,
-        textAlign: 'center',
-    },
-    submitButton: {
-        backgroundColor: '#ff3838',
-        padding: 6,
-        borderRadius: 5,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    pokeballImage: {
-        width: 36,
-        height: 36,
-    },
-    submitButtonText: {
-        color: 'white',
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 18,
-        marginHorizontal: 10,
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContent: {
-        alignItems: 'center',
-        backgroundColor: '#ccc',
-        width: '90%',
-        borderRadius: 16,
-    },
-    modalTitle: {
-        textAlign: 'center',
-        width: '100%',
-        fontSize: 24,
-        fontWeight: 'bold',
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-        backgroundColor: '#ff3838',
-        color: 'white',
-        paddingVertical: 16,
-    },
-    modalDefinitionContainer: {
-        backgroundColor: '#fff',
-        width: '100%',
-        alignItems: 'center',
-        paddingHorizontal: 10,
-        borderBottomLeftRadius: 16,
-        borderBottomRightRadius: 16,
-    },
-    modalRule: {
-        fontSize: 18,
-        color: 'gray',
-        padding: 5,
-        width: '100%',
-        borderRadius: 12,
-        textAlign: 'center',
-        marginVertical: 10,
-    },
-});
 
 export default PokeGrowerScreen;
