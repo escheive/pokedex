@@ -12,7 +12,7 @@ const PokeGrowerScreen = ({ navigation }) => {
     const [isCorrect, setIsCorrect] = useState(null)
 
     const grabRandomPokemon = () => {
-        const randomPokemonId = Math.floor(Math.random() * 30)
+        const randomPokemonId = Math.floor(Math.random() * 39 + 1)
         setRandomPokemon(randomPokemonId)
     }
 
@@ -30,6 +30,7 @@ const PokeGrowerScreen = ({ navigation }) => {
             setIsCorrect(false)
         }
         setTimeout(() => {
+            setUserAnswer('')
             setIsCorrect(null)
             grabRandomPokemon();
         }, 1000);
@@ -91,6 +92,7 @@ const PokeGrowerScreen = ({ navigation }) => {
                         <View style={styles.modalDefinitionContainer}>
                             <Text style={styles.modalRule}>This is a guessing game, where you can put your pokémon knowledge to the test!</Text>
                             <Text style={styles.modalRule}>Press the "Catch" button to submit your answer</Text>
+                            <Text style={styles.modalRule}>Gender specific pokemon require a -m or -f after the name ex. nidoran-m</Text>
                             <Text style={styles.modalRule}>Tap on the trophies symbol to reveal challenges for you to complete</Text>
                             <Text style={styles.modalRule}>Can you Guess Them All?</Text>
                         </View>
@@ -111,7 +113,7 @@ const PokeGrowerScreen = ({ navigation }) => {
                     style={styles.image}
                     source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonList[randomPokemon].id}.png` }}
                 />
-                <View style={styles.pokemonImageOverlay}></View>
+                <Text>{pokemonList[randomPokemon].name}</Text>
             </View>
 
             <TextInput
@@ -119,6 +121,8 @@ const PokeGrowerScreen = ({ navigation }) => {
                 placeholder="Enter answer here"
                 onChangeText={setUserAnswer}
                 value={userAnswer}
+                returnKeyType="done"
+                onSubmitEditing={handleSubmit}
             />
 
             <TouchableOpacity
