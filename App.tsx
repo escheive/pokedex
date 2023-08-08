@@ -22,7 +22,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import PokemonScreen from './src/screens/PokemonScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
-import PokeGrowerScreen from './src/screens/PokeGrowerScreen';
+import WhosThatPokemonScreen from './src/screens/WhosThatPokemonScreen';
 // Components
 import LoadingScreen from './src/components/LoadingScreen';
 // Navigation
@@ -90,7 +90,7 @@ const App = () => {
                 </Drawer.Screen>
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />
-                <Drawer.Screen name="PokeGrower" component={PokeGrowerScreen} />
+                <Drawer.Screen name="Who's That Pokémon!" component={WhosThatPokemonScreen} />
             </Drawer.Navigator>
 
         </NavigationContainer>

@@ -9,6 +9,21 @@ const PokeGrowerScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+
+            <View style={styles.scoresContainer}>
+                <View styles={styles.scoreContainer}>
+                    <Text style={styles.scoreText}>Last Score: 16</Text>
+                </View>
+
+                <View styles={styles.scoreContainer}>
+                    <Text style={styles.scoreText}>Hi-Score: 54</Text>
+                </View>
+
+                <View styles={styles.scoreContainer}>
+                    <Text style={styles.scoreText}>Trophies: 10/26</Text>
+                </View>
+            </View>
+
             <View>
                 <Image
                     alt="Pokemon Image"
@@ -27,6 +42,26 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
+    },
+    scoresContainer: {
+        flexDirection: 'row',
+        width: '95%',
+        justifyContent: 'space-between',
+        marginVertical: 5,
+        backgroundColor: 'yellow',
+        borderRadius: 20,
+        borderColor: 'blue',
+        borderWidth: 3,
+
+    },
+    scoreContainer: {
+
+    },
+    scoreText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        padding: 6,
+        borderRadius: 16,
     },
     image: {
         width: 75,
