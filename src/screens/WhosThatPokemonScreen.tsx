@@ -11,6 +11,9 @@ const PokeGrowerScreen = ({ navigation }) => {
     const [randomPokemon, setRandomPokemon] = useState(1);
     const [isCorrect, setIsCorrect] = useState(null);
     const [gameStarted, setGameStarted] = useState(false);
+    const [liveScore, setLiveScore] = useState(0);
+    const [lives, setLives] = useState(3);
+    const [highScore, setHighScore] = useState(0);
 
     const grabRandomPokemon = () => {
         const randomPokemonId = Math.floor(Math.random() * 39 + 1)
@@ -27,8 +30,15 @@ const PokeGrowerScreen = ({ navigation }) => {
         // TODO: handle user answer
         if (userAnswer.toLowerCase() === pokemonList[randomPokemon].name) {
             setIsCorrect(true)
+            setLiveScore(liveScore + 1)
         } else {
             setIsCorrect(false)
+            if (lives > 1) {
+                setLives(lives - 1)
+            } else {
+                setGameStarted(false)
+                setLives(3)
+            }
         }
         setTimeout(() => {
             setUserAnswer('')
@@ -67,7 +77,7 @@ const PokeGrowerScreen = ({ navigation }) => {
             <CorrectBanner isCorrect={isCorrect} />
 
             <TouchableOpacity
-                style={styles.scoreContainer}
+                style={styles.howToPlayButton}
                 onPress={() => setRulesOpen(true)}
             >
                 <Ionicons
@@ -101,7 +111,7 @@ const PokeGrowerScreen = ({ navigation }) => {
                 </TouchableOpacity>
             </Modal>
 
-            <View>
+            <View style={styles.gameContainer}>
                 { gameStarted !== true ?
                     (
                         <TouchableOpacity
@@ -112,6 +122,10 @@ const PokeGrowerScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     ) : (
                         <View style={styles.gameplayContainer}>
+                            <View style={styles.liveScoreContainer}>
+                                <Text style={styles.liveScore}>Score: {liveScore}</Text>
+                                <Text style={styles.liveScore}>Lives Left: {lives}</Text>
+                            </View>
                             <Image
                                 alt="Pokemon Image"
                                 style={styles.image}
@@ -155,22 +169,24 @@ const styles = StyleSheet.create({
     },
     scoresContainer: {
         flexDirection: 'row',
-        width: '95%',
+        width: '100%',
         justifyContent: 'space-between',
-        marginVertical: 5,
-        backgroundColor: 'yellow',
-        borderRadius: 20,
-        borderColor: 'blue',
-        borderWidth: 3,
+        backgroundColor: '#ddd',
     },
     scoreContainer: {
         flexDirection: 'row',
-        padding: 6,
+        width: '33%',
+        padding: 12,
+        justifyContent: 'center',
     },
     scoreText: {
         fontSize: 16,
         fontWeight: 'bold',
         borderRadius: 16,
+    },
+    howToPlayButton: {
+        flexDirection: 'row',
+        marginVertical: 15,
     },
     startButtonText: {
         color: 'white',
@@ -179,21 +195,27 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginHorizontal: 10,
     },
+    gameContainer: {
+    },
     gameplayContainer: {
         alignItems: 'center',
     },
-    image: {
-        width: 75,
-        height: 75,
-        tintColor: 'black',
-    },
-    pokemonImageOverlay: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
+    liveScoreContainer: {
+        flexDirection: 'row',
         width: '100%',
-        height: '100%',
-        pointerEvents: 'none',
+        justifyContent: 'space-around',
+        borderWidth: 4,
+        marginBottom: 20,
+    },
+    liveScore: {
+        fontSize: 24,
+        padding: 6,
+        borderRadius: 20,
+    },
+    image: {
+        width: 125,
+        height: 125,
+        tintColor: 'black',
     },
     input: {
         padding: 10,
