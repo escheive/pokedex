@@ -13,6 +13,7 @@ const PokeGrowerScreen = ({ navigation }) => {
     const [gameStarted, setGameStarted] = useState(false);
     const [liveScore, setLiveScore] = useState(0);
     const [lives, setLives] = useState(3);
+    const [lastScore, setLastScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
 
     const grabRandomPokemon = () => {
@@ -29,13 +30,19 @@ const PokeGrowerScreen = ({ navigation }) => {
     const handleSubmit = () => {
         // TODO: handle user answer
         if (userAnswer.toLowerCase() === pokemonList[randomPokemon].name) {
-            setIsCorrect(true)
+            setIsCorrect('Correct')
             setLiveScore(liveScore + 1)
         } else {
-            setIsCorrect(false)
             if (lives > 1) {
+                setIsCorrect('Incorrect')
                 setLives(lives - 1)
             } else {
+                setIsCorrect('Game Over')
+                setLastScore(liveScore);
+                if (liveScore > highScore) {
+                    setHighScore(lastScore)
+                }
+                setLiveScore(0);
                 setGameStarted(false)
                 setLives(3)
             }
@@ -56,11 +63,11 @@ const PokeGrowerScreen = ({ navigation }) => {
 
             <View style={styles.scoresContainer}>
                 <View style={styles.scoreContainer}>
-                    <Text style={styles.scoreText}>Last Score: 16</Text>
+                    <Text style={styles.scoreText}>Last Score: {lastScore}</Text>
                 </View>
 
                 <View style={styles.scoreContainer}>
-                    <Text style={styles.scoreText}>Hi-Score: 54</Text>
+                    <Text style={styles.scoreText}>Hi-Score: {highScore}</Text>
                 </View>
 
                 <View style={styles.scoreContainer}>

@@ -23,7 +23,7 @@ const CorrectBanner = ({ isCorrect }) => {
         bannerText: {
             width: '100%',
             color: 'white',
-            backgroundColor: isCorrect === true ? 'green' : 'red',
+            backgroundColor: isCorrect === 'Correct' ? 'green' : 'red',
             padding: 8,
             fontSize: 24,
             fontWeight: 'bold',
@@ -39,12 +39,7 @@ const CorrectBanner = ({ isCorrect }) => {
             style={styles.modal}
         >
             <View style={styles.bannerContainer}>
-                { isCorrect === true ? (
-                    <Text style={styles.bannerText}>Correct!</Text>
-                ) : (
-                    <Text style={styles.bannerText}>Incorrect!</Text>
-                )}
-
+                <Text style={styles.bannerText}>{isCorrect}</Text>
             </View>
         </Modal>
     )
