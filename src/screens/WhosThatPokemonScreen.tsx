@@ -62,7 +62,7 @@ const PokeGrowerScreen = ({ navigation }) => {
                     size={24}
                     color="black"
                 />
-                <Text style={{ fontSize: 18, fontWeight: 'bold'}}>Rules</Text>
+                <Text style={{ fontSize: 18, fontWeight: 'bold'}}>How to play</Text>
             </TouchableOpacity>
 
             <Modal visible={rulesOpen === true} animationType="fade" transparent>
@@ -78,7 +78,10 @@ const PokeGrowerScreen = ({ navigation }) => {
                     >
                         <Text style={styles.modalTitle}>Rules</Text>
                         <View style={styles.modalDefinitionContainer}>
-                            <Text style={styles.modalDefinition}>Game rules</Text>
+                            <Text style={styles.modalRule}>This is a guessing game, where you can put your pokémon knowledge to the test!</Text>
+                            <Text style={styles.modalRule}>Press the "Catch" button to submit your answer</Text>
+                            <Text style={styles.modalRule}>Tap on the trophies symbol to reveal challenges for you to complete</Text>
+                            <Text style={styles.modalRule}>Can you Guess Them All?</Text>
                         </View>
                     </TouchableOpacity>
                 </TouchableOpacity>
@@ -225,14 +228,14 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 16,
         borderBottomRightRadius: 16,
     },
-    modalDefinition: {
+    modalRule: {
         fontSize: 18,
         color: 'gray',
-        padding: 10,
+        padding: 5,
         width: '100%',
         borderRadius: 12,
         textAlign: 'center',
-        marginVertical: 30,
+        marginVertical: 10,
     },
 });
 
