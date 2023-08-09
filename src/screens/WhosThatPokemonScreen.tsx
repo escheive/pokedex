@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, Text, StyleSheet, Button, Image, Modal, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { Dimensions, View, Text, StyleSheet, Button, Image, Modal, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CorrectBanner from '../components/WhosThatPokemon/CorrectBanner';
+import { capitalizeString } from '../utils/helpers';
 
 
 const PokeGrowerScreen = ({ navigation }) => {
@@ -15,7 +16,6 @@ const PokeGrowerScreen = ({ navigation }) => {
     const [lives, setLives] = useState(3);
     const [lastScore, setLastScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
-    const [pokemonTintColor, setPokemonTintColor] = useState('black');
 
     const grabRandomPokemon = () => {
         const randomPokemonId = Math.floor(Math.random() * 39 + 1)
@@ -29,12 +29,11 @@ const PokeGrowerScreen = ({ navigation }) => {
     }
 
     const handleSubmit = () => {
-        setPokemonTintColor(null)
         if (userAnswer.toLowerCase() === pokemonList[randomPokemon].name) {
             setIsCorrect('Correct')
             setLiveScore(liveScore + 1)
         } else {
-            if (lives > 1) {
+            if (lives > 0) {
                 setIsCorrect('Incorrect')
                 setLives(lives - 1)
             } else {
@@ -43,15 +42,16 @@ const PokeGrowerScreen = ({ navigation }) => {
                 if (liveScore > highScore) {
                     setHighScore(lastScore)
                 }
-                setLiveScore(0);
-                setGameStarted(false)
-                setLives(3)
             }
         }
         setTimeout(() => {
+            if (lives == 1) {
+                setGameStarted(false)
+                setLiveScore(0);
+                setLives(3)
+            }
             setUserAnswer('')
             setIsCorrect(null)
-            setPokemonTintColor('black');
             grabRandomPokemon();
         }, 1500);
 
@@ -62,7 +62,6 @@ const PokeGrowerScreen = ({ navigation }) => {
 
     const styles = StyleSheet.create({
         container: {
-            flex: 1,
             alignItems: 'center',
             justifyContent: 'flex-start',
         },
@@ -98,6 +97,7 @@ const PokeGrowerScreen = ({ navigation }) => {
         },
         gameplayContainer: {
             alignItems: 'center',
+            flex: 1,
         },
         liveScoreContainer: {
             flexDirection: 'row',
@@ -112,9 +112,13 @@ const PokeGrowerScreen = ({ navigation }) => {
             borderRadius: 20,
         },
         image: {
-            width: 125,
-            height: 125,
-            tintColor: pokemonTintColor,
+            width: (Dimensions.get('window').width * 0.6 ),
+            aspectRatio: 1,
+            tintColor: isCorrect !== null ? null : 'black',
+        },
+        pokemonName: {
+            fontSize: 34,
+            fontWeight: 'bold',
         },
         input: {
             padding: 10,
@@ -186,7 +190,7 @@ const PokeGrowerScreen = ({ navigation }) => {
     });
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
 
             <View style={styles.scoresContainer}>
                 <View style={styles.scoreContainer}>
@@ -245,9 +249,8 @@ const PokeGrowerScreen = ({ navigation }) => {
                 </TouchableOpacity>
             </Modal>
 
-            <View style={styles.gameContainer}>
-                { gameStarted !== true ?
-                    (
+            <KeyboardAvoidingView style={styles.gameContainer} behavior='padding'>
+                { gameStarted !== true ? (
                         <TouchableOpacity
                             style={styles.submitButton}
                             onPress={startGame}
@@ -265,7 +268,9 @@ const PokeGrowerScreen = ({ navigation }) => {
                                 style={styles.image}
                                 source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonList[randomPokemon].id}.png` }}
                             />
-                            <Text>{pokemonList[randomPokemon].name}</Text>
+                            <Text style={styles.pokemonName}>
+                                {isCorrect !== null ? capitalizeString(pokemonList[randomPokemon].name) : null}
+                            </Text>
 
                             <TextInput
                                 style={styles.input}
@@ -287,11 +292,10 @@ const PokeGrowerScreen = ({ navigation }) => {
                                 <Text style={styles.submitButtonText}>Catch This Pokémon</Text>
                             </TouchableOpacity>
                         </View>
-                    )
-                }
-            </View>
+                    )}
+            </KeyboardAvoidingView>
 
-        </View>
+        </ScrollView>
     );
 };
 
