@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Dimensions, View, Text, StyleSheet, Button, Image, Modal, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView } from 'react-native';
+import { Dimensions, View, Text, StyleSheet, Button, Image, Modal, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CorrectBanner from '../components/WhosThatPokemon/CorrectBanner';
 import { capitalizeString } from '../utils/helpers';
@@ -23,6 +24,8 @@ const PokeGrowerScreen = ({ navigation }) => {
     }
 
     const startGame = () => {
+        setLiveScore(0)
+        setLives(3)
         setGameStarted(true)
         grabRandomPokemon();
         console.log('Game has been started');
@@ -33,22 +36,20 @@ const PokeGrowerScreen = ({ navigation }) => {
             setIsCorrect('Correct')
             setLiveScore(liveScore + 1)
         } else {
-            if (lives > 0) {
+            if (lives > 1) {
                 setIsCorrect('Incorrect')
                 setLives(lives - 1)
             } else {
                 setIsCorrect('Game Over')
                 setLastScore(liveScore);
                 if (liveScore > highScore) {
-                    setHighScore(lastScore)
+                    setHighScore(liveScore)
                 }
             }
         }
         setTimeout(() => {
             if (lives == 1) {
                 setGameStarted(false)
-                setLiveScore(0);
-                setLives(3)
             }
             setUserAnswer('')
             setIsCorrect(null)
@@ -64,6 +65,7 @@ const PokeGrowerScreen = ({ navigation }) => {
         container: {
             alignItems: 'center',
             justifyContent: 'flex-start',
+            flexGrow: 1,
         },
         scoresContainer: {
             flexDirection: 'row',
@@ -97,14 +99,13 @@ const PokeGrowerScreen = ({ navigation }) => {
         },
         gameplayContainer: {
             alignItems: 'center',
-            flex: 1,
         },
         liveScoreContainer: {
             flexDirection: 'row',
             width: '100%',
             justifyContent: 'space-around',
             borderWidth: 4,
-            marginBottom: 20,
+            marginBottom: 10,
         },
         liveScore: {
             fontSize: 24,
@@ -112,8 +113,8 @@ const PokeGrowerScreen = ({ navigation }) => {
             borderRadius: 20,
         },
         image: {
-            width: (Dimensions.get('window').width * 0.6 ),
-            aspectRatio: 1,
+            width: 300,
+            height: 300,
             tintColor: isCorrect !== null ? null : 'black',
         },
         pokemonName: {
@@ -123,7 +124,6 @@ const PokeGrowerScreen = ({ navigation }) => {
         input: {
             padding: 10,
             borderWidth: 1,
-            borderColor: '#ccc',
             borderRadius: 5,
             width: 250,
             marginVertical: 10,
@@ -156,7 +156,7 @@ const PokeGrowerScreen = ({ navigation }) => {
         modalContent: {
             alignItems: 'center',
             backgroundColor: '#ccc',
-            width: '90%',
+            width: '95%',
             borderRadius: 16,
         },
         modalTitle: {
@@ -179,7 +179,7 @@ const PokeGrowerScreen = ({ navigation }) => {
             borderBottomRightRadius: 16,
         },
         modalRule: {
-            fontSize: 18,
+            fontSize: 20,
             color: 'gray',
             padding: 5,
             width: '100%',
@@ -190,112 +190,114 @@ const PokeGrowerScreen = ({ navigation }) => {
     });
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="position" keyboardVerticalOffset={-100}>
+            <View style={styles.container}>
 
-            <View style={styles.scoresContainer}>
-                <View style={styles.scoreContainer}>
-                    <Text style={styles.scoreText}>Last Score: {lastScore}</Text>
+                <View style={styles.scoresContainer}>
+                    <View style={styles.scoreContainer}>
+                        <Text style={styles.scoreText}>Last Score: {lastScore}</Text>
+                    </View>
+
+                    <View style={styles.scoreContainer}>
+                        <Text style={styles.scoreText}>Hi-Score: {highScore}</Text>
+                    </View>
+
+                    <View style={styles.scoreContainer}>
+                        <Ionicons
+                            name="trophy-sharp"
+                            size={20}
+                            color="black"
+                        />
+                        <Text style={styles.scoreText}>10/26</Text>
+                    </View>
+
                 </View>
 
-                <View style={styles.scoreContainer}>
-                    <Text style={styles.scoreText}>Hi-Score: {highScore}</Text>
-                </View>
+                <CorrectBanner isCorrect={isCorrect} />
 
-                <View style={styles.scoreContainer}>
+                <TouchableOpacity
+                    style={styles.howToPlayButton}
+                    onPress={() => setRulesOpen(true)}
+                >
                     <Ionicons
-                        name="trophy-sharp"
-                        size={20}
+                        name="information-circle-outline"
+                        size={24}
                         color="black"
                     />
-                    <Text style={styles.scoreText}>10/26</Text>
-                </View>
-
-            </View>
-
-            <CorrectBanner isCorrect={isCorrect} />
-
-            <TouchableOpacity
-                style={styles.howToPlayButton}
-                onPress={() => setRulesOpen(true)}
-            >
-                <Ionicons
-                    name="information-circle-outline"
-                    size={24}
-                    color="black"
-                />
-                <Text style={{ fontSize: 18, fontWeight: 'bold'}}>How to play</Text>
-            </TouchableOpacity>
-
-            <Modal visible={rulesOpen === true} animationType="fade" transparent>
-                <TouchableOpacity
-                    style={styles.modalContainer}
-                    activeOpacity={1}
-                    onPress={() => setRulesOpen(false)}
-                >
-                    <TouchableOpacity
-                        style={styles.modalContent}
-                        activeOpacity={1}
-                        onPress={() => {}}
-                    >
-                        <Text style={styles.modalTitle}>Rules</Text>
-                        <View style={styles.modalDefinitionContainer}>
-                            <Text style={styles.modalRule}>This is a guessing game, where you can put your pokémon knowledge to the test!</Text>
-                            <Text style={styles.modalRule}>Press the "Catch" button to submit your answer</Text>
-                            <Text style={styles.modalRule}>Gender specific pokemon require a -m or -f after the name ex. nidoran-m</Text>
-                            <Text style={styles.modalRule}>Tap on the trophies symbol to reveal challenges for you to complete</Text>
-                            <Text style={styles.modalRule}>Can you Guess Them All?</Text>
-                        </View>
-                    </TouchableOpacity>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold'}}>How to play</Text>
                 </TouchableOpacity>
-            </Modal>
 
-            <KeyboardAvoidingView style={styles.gameContainer} behavior='padding'>
-                { gameStarted !== true ? (
+                <Modal visible={rulesOpen === true} animationType="fade" transparent>
+                    <TouchableOpacity
+                        style={styles.modalContainer}
+                        activeOpacity={1}
+                        onPress={() => setRulesOpen(false)}
+                    >
                         <TouchableOpacity
-                            style={styles.submitButton}
-                            onPress={startGame}
+                            style={styles.modalContent}
+                            activeOpacity={1}
+                            onPress={() => {}}
                         >
-                            <Text style={styles.startButtonText}>Start</Text>
-                        </TouchableOpacity>
-                    ) : (
-                        <View style={styles.gameplayContainer}>
-                            <View style={styles.liveScoreContainer}>
-                                <Text style={styles.liveScore}>Score: {liveScore}</Text>
-                                <Text style={styles.liveScore}>Lives Left: {lives}</Text>
+                            <Text style={styles.modalTitle}>Rules</Text>
+                            <View style={styles.modalDefinitionContainer}>
+                                <Text style={styles.modalRule}>This is a guessing game, where you can put your pokémon knowledge to the test!</Text>
+                                <Text style={styles.modalRule}>Press the "Catch" button to submit your answer</Text>
+                                <Text style={styles.modalRule}>Gender specific pokemon require a -m or -f after the name ex. nidoran-m</Text>
+                                <Text style={styles.modalRule}>Tap on the trophies symbol to reveal challenges for you to complete</Text>
+                                <Text style={styles.modalRule}>Can you Guess Them All?</Text>
                             </View>
-                            <Image
-                                alt="Pokemon Image"
-                                style={styles.image}
-                                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonList[randomPokemon].id}.png` }}
-                            />
-                            <Text style={styles.pokemonName}>
-                                {isCorrect !== null ? capitalizeString(pokemonList[randomPokemon].name) : null}
-                            </Text>
+                        </TouchableOpacity>
+                    </TouchableOpacity>
+                </Modal>
 
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter answer here"
-                                onChangeText={setUserAnswer}
-                                value={userAnswer}
-                                returnKeyType="done"
-                                onSubmitEditing={handleSubmit}
-                            />
-
+                <View style={styles.gameContainer}>
+                    { gameStarted !== true ? (
                             <TouchableOpacity
                                 style={styles.submitButton}
-                                onPress={handleSubmit}
+                                onPress={startGame}
                             >
-                                <Image
-                                    source={{ uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png' }}
-                                    style={styles.pokeballImage}
-                                />
-                                <Text style={styles.submitButtonText}>Catch This Pokémon</Text>
+                                <Text style={styles.startButtonText}>Start</Text>
                             </TouchableOpacity>
-                        </View>
-                    )}
-            </KeyboardAvoidingView>
+                        ) : (
+                            <View style={styles.gameplayContainer}>
+                                <View style={styles.liveScoreContainer}>
+                                    <Text style={styles.liveScore}>Score: {liveScore}</Text>
+                                    <Text style={styles.liveScore}>Lives Left: {lives}</Text>
+                                </View>
+                                <Image
+                                    alt="Pokemon Image"
+                                    style={styles.image}
+                                    source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonList[randomPokemon].id}.png` }}
+                                />
+                                <Text style={styles.pokemonName}>
+                                    {isCorrect !== null ? capitalizeString(pokemonList[randomPokemon].name) : null}
+                                </Text>
 
-        </ScrollView>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Enter answer here"
+                                    onChangeText={setUserAnswer}
+                                    value={userAnswer}
+
+                                    onSubmitEditing={() => handleSubmit()}
+                                />
+
+                                <TouchableOpacity
+                                    style={styles.submitButton}
+                                    onPress={handleSubmit}
+                                >
+                                    <Image
+                                        source={{ uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png' }}
+                                        style={styles.pokeballImage}
+                                    />
+                                    <Text style={styles.submitButtonText}>Catch This Pokémon</Text>
+                                </TouchableOpacity>
+
+                            </View>
+                        )}
+                </View>
+            </View>
+        </KeyboardAvoidingView>
     );
 };
 
