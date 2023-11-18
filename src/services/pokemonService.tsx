@@ -4,6 +4,7 @@ import { createPokemonTable, insertPokemon } from '../utils/database/pokemonData
 import { useDispatch } from 'react-redux';
 import { fetchPokemonRequest, fetchPokemonSuccess, fetchPokemonFailure } from '../actions/pokemonActions';
 
+
 ////////////////////////////////////////////////////////////////
 //++++++++++++++++++ Pokemon Data Functions ++++++++++++++++++//
 ////////////////////////////////////////////////////////////////

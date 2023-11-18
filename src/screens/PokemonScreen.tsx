@@ -9,6 +9,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePokemonStatusAction, updatePokemonFavoriteStatusAction } from '../actions/pokemonActions';
 import FilterDropdownDrawer from '../components/FilterDropdownDrawer';
+import { selectPokemon } from '../store/reducers/pokemonSlice';
+import { useAppSelector, useAppDispatch } from '../hooks';
 
 type Props = {
     navigation: StackNavigationProp<any>;
@@ -45,7 +47,8 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     });
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const dispatch = useDispatch();
-    const pokemonList = useSelector((state) => state.pokemon.pokemonList);
+    const pokemonList = useAppSelector(selectPokemon).data;
+//     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
     // function to handle user press on a pokemon
     const handlePress = async (pokemon: Pokemon) => {
