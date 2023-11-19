@@ -48,6 +48,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const dispatch = useDispatch();
     const pokemonList = useAppSelector(selectPokemon).data;
+    console.log(pokemonList)
 //     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
     // function to handle user press on a pokemon
@@ -101,46 +102,44 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 
     // function to handle the filtering of pokemon
     const filterPokemon = () => {
-        const { showFavorites, showCapturedPokemon, selectedVersions, selectedTypes, searchQuery, filterByDualTypes } = filterOptions;
+        const {
+          showFavorites,
+          showCapturedPokemon,
+          selectedVersions,
+          selectedTypes,
+          searchQuery,
+          filterByDualTypes
+        } = filterOptions;
+
         // Turn pokemonList to an object
-        const filteredList = Object.values(pokemonList)
-            .filter((pokemon) => (showFavorites ? pokemon.isFavorite : true))
-            .filter((pokemon) => (showCapturedPokemon ? pokemon.isCaptured : true))
-            .filter((pokemon) => {
-                if (selectedVersions.length > 0) {
-                    return selectedVersions.some((version) => {
-                        const range = groupedVersions[version];
-                        return pokemon.id >= range.start && pokemon.id <= range.end;
-                    });
-                }
-                return true;
-            })
-            .filter((pokemon) => {
-                if (selectedTypes.length > 0) {
-                    if (filterByDualTypes) {
-                        // Filter for Pokemon with both selected types
-                        return selectedTypes.every((type) =>
-                            pokemon.type1.includes(type) ||
-                            pokemon.type2 && pokemon.type2.includes(type)
-                        );
-                    } else {
-                        // Filter for Pokemon with any of selected types
-                        return selectedTypes.some((type) =>
-                            pokemon.type1.includes(type) ||
-                            pokemon.type2 && pokemon.type2.includes(type)
-                        );
-                    }
-                }
-                return true;
-            })
-            .filter((pokemon) =>
-                pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-            );
+        const filteredList = pokemonList.filter((pokemon) =>
+          (showFavorites ? pokemon.isFavorite : true) &&
+          (showCapturedPokemon ? pokemon.isCaptured : true) &&
+          (selectedVersions.length > 0 ?
+            selectedVersions.some((version) => {
+              const range = groupedVersions[version];
+              return pokemon.id >= range.start && pokemon.id <= range.end;
+          }) : true
+        ) &&
+        (selectedTypes.length > 0 ?
+          (filterByDualTypes ?
+            // Filter for Pokemon with both selected types
+            selectedTypes.every((type) =>
+              pokemon.type1.includes(type) || (pokemon.type2 && pokemon.type2.includes(type))
+            ) :
+            // Filter for Pokemon with any of selected types
+            selectedTypes.some((type) =>
+              pokemon.type1.includes(type) || (pokemon.type2 && pokemon.type2.includes(type))
+            )
+          ) : true
+        ) &&
+          pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+        );
 
         return filteredList;
     };
 
-
+// Old filter function that handled pokemonList as an object, pokemonList is now an array but keeping here in case need it later
 //     // function to handle the filtering of pokemon
 //     const filterPokemon = () => {
 //         // Turn pokemonList to an object
