@@ -39,7 +39,7 @@ type DetailsScreenProps = {
 const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreenProps) => {
     // Grab our pokemon data that was pulled in our app.tsx from params
     const { pokemon } = route.params;
-    const abilitiesData = useSelector((state) => state.abilities.abilitiesData);
+//     const abilitiesData = useSelector((state) => state.abilities.abilitiesData);
     // useState to update if a pokemon was favorited or unfavorited without refreshing
     const [isFavorite, setIsFavorite] = useState(false);
     // useState to track pokemonAbilities for each individual pokemon when their page is pulled up

@@ -68,6 +68,31 @@ import { fetchPokemonRequest, fetchPokemonSuccess, fetchPokemonFailure } from '.
 //     }
 // };
 
+// Function to fetch full pokemon object from database before navigating to its details page
+const fetchPokemonDetails = async (pokemonId) => {
+  console.log('fetchPokemonDetails function hit');
+
+  return new Promise((resolve, reject) => {
+    database.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM Pokemon WHERE id = ?;`,
+        [pokemonId],
+        (tx, result) => {
+          if (result.rows.length > 0) {
+            const pokemonDetails = result.rows.item(0);
+            resolve(pokemonDetails);
+          } else {
+            resolve(null); // Resolve with null if there is no data found
+          }
+        },
+        (error) => {
+          console.error('Error fetching Pokemon details:', error);
+          reject(error);
+        }
+      );
+    });
+  });
+};
 
 // Function to fetch base pokemon data from the api
 const fetchPokemonFromAPI = async (resultsPerPage, page) => {
@@ -278,4 +303,4 @@ const fetchPokemonData = () => {
 //     };
 // };
 
-export { fetchPokemonData, fetchPokemonFromAPI };
+export { fetchPokemonData, fetchPokemonFromAPI, fetchPokemonDetails };

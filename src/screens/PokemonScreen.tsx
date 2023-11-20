@@ -5,6 +5,7 @@ import { Pokemon } from '../types';
 import { getTypeStyle, pokemonColors } from '../utils/typeStyle';
 import { capitalizeString } from '../utils/helpers';
 import { fetchPokemonData } from '../utils/api';
+import { fetchPokemonDetails } from '../services/pokemonService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePokemonStatusAction, updatePokemonFavoriteStatusAction } from '../actions/pokemonActions';
@@ -53,7 +54,10 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 
     // function to handle user press on a pokemon
     const handlePress = async (pokemon: Pokemon) => {
-        navigation.navigate('Details', { pokemon });
+      // Fetch full details using an asynchronous function
+      const fullPokemonDetails = await fetchPokemonDetails(pokemon.id);
+      // Navigate to details page with full Pokemon details
+      navigation.navigate('Details', { pokemon: fullPokemonDetails });
     };
 
     // function to handle search query changes
@@ -112,7 +116,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         } = filterOptions;
 
         // Turn pokemonList to an object
-        const filteredList = pokemonList.filter((pokemon) =>
+        const filteredList = pokemonList && pokemonList.filter((pokemon) =>
           (showFavorites ? pokemon.isFavorite : true) &&
           (showCapturedPokemon ? pokemon.isCaptured : true) &&
           (selectedVersions.length > 0 ?

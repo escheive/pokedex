@@ -65,7 +65,6 @@ const App = () => {
 //         resetAbilitiesTable();
 //         resetPokemonTable();
 //         resetMovesTable();
-//         dispatch(fetchPokemonData())
           dispatch(fetchPokemonData());
 //             .then(() => dispatch(fetchAbilitiesData()))
 //             .then(() => dispatch(fetchMovesData()))
