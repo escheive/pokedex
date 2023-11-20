@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { fetchAbilitiesRequest, fetchAbilitiesSuccess, fetchAbilitiesFailure } from '../actions/abilitiesActions';
 
 // Function to fetch base abilities data from the api
-const fetchAbilitiesFromAPI = async (start, end) => {
+const fetchAbilitiesFromApi = async (start, end) => {
     console.log('fetchingAbilitiesFromAPI function hit')
     try {
         const response = await fetch(`https://pokeapi.co/api/v2/ability?limit=${end - start}&offset=${start}`);
@@ -77,7 +77,7 @@ const fetchAbilitiesData = () => {
 
       if (!fetchedAbilitiesData.length) {
         // set loading phase so that loading screen updates
-        const apiData = await fetchAbilitiesFromAPI(start, end);
+        const apiData = await fetchAbilitiesFromApi(start, end);
         // Insert fetched ability into database
         await insertAbility(apiData);
         // Push fetched abilities into our fetchedAbilitiesData array
@@ -152,4 +152,4 @@ const fetchAbilitiesData = () => {
 //     };
 // };
 
-export { fetchAbilitiesData, fetchAbilitiesFromAPI };
+export { fetchAbilitiesData, fetchAbilitiesFromApi };
