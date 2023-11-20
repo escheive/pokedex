@@ -99,26 +99,29 @@ const fetchPokemonDetails = async (pokemonId) => {
 const fetchPokemonFromAPI = async (resultsPerPage, page) => {
     console.log('fetchingPokemonFromAPI function hit')
     try {
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${resultsPerPage}&offset=${(page - 1) * resultsPerPage}`);
-        const data = await response.json();
+        const response = await pokeApi.get(`pokemon?limit=${resultsPerPage}&offset=${(page - 1) * resultsPerPage}`);
+        const data = response.data;
 
-        const pokemonData = data.results.map(async (pokemon) => {
-            const response = await fetch(pokemon.url);
-            const pokemonDetails = await response.json();
-            const moves = await pokemonDetails.moves.map((move) => {
+        const pokemonData = await Promise.all(data.results.map(async (pokemon) => {
+            const pokemonDetailsResponse = await pokeApi.get(pokemon.url);
+            const pokemonDetails = pokemonDetailsResponse.data;
+
+            const moves = pokemonDetails.moves.map((move) => {
                 return {
                     name: move.move.name,
                     learnMethod: move.version_group_details[0].move_learn_method.name,
                     levelLearnedAt: move.version_group_details[0].level_learned_at
                 };
             });
-            const modifiedStats = await pokemonDetails.stats.map((stat) => {
+
+            const modifiedStats = pokemonDetails.stats.map((stat) => {
                 return {
                     name: stat.stat.name,
                     value: stat.base_stat
                 };
             });
-            const modifiedAbilities = await pokemonDetails.abilities.map((ability) => {
+
+            const modifiedAbilities = pokemonDetails.abilities.map((ability) => {
                 return {
                     name: ability.ability.name,
                     isHidden: ability.is_hidden
@@ -140,18 +143,73 @@ const fetchPokemonFromAPI = async (resultsPerPage, page) => {
                 image_url: pokemonDetails.sprites.other['official-artwork'].front_default,
                 pixel_image_url: pokemonDetails.sprites.front_default,
             }
-        });
-
-        const transformedPokemonData = await Promise.all(pokemonData);
+        }));
 
         // Release memory occupied by data.results and pokemonUrls
         data.results = null;
-        return transformedPokemonData;
+        return pokemonData;
     } catch (error) {
         console.error('Error in fetchPokemonFromAPI function', error);
         throw error;
     }
 };
+// // Function to fetch base pokemon data from the api
+// const fetchPokemonFromAPI = async (resultsPerPage, page) => {
+//     console.log('fetchingPokemonFromAPI function hit')
+//     try {
+//         const response = await pokeApi.get(`pokemon?limit=${resultsPerPage}&offset=${(page - 1) * resultsPerPage}`);
+//         const data = response.data;
+//
+//         const pokemonData = data.results.map(async (pokemon) => {
+//             const response = await fetch(pokemon.url);
+//             const pokemonDetails = await response.json();
+//             const moves = await pokemonDetails.moves.map((move) => {
+//                 return {
+//                     name: move.move.name,
+//                     learnMethod: move.version_group_details[0].move_learn_method.name,
+//                     levelLearnedAt: move.version_group_details[0].level_learned_at
+//                 };
+//             });
+//             const modifiedStats = await pokemonDetails.stats.map((stat) => {
+//                 return {
+//                     name: stat.stat.name,
+//                     value: stat.base_stat
+//                 };
+//             });
+//             const modifiedAbilities = await pokemonDetails.abilities.map((ability) => {
+//                 return {
+//                     name: ability.ability.name,
+//                     isHidden: ability.is_hidden
+//                 };
+//             });
+//
+//             return {
+//                 id: pokemonDetails.id,
+//                 name: pokemonDetails.name,
+//                 type1: pokemonDetails.types[0].type.name,
+//                 type2: pokemonDetails.types[1] ? pokemonDetails.types[1].type.name : null,
+//                 height: pokemonDetails.height,
+//                 weight: pokemonDetails.weight,
+//                 base_experience: pokemonDetails.base_experience,
+//                 stats: modifiedStats,
+//                 abilities: modifiedAbilities,
+//                 moves: moves,
+//                 species_url: pokemonDetails.species.url,
+//                 image_url: pokemonDetails.sprites.other['official-artwork'].front_default,
+//                 pixel_image_url: pokemonDetails.sprites.front_default,
+//             }
+//         });
+//
+//         const transformedPokemonData = await Promise.all(pokemonData);
+//
+//         // Release memory occupied by data.results and pokemonUrls
+//         data.results = null;
+//         return transformedPokemonData;
+//     } catch (error) {
+//         console.error('Error in fetchPokemonFromAPI function', error);
+//         throw error;
+//     }
+// };
 
 
 // Function to fetch base pokemon data from database or api
