@@ -49,7 +49,7 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const dispatch = useDispatch();
     const pokemonList = useAppSelector(selectPokemon).data;
-    console.log(pokemonList)
+//     console.log(pokemonList)
 //     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
 
     // function to handle user press on a pokemon

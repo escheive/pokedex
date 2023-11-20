@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createAbilitiesTable, fetchAbilitiesFromApi } from '../../services/abilitiesService';
-import { insertAbility } from '../../utils/database/abilitiesDatabase';
+import { fetchAbilitiesDataFromApiOrDatabase } from '../../services/abilitiesService';
 
 // Define a type for abilitiesSlice state
 interface AbilitiesState {
@@ -15,50 +14,50 @@ const initialState: AbilitiesState = {
   error: null,
 };
 
-// Define the asynchronous thunk for fetching Abilities data
+// Define an asynchronous thunk for fetching Abilities data
 export const fetchAbilitiesData = createAsyncThunk('abilities/fetchAbilitiesData', async () => {
   try {
-    await createAbilitiesTable(); // Wait for the table creation process to complete
-
-    const totalCount = 298; // The number of total abilities in the PokeApi as of now
-    const start = 0;
-    const end = 298;
-
-    const fetchedAbilitiesData = await fetchAbilitiesFromApi(start, end);
-    await insertAbility(fetchedAbilitiesData);
-
-    return fetchedAbilitiesData;
+    await fetchAbilitiesDataFromApiOrDatabase();
   } catch (error) {
-    console.error('Error fetching and inserting Abilities data in the fetchAbilitiesData thunk:', error);
-    throw error;
+    console.error('Error fetching and inserting Abilities data:', error);
+    return rejectWithValue(error.message);
   }
 });
 
 export const abilitiesSlice = createSlice({
   name: 'abilities',
   initialState,
-  reducers: {},
+  reducers: {
+    // Action that sets abilities in the abilities state
+    setAbilities: (state, action) => {
+      state.data = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    // Action that reset our abilities state to free up memory, will use when a user navigates away from a page that displays all abilities
+    resetAbilities: (state) => {
+      state.data = [];
+      state.loading = false;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      // Case to set loading state to true while abilities are being fetched
       .addCase(fetchAbilitiesData.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      // Case to set abilities data and reset loading to false
       .addCase(fetchAbilitiesData.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.error = null;
       })
-      // Case to handle errors and reset loading to false
       .addCase(fetchAbilitiesData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch Abilities data';
+        state.error = action.payload;
       });
   },
 });
 
-// Export method for useAppSelector and the reducer itself
-export const selectAbilities = (state) => state.abilities; // This allows us to pull data in the slice
-
-export default abilitiesSlice.reducer; // This allows us to import to the store
+export const { setAbilities, resetAbilities } = abilitiesSlice.actions; // Export action that allows us to set abilities state
+export const selectAbilities = (state) => state.abilities; // Export selector that allows us to pull in data from the slice
+export default abilitiesSlice.reducer; // Export the reducer so that we can import it to our redux store
