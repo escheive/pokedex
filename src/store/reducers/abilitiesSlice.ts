@@ -51,6 +51,7 @@ export const abilitiesSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAbilitiesData.fulfilled, (state, action) => {
+        state.data = action.payload;
         state.loading = false;
         state.error = null;
       })
