@@ -17,10 +17,13 @@ const initialState: AbilitiesState = {
 // Define an asynchronous thunk for fetching Abilities data
 export const fetchAbilitiesData = createAsyncThunk('abilities/fetchAbilitiesData', async () => {
   try {
-    await fetchAbilitiesDataFromApiOrDatabase();
+    // Directly call the fetch function
+    const abilitiesData = await fetchAbilitiesDataFromApiOrDatabase();
+    // Return the data
+    return abilitiesData;
   } catch (error) {
     console.error('Error fetching and inserting Abilities data:', error);
-    return rejectWithValue(error.message);
+    throw error;
   }
 });
 

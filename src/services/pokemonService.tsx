@@ -103,7 +103,7 @@ const fetchPokemonFromAPI = async (resultsPerPage, page) => {
         const data = response.data;
 
         const pokemonData = await Promise.all(data.results.map(async (pokemon) => {
-            const pokemonDetailsResponse = await pokeApi.get(pokemon.url);
+            const pokemonDetailsResponse = await axios.get(pokemon.url);
             const pokemonDetails = pokemonDetailsResponse.data;
 
             const moves = pokemonDetails.moves.map((move) => {

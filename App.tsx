@@ -41,7 +41,8 @@ import { pokemonColors } from './src/utils/typeStyle';
 // Services
 // import { fetchPokemonData } from './src/services/pokemonService';
 import { fetchPokemonData } from './src/store/reducers/pokemonSlice';
-import { fetchAbilitiesData } from './src/services/abilitiesService';
+import { fetchAbilitiesData } from './src/store/reducers/abilitiesSlice';
+import { fetchAbilitiesDataFromApiOrDatabase } from './src/services/abilitiesService';
 import { fetchMovesData } from './src/services/movesService';
 // Database
 import SQLite from 'react-native-sqlite-storage';
@@ -58,19 +59,26 @@ const App = () => {
   const dispatch = useAppDispatch();
     const isAbilitiesLoading = false;
     const isPokemonLoading = false;
+    const [allAbilities, setAllAbilities] = useState([]);
 //     const isPokemonLoading = useSelector((state) => state.pokemon.loading);
 //     const isAbilitiesLoading = useSelector((state) => state.abilities.loading);
 
     useEffect(() => {
+      const fetchAndSetAbilities = async () => {
+        const fetchedAbilities = await dispatch(fetchAbilitiesData());
+        setAllAbilities(fetchedAbilities)
+      }
 //         resetAbilitiesTable();
 //         resetPokemonTable();
 //         resetMovesTable();
           dispatch(fetchPokemonData());
+          fetchAndSetAbilities();
 //             .then(() => dispatch(fetchAbilitiesData()))
 //             .then(() => dispatch(fetchMovesData()))
 //             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
     }, [dispatch]);
 
+  console.log(allAbilities)
     let loadingText = '';
     if (isPokemonLoading) {
         loadingText = 'Loading Pokemon...'

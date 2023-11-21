@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const pokeApi = axios.create({
-  baseUrl: 'https://pokeapi.co/api/v2/',
+  baseURL: 'https://pokeapi.co/api/v2/',
   headers: {
     'Content-Type': 'application/json',
   },

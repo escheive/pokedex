@@ -1,4 +1,5 @@
 import axios from 'axios';
+import pokeApi from '../axiosConfig';
 import { database } from '../utils/database/database';
 import { createAbilitiesTable, insertAbility } from '../utils/database/abilitiesDatabase';
 // Redux
@@ -7,17 +8,15 @@ import { fetchAbilitiesRequest, fetchAbilitiesSuccess, fetchAbilitiesFailure } f
 
 // Function to fetch base abilities data from the api
 const fetchAbilitiesFromApi = async (start, end) => {
-    console.log('fetchingAbilitiesFromAPI function hit')
+    console.log('fetchAbilitiesFromApi function hit')
     try {
-        const response = await axios.get(`https://pokeapi.co/api/v2/ability?limit=${end - start}&offset=${start}`);
+        const response = await pokeApi.get(`ability?limit=${end - start}&offset=${start}`);
         const data = await response.data;
 
-        const abilityUrls = data.results.map((ability) => ability.url); // Map over the list of abilities and grab all the urls
-
         // Batch fetching in parallel
-        const abilityData = await Promise.all(abilityUrls.map(async (url) => {
-          const response = await axios.get(url);
-          return response.data;
+        const abilityData = await Promise.all(data.results.map(async (ability) => {
+          const abilitiesDetailsResponse = await axios.get(ability.url);
+          return abilitiesDetailsResponse.data;
         }));
 
         const modifiedAbilityData = await Promise.all(abilityData.map(async (ability) => {
@@ -46,66 +45,65 @@ const fetchAbilitiesFromApi = async (start, end) => {
 };
 
 // Function to fetch ability data from database or api
-const fetchAbilitiesDataFromApiOrDatabase = () => {
+const fetchAbilitiesDataFromApiOrDatabase = async () => {
   console.log('fetchAbilitiesData function hit');
-  return async (dispatch) => {
 
-    try {
-      await createAbilitiesTable(); // Wait for the table creation process to complete
+  try {
+    await createAbilitiesTable(); // Wait for the table creation process to complete
 
-      const totalCount = 298; // total of all abilities on pokeapi
-      const batchSize = 20;  // Adjust the batch size based on your needs
-      const batches = Math.ceil(totalCount / batchSize);
+    const totalCount = 363; // total of all abilities on pokeapi
+    const batchSize = 20;  // Adjust the batch size based on your needs
+    const batches = Math.ceil(totalCount / batchSize);
 
-      let fetchedAbilitiesData = [];
+    let fetchedAbilitiesData = [];
 
-      // Batch fetching in series
-      for (let i=0; i<batches; i++) {
-        const start = i * batchSize; // Starting point for fetching abilities
-        const end = Math.min((i + 1) * batchSize, totalCount); // End point for fetching abilities
+    // Batch fetching in series
+    for (let i=0; i<batches; i++) {
+      const start = i * batchSize; // Starting point for fetching abilities
+      const end = Math.min((i + 1) * batchSize, totalCount); // End point for fetching abilities
 
-        // Attempt to fetch abilities from database
-        const databaseData = await new Promise((resolve, reject) => {
-          database.transaction((tx) => {
-            tx.executeSql(
-              `SELECT * FROM Abilities WHERE id BETWEEN ? AND ?;`,
-              [start, end],
-              (tx, result) => {
-                const abilitiesData = [];
-                if (result.rows.length > 0) {
-                  for (let i=0; i<result.rows.length; i++) {
-                    abilitiesData.push(result.rows.item(i));
-                  }
+      // Attempt to fetch abilities from database
+      const databaseData = await new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+          tx.executeSql(
+            `SELECT * FROM Abilities WHERE id BETWEEN ? AND ?;`,
+            [start, end],
+            (tx, result) => {
+              const abilitiesData = [];
+              if (result.rows.length > 0) {
+                for (let i=0; i<result.rows.length; i++) {
+                  abilitiesData.push(result.rows.item(i));
                 }
-                resolve(abilitiesData);
-              },
-              (error) => {
-                console.error('Error fetching abilities from database:', error);
-                reject(error);
               }
-            );
-          });
+              resolve(abilitiesData);
+            },
+            (error) => {
+              console.error('Error fetching abilities from database:', error);
+              reject(error);
+            }
+          );
         });
+      });
 
-        // If no abilities were fetched from database
-        if (databaseData.length === 0) {
-          // fetch abilities from api
-          const apiData = await fetchAbilitiesFromApi(start, end);
-          // Insert fetched abilities from api into database
-          await insertAbility(apiData);
-          // Push fetched abilities into our fetchedAbilitiesData array
-          fetchedAbilitiesData = fetchedAbilitiesData.concat(apiData);
-        } else {
-          // If abilities were fetched from database, push those into our fetchedAbilitiesData array
-          fetchedAbilitiesData = fetchedAbilitiesData.concat(databaseData);
-        }
+      // If no abilities were fetched from database
+      if (!databaseData) {
+        // fetch abilities from api
+        const apiData = await fetchAbilitiesFromApi(start, end);
+        // Insert fetched abilities from api into database
+        await insertAbility(apiData);
+        // Push fetched abilities into our fetchedAbilitiesData array
+        fetchedAbilitiesData = fetchedAbilitiesData.concat(apiData);
+      } else {
+        // If abilities were fetched from database, push those into our fetchedAbilitiesData array
+        fetchedAbilitiesData = fetchedAbilitiesData.concat(databaseData);
       }
-
-      console.log('Successfully fetched data in the fetchAbilitiesData function');
-    } catch(error) {
-      console.error('Error fetching and inserting Abilities data in the fetchAbilitiesData function:', error);
     }
-  };
+
+    console.log('Successfully fetched data in the fetchAbilitiesData function');
+    return fetchedAbilitiesData;
+  } catch(error) {
+    console.error('Error fetching and inserting Abilities data in the fetchAbilitiesData function:', error);
+  }
 };
 
 // // Function to fetch ability data from database or api
