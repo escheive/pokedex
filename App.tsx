@@ -30,6 +30,7 @@ import WhosThatPokemonScreen from './src/screens/WhosThatPokemonScreen';
 import LoadingScreen from './src/components/LoadingScreen';
 // Navigation
 import PokemonStackNavigator from './src/navigation/PokemonStackNavigator';
+import AbilityStackNavigator from './src/navigation/AbilityStackNavigator';
 import ProfileStack from './src/navigation/ProfileStack';
 import SettingsStack from './src/navigation/SettingsStack';
 // Utils
@@ -78,7 +79,6 @@ const App = () => {
 //             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
     }, [dispatch]);
 
-  console.log(allAbilities)
     let loadingText = '';
     if (isPokemonLoading) {
         loadingText = 'Loading Pokemon...'
@@ -100,7 +100,10 @@ const App = () => {
                 })}
             >
                 <Drawer.Screen name="Pokemon">
-                    {(props) => <PokemonStackNavigator {...props} />}
+                  {(props) => <PokemonStackNavigator {...props} />}
+                </Drawer.Screen>
+                <Drawer.Screen name="Abilities">
+                  {(props) => <AbilityStackNavigator {...props} />}
                 </Drawer.Screen>
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />
