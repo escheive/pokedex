@@ -140,35 +140,35 @@ const insertPokemon = async (pokemonData) => {
     }
 };
 
-const updatePokemonStatus = async (pokemonId, field, value) => {
-    try {
-        await new Promise((resolve, reject) => {
-            database.transaction((tx) => {
-                let query = '';
+const updatePokemonStatus = async (pokemonId: number, field: string, value) => {
+  try {
+    await new Promise((resolve, reject) => {
+      database.transaction((tx) => {
+        let query = '';
 
-                if (field === 'isFavorite') {
-                    query = 'UPDATE Pokemon SET isFavorite = ? WHERE id = ?;';
-                } else if (field === 'isCaught') {
-                    query = 'UPDATE Pokemon SET isCaught = ? WHERE id = ?;';
-                }
+        if (field === 'isFavorite') {
+          query = 'UPDATE Pokemon SET isFavorite = ? WHERE id = ?;';
+        } else if (field === 'isCaught') {
+          query = 'UPDATE Pokemon SET isCaught = ? WHERE id = ?;';
+        }
 
-                tx.executeSql(
-                    query,
-                    [value, pokemonId],
-                    () => {
-                        console.log(`Pokemon with ID ${pokemonId} status updated`);
-                        resolve();
-                    },
-                    (error) => {
-                        console.error('Error updating Pokemon status:', error);
-                        reject(error);
-                    }
-                );
-            });
-        });
-    } catch (error) {
-        console.error('Error updating status:', error);
-    }
+        tx.executeSql(
+          query,
+          [value, pokemonId],
+          () => {
+            console.log(`Pokemon with ID ${pokemonId} status updated`);
+            resolve();
+          },
+          (error) => {
+            console.error('Error updating Pokemon status:', error);
+            reject(error);
+          }
+        );
+      });
+    });
+  } catch (error) {
+    console.error('Error updating status:', error);
+  }
 };
 
 

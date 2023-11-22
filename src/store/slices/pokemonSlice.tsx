@@ -100,19 +100,18 @@ export const pokemonSlice = createSlice({
       state.data = action.payload;
       state.loading = false;
     },
-    setFavoriteStatus: (state, action) => {
-      const { pokemonId, isFavorite } = action.payload;
-      // Find the pokemon in the pokemon array and update its favorite status
-      const pokemonIndex = state.data.findIndex(pokemon => pokemon.id === pokemonId);
-      if (pokemonIndex !== -1) {
-        state.data[pokemonIndex].isFavorite = isFavorite
+    setPokemonFavoriteStatus: (state, action) => {
+      const { pokemonId, updatedFavoriteStatus } = action.payload;
+      if (state.data[pokemonId - 1]) {
+        state.data[pokemonId - 1].isFavorite = updatedFavoriteStatus
       }
     },
-    setCaptureStatus: (state, action) => {
+    setPokemonCaughtStatus: (state, action) => {
       const { pokemonId, isCaught } = action.payload;
-      // Find the pokemon in the pokemon array and update its captured status
+      // Find the pokemon in the pokemon array and update its caught status
+      const pokemonIndex = state.data.findIndex(pokemon => pokemon.id === pokemonId);
       if (pokemonIndex !== -1) {
-        state.data[pokemonIndex].isCaptured = isCaptured;
+        state.data[pokemonIndex].isCaught = !isCaught;
       }
     },
   },
@@ -133,7 +132,7 @@ export const pokemonSlice = createSlice({
   },
 });
 
-export const { setPokemon, setFavoriteStatus, setCaptureStatus } = pokemonSlice.actions;
+export const { setPokemon, setPokemonFavoriteStatus, setPokemonCaughtStatus, } = pokemonSlice.actions;
 // export method for useAppSelector to pull the data in the slice
 export const selectPokemon = (state: RootState) => state.pokemon;
 

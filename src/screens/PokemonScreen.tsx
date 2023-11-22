@@ -14,6 +14,7 @@ import { selectPokemon } from '../store/slices/pokemonSlice';
 import { selectAbilities } from '../store/slices/abilitiesSlice';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { resetPokemonTable } from '../utils/database/pokemonDatabase';
+import { setPokemonFavoriteStatus, setPokemonCaughtStatus } from '../store/slices/pokemonSlice';
 
 type Props = {
     navigation: StackNavigationProp<any>;
@@ -155,10 +156,8 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 
 
     const handleFavoritePress = (selectedPokemon) => {
-        // Update the isFavorite value in the database
-        const updatedFavoriteValue = !selectedPokemon.isFavorite;
         // pokemon action to update the pokemon in the pokemonList state
-        dispatch(updatePokemonStatusAction(selectedPokemon.id, 'isFavorite', updatedFavoriteValue));
+        dispatch(setPokemonFavoriteStatus({ pokemonId: selectedPokemon.id, updatedFavoriteStatus: !selectedPokemon.isFavorite }));
 //         // pokemon action to update the pokemon in the pokemonList state
 //         dispatch(updatePokemonFavoriteStatusAction(selectedPokemon.id, updatedFavoriteValue));
     }
