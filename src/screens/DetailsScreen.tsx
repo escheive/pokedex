@@ -61,7 +61,6 @@ const DetailsScreen = ({ route, navigation, allPokemonAbilities }: DetailsScreen
     // useEffect to check if a pokemon is favorited and fetch ability info when pokemon object changes
     useEffect(() => {
 //         getPokedexEntry(setPokedexEntry, pokemon.species_url)
-
         checkIfFavorite();
 
         const findThisPokemonsAbilities = async () => {

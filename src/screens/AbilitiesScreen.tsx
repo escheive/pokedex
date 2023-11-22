@@ -9,7 +9,7 @@ import { fetchAbilitiesFromDatabase } from '../utils/database/abilitiesDatabase'
 
 import { capitalizeString } from '../utils/helpers';
 
-const AbilitiesScreen = () => {
+const AbilitiesScreen = ({route}) => {
   const dispatch = useAppDispatch();
   const screenWidth = Dimensions.get('window').width;
   const allAbilities = useAppSelector(selectAbilities).data;

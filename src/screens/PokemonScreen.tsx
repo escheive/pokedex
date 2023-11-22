@@ -4,14 +4,16 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Pokemon } from '../types';
 import { getTypeStyle, pokemonColors } from '../utils/typeStyle';
 import { capitalizeString } from '../utils/helpers';
-import { fetchPokemonData } from '../utils/api';
+// import { fetchPokemonData } from '../utils/api';
+import { fetchPokemonData } from '../store/slices/pokemonSlice';
 import { fetchPokemonDetails } from '../services/pokemonService';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useDispatch, useSelector } from 'react-redux';
 import { updatePokemonStatusAction, updatePokemonFavoriteStatusAction } from '../actions/pokemonActions';
 import FilterDropdownDrawer from '../components/FilterDropdownDrawer';
 import { selectPokemon } from '../store/slices/pokemonSlice';
+import { selectAbilities } from '../store/slices/abilitiesSlice';
 import { useAppSelector, useAppDispatch } from '../hooks';
+import { resetPokemonTable } from '../utils/database/pokemonDatabase';
 
 type Props = {
     navigation: StackNavigationProp<any>;
@@ -34,23 +36,29 @@ const versionOptions = [
 
 
 const PokemonScreen = ({ navigation, typeData, route }: Props) => {
-    const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+  const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 //     const [showFavorites, setShowFavorites] = useState(false);
 //     const [showCaughtPokemon, setShowCaughtPokemon] = useState(false);
 //     const [searchQuery, setSearchQuery] = useState('');
-    const [filterOptions, setFilterOptions] = useState({
-        showFavorites: false,
-        showCapturedPokemon: false,
-        selectedVersions: [],
-        selectedTypes: [],
-        searchQuery: '',
-        filterByDualTypes: false,
-    });
-    const [dropdownVisible, setDropdownVisible] = useState(false);
-    const dispatch = useDispatch();
-    const pokemonList = useAppSelector(selectPokemon).data;
-//     console.log(pokemonList)
-//     const pokemonList = useSelector((state) => state.pokemon.pokemonList);
+  const [filterOptions, setFilterOptions] = useState({
+    showFavorites: false,
+    showCapturedPokemon: false,
+    selectedVersions: [],
+    selectedTypes: [],
+    searchQuery: '',
+    filterByDualTypes: false,
+  });
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const { loading, data: pokemonList, error } = useAppSelector(selectPokemon);
+
+  useEffect(() => {
+//     resetPokemonTable()
+//       .then(() => dispatch(fetchPokemonData()))
+//       .catch((error) => console.error('Error fetching pokemon data:', error));
+    dispatch(fetchPokemonData())
+
+  }, [dispatch]);
 
     // function to handle user press on a pokemon
     const handlePress = async (pokemon: Pokemon) => {
@@ -143,61 +151,6 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         return filteredList;
     };
 
-// Old filter function that handled pokemonList as an object, pokemonList is now an array but keeping here in case need it later
-//     // function to handle the filtering of pokemon
-//     const filterPokemon = () => {
-//         // Turn pokemonList to an object
-//         const filteredList = Object.values(pokemonList)
-//             .filter((pokemon) => (showFavorites ? pokemon.isFavorite : true))
-//             .filter((pokemon) => (showCaughtPokemon ? pokemon.isCaptured : true))
-//             .filter((pokemon) => {
-//                 if (selectedVersions.length > 0) {
-//                     return selectedVersions.some((version) => {
-//                         const range = groupedVersions[version];
-//                         return pokemon.id >= range.start && pokemon.id <= range.end;
-//                     });
-//                 }
-//                 return true;
-//             })
-//             .filter((pokemon) =>
-//                 pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-//             );
-//
-//         return filteredList;
-//     };
-
-
-//     // function to handle the filtering of pokemon
-//     const filterPokemon = (pokemonList, searchQuery, showFavorites, showCaughtPokemon) => {
-//         let filteredList = Object.values(pokemonList);
-//
-//         if (showFavorites) {
-//             filteredList = filteredList.filter((pokemon) => pokemon.isFavorite);
-//         }
-//
-//         if (showCaughtPokemon) {
-//             filteredList = filteredList.filter((pokemon) => pokemon.isCaptured);
-//         }
-//
-//         if (selectedVersions.length > 0) {
-//             filteredList = filteredList.filter((pokemon) => {
-//                 const matchesSelectedVersions = selectedVersions.some((version) => {
-//                     const range = groupedVersions[version];
-//                     return pokemon.id >= range.start && pokemon.id <= range.end;
-//                 });
-//                 return matchesSelectedVersions;
-//             });
-//         }
-//
-//         if (searchQuery) {
-//             filteredList = filteredList.filter((pokemon) =>
-//                 pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-//             );
-//         }
-//
-//         return filteredList;
-//     };
-
     const filteredPokemon = filterPokemon();
 
 
@@ -283,47 +236,70 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         );
     };
 
-    const renderPokemonList = () => {
-        if (filteredPokemon.length === 0) {
-            return <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
-        }
-
-        return (
-            <FlatList
-                data={filteredPokemon}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.name}
-                contentContainerStyle={styles.listContainer}
-            />
-        );
+  const renderPokemonList = () => {
+    if (loading) {
+      return (
+        <Text>Loading...</Text>
+      )
     };
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.filterContainer}>
+    if (error) {
+      return (
+        <Text>Error: {error}</Text>
+      )
+    };
 
-                <View style={styles.filtersContainer}>
-                    <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} filterOptions={filterOptions} setFilterOptions={setFilterOptions} />
-                    <View style={styles.searchInputContainer}>
-                        <Ionicons
-                            name="search"
-                            size={18} color="black"
-                        />
-                        <TextInput
-                            style={styles.searchInput}
-                            value={filterOptions.searchQuery}
-                            onChangeText={handleSearchQueryChange}
-                            placeholder="Search Pokemon"
-                        />
-                    </View>
-                </View>
-
-            </View>
-            <View>
-                {renderPokemonList()}
-            </View>
-        </View>
+    const listContent = (filteredPokemon.length === 0) ? (
+      <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
+    ) : (
+      <FlatList
+        data={filteredPokemon}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.name}
+        contentContainerStyle={styles.listContainer}
+      />
     );
+
+    return listContent;
+
+//     if (filteredPokemon.length === 0) {
+//       return <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
+//     }
+//
+//     return (
+//       <FlatList
+//         data={filteredPokemon}
+//         renderItem={renderItem}
+//         keyExtractor={(item) => item.name}
+//         contentContainerStyle={styles.listContainer}
+//       />
+//     );
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.filterContainer}>
+        <View style={styles.filtersContainer}>
+          <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} filterOptions={filterOptions} setFilterOptions={setFilterOptions} />
+          <View style={styles.searchInputContainer}>
+            <Ionicons
+              name="search"
+              size={18} color="black"
+            />
+            <TextInput
+              style={styles.searchInput}
+              value={filterOptions.searchQuery}
+              onChangeText={handleSearchQueryChange}
+              placeholder="Search Pokemon"
+            />
+          </View>
+        </View>
+      </View>
+      <View>
+        {renderPokemonList()}
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

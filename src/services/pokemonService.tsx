@@ -1,3 +1,4 @@
+import axios from 'axios';
 import pokeApi from '../axiosConfig';
 import { database } from '../utils/database/database';
 import { createPokemonTable, insertPokemon } from '../utils/database/pokemonDatabase';

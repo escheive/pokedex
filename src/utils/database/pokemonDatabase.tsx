@@ -36,7 +36,7 @@ const createPokemonTable = () => {
                             species_url TEXT,
                             image_url TEXT,
                             pixel_image_url TEXT,
-                            isCaptured BOOLEAN DEFAULT false,
+                            isCaught BOOLEAN DEFAULT false,
                             isFavorite BOOLEAN DEFAULT false
                             );`,
                             [],
@@ -66,23 +66,28 @@ const createPokemonTable = () => {
 
 // Function to drop pokemon table
 const resetPokemonTable = () => {
-    console.log('resetPokemonTable function hit');
+  console.log('resetPokemonTable function hit');
+  return new Promise((resolve, reject) => {
     try {
-        database.transaction((tx) => {
-            tx.executeSql(
-                `DROP TABLE IF EXISTS pokemon;`,
-                [],
-                () => {
-                    console.log('Table "pokemon" dropped successfully');
-                },
-                (error) => {
-                    console.error('Error dropping table "pokemon":', error);
-                }
-            );
-        });
+      database.transaction((tx) => {
+        tx.executeSql(
+          `DROP TABLE IF EXISTS pokemon;`,
+          [],
+          () => {
+            console.log('Table "pokemon" dropped successfully');
+            resolve();
+          },
+          (error) => {
+            console.error('Error dropping table "pokemon":', error);
+            reject(error);
+          }
+        );
+      });
     } catch (error) {
-        console.error('Error with resetPokemonTable function', error);
+      console.error('Error with resetPokemonTable function', error);
+      reject(error);
     }
+  });
 };
 
 
@@ -96,7 +101,7 @@ const insertPokemon = async (pokemonData) => {
                 const totalInsertions = pokemonData.length;
                 pokemonData.forEach((pokemon) => {
                     tx.executeSql(
-                        `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, stats, abilities, moves, species_url, image_url, pixel_image_url, isCaptured, isFavorite)
+                        `INSERT OR IGNORE INTO Pokemon (id, name, type1, type2, height, weight, base_experience, stats, abilities, moves, species_url, image_url, pixel_image_url, isCaught, isFavorite)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
                         [
                             pokemon.id,
@@ -143,8 +148,8 @@ const updatePokemonStatus = async (pokemonId, field, value) => {
 
                 if (field === 'isFavorite') {
                     query = 'UPDATE Pokemon SET isFavorite = ? WHERE id = ?;';
-                } else if (field === 'isCaptured') {
-                    query = 'UPDATE Pokemon SET isCaptured = ? WHERE id = ?;';
+                } else if (field === 'isCaught') {
+                    query = 'UPDATE Pokemon SET isCaught = ? WHERE id = ?;';
                 }
 
                 tx.executeSql(
@@ -190,28 +195,28 @@ const updatePokemonFavoriteStatus = async (pokemonId, isFavorite) => {
     }
 };
 
-const updatePokemonCaptureStatus = async (pokemonId, isCaptured) => {
+const updatePokemonCaughtStatus = async (pokemonId, isCaught) => {
     try {
         await new Promise((resolve, reject) => {
             database.transaction((tx) => {
                 tx.executeSql(
-                    `UPDATE Pokemon SET isCaptured = ? WHERE id = ?;`,
+                    `UPDATE Pokemon SET isCaught = ? WHERE id = ?;`,
                     [isCaptured ? 1 : 0, pokemonId],
                     () => {
-                        console.log(`Pokemon with ID ${pokemonId} capture status updated`);
+                        console.log(`Pokemon with ID ${pokemonId} caught status updated`);
                         resolve();
                     },
                     (error) => {
-                        console.error('Error updating Pokemon capture status:', error);
+                        console.error('Error updating Pokemon caught status:', error);
                         reject(error);
                     }
                 );
             });
         });
     } catch (error) {
-        console.error('Error updating capture status:', error);
+        console.error('Error updating caught status:', error);
     }
 };
 
 
-export { createPokemonTable, resetPokemonTable, insertPokemon, updatePokemonFavoriteStatus, updatePokemonCaptureStatus, updatePokemonStatus };
+export { createPokemonTable, resetPokemonTable, insertPokemon, updatePokemonFavoriteStatus, updatePokemonCaughtStatus, updatePokemonStatus };

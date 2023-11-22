@@ -64,6 +64,8 @@ export const fetchPokemonData = createAsyncThunk('pokemon/fetchPokemonData', asy
           console.log('Batch:', page);
           const fetchedData = await fetchPokemonFromAPI(resultsPerPage, page);
           batchInserts.push(insertPokemon(fetchedData));
+          // Populated fetchedPokemonData as well since that is what we will return for our state
+          fetchedPokemonData.push(...fetchedData);
 
           totalResults = 40;
           // totalResults = data.count;
@@ -98,6 +100,21 @@ export const pokemonSlice = createSlice({
       state.data = action.payload;
       state.loading = false;
     },
+    setFavoriteStatus: (state, action) => {
+      const { pokemonId, isFavorite } = action.payload;
+      // Find the pokemon in the pokemon array and update its favorite status
+      const pokemonIndex = state.data.findIndex(pokemon => pokemon.id === pokemonId);
+      if (pokemonIndex !== -1) {
+        state.data[pokemonIndex].isFavorite = isFavorite
+      }
+    },
+    setCaptureStatus: (state, action) => {
+      const { pokemonId, isCaught } = action.payload;
+      // Find the pokemon in the pokemon array and update its captured status
+      if (pokemonIndex !== -1) {
+        state.data[pokemonIndex].isCaptured = isCaptured;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -106,12 +123,6 @@ export const pokemonSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchPokemonData.fulfilled, (state, action) => {
-//         const fetchedPokemonData = action.payload;
-//
-//         // Extract and store only essential info of each pokemon in memory
-//         Object.keys(fetchedPokemonData).forEach((id) => {
-//           const { name, image_url, isCaptured, isFavorite, }
-//         })
         state.loading = false;
         state.data = action.payload;
       })
@@ -122,7 +133,7 @@ export const pokemonSlice = createSlice({
   },
 });
 
-export const { setPokemon } = pokemonSlice.actions;
+export const { setPokemon, setFavoriteStatus, setCaptureStatus } = pokemonSlice.actions;
 // export method for useAppSelector to pull the data in the slice
 export const selectPokemon = (state: RootState) => state.pokemon;
 

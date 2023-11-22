@@ -35,7 +35,6 @@ import ProfileStack from './src/navigation/ProfileStack';
 import SettingsStack from './src/navigation/SettingsStack';
 // Utils
 import { database } from './src/utils/database/database';
-import { resetPokemonTable } from './src/utils/database/pokemonDatabase';
 import { resetAbilitiesTable } from './src/utils/database/abilitiesDatabase';
 import { resetMovesTable } from './src/utils/database/movesDatabase';
 import { pokemonColors } from './src/utils/typeStyle';
@@ -58,61 +57,58 @@ const Drawer = createDrawerNavigator();
 const App = () => {
 //     const dispatch = useDispatch();
   const dispatch = useAppDispatch();
-    const isAbilitiesLoading = false;
-    const isPokemonLoading = false;
-    const [allAbilities, setAllAbilities] = useState([]);
+  const isAbilitiesLoading = false;
+  const isPokemonLoading = false;
 //     const isPokemonLoading = useSelector((state) => state.pokemon.loading);
 //     const isAbilitiesLoading = useSelector((state) => state.abilities.loading);
 
-    useEffect(() => {
+  useEffect(() => {
 //       const fetchAndSetAbilities = async () => {
 //         const fetchedAbilities = await dispatch(fetchAbilitiesData());
-// //         setAllAbilities(fetchedAbilities)
 //       }
 //         resetAbilitiesTable();
-//         resetPokemonTable();
 //         resetMovesTable();
-          dispatch(fetchPokemonData());
-          fetchAbilitiesFromApi();
-//           fetchAndSetAbilities();
+    dispatch(fetchAbilitiesData());
+//     fetchAbilitiesFromApi();
+//     fetchAndSetAbilities();
 //             .then(() => dispatch(fetchAbilitiesData()))
 //             .then(() => dispatch(fetchMovesData()))
 //             .catch((error) => console.error('Error in app.tsx useEffect fetching either pokemon or abilities:', error))
-    }, [dispatch]);
+  }, [dispatch]);
 
-    let loadingText = '';
-    if (isPokemonLoading) {
-        loadingText = 'Loading Pokemon...'
-    } else if (isAbilitiesLoading) {
-        loadingText = 'Loading Abilities...'
-    }
+  let loadingText = '';
+  if (isPokemonLoading) {
+      loadingText = 'Loading Pokemon...'
+  } else if (isAbilitiesLoading) {
+      loadingText = 'Loading Abilities...'
+  }
 
-    if (isPokemonLoading || isAbilitiesLoading) {
-        return <LoadingScreen loadingText={loadingText} />;
-    }
+  if (isPokemonLoading || isAbilitiesLoading) {
+    return <LoadingScreen loadingText={loadingText} />;
+  }
 
-    return (
-        <NavigationContainer style={styles.container}>
+  return (
+    <NavigationContainer style={styles.container}>
 
-            <Drawer.Navigator
-                screenOptions={({ route }) => ({
-                    headerTitle: getFocusedRouteNameFromRoute(route),
-                    headerShown: getFocusedRouteNameFromRoute(route) !== 'Details',
-                })}
-            >
-                <Drawer.Screen name="Pokemon">
-                  {(props) => <PokemonStackNavigator {...props} />}
-                </Drawer.Screen>
-                <Drawer.Screen name="Abilities">
-                  {(props) => <AbilityStackNavigator {...props} />}
-                </Drawer.Screen>
-                <Drawer.Screen name="Profile" component={ProfileScreen} />
-                <Drawer.Screen name="Settings" component={SettingsScreen} />
-                <Drawer.Screen name="Who's That Pokémon!" component={WhosThatPokemonScreen} />
-            </Drawer.Navigator>
+      <Drawer.Navigator
+        screenOptions={({ route }) => ({
+          headerTitle: getFocusedRouteNameFromRoute(route),
+          headerShown: getFocusedRouteNameFromRoute(route) !== 'Details',
+        })}
+      >
+        <Drawer.Screen name="Pokemon">
+          {(props) => <PokemonStackNavigator {...props} />}
+        </Drawer.Screen>
+        <Drawer.Screen name="Abilities">
+          {(props) => <AbilityStackNavigator {...props} />}
+        </Drawer.Screen>
+        <Drawer.Screen name="Profile" component={ProfileScreen} />
+        <Drawer.Screen name="Settings" component={SettingsScreen} />
+        <Drawer.Screen name="Who's That Pokémon!" component={WhosThatPokemonScreen} />
+      </Drawer.Navigator>
 
-        </NavigationContainer>
-    );
+    </NavigationContainer>
+  );
 };
 
 const styles = StyleSheet.create({
