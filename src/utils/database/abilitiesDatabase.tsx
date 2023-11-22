@@ -1,13 +1,12 @@
 import { database } from './database';
 
-
 ////////////////////////////////////////////////////////////////
 //++++++++++++++++ Ability Database Functions ++++++++++++++++//
 ////////////////////////////////////////////////////////////////
 
 
 // Function to check and create an Abilities table
-const createAbilitiesTable = () => {
+export const createAbilitiesTable = () => {
     console.log('createAbilitiesTable function hit')
     return new Promise((resolve, reject) => {
         database.transaction((tx) => {
@@ -50,10 +49,31 @@ const createAbilitiesTable = () => {
     });
 };
 
+// Function to check if the Abilities table exists before performing any operations
+export const checkAbilitiesTableExists = () => {
+  console.log('Checking if Abilities table exists in sqlite database');
 
+  return new Promise((resolve, reject) => {
+    database.transaction((tx) => {
+      tx.executeSql(
+        `SELECT name FROM sqlite_master WHERE type='table' AND name='Abilities';`,
+        [],
+        (tx, result) => {
+          if (result.rows.length === 0) {
+            console.log("Abilities table doesn't exist");
+            resolve(false);
+          } else {
+            console.log('Table does exist')
+            resolve(true);
+          }
+        }
+      )
+    })
+  })
+}
 
 // Function to drop Abilities table
-const resetAbilitiesTable = () => {
+export const resetAbilitiesTable = () => {
     console.log('resetAbilitiesTable function hit');
     database.transaction((tx) => {
         tx.executeSql(
@@ -73,7 +93,7 @@ const resetAbilitiesTable = () => {
 
 
 // Function to insert ability data into the Abilities db table
-const insertAbility = async (abilityData) => {
+export const insertAbility = async (abilityData) => {
     console.log('insertAbility function hit');
     try {
         await new Promise((resolve, reject) => {
@@ -108,5 +128,43 @@ const insertAbility = async (abilityData) => {
     }
 };
 
+export const fetchAbilitiesFromDatabase = async (dispatch) => {
+  console.log('fetchAbilitiesFromDatabase hit');
 
-export { createAbilitiesTable, resetAbilitiesTable, insertAbility };
+  try {
+    // Check for table in sqlite db
+    const tableExists = await checkAbilitiesTableExists();
+    // If the table doesn't exist, create it
+    if (!tableExists) {
+      console.log("table doesn't exist");
+      return null;
+    } else {
+      // Attempt to fetch abilities from database
+      const databaseAbilitiesData = await new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+          tx.executeSql(
+            `SELECT * FROM Abilities;`,
+            [],
+            (tx, result) => {
+              const abilitiesData = [];
+              if (result.rows.length > 0) {
+                for (let i=0; i<result.rows.length; i++) {
+                  abilitiesData.push(result.rows.item(i));
+                }
+              }
+              resolve(abilitiesData);
+            },
+            (error) => {
+              console.error('Error fetching abilities from database:', error);
+              reject(error);
+            }
+          );
+        });
+      });
+      return databaseAbilitiesData;
+    }
+  } catch (error) {
+    console.error('Error fetching abilities from database', error);
+    throw error;
+  }
+}

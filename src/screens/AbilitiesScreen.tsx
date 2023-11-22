@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dimensions, View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 
-import { selectAbilities } from '../store/reducers/abilitiesSlice';
+import { selectAbilities, setAbilities } from '../store/slices/abilitiesSlice';
+import { fetchAbilitiesFromDatabase } from '../utils/database/abilitiesDatabase';
 
 import { capitalizeString } from '../utils/helpers';
 
 const AbilitiesScreen = () => {
+  const dispatch = useAppDispatch();
   const screenWidth = Dimensions.get('window').width;
   const allAbilities = useAppSelector(selectAbilities).data;
+
+  useEffect(() => {
+    const fetchAndSetAbilities = async () => {
+      const fetchedAbilities = await fetchAbilitiesFromDatabase();
+      dispatch(setAbilities(fetchedAbilities))
+    }
+
+    fetchAndSetAbilities()
+  }, []);
 
   const [filterOptions, setFilterOptions] = useState({
     showFavorites: false,
@@ -84,15 +95,15 @@ const AbilitiesScreen = () => {
   };
 
   const renderAbilitiesList = () => {
-//   if (filteredAbilities.length === 0) {
-//       return <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
-//   }
+    if (filteredAbilities.length === 0) {
+      return <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
+  }
 
     return (
       <FlatList
         data={filteredAbilities}
         renderItem={renderItem}
-        keyExtractor={(item) => item.name}
+        keyExtractor={(item) => item.abilityName}
         contentContainerStyle={styles.listContainer}
       />
     );

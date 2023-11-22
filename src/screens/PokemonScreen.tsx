@@ -10,7 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePokemonStatusAction, updatePokemonFavoriteStatusAction } from '../actions/pokemonActions';
 import FilterDropdownDrawer from '../components/FilterDropdownDrawer';
-import { selectPokemon } from '../store/reducers/pokemonSlice';
+import { selectPokemon } from '../store/slices/pokemonSlice';
 import { useAppSelector, useAppDispatch } from '../hooks';
 
 type Props = {

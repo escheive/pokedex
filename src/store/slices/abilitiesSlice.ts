@@ -14,18 +14,18 @@ const initialState: AbilitiesState = {
   error: null,
 };
 
-// Define an asynchronous thunk for fetching Abilities data
-export const fetchAbilitiesData = createAsyncThunk('abilities/fetchAbilitiesData', async () => {
-  try {
-    // Directly call the fetch function
-    const abilitiesData = await fetchAbilitiesDataFromApiOrDatabase();
-    // Return the data
-    return abilitiesData;
-  } catch (error) {
-    console.error('Error fetching and inserting Abilities data:', error);
-    throw error;
-  }
-});
+// // Define an asynchronous thunk for fetching Abilities data
+// export const fetchAbilitiesData = createAsyncThunk('abilities/fetchAbilitiesData', async () => {
+//   try {
+//     // Directly call the fetch function
+//     const abilitiesData = await fetchAbilitiesDataFromApiOrDatabase();
+//     // Return the data
+//     return abilitiesData;
+//   } catch (error) {
+//     console.error('Error fetching and inserting Abilities data:', error);
+//     throw error;
+//   }
+// });
 
 export const abilitiesSlice = createSlice({
   name: 'abilities',
@@ -44,22 +44,22 @@ export const abilitiesSlice = createSlice({
       state.error = null;
     },
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchAbilitiesData.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchAbilitiesData.fulfilled, (state, action) => {
-        state.data = action.payload;
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(fetchAbilitiesData.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-  },
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(fetchAbilitiesData.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(fetchAbilitiesData.fulfilled, (state, action) => {
+//         state.data = action.payload;
+//         state.loading = false;
+//         state.error = null;
+//       })
+//       .addCase(fetchAbilitiesData.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.payload;
+//       });
+//   },
 });
 
 export const { setAbilities, resetAbilities } = abilitiesSlice.actions; // Export action that allows us to set abilities state
