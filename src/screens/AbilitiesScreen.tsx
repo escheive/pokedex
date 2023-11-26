@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 
 import { selectAbilities, setAbilities } from '../store/slices/abilitiesSlice';
 import { fetchAbilitiesFromDatabase } from '../utils/database/abilitiesDatabase';
-
+import FilterDropdownDrawer from '../components/FilterDropdownDrawer';
 import { capitalizeString } from '../utils/helpers';
 
 const AbilitiesScreen = ({route}) => {
@@ -16,7 +16,11 @@ const AbilitiesScreen = ({route}) => {
 
   const [filterOptions, setFilterOptions] = useState({
     showFavorites: false,
+    showCapturedPokemon: false,
+    selectedVersions: [],
+    selectedTypes: [],
     searchQuery: '',
+    filterByDualTypes: false,
   });
 
   // function to handle search query changes
@@ -52,13 +56,16 @@ const AbilitiesScreen = ({route}) => {
         <TouchableOpacity style={styles.itemCard} onPress={() => console.log('pressed')}>
           <View style={styles.itemDetailsContainer}>
             <Text style={styles.abilityId}>{ability.id}</Text>
-
             <View style={styles.abilityNameContainer}>
               <View style={styles.nameContainer}>
                 <Text style={styles.abilityName}>{capitalizeString(ability.name)}</Text>
               </View>
             </View>
           </View>
+          <Ionicons
+            name="information-circle-outline"
+            size={18} color="black"
+          />
         </TouchableOpacity>
       </View>
     );
@@ -82,7 +89,7 @@ const AbilitiesScreen = ({route}) => {
   return (
     <View style={styles.container}>
       <View style={styles.filterContainer}>
-
+        <FilterDropdownDrawer filterOptions={filterOptions} setFilterOptions={setFilterOptions} />
         <View style={styles.filtersContainer}>
           <View style={styles.searchInputContainer}>
             <Ionicons
@@ -193,7 +200,6 @@ const styles = StyleSheet.create({
   },
   abilityName: {
     fontSize: 20,
-    marginBottom: 10,
     paddingRight: 15,
   },
 });
