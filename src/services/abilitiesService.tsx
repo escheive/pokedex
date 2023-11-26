@@ -14,39 +14,40 @@ const fetchAbilitiesFromApi = async () => {
     const tableExists = await checkAbilitiesTableExists();
     if (!tableExists) {
       await createAbilitiesTable(); // Wait for the table creation process to complete
-
-      const response = await pokeApi.get(`ability?limit=100000&offset=0`);
-      const data = await response.data;
-      const abilitiesCount = data.count;
-
-      // Batch fetching in parallel
-      const abilityData = await Promise.all(data.results.map(async (ability) => {
-        const abilitiesDetailsResponse = await axios.get(ability.url);
-        return abilitiesDetailsResponse.data;
-      }));
-
-      const modifiedAbilityData = await Promise.all(abilityData.map(async (ability) => {
-        let modifiedAbility = ability;
-
-        if (ability.effect_entries.length > 0) {
-          const englishEffectEntries = ability.effect_entries.find((description) => description.language.name === "en");
-
-          modifiedAbility.shortDescription = englishEffectEntries.short_effect;
-          modifiedAbility.longDescription = englishEffectEntries.effect;
-
-        };
-
-        if (ability.pokemon.length > 0) {
-          const pokemonWithAbility = await ability.pokemon.map((pokemon) => pokemon.pokemon.name)
-          modifiedAbility.pokemonWithAbility = JSON.stringify(pokemonWithAbility);
-        }
-
-        return modifiedAbility;
-      }));
-      // Insert fetched and modified abilities from api into database
-      await insertAbility(modifiedAbilityData);
-      console.log('Done inserting abilities')
     }
+
+    const response = await pokeApi.get(`ability?limit=100000&offset=0`);
+    const data = await response.data;
+    const abilitiesCount = data.count;
+
+    // Batch fetching in parallel
+    const abilityData = await Promise.all(data.results.map(async (ability) => {
+      const abilitiesDetailsResponse = await axios.get(ability.url);
+      return abilitiesDetailsResponse.data;
+    }));
+
+    const modifiedAbilityData = await Promise.all(abilityData.map(async (ability) => {
+      let modifiedAbility = ability;
+
+      if (ability.effect_entries.length > 0) {
+        const englishEffectEntries = ability.effect_entries.find((description) => description.language.name === "en");
+
+        modifiedAbility.shortDescription = englishEffectEntries.short_effect;
+        modifiedAbility.longDescription = englishEffectEntries.effect;
+
+      };
+
+      if (ability.pokemon.length > 0) {
+        const pokemonWithAbility = await ability.pokemon.map((pokemon) => pokemon.pokemon.name)
+        modifiedAbility.pokemonWithAbility = JSON.stringify(pokemonWithAbility);
+      }
+
+      return modifiedAbility;
+    }));
+    // Insert fetched and modified abilities from api into database
+    await insertAbility(modifiedAbilityData);
+    console.log('Done inserting abilities')
+    return modifiedAbilityData;
 
   } catch (error) {
     console.error('Error in fetchAbilitiesFromAPI function', error);
@@ -111,18 +112,24 @@ const fetchAbilitiesDataFromApiOrDatabase = async () => {
 
       // Attempt to fetch abilities from database
       const databaseData = await new Promise((resolve, reject) => {
+        console.log('checking for database data')
         database.transaction((tx) => {
           tx.executeSql(
             `SELECT * FROM Abilities WHERE id BETWEEN ? AND ?;`,
             [start, end],
             (tx, result) => {
-              const abilitiesData = [];
-              if (result.rows.length > 0) {
-                for (let i=0; i<result.rows.length; i++) {
-                  abilitiesData.push(result.rows.item(i));
+              try {
+                const abilitiesData = [];
+                if (result.rows.length > 0) {
+                  for (let j=0; j<result.rows.length; j++) {
+                    abilitiesData.push(result.rows.item(j));
+                  }
                 }
+                resolve(abilitiesData);
+              } catch (error) {
+                console.error('Error processing database result:', error);
+                reject(error);
               }
-              resolve(abilitiesData);
             },
             (error) => {
               console.error('Error fetching abilities from database:', error);
@@ -133,7 +140,8 @@ const fetchAbilitiesDataFromApiOrDatabase = async () => {
       });
 
       // If no abilities were fetched from database
-      if (!databaseData) {
+      if (!databaseData || databaseData.length === 0) {
+        console.log('no database data')
         // fetch abilities from api
         const apiData = await fetchAbilitiesFromApi();
         // Insert fetched abilities from api into database

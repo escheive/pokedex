@@ -12,20 +12,10 @@ import { capitalizeString } from '../utils/helpers';
 const AbilitiesScreen = ({route}) => {
   const dispatch = useAppDispatch();
   const screenWidth = Dimensions.get('window').width;
-  const allAbilities = useAppSelector(selectAbilities).data;
-
-  useEffect(() => {
-    const fetchAndSetAbilities = async () => {
-      const fetchedAbilities = await fetchAbilitiesFromDatabase();
-      dispatch(setAbilities(fetchedAbilities))
-    }
-
-    fetchAndSetAbilities()
-  }, []);
+  const { data: abilitiesList, loading, error } = useAppSelector(selectAbilities);
 
   const [filterOptions, setFilterOptions] = useState({
     showFavorites: false,
-    selectedVersions: [],
     searchQuery: '',
   });
 
@@ -37,38 +27,18 @@ const AbilitiesScreen = ({route}) => {
     }));
   };
 
-  const groupedVersions = {
-    gen1: { start: 1, end: 151 },
-    gen2: { start: 152, end: 251 },
-    gen3: { start: 252, end: 386 },
-    gen4: { start: 387, end: 493 },
-    gen5: { start: 494, end: 649 },
-    gen6: { start: 650, end: 721 },
-    gen7: { start: 722, end: 809 },
-    gen8: { start: 810, end: 905 },
-    gen9: { start: 906, end: 1010 },
-  };
-
   // function to handle the filtering of abilities
   const filterAbilities = () => {
     const {
       showFavorites,
-      selectedVersions,
       searchQuery,
     } = filterOptions;
 
-    const filteredAbilitiesList = allAbilities && allAbilities.filter((ability) =>
-//       (showFavorites ? pokemon.isFavorite : true) &&
-      (selectedVersions.length > 0 ?
-        selectedVersions.some((version) => {
-          const range = groupedVersions[version];
-          return ability.id >= range.start && ability.id <= range.end;
-      }) : true
-    ) &&
-      ability.abilityName.toLowerCase().startsWith(searchQuery.toLowerCase())
+    const filteredList = abilitiesList && abilitiesList.filter((ability) =>
+      ability.name.toLowerCase().startsWith(searchQuery.toLowerCase())
     );
 
-    return filteredAbilitiesList;
+    return filteredList;
   };
 
   const filteredAbilities = filterAbilities();
@@ -85,7 +55,7 @@ const AbilitiesScreen = ({route}) => {
 
             <View style={styles.abilityNameContainer}>
               <View style={styles.nameContainer}>
-                <Text style={styles.abilityName}>{capitalizeString(ability.abilityName)}</Text>
+                <Text style={styles.abilityName}>{capitalizeString(ability.name)}</Text>
               </View>
             </View>
           </View>
@@ -103,7 +73,7 @@ const AbilitiesScreen = ({route}) => {
       <FlatList
         data={filteredAbilities}
         renderItem={renderItem}
-        keyExtractor={(item) => item.abilityName}
+        keyExtractor={(item) => item.name}
         contentContainerStyle={styles.listContainer}
       />
     );
@@ -123,7 +93,7 @@ const AbilitiesScreen = ({route}) => {
               style={styles.searchInput}
               value={filterOptions.searchQuery}
               onChangeText={handleSearchQueryChange}
-              placeholder="Search Pokemon"
+              placeholder="Search Abilities"
             />
           </View>
         </View>

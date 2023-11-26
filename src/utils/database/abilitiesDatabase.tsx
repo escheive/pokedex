@@ -20,7 +20,7 @@ export const createAbilitiesTable = () => {
                         tx.executeSql(
                             `CREATE TABLE IF NOT EXISTS Abilities (
                             id INTEGER PRIMARY KEY,
-                            abilityName TEXT,
+                            name TEXT,
                             shortAbilityDescription TEXT,
                             longAbilityDescription TEXT,
                             pokemonWithAbility TEXT
@@ -100,7 +100,7 @@ export const insertAbility = async (abilityData) => {
             database.transaction((tx) => {
                 abilityData.forEach((ability) => {
                     tx.executeSql(
-                        `INSERT OR IGNORE INTO Abilities (id, abilityName, shortAbilityDescription, longAbilityDescription, pokemonWithAbility)
+                        `INSERT OR IGNORE INTO Abilities (id, name, shortAbilityDescription, longAbilityDescription, pokemonWithAbility)
                         VALUES (?, ?, ?, ?, ?);`,
                         [
                             ability.id,
