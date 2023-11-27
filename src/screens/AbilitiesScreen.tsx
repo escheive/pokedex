@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal } from 'react-native';
+import { Dimensions, View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal, Animated, Easing, ScrollView, PanResponder } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -8,9 +8,11 @@ import { selectAbilities, setAbilities } from '../store/slices/abilitiesSlice';
 import { fetchAbilitiesFromDatabase } from '../utils/database/abilitiesDatabase';
 import FilterDropdownDrawer from '../components/FilterDropdownDrawer';
 import { capitalizeString } from '../utils/helpers';
+import SlidingModal from '../components/SlidingModal';
 
 const AbilitiesScreen = ({route}) => {
   const dispatch = useAppDispatch();
+  const screenHeight = Dimensions.get('window').height;
   const screenWidth = Dimensions.get('window').width;
   const { data: abilitiesList, loading, error } = useAppSelector(selectAbilities);
   const [selectedAbility, setSelectedAbility] = useState(null);
@@ -113,7 +115,7 @@ const AbilitiesScreen = ({route}) => {
       <View>
           {renderAbilitiesList()}
       </View>
-      <Modal visible={selectedAbility !== null} animationType="fade" transparent>
+      <Modal visible={selectedAbility !== null} animationType='slide' transparent>
         <TouchableOpacity
           style={styles.modalContainer}
           activeOpacity={1}
@@ -124,10 +126,12 @@ const AbilitiesScreen = ({route}) => {
             activeOpacity={1}
             onPress={() => {}}
           >
-            <Text style={styles.modalTitle}>{selectedAbility?.name}</Text>
-            <View style={styles.modalDefinitionContainer}>
-              <Text style={styles.modalDefinition}>{selectedAbility?.shortAbilityDescription}</Text>
-            </View>
+            <ScrollView style={{ width: '100%'}}>
+              <Text style={styles.modalTitle}>{selectedAbility?.name}</Text>
+              <View style={styles.modalDefinitionContainer}>
+                <Text style={styles.modalDefinition}>{selectedAbility?.shortAbilityDescription}</Text>
+              </View>
+            </ScrollView>
           </TouchableOpacity>
         </TouchableOpacity>
       </Modal>
@@ -226,7 +230,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
@@ -267,3 +271,24 @@ const styles = StyleSheet.create({
 });
 
 export default AbilitiesScreen;
+
+//      <Modal visible={selectedAbility !== null} animationType='slide' transparent>
+//         <TouchableOpacity
+//           style={styles.modalContainer}
+//           activeOpacity={1}
+//           onPress={() => setSelectedAbility(null)}
+//         >
+//           <TouchableOpacity
+//             style={styles.modalContent}
+//             activeOpacity={1}
+//             onPress={closeModal}
+//           >
+//             <ScrollView>
+//               <Text style={styles.modalTitle}>{selectedAbility?.name}</Text>
+//               <View style={styles.modalDefinitionContainer}>
+//                 <Text style={styles.modalDefinition}>{selectedAbility?.shortAbilityDescription}</Text>
+//               </View>
+//             </ScrollView>
+//           </TouchableOpacity>
+//         </TouchableOpacity>
+//       </Modal>

@@ -283,9 +283,9 @@ const PokemonCard = ({ pokemon, pokedexEntry, thisPokemonsAbilities, getTypeBack
                         onPress={() => setSelectedAbility(null)}
                     >
                         <TouchableOpacity
-                            style={styles.modalContent}
-                            activeOpacity={1}
-                            onPress={() => {}}
+                          style={styles.modalContent}
+                          activeOpacity={1}
+                          onPress={() => {}}
                         >
                             <Text style={styles.modalTitle}>{selectedAbility?.abilityName}</Text>
                             <View style={styles.modalDefinitionContainer}>
