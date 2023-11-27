@@ -16,6 +16,7 @@ const AbilitiesScreen = ({route}) => {
   const screenWidth = Dimensions.get('window').width;
   const { data: abilitiesList, loading, error } = useAppSelector(selectAbilities);
   const [selectedAbility, setSelectedAbility] = useState(null);
+  console.log(selectedAbility)
 
   const [filterOptions, setFilterOptions] = useState({
     showFavorites: false,
@@ -126,10 +127,18 @@ const AbilitiesScreen = ({route}) => {
             activeOpacity={1}
             onPress={() => {}}
           >
-            <ScrollView style={{ width: '100%'}}>
+            <ScrollView
+              style={styles.modalDetailsScrollContainer}
+              contentContainerStyle={{ alignItems: 'center' }}
+            >
               <Text style={styles.modalTitle}>{selectedAbility?.name}</Text>
-              <View style={styles.modalDefinitionContainer}>
-                <Text style={styles.modalDefinition}>{selectedAbility?.shortAbilityDescription}</Text>
+              <View style={styles.modalDetailContainer}>
+                <Text style={styles.modalDetailTitleText}>Effect</Text>
+                <Text style={styles.modalDetailText}>{selectedAbility?.effect}</Text>
+              </View>
+              <View style={styles.modalDetailContainer}>
+                <Text style={styles.modalDetailTitleText}>Description</Text>
+                <Text style={styles.modalDetailText}>{selectedAbility?.longAbilityDescription}</Text>
               </View>
             </ScrollView>
           </TouchableOpacity>
@@ -236,7 +245,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     alignItems: 'center',
-    backgroundColor: '#ccc',
+    backgroundColor: 'fff',
     width: '100%',
     borderRadius: 16,
   },
@@ -251,22 +260,34 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingVertical: 16,
   },
-  modalDefinitionContainer: {
-    backgroundColor: '#fff',
+  modalDetailsScrollContainer: {
     width: '100%',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
-  modalDefinition: {
-    fontSize: 18,
+  modalDetailContainer: {
+    backgroundColor: '#eee',
+    width: '90%',
+    alignItems: 'center',
+    margin: 10,
+    padding: 8,
+    borderRadius: 16,
+  },
+  modalDetailTitleText: {
+    fontSize: 22,
     color: 'gray',
-    padding: 10,
     width: '100%',
     borderRadius: 12,
     textAlign: 'center',
-    marginVertical: 30,
+  },
+  modalDetailText: {
+    fontSize: 18,
+    color: 'gray',
+    width: '100%',
+    borderRadius: 12,
+    textAlign: 'center',
+    marginVertical: 8,
   },
 });
 

@@ -32,7 +32,7 @@ const fetchAbilitiesFromApi = async () => {
       if (ability.effect_entries.length > 0) {
         const englishEffectEntries = ability.effect_entries.find((description) => description.language.name === "en");
 
-        modifiedAbility.shortDescription = englishEffectEntries.short_effect;
+        modifiedAbility.effect = englishEffectEntries.short_effect;
         modifiedAbility.longDescription = englishEffectEntries.effect;
 
       };
