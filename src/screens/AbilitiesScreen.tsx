@@ -5,18 +5,26 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useAppDispatch, useAppSelector } from '../hooks';
 
 import { selectAbilities, setAbilities } from '../store/slices/abilitiesSlice';
+import { selectPokemon } from '../store/slices/pokemonSlice';
 import { fetchAbilitiesFromDatabase } from '../utils/database/abilitiesDatabase';
 import FilterDropdownDrawer from '../components/FilterDropdownDrawer';
 import { capitalizeString } from '../utils/helpers';
 import SlidingModal from '../components/SlidingModal';
+import { getTypeStyle, pokemonColors } from '../utils/typeStyle';
 
 const AbilitiesScreen = ({route}) => {
   const dispatch = useAppDispatch();
   const screenHeight = Dimensions.get('window').height;
   const screenWidth = Dimensions.get('window').width;
   const { data: abilitiesList, loading, error } = useAppSelector(selectAbilities);
+  const { data: pokemonList } = useAppSelector(selectPokemon);
   const [selectedAbility, setSelectedAbility] = useState(null);
-  console.log(selectedAbility)
+
+  const pokemonWithAbilityDetails = selectedAbility !== null ? pokemonList.filter(pokemon => selectedAbility.pokemonWithAbility.includes(pokemon.name)) : null;
+  if (selectedAbility) {
+    console.log("Selected Ability:", selectedAbility);
+    console.log("Filtered Pokemon Details:", pokemonWithAbilityDetails);
+  }
 
   const [filterOptions, setFilterOptions] = useState({
     showFavorites: false,
@@ -62,17 +70,14 @@ const AbilitiesScreen = ({route}) => {
     return (
       <View style={[styles.itemContainer, { width: itemWidth }]}>
         <TouchableOpacity style={styles.itemCard} onPress={() => setSelectedAbility(ability)}>
-          <View style={styles.itemDetailsContainer}>
-            <Text style={styles.abilityId}>{ability.id}</Text>
-            <View style={styles.abilityNameContainer}>
-              <View style={styles.nameContainer}>
-                <Text style={styles.abilityName}>{capitalizeString(ability.name)}</Text>
-              </View>
-            </View>
+          <Text style={styles.abilityId}>{ability.id}</Text>
+          <View style={styles.abilityNameEffectContainer}>
+            <Text style={styles.abilityNameText}>{capitalizeString(ability.name)}</Text>
+            <Text style={styles.abilityEffectText}>Effect</Text>
           </View>
           <Ionicons
             name="information-circle-outline"
-            size={18} color="black"
+            size={18} color="#aaa"
           />
         </TouchableOpacity>
       </View>
@@ -140,6 +145,66 @@ const AbilitiesScreen = ({route}) => {
                 <Text style={styles.modalDetailTitleText}>Description</Text>
                 <Text style={styles.modalDetailText}>{selectedAbility?.longAbilityDescription}</Text>
               </View>
+              <View style={styles.modalPokemonContainer}>
+                <Text style={styles.modalDetailTitleText}>Pokemon with this Ability</Text>
+                {selectedAbility ? pokemonWithAbilityDetails.map((pokemon) => {
+                  const backgroundColor = pokemon.type1 ? pokemonColors[pokemon.type1].backgroundColor : '';
+                  return (
+                    <View style={[styles.itemContainer, { width: '90%', backgroundColor }]}>
+                      <TouchableOpacity style={styles.itemCard} onPress={() => handlePress(pokemon)}>
+                        <View style={styles.itemDetailsContainer}>
+                          <Text style={[styles.pokemonId, { color: pokemon.type1 ? pokemonColors[pokemon.type1].color : 'white' }]}>{pokemon.id}</Text>
+
+                          <View style={styles.pokemonNameAndTypeContainer}>
+                            <View style={styles.nameContainer}>
+                              <Text style={[styles.pokemonName, { color: pokemonColors[pokemon.type1].color } ]}>{capitalizeString(pokemon.name)}</Text>
+                                <View style={{ flexDirection: 'row' }}>
+                                  {pokemon.isFavorite ? (
+                                    <Ionicons
+                                      name="star"
+                                      size={24} color="#555"
+                                      onPress={() => handleFavoritePress(pokemon)}
+                                    />
+                                  ) : (
+                                    <Ionicons
+                                      name="star-outline"
+                                      size={24} color="#555"
+                                      onPress={() => handleFavoritePress(pokemon)}
+                                    />
+                                  )}
+                                  {pokemon.isCaptured ? (
+                                    <Ionicons
+                                      name="checkmark-circle-outline"
+                                      size={26} color="#555"
+                                      onPress={() => handleCapturePress(pokemon)}
+                                    />
+                                  ) : (
+                                    <Ionicons
+                                      name="ellipse-outline"
+                                      size={26} color="#555"
+                                      onPress={() => handleCapturePress(pokemon)}
+                                    />
+                                  )}
+                                </View>
+                              </View>
+
+                            <View style={styles.pokemonTypesContainer}>
+                              <Text style={styles.pokemonType}>{capitalizeString(pokemon.type1)}</Text>
+                              {pokemon.type2 && (
+                                <Text style={styles.pokemonType}>{capitalizeString(pokemon.type2)}</Text>
+                              )}
+                            </View>
+                          </View>
+                        </View>
+                        <Image
+                          style={styles.image}
+                          source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )
+                }) : null}
+              </View>
             </ScrollView>
           </TouchableOpacity>
         </TouchableOpacity>
@@ -199,43 +264,21 @@ const styles = StyleSheet.create({
   listContainer: {
     alignItems: 'center',
     zIndex: 1,
-  },
-  itemContainer: {
-    marginVertical: 10,
-    // aspectRatio for two columns
-//         aspectRatio: 1,
-    aspectRatio: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-  },
-  itemCard: {
-    height: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-  },
-  itemDetailsContainer: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
+    backgroundColor: '#F0F4F8',
   },
   abilityId: {
     fontSize: 16,
-    paddingRight: 40,
+    color: '#aaa'
   },
-  nameContainer: {
-    flexDirection: 'row',
-//         justifyContent: 'space-between',
-//         marginRight: 15,
-  },
-  abilityName: {
+  abilityNameText: {
     fontSize: 20,
-    paddingRight: 15,
+    color: '#3498db',
+    textAlign: 'center',
+  },
+  abilityEffectText: {
+    fontSize: 18,
+    color: '#aaa',
+    textAlign: 'center',
   },
   modalContainer: {
     flex: 1,
@@ -288,6 +331,42 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     textAlign: 'center',
     marginVertical: 8,
+  },
+  modalPokemonContainer: {
+    backgroundColor: '#eee',
+    width: '100%',
+    alignItems: 'center',
+    margin: 10,
+    padding: 8,
+  },
+  itemContainer: {
+    marginVertical: 10,
+    // aspectRatio for two columns
+//         aspectRatio: 1,
+    aspectRatio: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    backgroundColor: '#fff',
+},
+  itemCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  itemDetailsContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  abilityNameEffectContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
