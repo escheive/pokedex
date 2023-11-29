@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity, TextInput, Image } from 'react-native';
 import { useSelector } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { capitalizeString } from '../utils/helpers';
 import { pokemonColors } from '../utils/typeStyle';
 import RecommendationSystem from '../ml/RecommendationSystem';

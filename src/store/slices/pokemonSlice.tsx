@@ -17,79 +17,82 @@ const initialState: PokemonState = {
   error: null,
 }
 
-// Define the asynchronous thunk for fetching Pokemon data
-export const fetchPokemonData = createAsyncThunk('pokemon/fetchPokemonData', async () => {
-  try {
-    // Wait for the table creation process to complete
-    await createPokemonTable();
-
-    const totalCount = 40;
-    const batchSize = 20;
-    const batches = Math.ceil(totalCount / batchSize);
-
-    const fetchedPokemonData: InitialPokemon[] = [];
-
-    const hasData = await new Promise<boolean>((resolve, reject) => {
-      const start = 0;
-      const end = totalCount;
-      database.transaction((tx) => {
-        tx.executeSql(
-          `SELECT * FROM Pokemon WHERE id BETWEEN ? AND ?;`,
-          [start, end],
-          (tx, result) => {
-            if (result.rows.length > 0) {
-              for (let i = 0; i < result.rows.length; i++) {
-                const pokemon = result.rows.item(i);
-                fetchedPokemonData.push(pokemon);
-              }
-            }
-            resolve(result.rows.length > 0);
-          },
-          (error) => {
-            console.error('Error checking Pokemon data in the fetchPokemonData function, hasData subsection:', error);
-            reject(error);
-          }
-        );
-      });
-    });
-
-    if (!hasData) {
-      const batchInserts = [];
-      let page = 1;
-      let totalResults = 0;
-      const resultsPerPage = 20;
-
-      const fetchDataAndInsert = async () => {
-        try {
-          console.log('Batch:', page);
-          const fetchedData = await fetchPokemonFromAPI(resultsPerPage, page);
-          batchInserts.push(insertPokemon(fetchedData));
-          // Populated fetchedPokemonData as well since that is what we will return for our state
-          fetchedPokemonData.push(...fetchedData);
-
-          totalResults = 40;
-          // totalResults = data.count;
-          page++;
-          if ((page - 1) * resultsPerPage < totalResults) {
-            await fetchDataAndInsert();
-          } else {
-            await Promise.all(batchInserts);
-          }
-        } catch (error) {
-          console.error('Error in the !hasData section of fetchPokemonData function:', error);
-          throw error;
-        }
-      };
-
-      await fetchDataAndInsert();
-    }
-
-    return fetchedPokemonData;
-  } catch (error) {
-    console.error('Error fetching and inserting Pokemon data in the fetchPokemonData function:', error);
-    throw error;
-  }
+export const fetchPokemonData =createAsyncThunk('pokemon/fetchPokemonData', async () => {
+  console.log('fetchPokemonData')
 });
+// // Define the asynchronous thunk for fetching Pokemon data
+// export const fetchPokemonData = createAsyncThunk('pokemon/fetchPokemonData', async () => {
+//   try {
+//     // Wait for the table creation process to complete
+//     await createPokemonTable();
+//
+//     const totalCount = 40;
+//     const batchSize = 20;
+//     const batches = Math.ceil(totalCount / batchSize);
+//
+//     const fetchedPokemonData: InitialPokemon[] = [];
+//
+//     const hasData = await new Promise<boolean>((resolve, reject) => {
+//       const start = 0;
+//       const end = totalCount;
+//       database.transaction((tx) => {
+//         tx.executeSql(
+//           `SELECT * FROM Pokemon WHERE id BETWEEN ? AND ?;`,
+//           [start, end],
+//           (tx, result) => {
+//             if (result.rows.length > 0) {
+//               for (let i = 0; i < result.rows.length; i++) {
+//                 const pokemon = result.rows.item(i);
+//                 fetchedPokemonData.push(pokemon);
+//               }
+//             }
+//             resolve(result.rows.length > 0);
+//           },
+//           (error) => {
+//             console.error('Error checking Pokemon data in the fetchPokemonData function, hasData subsection:', error);
+//             reject(error);
+//           }
+//         );
+//       });
+//     });
+//
+//     if (!hasData) {
+//       const batchInserts = [];
+//       let page = 1;
+//       let totalResults = 0;
+//       const resultsPerPage = 20;
+//
+//       const fetchDataAndInsert = async () => {
+//         try {
+//           console.log('Batch:', page);
+//           const fetchedData = await fetchPokemonFromAPI(resultsPerPage, page);
+//           batchInserts.push(insertPokemon(fetchedData));
+//           // Populated fetchedPokemonData as well since that is what we will return for our state
+//           fetchedPokemonData.push(...fetchedData);
+//
+//           totalResults = 40;
+//           // totalResults = data.count;
+//           page++;
+//           if ((page - 1) * resultsPerPage < totalResults) {
+//             await fetchDataAndInsert();
+//           } else {
+//             await Promise.all(batchInserts);
+//           }
+//         } catch (error) {
+//           console.error('Error in the !hasData section of fetchPokemonData function:', error);
+//           throw error;
+//         }
+//       };
+//
+//       await fetchDataAndInsert();
+//     }
+//
+//     return fetchedPokemonData;
+//   } catch (error) {
+//     console.error('Error fetching and inserting Pokemon data in the fetchPokemonData function:', error);
+//     throw error;
+//   }
+// });
 
 export const pokemonSlice = createSlice({
   name: 'pokemon',

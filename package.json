@@ -10,7 +10,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.19.1",
+    "@apollo/client": "^3.8.7",
+    "@react-native-async-storage/async-storage": "^1.20.0",
     "@react-native-community/viewpager": "^5.0.11",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/drawer": "^6.6.2",

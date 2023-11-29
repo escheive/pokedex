@@ -50,6 +50,14 @@ import SQLite from 'react-native-sqlite-storage';
 import typeData from './src/assets/typeData';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+// Create an Apollo Client instance
+const client = new ApolloClient({
+  uri: 'https://beta.pokeapi.co/graphql/v1beta', // PokeAPI Graphql endpoint
+  cache: new InMemoryCache(), // Allows data to be stored in local cache, and subsequent fetches of the same data to not use the network
+})
+
 // const store = createStore(rootReducer, applyMiddleware(thunk));
 const Drawer = createDrawerNavigator();
 
@@ -68,7 +76,7 @@ const App = () => {
 //       }
 //         resetAbilitiesTable();
 //         resetMovesTable();
-    dispatch(fetchAbilitiesData());
+//     dispatch(fetchAbilitiesData());
 //     fetchAbilitiesFromApi();
 //     fetchAndSetAbilities();
 //             .then(() => dispatch(fetchAbilitiesData()))
@@ -121,7 +129,9 @@ const styles = StyleSheet.create({
 export default function AppWrapper() {
     return (
         <Provider store={store}>
-          <App database={database} />
+          <ApolloProvider client={client}>
+            <App database={database} />
+          </ApolloProvider>
         </Provider>
     );
 }

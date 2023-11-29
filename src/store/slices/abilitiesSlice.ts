@@ -30,79 +30,84 @@ const initialState: AbilitiesState = {
 //     throw error;
 //   }
 // });
-// Define the asynchronous thunk for fetching Abilities data
+
 export const fetchAbilitiesData = createAsyncThunk('abilities/fetchAbilitiesData', async () => {
-  try {
-    // Wait for the table creation process to complete
-    await createAbilitiesTable();
-
-    const totalCount = 363; // Total number of abilities on PokeAPI
-    const batchSize = 20;
-    const batches = Math.ceil(totalCount / batchSize);
-
-    const fetchedAbilitiesData = [];
-
-    const hasData = await new Promise<boolean>((resolve, reject) => {
-      const start = 0;
-      const end = totalCount;
-      database.transaction((tx) => {
-        tx.executeSql(
-          `SELECT * FROM Abilities WHERE id BETWEEN ? AND ?;`,
-          [start, end],
-          (tx, result) => {
-            if (result.rows.length > 0) {
-              for (let i = 0; i < result.rows.length; i++) {
-                const ability = result.rows.item(i);
-                fetchedAbilitiesData.push(ability);
-              }
-            }
-            resolve(result.rows.length > 0);
-          },
-          (error) => {
-            console.error('Error checking Abilities data in the fetchAbilitiesData function, hasData subsection:', error);
-            reject(error);
-          }
-        );
-      });
-    });
-
-    if (!hasData) {
-      const batchInserts = [];
-      let page = 1;
-      let totalResults = 0;
-      const resultsPerPage = 20;
-
-      const fetchDataAndInsert = async () => {
-        try {
-          console.log('Batch:', page);
-          const fetchedData = await fetchAbilitiesFromApi(resultsPerPage, page);
-          batchInserts.push(insertAbility(fetchedData));
-          // Populate fetchedAbilitiesData as well since that is what we will return for our state
-          fetchedAbilitiesData.push(...fetchedData);
-
-          totalResults = 363; // Update with the actual total count from the API
-          // totalResults = data.count;
-          page++;
-          if ((page - 1) * resultsPerPage < totalResults) {
-            await fetchDataAndInsert();
-          } else {
-            await Promise.all(batchInserts);
-          }
-        } catch (error) {
-          console.error('Error in the !hasData section of fetchAbilitiesData function:', error);
-          throw error;
-        }
-      };
-
-      await fetchDataAndInsert();
-    }
-
-    return fetchedAbilitiesData;
-  } catch (error) {
-    console.error('Error fetching and inserting Abilities data in the fetchAbilitiesData function:', error);
-    throw error;
-  }
+  console.log('fetchAbilities')
 });
+
+// // Define the asynchronous thunk for fetching Abilities data
+// export const fetchAbilitiesData = createAsyncThunk('abilities/fetchAbilitiesData', async () => {
+//   try {
+//     // Wait for the table creation process to complete
+//     await createAbilitiesTable();
+//
+//     const totalCount = 363; // Total number of abilities on PokeAPI
+//     const batchSize = 20;
+//     const batches = Math.ceil(totalCount / batchSize);
+//
+//     const fetchedAbilitiesData = [];
+//
+//     const hasData = await new Promise<boolean>((resolve, reject) => {
+//       const start = 0;
+//       const end = totalCount;
+//       database.transaction((tx) => {
+//         tx.executeSql(
+//           `SELECT * FROM Abilities WHERE id BETWEEN ? AND ?;`,
+//           [start, end],
+//           (tx, result) => {
+//             if (result.rows.length > 0) {
+//               for (let i = 0; i < result.rows.length; i++) {
+//                 const ability = result.rows.item(i);
+//                 fetchedAbilitiesData.push(ability);
+//               }
+//             }
+//             resolve(result.rows.length > 0);
+//           },
+//           (error) => {
+//             console.error('Error checking Abilities data in the fetchAbilitiesData function, hasData subsection:', error);
+//             reject(error);
+//           }
+//         );
+//       });
+//     });
+//
+//     if (!hasData) {
+//       const batchInserts = [];
+//       let page = 1;
+//       let totalResults = 0;
+//       const resultsPerPage = 20;
+//
+//       const fetchDataAndInsert = async () => {
+//         try {
+//           console.log('Batch:', page);
+//           const fetchedData = await fetchAbilitiesFromApi(resultsPerPage, page);
+//           batchInserts.push(insertAbility(fetchedData));
+//           // Populate fetchedAbilitiesData as well since that is what we will return for our state
+//           fetchedAbilitiesData.push(...fetchedData);
+//
+//           totalResults = 363; // Update with the actual total count from the API
+//           // totalResults = data.count;
+//           page++;
+//           if ((page - 1) * resultsPerPage < totalResults) {
+//             await fetchDataAndInsert();
+//           } else {
+//             await Promise.all(batchInserts);
+//           }
+//         } catch (error) {
+//           console.error('Error in the !hasData section of fetchAbilitiesData function:', error);
+//           throw error;
+//         }
+//       };
+//
+//       await fetchDataAndInsert();
+//     }
+//
+//     return fetchedAbilitiesData;
+//   } catch (error) {
+//     console.error('Error fetching and inserting Abilities data in the fetchAbilitiesData function:', error);
+//     throw error;
+//   }
+// });
 
 export const abilitiesSlice = createSlice({
   name: 'abilities',

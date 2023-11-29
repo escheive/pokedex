@@ -16,6 +16,24 @@ import { useAppSelector, useAppDispatch } from '../hooks';
 import { resetPokemonTable } from '../utils/database/pokemonDatabase';
 import { setPokemonFavoriteStatus, setPokemonCaughtStatus } from '../store/slices/pokemonSlice';
 
+import { useQuery, gql } from '@apollo/client';
+
+// Define Graphql query
+const POKEMON_LIST_QUERY = gql`
+  query pokemonListquery {
+    pokemon_v2_pokemon {
+      id
+      name
+      pokemon_v2_pokemontypes {
+        pokemon_v2_type {
+          name
+          id
+        }
+      }
+    }
+  }
+`;
+
 type Props = {
     navigation: StackNavigationProp<any>;
     pokemonList: Pokemon[];
@@ -51,7 +69,9 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
     filterByDualTypes: false,
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const { loading, data: pokemonList, error } = useAppSelector(selectPokemon);
+//   const { loading, data: pokemonList, error } = useAppSelector(selectPokemon);
+  const { loading, error, data, networkStatus } = useQuery(POKEMON_LIST_QUERY);
+  const pokemonList = data?.pokemon_v2_pokemon;
 
   useEffect(() => {
 //     resetPokemonTable()
@@ -61,179 +81,161 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 
   }, [dispatch]);
 
-    // function to handle user press on a pokemon
-    const handlePress = async (pokemon: Pokemon) => {
-      // Fetch full details using an asynchronous function
-      const fullPokemonDetails = await fetchPokemonDetails(pokemon.id);
-      // Navigate to details page with full Pokemon details
-      navigation.navigate('Details', { pokemon: fullPokemonDetails });
-    };
+  // function to handle user press on a pokemon
+  const handlePress = async (pokemon: Pokemon) => {
+    // Fetch full details using an asynchronous function
+    const fullPokemonDetails = await fetchPokemonDetails(pokemon.id);
+    // Navigate to details page with full Pokemon details
+    navigation.navigate('Details', { pokemon: fullPokemonDetails });
+  };
 
-    // function to handle search query changes
-    const handleSearchQueryChange = (query) => {
-        setFilterOptions((prevOptions) => ({
-            ...prevOptions,
-            searchQuery: query,
-        }));
-    };
+  // function to handle search query changes
+  const handleSearchQueryChange = (query) => {
+    setFilterOptions((prevOptions) => ({
+      ...prevOptions,
+      searchQuery: query,
+    }));
+  };
 
-    const groupedVersions = {
-        gen1: { start: 1, end: 151 },
-        gen2: { start: 152, end: 251 },
-        gen3: { start: 252, end: 386 },
-        gen4: { start: 387, end: 493 },
-        gen5: { start: 494, end: 649 },
-        gen6: { start: 650, end: 721 },
-        gen7: { start: 722, end: 809 },
-        gen8: { start: 810, end: 905 },
-        gen9: { start: 906, end: 1010 },
-    };
+  const groupedVersions = {
+    gen1: { start: 1, end: 151 },
+    gen2: { start: 152, end: 251 },
+    gen3: { start: 252, end: 386 },
+    gen4: { start: 387, end: 493 },
+    gen5: { start: 494, end: 649 },
+    gen6: { start: 650, end: 721 },
+    gen7: { start: 722, end: 809 },
+    gen8: { start: 810, end: 905 },
+    gen9: { start: 906, end: 1010 },
+  };
 
-//     const handleVersionSelect = (version: string) => {
-//       let updatedVersions: string[] = [];
-//
-//       if (groupedVersions.hasOwnProperty(version)) {
-//         // If the selected version is a grouped version, handle it accordingly
-//         const range = groupedVersions[version];
-//         if (selectedVersions.includes(version)) {
-//           updatedVersions = selectedVersions.filter((v) => v !== version);
-//         } else {
-//           updatedVersions = [...selectedVersions, version];
-//         }
-//       } else {
-//         // If the selected version is not a grouped version, handle it as usual
-//         if (selectedVersions.includes(version)) {
-//           updatedVersions = selectedVersions.filter((v) => v !== version);
-//         } else {
-//           updatedVersions = [...selectedVersions, version];
-//         }
-//       }
-//
-//       setSelectedVersions(updatedVersions);
-//     };
+  // function to handle the filtering of pokemon
+  const filterPokemon = () => {
+    const {
+      showFavorites,
+      showCapturedPokemon,
+      selectedVersions,
+      selectedTypes,
+      searchQuery,
+      filterByDualTypes
+    } = filterOptions;
 
+    // Turn pokemonList to an object
+    const filteredList = pokemonList && pokemonList.filter((pokemon) =>
+      (showFavorites ? pokemon.isFavorite : true) &&
+      (showCapturedPokemon ? pokemon.isCaptured : true) &&
+      (selectedVersions.length > 0 ?
+        selectedVersions.some((version) => {
+          const range = groupedVersions[version];
+          return pokemon.id >= range.start && pokemon.id <= range.end;
+      }) : true
+    ) &&
+    (selectedTypes.length > 0 ?
+      (filterByDualTypes ?
+        // Filter for Pokemon with both selected types
+        selectedTypes.every((type) =>
+          pokemon.type1.includes(type) || (pokemon.type2 && pokemon.type2.includes(type))
+        ) :
+        // Filter for Pokemon with any of selected types
+        selectedTypes.some((type) =>
+          pokemon.type1.includes(type) || (pokemon.type2 && pokemon.type2.includes(type))
+        )
+      ) : true
+    ) &&
+      pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+    );
 
-    // function to handle the filtering of pokemon
-    const filterPokemon = () => {
-        const {
-          showFavorites,
-          showCapturedPokemon,
-          selectedVersions,
-          selectedTypes,
-          searchQuery,
-          filterByDualTypes
-        } = filterOptions;
+    return filteredList;
+  };
 
-        // Turn pokemonList to an object
-        const filteredList = pokemonList && pokemonList.filter((pokemon) =>
-          (showFavorites ? pokemon.isFavorite : true) &&
-          (showCapturedPokemon ? pokemon.isCaptured : true) &&
-          (selectedVersions.length > 0 ?
-            selectedVersions.some((version) => {
-              const range = groupedVersions[version];
-              return pokemon.id >= range.start && pokemon.id <= range.end;
-          }) : true
-        ) &&
-        (selectedTypes.length > 0 ?
-          (filterByDualTypes ?
-            // Filter for Pokemon with both selected types
-            selectedTypes.every((type) =>
-              pokemon.type1.includes(type) || (pokemon.type2 && pokemon.type2.includes(type))
-            ) :
-            // Filter for Pokemon with any of selected types
-            selectedTypes.some((type) =>
-              pokemon.type1.includes(type) || (pokemon.type2 && pokemon.type2.includes(type))
-            )
-          ) : true
-        ) &&
-          pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-        );
-
-        return filteredList;
-    };
-
-    const filteredPokemon = filterPokemon();
+  const filteredPokemon = filterPokemon();
 
 
-    const handleFavoritePress = (selectedPokemon) => {
-        // pokemon action to update the pokemon in the pokemonList state
-        dispatch(setPokemonFavoriteStatus({ pokemonId: selectedPokemon.id, updatedFavoriteStatus: !selectedPokemon.isFavorite }));
-//         // pokemon action to update the pokemon in the pokemonList state
-//         dispatch(updatePokemonFavoriteStatusAction(selectedPokemon.id, updatedFavoriteValue));
-    }
+  const handleFavoritePress = (selectedPokemon) => {
+      // pokemon action to update the pokemon in the pokemonList state
+    dispatch(setPokemonFavoriteStatus({ pokemonId: selectedPokemon.id, updatedFavoriteStatus: !selectedPokemon.isFavorite }));
+       // pokemon action to update the pokemon in the pokemonList state
+       // dispatch(updatePokemonFavoriteStatusAction(selectedPokemon.id, updatedFavoriteValue));
+  }
 
-    const handleCapturePress = (selectedPokemon) => {
-        // Update the isCaptured value in the database
-        const updatedCaptureValue = !selectedPokemon.isCaptured;
-        // pokemon action to update the pokemon in the pokemonList state
-        dispatch(updatePokemonStatusAction(selectedPokemon.id, 'isCaptured', updatedCaptureValue));
-//         // pokemon action to update the pokemon in the pokemonList state
-//         dispatch(updatePokemon(selectedPokemon.id, updatedCaptureValue));
-    }
-
-
-    const renderItem = ({ item: pokemon }: { item: Pokemon }) => {
-        const screenWidth = Dimensions.get('window').width;
-        // Width for one column
-        const itemWidth = screenWidth - 5;
-        const backgroundColor = pokemon.type1 ? pokemonColors[pokemon.type1].backgroundColor : '';
-        return (
-            <View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
-                <TouchableOpacity style={styles.itemCard} onPress={() => handlePress(pokemon)}>
-                    <View style={styles.itemDetailsContainer}>
-                        <Text style={[styles.pokemonId, { color: pokemon.type1 ? pokemonColors[pokemon.type1].color : 'white' }]}>{pokemon.id}</Text>
-
-                        <View style={styles.pokemonNameAndTypeContainer}>
-                            <View style={styles.nameContainer}>
-                                <Text style={[styles.pokemonName, { color: pokemonColors[pokemon.type1].color } ]}>{capitalizeString(pokemon.name)}</Text>
-                                <View style={{ flexDirection: 'row' }}>
-                                    {pokemon.isFavorite ? (
-                                        <Ionicons
-                                            name="star"
-                                            size={24} color="#555"
-                                            onPress={() => handleFavoritePress(pokemon)}
-                                        />
-                                    ) : (
-                                        <Ionicons
-                                            name="star-outline"
-                                            size={24} color="#555"
-                                            onPress={() => handleFavoritePress(pokemon)}
-                                        />
-                                    )}
-                                    {pokemon.isCaptured ? (
-                                        <Ionicons
-                                            name="checkmark-circle-outline"
-                                            size={26} color="#555"
-                                            onPress={() => handleCapturePress(pokemon)}
-                                        />
-                                    ) : (
-                                        <Ionicons
-                                            name="ellipse-outline"
-                                            size={26} color="#555"
-                                            onPress={() => handleCapturePress(pokemon)}
-                                        />
-                                    )}
-                                </View>
-                            </View>
-
-                            <View style={styles.pokemonTypesContainer}>
-                                <Text style={styles.pokemonType}>{capitalizeString(pokemon.type1)}</Text>
-                                {pokemon.type2 && (
-                                    <Text style={styles.pokemonType}>{capitalizeString(pokemon.type2)}</Text>
-                                )}
-                            </View>
-                        </View>
+  const handleCapturePress = (selectedPokemon) => {
+    // Update the isCaptured value in the database
+    const updatedCaptureValue = !selectedPokemon.isCaptured;
+    // pokemon action to update the pokemon in the pokemonList state
+    dispatch(updatePokemonStatusAction(selectedPokemon.id, 'isCaptured', updatedCaptureValue));
+    // pokemon action to update the pokemon in the pokemonList state
+    // dispatch(updatePokemon(selectedPokemon.id, updatedCaptureValue));
+  }
 
 
-                    </View>
-                    <Image
-                        style={styles.image}
-                        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
-                    />
-                </TouchableOpacity>
+  const renderItem = ({ item: pokemon }: { item: Pokemon }) => {
+    const screenWidth = Dimensions.get('window').width;
+    const itemWidth = screenWidth - 5;
+    const type1 = pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name;
+    const type2 = pokemon.pokemon_v2_pokemontypes[1]?.pokemon_v2_type.name;
+
+    const backgroundColor = pokemonColors[type1].backgroundColor;
+    const textColor = pokemonColors[type1].color;
+
+    const iconContainer = (
+      <View style={{ flexDirection: 'row' }}>
+        {pokemon.isFavorite ? (
+          <Ionicons
+            name="star"
+            size={24} color="#555"
+            onPress={() => handleFavoritePress(pokemon)}
+          />
+        ) : (
+          <Ionicons
+            name="star-outline"
+            size={24} color="#555"
+            onPress={() => handleFavoritePress(pokemon)}
+          />
+        )}
+        {pokemon.isCaptured ? (
+          <Ionicons
+            name="checkmark-circle-outline"
+            size={26} color="#555"
+            onPress={() => handleCapturePress(pokemon)}
+          />
+        ) : (
+          <Ionicons
+            name="ellipse-outline"
+            size={26} color="#555"
+            onPress={() => handleCapturePress(pokemon)}
+          />
+        )}
+      </View>
+    );
+
+    const typesContainer = (
+      <View style={styles.pokemonTypesContainer}>
+        <Text style={[styles.pokemonType, { color: textColor }]}>{capitalizeString(type1)}</Text>
+        {type2 && <Text style={[styles.pokemonType, { color: textColor }]}>{capitalizeString(type2)}</Text>}
+      </View>
+    );
+
+    return (
+      <View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
+        <TouchableOpacity style={styles.itemCard} onPress={() => handlePress(pokemon)}>
+          <View style={styles.itemDetailsContainer}>
+            <Text style={[styles.pokemonId, { color: textColor }]}>{pokemon.id}</Text>
+            <View style={styles.pokemonNameAndTypeContainer}>
+              <View style={styles.nameContainer}>
+                <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
+                {iconContainer}
+              </View>
+              {typesContainer}
             </View>
-        );
-    };
+          </View>
+          <Image
+            style={styles.image}
+            source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const renderPokemonList = () => {
     if (loading) {
@@ -256,23 +258,11 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
         renderItem={renderItem}
         keyExtractor={(item) => item.name}
         contentContainerStyle={styles.listContainer}
+        windowSize={10}
       />
     );
 
     return listContent;
-
-//     if (filteredPokemon.length === 0) {
-//       return <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
-//     }
-//
-//     return (
-//       <FlatList
-//         data={filteredPokemon}
-//         renderItem={renderItem}
-//         keyExtractor={(item) => item.name}
-//         contentContainerStyle={styles.listContainer}
-//       />
-//     );
   };
 
   return (
@@ -303,118 +293,112 @@ const PokemonScreen = ({ navigation, typeData, route }: Props) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: 'white',
+      flex: 1,
+      backgroundColor: 'white',
     },
     filterContainer: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginVertical: 10,
-        zIndex: 2
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginVertical: 10,
+      zIndex: 2
     },
     filterTitleText: {
-        fontSize: 18,
+      fontSize: 18,
     },
     dropdownContainer: {
-        position: 'relative',
+      position: 'relative',
     },
     dropdownTrigger: {
-        padding: 10,
-        backgroundColor: '#F5F5F5',
-        borderColor: '#DDDDDD',
-        borderWidth: 1,
-        borderRadius: 5,
+      padding: 10,
+      backgroundColor: '#F5F5F5',
+      borderColor: '#DDDDDD',
+      borderWidth: 1,
+      borderRadius: 5,
     },
     dropdownContent: {
-        position: 'absolute',
-        top: '100%',
-        left: 0,
-        width: '100%',
-        backgroundColor: '#FFFFFF',
-        borderColor: '#DDDDDD',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginTop: 5,
-        padding: 10,
+      position: 'absolute',
+      top: '100%',
+      left: 0,
+      width: '100%',
+      backgroundColor: '#FFFFFF',
+      borderColor: '#DDDDDD',
+      borderWidth: 1,
+      borderRadius: 5,
+      marginTop: 5,
+      padding: 10,
     },
     filtersContainer: {
-        marginTop: 10,
-        flexDirection: 'row',
-        justifyContent: 'center',
+      marginTop: 10,
+      flexDirection: 'row',
+      justifyContent: 'center',
     },
     searchInputContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 5,
-        paddingHorizontal: 10,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: 'black',
+      borderRadius: 5,
+      paddingHorizontal: 10,
     },
     searchInput: {
-        fontSize: 16,
+      fontSize: 16,
     },
     listContainer: {
-        alignItems: 'center',
-        zIndex: 1,
+      alignItems: 'center',
+      zIndex: 1,
     },
     itemContainer: {
-        marginVertical: 10,
-        // aspectRatio for two columns
-//         aspectRatio: 1,
-        aspectRatio: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
+      marginVertical: 10,
+      aspectRatio: 5,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 5,
     },
     itemCard: {
-        height: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 20,
+      height: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 20,
     },
     itemDetailsContainer: {
-        alignItems: 'flex-start',
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
     },
     pokemonId: {
-        fontSize: 16,
-        paddingRight: 40,
+      fontSize: 16,
+      paddingRight: 40,
     },
     nameContainer: {
-        flexDirection: 'row',
-//         justifyContent: 'space-between',
-//         marginRight: 15,
+      flexDirection: 'row',
     },
     pokemonName: {
-        fontSize: 20,
-        marginBottom: 10,
-        paddingRight: 15,
+      fontSize: 20,
+      marginBottom: 10,
+      paddingRight: 15,
     },
     pokemonTypesContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
     },
     pokemonType: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        paddingHorizontal: 20,
-        marginRight: 15,
-        borderWidth: 1,
-        borderColor: '#555',
-        borderRadius: 10,
-        textAlign: 'center',
+      fontSize: 16,
+      fontWeight: 'bold',
+      paddingHorizontal: 20,
+      marginRight: 15,
+      borderWidth: 1,
+      borderRadius: 10,
+      borderColor: '#555',
+      textAlign: 'center',
     },
     image: {
-//         width: 100,
-//         height: 100,
-        width: 75,
-        height: 75,
+      width: 75,
+      height: 75,
     },
 });
 
