@@ -93,9 +93,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.pokevault"
+    namespace "com.poke_vault"
     defaultConfig {
-        applicationId "com.pokevault"
+        applicationId "com.poke_vault"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

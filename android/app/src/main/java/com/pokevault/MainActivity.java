@@ -1,4 +1,4 @@
-package com.pokevault;
+package com.poke_vault;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -19,7 +19,7 @@ public class MainActivity extends ReactActivity {
   }
   @Override
   protected String getMainComponentName() {
-    return "PokeVault";
+    return "poke_vault";
   }
 
   /**

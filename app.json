@@ -1,6 +1,6 @@
 {
-  "name": "PokeVault",
-  "displayName": "PokeVault",
+  "name": "poke_vault",
+  "displayName": "poke_vault",
   "androidStatusBar": {
     "backgroundColor": "#000000"
   }

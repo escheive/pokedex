@@ -1,4 +1,4 @@
-package com.pokevault;
+package com.poke_vault;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
