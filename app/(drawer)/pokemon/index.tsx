@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Image, Dimensions, Switch, TextInput } from 'react-native';
-import { pokemonColors } from '../../utils/typeColors';
-import { capitalizeString } from '../../utils/helpers';
+import { pokemonColors } from '../../../utils/typeColors';
+import { capitalizeString } from '../../../utils/helpers';
 // // import { fetchPokemonData } from '../utils/api';
 // import { fetchPokemonData } from '../store/slices/pokemonSlice';
 // import { fetchPokemonDetails } from '../services/pokemonService';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // import { updatePokemonStatusAction, updatePokemonFavoriteStatusAction } from '../actions/pokemonActions';
 // import FilterDropdownDrawer from '../components/FilterDropdownDrawer';
-import { setPokemon, selectPokemon } from '../../store/slices/pokemonSlice';
+import { setPokemon, selectPokemon } from '../../../store/slices/pokemonSlice';
 // import { selectAbilities } from '../store/slices/abilitiesSlice';
-import { useAppSelector, useAppDispatch } from '../../utils/hooks';
+import { useAppSelector, useAppDispatch } from '../../../utils/hooks';
 // import { setPokemonFavoriteStatus, setPokemonCaughtStatus } from '../store/slices/pokemonSlice';
 import { Link } from 'expo-router';
+import { DrawerToggleButton } from "@react-navigation/drawer";
+import Drawer from "expo-router/src/layouts/Drawer";
+
+
 import { useQuery, gql } from '@apollo/client';
 
 // Define Graphql query
@@ -43,7 +47,7 @@ const versionOptions = [
     { key: 'gen9', label: 'Gen 9' },
 ];
 
-const PokemonScreen = () => {
+export default function Page() {
   const dispatch = useAppDispatch();
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 //     const [showFavorites, setShowFavorites] = useState(false);
@@ -241,6 +245,13 @@ const PokemonScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Drawer.Screen
+        options={{
+          title: "Pokemon",
+          headerShown: true,
+          headerLeft: () => <DrawerToggleButton />
+        }}
+      />
       <View style={styles.filterContainer}>
         <View style={styles.filtersContainer}>
           {/* <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} filterOptions={filterOptions} setFilterOptions={setFilterOptions} /> */}
@@ -375,5 +386,3 @@ const styles = StyleSheet.create({
       height: 75,
     },
 });
-
-export default PokemonScreen;

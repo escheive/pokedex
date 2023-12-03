@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { SplashScreen, Stack, Link } from 'expo-router';
+import { SplashScreen, Slot } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 import { useEffect } from 'react';
@@ -25,7 +25,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  initialRouteName: 'pokemon',
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -63,11 +63,23 @@ function RootLayoutNav() {
       <Provider store={store}>
         <ApolloProvider client={client}>
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <Drawer>
-              <Drawer.Screen name="pokemon" />
-              <Drawer.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Drawer.Screen name="modal" options={{ presentation: 'modal' }} />
-            </Drawer>
+            <Slot />
+            {/* <Drawer>
+              <Drawer.Screen 
+                name="pokemon"
+                options={{
+                  drawerLabel: 'Pokemon',
+                  title: 'Pokemon'
+                }}
+              />
+              <Drawer.Screen 
+                name="profile"
+                options={{
+                  drawerLabel: 'Profile',
+                  title: 'Profile'
+                }}
+              />
+            </Drawer> */}
           </ThemeProvider>
         </ApolloProvider>
       </Provider>

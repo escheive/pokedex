@@ -4,36 +4,16 @@ import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableO
 // Components
 // import PokemonStats from '../components/pokemon/PokemonStats';
 // import PillBar from '../components/PillBar';
-import PokemonCard from '../../components/pokemon/PokemonCard';
+import PokemonCard from '../../../components/pokemon/PokemonCard';
 // import EvolutionChain from '../components/pokemon/EvolutionChain';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // Utils
 // import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
-import { pokemonColors } from '../../utils/typeColors';
-import { useAppSelector } from '../../utils/hooks';
-import { selectPokemonById } from '../../store/slices/pokemonSlice';
-import { useLocalSearchParams } from 'expo-router';
+import { pokemonColors } from '../../../utils/typeColors';
+import { useAppSelector } from '../../../utils/hooks';
+import { selectPokemonById } from '../../../store/slices/pokemonSlice';
+import { useLocalSearchParams, Stack } from 'expo-router';
 
-type TypeProps = {
-    type: {
-        name: string;
-    };
-};
-
-type PokemonProps = {
-    name: string;
-    id: number;
-    types: TypeProps[];
-}
-
-type DetailsScreenProps = {
-    route: {
-        params: {
-            pokemon: PokemonProps;
-        };
-    };
-    navigation: any;
-}
 
 export default function Page() {
   const localParams = useLocalSearchParams();
@@ -148,6 +128,7 @@ export default function Page() {
 
   return (
     <ScrollView style={styles.container}>
+      <Stack.Screen options={{ headerShown: true, title: pokemon.name }} />
       <PokemonCard
         pokemon={pokemon}
       />
