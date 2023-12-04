@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal } from 'react-native';
+import { Image } from "expo-image";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { pokemonColors } from '../../utils/typeColors';
 import { capitalizeString } from '../../utils/helpers';
@@ -16,19 +17,14 @@ const PokemonCard = ({ pokemon }) => {
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'flex-start',
-//                 height: windowHeight * 0.80,
                 marginBottom: 20,
                 overflow: 'hidden',
-                fontFamily: 'Arial, sans-serif',
-//                 backgroundColor: 'white',
             },
             imageContainer: {
                 backgroundColor: pokemonColors[pokemon?.pokemon_v2_pokemontypes[0].pokemon_v2_type.name].backgroundColor,
-//                 height: '50%',
                 height: windowHeight * 0.30,
                 width: '100%',
                 paddingTop: 32,
-//                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
             },
@@ -209,6 +205,8 @@ const PokemonCard = ({ pokemon }) => {
                 <Image
                   style={styles.image}
                   source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
+                  contentFit="contain"
+                  transition={500}
                 />
                 <View style={styles.idContainer}>
                     <Text style={styles.idText}>

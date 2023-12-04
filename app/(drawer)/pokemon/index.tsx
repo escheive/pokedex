@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Image, Dimensions, Switch, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
 import { pokemonColors } from '../../../utils/typeColors';
 import { capitalizeString } from '../../../utils/helpers';
 // // import { fetchPokemonData } from '../utils/api';
@@ -13,15 +13,15 @@ import { setPokemon, selectPokemon } from '../../../store/slices/pokemonSlice';
 import { useAppSelector, useAppDispatch } from '../../../utils/hooks';
 // import { setPokemonFavoriteStatus, setPokemonCaughtStatus } from '../store/slices/pokemonSlice';
 import { Link } from 'expo-router';
+import { Image } from "expo-image";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
-
 
 import { useQuery, gql } from '@apollo/client';
 
 // Define Graphql query
 const POKEMON_LIST_QUERY = gql`
-  query pokemonListquery {
+  query pokemonListQuery {
     pokemon_v2_pokemon {
       id
       name
@@ -209,6 +209,8 @@ export default function Page() {
           <Image
             style={styles.image}
             source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
+            contentFit="contain"
+            transition={1000}
           />
         </Link>
       </View>
@@ -343,21 +345,18 @@ const styles = StyleSheet.create({
       borderRadius: 5,
     },
     itemCard: {
-      height: '100%',
+      flex: 1,
       flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingHorizontal: 20,
+      justifyContent: 'flex-start',
     },
     itemDetailsContainer: {
-      alignItems: 'flex-start',
-      flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
       flex: 1,
     },
     pokemonId: {
       fontSize: 16,
-      paddingRight: 40,
     },
     nameContainer: {
       flexDirection: 'row',
