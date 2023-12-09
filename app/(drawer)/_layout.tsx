@@ -19,6 +19,13 @@ export default function DrawerLayout() {
         }}
       />
       <Drawer.Screen
+        name="items"
+        options={{
+          drawerLabel: "Items",
+          title: "Items",
+        }}
+      />
+      <Drawer.Screen
         name="home"
         options={{
           drawerLabel: "Home",
