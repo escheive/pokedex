@@ -20,8 +20,12 @@ export const itemsSlice = createSlice({
   reducers: {
     // Use the 'PayloadAction' type to declare the contents of 'action.payload'
     setItems: (state, action) => {
-      state.data = action.payload;
-      state.loading = false;
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+        error: null,
+      }
     },
   },
 });

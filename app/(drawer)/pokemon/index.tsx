@@ -35,6 +35,13 @@ const POKEMON_LIST_QUERY = gql`
   }
 `;
 
+type GroupedVersions = {
+  [version: string]: {
+    start: number;
+    end: number
+  };
+};
+
 const versionOptions = [
     { key: 'gen1', label: 'Gen 1' },
     { key: 'gen2', label: 'Gen 2' },
@@ -79,7 +86,7 @@ export default function Page() {
     }));
   };
 
-  const groupedVersions = {
+  const groupedVersions: GroupedVersions = {
     gen1: { start: 1, end: 151 },
     gen2: { start: 152, end: 251 },
     gen3: { start: 252, end: 386 },
@@ -132,11 +139,11 @@ export default function Page() {
 
   const filteredPokemon = filterPokemon();
 
-  const handleFavoritePress = () => {
+  const handleFavoritePress = (pokemon: any) => {
     console.log('favorited')
   }
 
-  const handleCaughtPress = () => {
+  const handleCaughtPress = (pokemon: any) => {
     console.log('caught')
   }
 
@@ -191,11 +198,15 @@ export default function Page() {
       <View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
         <Link 
           style={styles.itemCard} 
+          href={`/pokemon/${pokemon.id}`}
+        >
+        {/* <Link 
+          style={styles.itemCard} 
           href={{
             pathname: '/pokemon/[id]',
             params: { id: pokemon.id }
           }}
-        >
+        > */}
           <View style={styles.itemDetailsContainer}>
             <Text style={[styles.pokemonId, { color: textColor }]}>{pokemon.id}</Text>
             <View style={styles.pokemonNameAndTypeContainer}>
@@ -226,7 +237,7 @@ export default function Page() {
 
     if (error) {
       return (
-        <Text>Error: {error}</Text>
+        <Text>Error: {error.message}</Text>
       )
     };
 
@@ -357,6 +368,9 @@ const styles = StyleSheet.create({
     },
     pokemonId: {
       fontSize: 16,
+    },
+    pokemonNameAndTypeContainer: {
+
     },
     nameContainer: {
       flexDirection: 'row',

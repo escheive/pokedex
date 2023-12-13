@@ -1,4 +1,12 @@
-const pokemonColors = {
+type PokemonColors = {
+    [key: string]: {
+        backgroundColor: string;
+        alternateBackgroundColor: string;
+        color: string;
+    }
+}
+
+const pokemonColors: PokemonColors = {
     "normal": {
         "backgroundColor": 'rgba(128, 128, 128, 0.5)',
         "alternateBackgroundColor": 'rgba(168, 168, 120, 1)',

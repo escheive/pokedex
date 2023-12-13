@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Platform, View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
+import { FlashList } from "@shopify/flash-list";
 import { pokemonColors } from '../../../utils/typeColors';
 import { capitalizeString } from '../../../utils/helpers';
 // // import { fetchPokemonData } from '../utils/api';
@@ -20,6 +21,9 @@ import Drawer from "expo-router/src/layouts/Drawer";
 import { useQuery, gql } from '@apollo/client';
 
 const screenWidth = Dimensions.get('window').width;
+const blurhash =
+  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+
 
 // Define Graphql query
 const ITEMS_LIST_QUERY = gql`
@@ -49,6 +53,9 @@ const ITEMS_LIST_QUERY = gql`
         pokemon_v2_versiongroup {
           generation_id
         }
+      }
+      pokemon_v2_itemsprites {
+        sprites
       }
     }
   }
@@ -113,7 +120,8 @@ export default function Page() {
     console.log('favorited')
   }
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: any) => {
+    const itemUrl = JSON.parse(item.pokemon_v2_itemsprites[0].sprites);
 
     // const iconContainer = (
     //   <View style={{ flexDirection: 'row' }}>
@@ -135,13 +143,17 @@ export default function Page() {
 
     return (
       <View style={styles.itemContainer}>
-        <Link 
+        <Link
+          style={styles.itemCard} 
+          href={`/items/${item.id}`}
+        >
+        {/* <Link
           style={styles.itemCard} 
           href={{
             pathname: '/items/[id]',
             params: { id: item.id }
           }}
-        >
+        > */}
           <View style={styles.itemDetails}>
             <Text style={styles.itemId}>{item.id}</Text>
             <Text style={styles.itemName}>{capitalizeString(item.name)}</Text>
@@ -150,8 +162,9 @@ export default function Page() {
           <Image 
             style={styles.image}
             source={{
-              uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`
+              uri: `${itemUrl.default}`
             }}
+            placeholder={blurhash}
           />
         </Link>
       </View>
@@ -159,6 +172,7 @@ export default function Page() {
   };
 
   const renderItemsList = () => {
+
     if (loading) {
       return (
         <Text>Loading...</Text>
@@ -167,20 +181,22 @@ export default function Page() {
 
     if (error) {
       return (
-        <Text>Error: {error}</Text>
+        <Text>Error: {error.message}</Text>
       )
     };
 
     const listContent = (filteredItems.length === 0) ? (
       <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
     ) : (
-      <FlatList
-        data={filteredItems}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.name}
-        contentContainerStyle={styles.listContainer}
-        windowSize={10}
-      />
+      <View style={{ flex: 1, height: "100%", width: Dimensions.get("screen").width }}>
+        <FlashList
+          data={filteredItems}
+          renderItem={renderItem}
+          keyExtractor={(item: any) => `${item.id}`}
+          estimatedItemSize={300}
+          estimatedListSize={{ height: 120, width: Dimensions.get("screen").width }}
+        />
+      </View>
     );
 
     return listContent;
@@ -212,9 +228,7 @@ export default function Page() {
           </View>
         </View>
       </View>
-      <View>
-        {renderItemsList()}
-      </View>
+      {renderItemsList()}
     </View>
   );
 };

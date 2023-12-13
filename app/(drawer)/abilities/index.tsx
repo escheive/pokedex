@@ -147,7 +147,7 @@ export default function Page() {
 
     if (error) {
       return (
-        <Text>Error: {error}</Text>
+        <Text>Error: {error.message}</Text>
       )
     };
 
