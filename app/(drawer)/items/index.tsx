@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Platform, View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
 import { FlashList } from "@shopify/flash-list";
-import { capitalizeString } from '../../../utils/helpers';
+import { capitalizeString, getTMImageUrl } from '../../../utils/helpers';
 // // import { fetchPokemonData } from '../utils/api';
 // import { fetchPokemonData } from '../store/slices/pokemonSlice';
 // import { fetchPokemonDetails } from '../services/pokemonService';
@@ -117,8 +117,8 @@ export default function Page() {
   const renderItem = ({ item: item }: { item: any }) => {
     // Check if the item has a valid image URL before rendering the Image component
     let imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`;
-    if (item.name === "tm01") {
-      imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-normal.png`
+    if (item.name.startsWith("tm")) {
+      imageUrl = getTMImageUrl(item.name)
     }
     const hasValidImageUrl = imageUrl && imageUrl !== 'undefined';
 

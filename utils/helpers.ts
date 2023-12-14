@@ -1,22 +1,20 @@
-const capitalizeString = (string) => {
-    if (typeof string === 'string') {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    } else if (typeof string === 'object' && string !== null) {
-        return string.name.charAt(0).toUpperCase() + string.name.slice(1);
-    }
+export const capitalizeString = (string) => {
+  if (typeof string === 'string') {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  } else if (typeof string === 'object' && string !== null) {
+    return string.name.charAt(0).toUpperCase() + string.name.slice(1);
+  }
 }
-
-export { capitalizeString };
 
 type PokemonColors = {
-    [key: string]: {
-        backgroundColor: string;
-        alternateBackgroundColor: string;
-        color: string;
-    }
+  [key: string]: {
+    backgroundColor: string;
+    alternateBackgroundColor: string;
+    color: string;
+  }
 }
 
-const pokemonColors: PokemonColors = {
+export const pokemonColors: PokemonColors = {
     "normal": {
         "backgroundColor": 'rgba(128, 128, 128, 0.5)',
         "alternateBackgroundColor": 'rgba(168, 168, 120, 1)',
@@ -109,4 +107,119 @@ const pokemonColors: PokemonColors = {
     },
 }
 
-export { pokemonColors }
+interface TmTypeMapping {
+    [key: string]: string;
+  }
+  
+const tmTypeMapping: TmTypeMapping = {
+    tm01: 'dark',
+    tm02: 'dragon',
+    tm03: 'psychic',
+    tm04: 'psychic',
+    tm05: 'normal',
+    tm06: 'poison',
+    tm07: 'ice',
+    tm08: 'fighting',
+    tm09: 'poison',
+    tm10: 'normal',
+    tm11: 'fire',
+    tm12: 'dark',
+    tm13: 'ice',
+    tm14: 'ice',
+    tm15: 'normal',
+    tm16: 'psychic',
+    tm17: 'normal',
+    tm18: 'water',
+    tm19: 'psychic',
+    tm20: 'normal',
+    tm21: 'normal',
+    tm22: 'grass',
+    tm23: 'rock',
+    tm24: 'electric',
+    tm25: 'electric',
+    tm26: 'ground',
+    tm27: 'normal',
+    tm28: 'ground',
+    tm29: 'psychic',
+    tm30: 'ghost',
+    tm31: 'fighting',
+    tm32: 'normal',
+    tm33: 'psychic',
+    tm34: 'poison',
+    tm35: 'fire',
+    tm36: 'poison',
+    tm37: 'rock',
+    tm38: 'fire',
+    tm39: 'rock',
+    tm40: 'flying',
+    tm41: 'dark',
+    tm42: 'normal',
+    tm43: 'electric',
+    tm44: 'psychic',
+    tm45: 'normal',
+    tm46: 'dark',
+    tm47: 'fighting',
+    tm48: 'normal',
+    tm49: 'normal',
+    tm50: 'fire',
+    tm51: 'psychic',
+    tm52: 'fighting',
+    tm53: 'grass',
+    tm54: 'normal',
+    tm55: 'water',
+    tm56: 'dark',
+    tm57: 'electric',
+    tm58: 'flying',
+    tm59: 'fire',
+    tm60: 'dark',
+    tm61: 'fire',
+    tm62: 'flying',
+    tm63: 'dark',
+    tm64: 'normal',
+    tm65: 'ghost',
+    tm66: 'dark',
+    tm67: 'normal',
+    tm68: 'normal',
+    tm69: 'rock',
+    tm70: 'normal',
+    tm71: 'rock',
+    tm72: 'electric',
+    tm73: 'electric',
+    tm74: 'steel',
+    tm75: 'normal',
+    tm76: 'rock',
+    tm77: 'normal',
+    tm78: 'ground',
+    tm79: 'ice',
+    tm80: 'rock',
+    tm81: 'bug',
+    tm82: 'dragon',
+    tm83: 'normal',
+    tm84: 'poison',
+    tm85: 'psychic',
+    tm86: 'grass',
+    tm87: 'normal',
+    tm88: 'flying',
+    tm89: 'bug',
+    tm90: 'normal',
+    tm91: 'steel',
+    tm92: 'psychic',
+    tm93: 'electric',
+    tm94: 'fighting',
+    tm95: 'dark',
+    tm96: 'normal',
+    tm97: 'dark',
+    tm98: 'fighting',
+    tm99: 'fairy',
+    tm100: 'normal',
+};
+  
+export const getTMImageUrl = (tmNumber: string) => {
+  const type = tmTypeMapping[tmNumber.toLowerCase()];
+  if (type) {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-${type}.png`;
+  } else {
+    // Handle the case where the TM number is not in the mapping
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-normal.png`;
+  }
+};
