@@ -21,8 +21,6 @@ import Drawer from "expo-router/src/layouts/Drawer";
 import { useQuery, gql } from '@apollo/client';
 
 const screenWidth = Dimensions.get('window').width;
-const blurhash =
-  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
 
 // Define Graphql query
@@ -53,9 +51,6 @@ const ITEMS_LIST_QUERY = gql`
         pokemon_v2_versiongroup {
           generation_id
         }
-      }
-      pokemon_v2_itemsprites {
-        sprites
       }
     }
   }
@@ -116,30 +111,29 @@ export default function Page() {
 
   const filteredItems = filterItems();
 
-  const handleFavoritePress = () => {
+  const handleFavoritePress = (item: any) => {
     console.log('favorited')
   }
 
-  const renderItem = ({ item }: any) => {
-    const itemUrl = JSON.parse(item.pokemon_v2_itemsprites[0].sprites);
+  const renderItem = ({ item: item }: { item: any }) => {
 
-    // const iconContainer = (
-    //   <View style={{ flexDirection: 'row' }}>
-    //     {item?.isFavorite ? (
-    //       <Ionicons
-    //         name="star"
-    //         size={24} color="#555"
-    //         onPress={() => handleFavoritePress(item)}
-    //       />
-    //     ) : (
-    //       <Ionicons
-    //         name="star-outline"
-    //         size={24} color="#555"
-    //         onPress={() => handleFavoritePress(item)}
-    //       />
-    //     )}
-    //   </View>
-    // );
+    const iconContainer = (
+      <View style={{ flexDirection: 'row' }}>
+        {item?.isFavorite ? (
+          <Ionicons
+            name="star"
+            size={24} color="#555"
+            onPress={() => handleFavoritePress(item)}
+          />
+        ) : (
+          <Ionicons
+            name="star-outline"
+            size={24} color="#555"
+            onPress={() => handleFavoritePress(item)}
+          />
+        )}
+      </View>
+    );
 
     return (
       <View style={styles.itemContainer}>
@@ -157,14 +151,14 @@ export default function Page() {
           <View style={styles.itemDetails}>
             <Text style={styles.itemId}>{item.id}</Text>
             <Text style={styles.itemName}>{capitalizeString(item.name)}</Text>
+            {iconContainer}
             <Text style={styles.shortEffect}>{item.pokemon_v2_itemeffecttexts[0]?.short_effect}</Text>
           </View>
           <Image 
             style={styles.image}
             source={{
-              uri: `${itemUrl.default}`
+              uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`
             }}
-            placeholder={blurhash}
           />
         </Link>
       </View>
@@ -192,7 +186,7 @@ export default function Page() {
         <FlashList
           data={filteredItems}
           renderItem={renderItem}
-          keyExtractor={(item: any) => `${item.id}`}
+          keyExtractor={(item) => item.name}
           estimatedItemSize={300}
           estimatedListSize={{ height: 120, width: Dimensions.get("screen").width }}
         />

@@ -16,6 +16,7 @@ import { Link } from 'expo-router';
 import { Image } from "expo-image";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
+import { FlashList } from '@shopify/flash-list';
 
 import { useQuery, gql } from '@apollo/client';
 
@@ -244,13 +245,15 @@ export default function Page() {
     const listContent = (filteredPokemon.length === 0) ? (
       <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
     ) : (
-      <FlatList
-        data={filteredPokemon}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.name}
-        contentContainerStyle={styles.listContainer}
-        windowSize={10}
-      />
+      <View style={styles.listContainer}>
+        <FlashList
+          data={filteredPokemon}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.name}
+          estimatedItemSize={300}
+          estimatedListSize={{ height: 120, width: Dimensions.get("screen").width }}
+        />
+      </View>
     );
 
     return listContent;
@@ -282,9 +285,7 @@ export default function Page() {
           </View>
         </View>
       </View>
-      <View>
-        {renderPokemonList()}
-      </View>
+      {renderPokemonList()}
     </View>
   );
 };
@@ -345,6 +346,8 @@ const styles = StyleSheet.create({
     listContainer: {
       alignItems: 'center',
       zIndex: 1,
+      width: Dimensions.get("screen").width,
+      flex: 1,
     },
     itemContainer: {
       marginVertical: 10,
@@ -399,3 +402,11 @@ const styles = StyleSheet.create({
       height: 75,
     },
 });
+
+      // <FlatList
+      //   data={filteredPokemon}
+      //   renderItem={renderItem}
+      //   keyExtractor={(item) => item.name}
+      //   contentContainerStyle={styles.listContainer}
+      //   windowSize={10}
+      // />
