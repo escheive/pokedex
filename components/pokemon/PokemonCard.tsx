@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal } from 'react-native';
 import { Image } from "expo-image";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { pokemonColors } from '../../utils/typeColors';
-import { capitalizeString } from '../../utils/helpers';
+import { capitalizeString, pokemonColors } from '../../utils/helpers';
 
 const PokemonCard = ({ pokemon }) => {
 

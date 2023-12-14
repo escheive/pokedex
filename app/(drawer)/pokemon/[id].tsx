@@ -9,7 +9,7 @@ import PokemonCard from '../../../components/pokemon/PokemonCard';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // Utils
 // import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
-import { pokemonColors } from '../../../utils/typeColors';
+import { pokemonColors } from '../../../utils/helpers';
 import { useAppSelector } from '../../../utils/hooks';
 import { selectPokemonById } from '../../../store/slices/pokemonSlice';
 import { useLocalSearchParams, Stack } from 'expo-router';

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
-import { pokemonColors } from '../../../utils/typeColors';
-import { capitalizeString } from '../../../utils/helpers';
+import { capitalizeString, pokemonColors } from '../../../utils/helpers';
 // // import { fetchPokemonData } from '../utils/api';
 // import { fetchPokemonData } from '../store/slices/pokemonSlice';
 // import { fetchPokemonDetails } from '../services/pokemonService';

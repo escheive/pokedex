@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Platform, View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
 import { FlashList } from "@shopify/flash-list";
-import { pokemonColors } from '../../../utils/typeColors';
 import { capitalizeString } from '../../../utils/helpers';
 // // import { fetchPokemonData } from '../utils/api';
 // import { fetchPokemonData } from '../store/slices/pokemonSlice';
@@ -116,6 +115,12 @@ export default function Page() {
   }
 
   const renderItem = ({ item: item }: { item: any }) => {
+    // Check if the item has a valid image URL before rendering the Image component
+    let imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`;
+    if (item.name === "tm01") {
+      imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-normal.png`
+    }
+    const hasValidImageUrl = imageUrl && imageUrl !== 'undefined';
 
     const iconContainer = (
       <View style={{ flexDirection: 'row' }}>
@@ -154,12 +159,15 @@ export default function Page() {
             {iconContainer}
             <Text style={styles.shortEffect}>{item.pokemon_v2_itemeffecttexts[0]?.short_effect}</Text>
           </View>
-          <Image 
-            style={styles.image}
-            source={{
-              uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`
-            }}
-          />
+          {hasValidImageUrl ? (
+            <Image 
+              style={styles.image}
+              source={{
+                uri: `${imageUrl}`
+              }}
+              placeholder=""
+            />
+          ) : null }
         </Link>
       </View>
     );
