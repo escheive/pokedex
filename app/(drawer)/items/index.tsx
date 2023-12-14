@@ -117,7 +117,7 @@ export default function Page() {
   const renderItem = ({ item: item }: { item: any }) => {
     // Check if the item has a valid image URL before rendering the Image component
     let imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`;
-    if (item.name.startsWith("tm")) {
+    if (item.name.startsWith("tm") && item.name !== "tmv-pass" && item.name !== "tm-case") {
       imageUrl = getTMImageUrl(item.name)
     }
     const hasValidImageUrl = imageUrl && imageUrl !== 'undefined';
@@ -157,7 +157,11 @@ export default function Page() {
             <Text style={styles.itemId}>{item.id}</Text>
             <Text style={styles.itemName}>{capitalizeString(item.name)}</Text>
             {iconContainer}
-            <Text style={styles.shortEffect}>{item.pokemon_v2_itemeffecttexts[0]?.short_effect}</Text>
+            {item.pokemon_v2_itemeffecttexts[0] ? (
+              <Text style={styles.shortEffect}>{item.pokemon_v2_itemeffecttexts[0]?.short_effect}</Text>
+            ) : (
+              <Text style={styles.shortEffect}>This item has no info on PokeAPI yet!</Text>
+            )}
           </View>
           {hasValidImageUrl ? (
             <Image 
@@ -166,6 +170,7 @@ export default function Page() {
                 uri: `${imageUrl}`
               }}
               placeholder=""
+              contentFit="contain"
             />
           ) : null }
         </Link>
