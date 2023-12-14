@@ -60,9 +60,9 @@ export default function Page() {
       return <p>Loading...</p>
     }
   }
-  if (data) {
-    dispatch(setAbilities(abilitiesList))
-  }
+  // if (data) {
+  //   dispatch(setAbilities(abilitiesList))
+  // }
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {

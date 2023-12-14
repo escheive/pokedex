@@ -1,3 +1,4 @@
+import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -10,12 +11,26 @@ import { useColorScheme, Platform } from 'react-native';
 import store from '../store';
 import { Provider } from 'react-redux';
 
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { InMemoryCache } from "@apollo/client/core";
+import { ApolloClient, ApolloProvider } from '@apollo/client';
+import { persistCache, AsyncStorageWrapper, LocalStorageWrapper } from 'apollo3-cache-persist';
+
+const cache = new InMemoryCache({}); // Allows data to be stored in local cache, and subsequent fetches of the same data to not use the network
+
+// Conditionally select the storage wrapper based on platform
+const storageWrapper = Platform.OS === "web" ? new LocalStorageWrapper(window.localStorage) : new AsyncStorageWrapper(AsyncStorage);
+
+// Await before instantiating ApolloClient, else queries might run before cache is persisted
+persistCache({
+  cache,
+  storage: storageWrapper,
+});
 
 // Create an Apollo Client instance
 const client = new ApolloClient({
   uri: 'https://beta.pokeapi.co/graphql/v1beta', // PokeAPI Graphql endpoint
-  cache: new InMemoryCache(), // Allows data to be stored in local cache, and subsequent fetches of the same data to not use the network
+  cache, 
 })
 
 export {
@@ -64,25 +79,17 @@ function RootLayoutNav() {
         <ApolloProvider client={client}>
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <Slot />
-            {/* <Drawer>
-              <Drawer.Screen 
-                name="pokemon"
-                options={{
-                  drawerLabel: 'Pokemon',
-                  title: 'Pokemon'
-                }}
-              />
-              <Drawer.Screen 
-                name="profile"
-                options={{
-                  drawerLabel: 'Profile',
-                  title: 'Profile'
-                }}
-              />
-            </Drawer> */}
           </ThemeProvider>
         </ApolloProvider>
       </Provider>
     </GestureHandlerRootView>
   );
 }
+
+// import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+// // Create an Apollo Client instance
+// const client = new ApolloClient({
+//   uri: 'https://beta.pokeapi.co/graphql/v1beta', // PokeAPI Graphql endpoint
+//   cache: new InMemoryCache(), // Allows data to be stored in local cache, and subsequent fetches of the same data to not use the network
+// })

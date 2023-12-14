@@ -18,8 +18,8 @@ import { useLocalSearchParams, Stack } from 'expo-router';
 export default function Page() {
   const localParams = useLocalSearchParams();
   const pokemonId = localParams.id - 1;
-  const pokemon = useAppSelector((state) => selectPokemonById(state, pokemonId))
-  console.log(pokemon.pokemon_v2_pokemontypes)
+  // const pokemon = useAppSelector((state) => selectPokemonById(state, pokemonId))
+  const pokemon = null;
 
   if (!pokemon) return <Text>Loading...</Text>
 

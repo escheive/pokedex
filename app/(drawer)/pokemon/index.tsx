@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
+import { Platform, View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
 import { capitalizeString, pokemonColors } from '../../../utils/helpers';
 // // import { fetchPokemonData } from '../utils/api';
 // import { fetchPokemonData } from '../store/slices/pokemonSlice';
@@ -69,14 +69,17 @@ export default function Page() {
     filterByDualTypes: false,
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
-//   const { loading, data: pokemonList, error } = useAppSelector(selectPokemon);
   const { loading, error, data, networkStatus } = useQuery(POKEMON_LIST_QUERY);
   const pokemonList = data?.pokemon_v2_pokemon;
 
-  if (loading) return <Text>Loading...</Text>
-  if (data) {
-    dispatch(setPokemon(pokemonList))
-  }
+  if (loading) {
+    return (
+      <Text>Loading...</Text>
+    )
+  };
+  // if (data) {
+  //   dispatch(setPokemon(pokemonList))
+  // }
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
@@ -235,11 +238,11 @@ export default function Page() {
       )
     };
 
-    if (error) {
-      return (
-        <Text>Error: {error.message}</Text>
-      )
-    };
+    // if (error) {
+    //   return (
+    //     <Text>Error: {error.message}</Text>
+    //   )
+    // };
 
     const listContent = (filteredPokemon.length === 0) ? (
       <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>

@@ -79,9 +79,9 @@ export default function Page() {
       </>
     )
   }
-  if (data) {
-    dispatch(setItems(itemsList))
-  }
+  // if (data) {
+  //   dispatch(setItems(itemsList))
+  // }
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
