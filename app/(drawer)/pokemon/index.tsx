@@ -55,7 +55,7 @@ const versionOptions = [
 ];
 
 export default function Page() {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 //     const [showFavorites, setShowFavorites] = useState(false);
 //     const [showCaughtPokemon, setShowCaughtPokemon] = useState(false);
@@ -70,6 +70,7 @@ export default function Page() {
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const { loading, error, data, networkStatus } = useQuery(POKEMON_LIST_QUERY);
+  console.log("Pokemon network status:", networkStatus);
   const pokemonList = data?.pokemon_v2_pokemon;
 
   if (loading) {

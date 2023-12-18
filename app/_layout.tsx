@@ -1,37 +1,64 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Slot } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Drawer } from 'expo-router/drawer';
-import { useEffect } from 'react';
-import { useColorScheme, Platform } from 'react-native';
+import { useColorScheme, Platform, Text } from 'react-native';
 
 import store from '../store';
 import { Provider } from 'react-redux';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { InMemoryCache } from "@apollo/client/core";
+import { InMemoryCache, NormalizedCacheObject } from "@apollo/client/core";
 import { ApolloClient, ApolloProvider } from '@apollo/client';
-import { persistCache, AsyncStorageWrapper, LocalStorageWrapper } from 'apollo3-cache-persist';
+import { persistCache, AsyncStorageWrapper, LocalStorageWrapper, MMKVWrapper } from 'apollo3-cache-persist';
+import { MMKV } from 'react-native-mmkv';
 
-const cache = new InMemoryCache({}); // Allows data to be stored in local cache, and subsequent fetches of the same data to not use the network
 
-// Conditionally select the storage wrapper based on platform
-const storageWrapper = Platform.OS === "web" ? new LocalStorageWrapper(window.localStorage) : new AsyncStorageWrapper(AsyncStorage);
+const ApolloCacheProvider = ({ children }) => {
+  const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>();
 
-// Await before instantiating ApolloClient, else queries might run before cache is persisted
-persistCache({
-  cache,
-  storage: storageWrapper,
-});
+  useEffect(() => {
+    async function init() {
+      const cache = new InMemoryCache({});
 
-// Create an Apollo Client instance
-const client = new ApolloClient({
-  uri: 'https://beta.pokeapi.co/graphql/v1beta', // PokeAPI Graphql endpoint
-  cache, 
-})
+      const storage = new MMKV()
+
+      // Conditionally select the storage wrapper based on platform
+      const storageWrapper = Platform.OS === "web" ? new LocalStorageWrapper(window.localStorage) : new MMKVWrapper(storage);
+      // // Conditionally select the storage wrapper based on platform
+      // const storageWrapper = Platform.OS === "web" ? new LocalStorageWrapper(window.localStorage) : new AsyncStorageWrapper(AsyncStorage);
+
+      // Await before instantiating ApolloClient, else queries might run bef cache is persisted
+      await persistCache({
+        cache,
+        storage: storageWrapper,
+        debug: true,
+        maxSize: false,
+      });
+
+      // Create an Apollo Client instance
+      setClient(
+        new ApolloClient({
+          uri: 'https://beta.pokeapi.co/graphql/v1beta', // PokeAPI Graphql endpoint
+          cache,
+          ssrMode: typeof window === "undefined",
+        })
+      );
+    }
+
+    init().catch(console.error);
+  }, []);
+
+  
+
+  if (!client) {
+    return <Text>Initializing Client...</Text>
+  }
+
+  return <ApolloProvider client={client}>{children}</ApolloProvider>
+};
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -67,7 +94,11 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <ApolloCacheProvider>
+      <RootLayoutNav />
+    </ApolloCacheProvider>
+  )
 }
 
 function RootLayoutNav() {
@@ -75,16 +106,30 @@ function RootLayoutNav() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Provider store={store}>
-        <ApolloProvider client={client}>
+      {/* <Provider store={store}> */}
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <Slot />
           </ThemeProvider>
-        </ApolloProvider>
-      </Provider>
+      {/* </Provider> */}
     </GestureHandlerRootView>
   );
 }
+
+// function RootLayoutNav() {
+//   const colorScheme = useColorScheme();
+
+//   return (
+//     <ApolloProvider client={client}>
+//       <GestureHandlerRootView style={{ flex: 1 }}>
+//         {/* <Provider store={store}> */}
+//             <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+//               <Slot />
+//             </ThemeProvider>
+//         {/* </Provider> */}
+//       </GestureHandlerRootView>
+//     </ApolloProvider>
+//   );
+// }
 
 // import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
@@ -93,3 +138,20 @@ function RootLayoutNav() {
 //   uri: 'https://beta.pokeapi.co/graphql/v1beta', // PokeAPI Graphql endpoint
 //   cache: new InMemoryCache(), // Allows data to be stored in local cache, and subsequent fetches of the same data to not use the network
 // })
+
+
+  // // Async function to initialize and persist the apollo cache
+  // const initializeApolloCache = async () => {
+  //   // Conditionally select the storage wrapper based on platform
+  //   const storageWrapper = Platform.OS === "web" ? new LocalStorageWrapper(window.localStorage) : new AsyncStorageWrapper(AsyncStorage);
+  //   // const storageWrapper = Platform.OS === "web" ? new LocalStorageWrapper(window.localStorage) : null;
+
+  //   // Await before instantiating ApolloClient, else queries might run before cache is persisted
+  //   await persistCache({
+  //     cache,
+  //     storage: storageWrapper,
+  //   });
+  // }
+
+
+  // const cache = new InMemoryCache({}); // Allows data to be stored in local cache, and subsequent fetches of the same data to not use the network

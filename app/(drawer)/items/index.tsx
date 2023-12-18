@@ -56,7 +56,7 @@ const ITEMS_LIST_QUERY = gql`
 `;
 
 export default function Page() {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const [filterOptions, setFilterOptions] = useState({
     showFavorites: false,
     selectedTypes: [],
