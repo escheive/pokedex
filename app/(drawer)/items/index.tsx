@@ -65,6 +65,7 @@ export default function Page() {
   const [dropdownVisible, setDropdownVisible] = useState(false);
 //   const { loading, data: pokemonList, error } = useAppSelector(selectPokemon);
   const { loading, error, data, networkStatus } = useQuery(ITEMS_LIST_QUERY);
+  console.log(loading, error, networkStatus);
   const itemsList = data?.pokemon_v2_item;
 
   if (!data) {

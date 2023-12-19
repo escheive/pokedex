@@ -20,7 +20,8 @@ import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
 import { FlashList } from '@shopify/flash-list';
 
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, useReactiveVar } from '@apollo/client';
+import { favoritedPokemonVar } from '../../../utils/apolloConfig';
 
 // Define Graphql query
 const POKEMON_LIST_QUERY = gql`
@@ -72,7 +73,9 @@ export default function Page() {
     filterByDualTypes: false,
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const favoritedPokemon = useReactiveVar(favoritedPokemonVar);
   const { loading, error, data, networkStatus } = useQuery(POKEMON_LIST_QUERY);
+  console.log(loading, error, networkStatus);
   const pokemonList = data?.pokemon_v2_pokemon;
 
   // function to handle search query changes
@@ -145,13 +148,14 @@ export default function Page() {
     const itemWidth = screenWidth - 5;
     const type1 = pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name;
     const type2 = pokemon.pokemon_v2_pokemontypes[1]?.pokemon_v2_type.name;
+    const isFavorited = favoritedPokemonVar().includes(pokemon.id);
 
     const backgroundColor = pokemonColors[type1].backgroundColor;
     const textColor = pokemonColors[type1].color;
 
     const iconContainer = (
       <View style={{ flexDirection: 'row' }}>
-        {isFavorite(pokemon.id) ? (
+        {isFavorited ? (
           <Ionicons
             name="star"
             size={24} color="#555"

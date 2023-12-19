@@ -1,17 +1,15 @@
+import { favoritedPokemonVar } from "./apolloConfig";
 import mmkv from "./mmkvConfig";
 
-export const toggleFavorite = (pokemonId: number) => {
+export const toggleFavorite = (pokemonId: any) => {
   console.log("favorited: ", pokemonId)
-  const favorites = mmkv.getString("favorites");
-  let favoriteIds = favorites ? JSON.parse(favorites) : [];
+  const currentFavorites: number[] = favoritedPokemonVar();
 
-  if (favoriteIds.includes(pokemonId)) {
-    favoriteIds = favoriteIds.filter((id: any) => id !== pokemonId);
-  } else {
-    favoriteIds.push(pokemonId);
-  }
+  const newFavorites: any[] = currentFavorites.includes(pokemonId)
+    ? currentFavorites.filter(id => id !== pokemonId)
+    : [...currentFavorites, pokemonId];
 
-  mmkv.set("favorites", JSON.stringify(favoriteIds));
+    favoritedPokemonVar(newFavorites);
 };
 
 export const isFavorite = (pokemonId: number) => {

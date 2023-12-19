@@ -5,12 +5,9 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Slot } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useColorScheme, Platform, Text } from 'react-native';
-
-import { InMemoryCache, NormalizedCacheObject } from "@apollo/client/core";
 import { ApolloClient, ApolloProvider } from '@apollo/client';
-import { persistCache, AsyncStorageWrapper, LocalStorageWrapper, MMKVWrapper } from 'apollo3-cache-persist';
-import mmkv from "../utils/mmkvConfig";
-import { client } from "../utils/apolloConfig";
+// import { client } from "../utils/apolloConfig";
+import { ApolloCacheProvider } from '../utils/apolloConfig';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,10 +44,16 @@ export default function RootLayout() {
   }
 
   return (
-    <ApolloProvider client={client}>
+    <ApolloCacheProvider>
       <RootLayoutNav />
-    </ApolloProvider>
+    </ApolloCacheProvider>
   )
+
+  // return (
+  //   <ApolloProvider client={client}>
+  //     <RootLayoutNav />
+  //   </ApolloProvider>
+  // )
 }
 
 function RootLayoutNav() {
