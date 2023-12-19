@@ -39,3 +39,5 @@ Call Stack
 solution => https://github.com/facebook/metro/issues/1003#issuecomment-1626398738
 
 //////////////////
+
+For Apollo Persist, setting debug to true allowed me to realize my data was being purged when too much was attempting to be persisted. Adding maxSize 'false' solved the issue

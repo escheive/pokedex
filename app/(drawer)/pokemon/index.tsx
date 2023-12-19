@@ -11,6 +11,9 @@ import { setPokemon, selectPokemon } from '../../../store/slices/pokemonSlice';
 // import { selectAbilities } from '../store/slices/abilitiesSlice';
 import { useAppSelector, useAppDispatch } from '../../../utils/hooks';
 // import { setPokemonFavoriteStatus, setPokemonCaughtStatus } from '../store/slices/pokemonSlice';
+
+import { toggleFavorite, isFavorite } from "../../../utils/favorites";
+
 import { Link } from 'expo-router';
 import { Image } from "expo-image";
 import { DrawerToggleButton } from "@react-navigation/drawer";
@@ -70,17 +73,7 @@ export default function Page() {
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const { loading, error, data, networkStatus } = useQuery(POKEMON_LIST_QUERY);
-  console.log("Pokemon network status:", networkStatus);
   const pokemonList = data?.pokemon_v2_pokemon;
-
-  if (loading) {
-    return (
-      <Text>Loading...</Text>
-    )
-  };
-  // if (data) {
-  //   dispatch(setPokemon(pokemonList))
-  // }
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
@@ -143,10 +136,6 @@ export default function Page() {
 
   const filteredPokemon = filterPokemon();
 
-  const handleFavoritePress = (pokemon: any) => {
-    console.log('favorited')
-  }
-
   const handleCaughtPress = (pokemon: any) => {
     console.log('caught')
   }
@@ -162,17 +151,17 @@ export default function Page() {
 
     const iconContainer = (
       <View style={{ flexDirection: 'row' }}>
-        {pokemon.isFavorite ? (
+        {isFavorite(pokemon.id) ? (
           <Ionicons
             name="star"
             size={24} color="#555"
-            onPress={() => handleFavoritePress(pokemon)}
+            onPress={() => toggleFavorite(pokemon.id)}
           />
         ) : (
           <Ionicons
             name="star-outline"
             size={24} color="#555"
-            onPress={() => handleFavoritePress(pokemon)}
+            onPress={() => toggleFavorite(pokemon.id)}
           />
         )}
         {pokemon.isCaught ? (
