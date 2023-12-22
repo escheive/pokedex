@@ -5,7 +5,6 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Slot } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useColorScheme, Platform, Text } from 'react-native';
-import { ApolloClient, ApolloProvider } from '@apollo/client';
 // import { client } from "../utils/apolloConfig";
 import { ApolloCacheProvider } from '../utils/apolloConfig';
 

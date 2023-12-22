@@ -20,8 +20,24 @@ import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
 import { FlashList } from '@shopify/flash-list';
 
-import { useQuery, gql, useReactiveVar } from '@apollo/client';
-import { favoritedPokemonVar } from '../../../utils/apolloConfig';
+import { useQuery, gql, useReactiveVar, useMutation, useApolloClient } from '@apollo/client';
+// import { favoritedPokemonVar } from '../../../utils/apolloConfig';
+
+// // Define Graphql query
+// const POKEMON_LIST_QUERY = gql`
+//   query pokemonListQuery {
+//     pokemon_v2_pokemon {
+//       id
+//       name
+//       pokemon_v2_pokemontypes {
+//         pokemon_v2_type {
+//           name
+//           id
+//         }
+//       }
+//     }
+//   }
+// `;
 
 // Define Graphql query
 const POKEMON_LIST_QUERY = gql`
@@ -29,6 +45,7 @@ const POKEMON_LIST_QUERY = gql`
     pokemon_v2_pokemon {
       id
       name
+      isFavorited @client
       pokemon_v2_pokemontypes {
         pokemon_v2_type {
           name
@@ -38,6 +55,15 @@ const POKEMON_LIST_QUERY = gql`
     }
   }
 `;
+
+// const TOGGLE_FAVORITE_MUTATION = gql`
+//   mutation ToggleFavorite($pokemonId: ID!, $isFavorited: Boolean!) {
+//     toggleFavorite(pokemonId: $pokemonId, isFavorited: $isFavorited) @client {
+//       id,
+//       isFavorited
+//     }
+//   }
+// `;
 
 type GroupedVersions = {
   [version: string]: {
@@ -73,10 +99,107 @@ export default function Page() {
     filterByDualTypes: false,
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const favoritedPokemon = useReactiveVar(favoritedPokemonVar);
+  // const favoritedPokemon = useReactiveVar(favoritedPokemonVar);
   const { loading, error, data, networkStatus } = useQuery(POKEMON_LIST_QUERY);
   console.log(loading, error, networkStatus);
-  const pokemonList = data?.pokemon_v2_pokemon;
+  // const [pokemonList, setPokemonList] = useState(data?.pokemon_v2_pokemon);
+
+  const apolloClient = useApolloClient();
+
+  const handleClearApolloCache = () => {
+    apolloClient.resetStore().catch((error) => {
+      console.error("Error clearing cache", error);
+    });
+  };
+
+  // const [ toggleFavoriteMutation, { data: mutationData, error: mutationError } ] = useMutation(TOGGLE_FAVORITE_MUTATION);
+
+  const handleToggleFavorite = (pokemon) => {
+    console.log(`${pokemon.isFavorited ? "Unfavorited" : "Favorited"} `, pokemon)
+    const newIsFavoritedStatus = !pokemon.isFavorited;
+
+    apolloClient.writeQuery({
+      query: POKEMON_LIST_QUERY,
+      data: {
+        pokemon_v2_pokemon: data.pokemon_v2_pokemon.map((p) => 
+          p.id === pokemon.id ? { ...p, isFavorited: newIsFavoritedStatus } : p
+        )
+      },
+    })
+    // apolloClient.writeQuery({
+    //   query: POKEMON_LIST_QUERY,
+    //   data: {
+    //     pokemon_v2_pokemon: pokemonList.map((p) => 
+    //       p.id === pokemon.id ? { ...p, isFavorited: newIsFavoritedStatus } : p
+    //     )
+    //   },
+    // })
+    // apolloClient.writeFragment({
+    //   id: `pokemon_v2_pokemon:${pokemon.id}`,
+    //   fragment: gql`
+    //     fragment UpdatedPokemon on pokemon_v2_pokemon {
+    //       isFavorited
+    //     }
+    //   `,
+    //   data: {
+    //     isFavorited: newIsFavoritedStatus,
+    //   },
+    // })
+
+    console.log(`Updated isFavorite status for ${pokemon.name} to ${newIsFavoritedStatus}`);
+
+    const cachedPokemon = apolloClient.readFragment({
+      id: `pokemon_v2_pokemon:${pokemon.id}`,
+      fragment: gql`
+        fragment UpdatedPokemon on pokemon_v2_pokemon {
+          isFavorited
+        }
+      `,
+    });
+    
+    console.log("Cached Pokemon after write:", cachedPokemon);
+  };
+
+  // const handleToggleFavorite = (pokemon) => {
+  //   console.log("Favoriting: ", pokemon)
+  //   toggleFavoriteMutation({ 
+  //     variables: { pokemonId: pokemon.id, isFavorited: !pokemon.isFavorited },
+  //     optimisticResponse: {
+  //       toggleFavorite: {
+  //         __typename: 'pokemon_v2_pokemon',
+  //         id: pokemon.id,
+  //         isFavorited: !pokemon.isFavorited,
+  //       }
+  //     },
+  //     update(cache, { data: { toggleFavorite } }) {
+  //       console.log("Mutation response data: ", toggleFavorite);
+  //       // Manually update the cache
+  //       cache.writeFragment({
+  //         id: `pokemon_v2_pokemon:${pokemon.id}`,
+  //         fragment: gql`
+  //           fragment UpdatedPokemon on pokemon_v2_pokemon {
+  //             isFavorited
+  //           }
+  //         `,
+  //         data: {
+  //           isFavorited: !toggleFavorite.isFavorited,
+  //         },
+  //       });
+  //     },
+  //   }).catch((error) => {
+  //     console.error(`Error mutating favorite status for ${pokemon.name}: `, error)
+  //   })
+
+  //   if (mutationData) {
+  //     console.log("Mutation Result:", mutationData)
+  //   }
+
+  //   if (mutationError) {
+  //     console.error("Mutation Error:", mutationError)
+  //   }
+  // };
+
+
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
@@ -110,7 +233,7 @@ export default function Page() {
     } = filterOptions;
 
     // Turn pokemonList to an object
-    const filteredList = pokemonList && pokemonList.filter((pokemon: any) =>
+    const filteredList = data.pokemon_v2_pokemon && data.pokemon_v2_pokemon.filter((pokemon: any) =>
       (showFavorites ? pokemon.isFavorite : true) &&
       (showCapturedPokemon ? pokemon.isCaptured : true) &&
       (selectedVersions.length > 0 ?
@@ -136,6 +259,33 @@ export default function Page() {
 
     return filteredList;
   };
+  //   // Turn pokemonList to an object
+  //   const filteredList = pokemonList && pokemonList.filter((pokemon: any) =>
+  //     (showFavorites ? pokemon.isFavorite : true) &&
+  //     (showCapturedPokemon ? pokemon.isCaptured : true) &&
+  //     (selectedVersions.length > 0 ?
+  //       selectedVersions.some((version) => {
+  //         const range = groupedVersions[version];
+  //         return pokemon.id >= range.start && pokemon.id <= range.end;
+  //     }) : true
+  //   ) &&
+  //   (selectedTypes.length > 0 ?
+  //     (filterByDualTypes ?
+  //       // Filter for Pokemon with both selected types
+  //       selectedTypes.every((type) =>
+  //         pokemon.type1.includes(type) || (pokemon.type2 && pokemon.type2.includes(type))
+  //       ) :
+  //       // Filter for Pokemon with any of selected types
+  //       selectedTypes.some((type) =>
+  //         pokemon.type1.includes(type) || (pokemon.type2 && pokemon.type2.includes(type))
+  //       )
+  //     ) : true
+  //   ) &&
+  //     pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+  //   );
+
+  //   return filteredList;
+  // };
 
   const filteredPokemon = filterPokemon();
 
@@ -148,24 +298,23 @@ export default function Page() {
     const itemWidth = screenWidth - 5;
     const type1 = pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name;
     const type2 = pokemon.pokemon_v2_pokemontypes[1]?.pokemon_v2_type.name;
-    const isFavorited = favoritedPokemonVar().includes(pokemon.id);
 
     const backgroundColor = pokemonColors[type1].backgroundColor;
     const textColor = pokemonColors[type1].color;
 
     const iconContainer = (
       <View style={{ flexDirection: 'row' }}>
-        {isFavorited ? (
+        {pokemon.isFavorited ? (
           <Ionicons
             name="star"
             size={24} color="#555"
-            onPress={() => toggleFavorite(pokemon.id)}
+            onPress={() => handleToggleFavorite(pokemon)}
           />
         ) : (
           <Ionicons
             name="star-outline"
             size={24} color="#555"
-            onPress={() => toggleFavorite(pokemon.id)}
+            onPress={() => handleToggleFavorite(pokemon)}
           />
         )}
         {pokemon.isCaught ? (
@@ -238,7 +387,7 @@ export default function Page() {
     //   )
     // };
 
-    const listContent = (filteredPokemon.length === 0) ? (
+    const listContent = (filteredPokemon?.length === 0) ? (
       <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
     ) : (
       <View style={styles.listContainer}>
@@ -280,6 +429,9 @@ export default function Page() {
             />
           </View>
         </View>
+        <TouchableOpacity onPress={handleClearApolloCache}>
+          <Text>Clear Apollo Cache</Text>
+        </TouchableOpacity>
       </View>
       {renderPokemonList()}
     </View>
