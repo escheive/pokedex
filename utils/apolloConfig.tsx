@@ -41,6 +41,14 @@ export const ApolloCacheProvider = ({ children }) => {
                 },
                 merge: true,
               },
+              isCaught: {
+                read(isCaught = false) {
+                  // Read the current value of isCaught from the cache
+                  // If it doesn't exist, default to false
+                  return isCaught
+                },
+                merge: true,
+              }
             },
           },
         },

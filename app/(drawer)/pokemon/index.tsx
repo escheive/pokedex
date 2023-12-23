@@ -21,23 +21,6 @@ import Drawer from "expo-router/src/layouts/Drawer";
 import { FlashList } from '@shopify/flash-list';
 
 import { useQuery, gql, useReactiveVar, useMutation, useApolloClient } from '@apollo/client';
-// import { favoritedPokemonVar } from '../../../utils/apolloConfig';
-
-// // Define Graphql query
-// const POKEMON_LIST_QUERY = gql`
-//   query pokemonListQuery {
-//     pokemon_v2_pokemon {
-//       id
-//       name
-//       pokemon_v2_pokemontypes {
-//         pokemon_v2_type {
-//           name
-//           id
-//         }
-//       }
-//     }
-//   }
-// `;
 
 // Define Graphql query
 const POKEMON_LIST_QUERY = gql`
@@ -46,6 +29,7 @@ const POKEMON_LIST_QUERY = gql`
       id
       name
       isFavorited @client
+      isCaught @ client
       pokemon_v2_pokemontypes {
         pokemon_v2_type {
           name
@@ -55,15 +39,6 @@ const POKEMON_LIST_QUERY = gql`
     }
   }
 `;
-
-// const TOGGLE_FAVORITE_MUTATION = gql`
-//   mutation ToggleFavorite($pokemonId: ID!, $isFavorited: Boolean!) {
-//     toggleFavorite(pokemonId: $pokemonId, isFavorited: $isFavorited) @client {
-//       id,
-//       isFavorited
-//     }
-//   }
-// `;
 
 type GroupedVersions = {
   [version: string]: {
@@ -87,12 +62,12 @@ const versionOptions = [
 export default function Page() {
   // const dispatch = useAppDispatch();
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
-//     const [showFavorites, setShowFavorites] = useState(false);
-//     const [showCaughtPokemon, setShowCaughtPokemon] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [showCaughtPokemon, setShowCaughtPokemon] = useState(false);
 //     const [searchQuery, setSearchQuery] = useState('');
   const [filterOptions, setFilterOptions] = useState({
     showFavorites: false,
-    showCapturedPokemon: false,
+    showCaughtPokemon: false,
     selectedVersions: [],
     selectedTypes: [],
     searchQuery: '',
@@ -100,9 +75,8 @@ export default function Page() {
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
   // const favoritedPokemon = useReactiveVar(favoritedPokemonVar);
-  const { loading, error, data, networkStatus } = useQuery(POKEMON_LIST_QUERY);
+  const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY);
   console.log(loading, error, networkStatus);
-  // const [pokemonList, setPokemonList] = useState(data?.pokemon_v2_pokemon);
 
   const apolloClient = useApolloClient();
 
@@ -112,93 +86,44 @@ export default function Page() {
     });
   };
 
-  // const [ toggleFavoriteMutation, { data: mutationData, error: mutationError } ] = useMutation(TOGGLE_FAVORITE_MUTATION);
+  // Function that allows users to mark a pokemon as favorited/caught
+  const handleToggleFavoriteAndCaught = (pokemon, statusToUpdate) => {
+    console.log(pokemon.name, statusToUpdate)
 
-  const handleToggleFavorite = (pokemon) => {
-    console.log(`${pokemon.isFavorited ? "Unfavorited" : "Favorited"} `, pokemon)
-    const newIsFavoritedStatus = !pokemon.isFavorited;
+    // Update the pokemon's status to opposite of what is was set to when clicked
+    pokemon[statusToUpdate] = !pokemon[statusToUpdate];
 
-    apolloClient.writeQuery({
-      query: POKEMON_LIST_QUERY,
-      data: {
-        pokemon_v2_pokemon: data.pokemon_v2_pokemon.map((p) => 
-          p.id === pokemon.id ? { ...p, isFavorited: newIsFavoritedStatus } : p
-        )
-      },
-    })
-    // apolloClient.writeQuery({
-    //   query: POKEMON_LIST_QUERY,
-    //   data: {
-    //     pokemon_v2_pokemon: pokemonList.map((p) => 
-    //       p.id === pokemon.id ? { ...p, isFavorited: newIsFavoritedStatus } : p
-    //     )
-    //   },
-    // })
-    // apolloClient.writeFragment({
-    //   id: `pokemon_v2_pokemon:${pokemon.id}`,
-    //   fragment: gql`
-    //     fragment UpdatedPokemon on pokemon_v2_pokemon {
-    //       isFavorited
-    //     }
-    //   `,
-    //   data: {
-    //     isFavorited: newIsFavoritedStatus,
-    //   },
-    // })
-
-    console.log(`Updated isFavorite status for ${pokemon.name} to ${newIsFavoritedStatus}`);
-
-    const cachedPokemon = apolloClient.readFragment({
+    // Edit the pokemon list by accessing it in cache by id
+    // Using fragment allows editing of a 'fragment' of the cache instead of the whole query list
+    apolloClient.writeFragment({
       id: `pokemon_v2_pokemon:${pokemon.id}`,
       fragment: gql`
         fragment UpdatedPokemon on pokemon_v2_pokemon {
-          isFavorited
+          ${statusToUpdate}
         }
       `,
-    });
-    
-    console.log("Cached Pokemon after write:", cachedPokemon);
+      data: {
+        __typename: 'pokemon_v2_pokemon',
+        [statusToUpdate]: !pokemon[statusToUpdate]
+      },
+    })
   };
 
-  // const handleToggleFavorite = (pokemon) => {
-  //   console.log("Favoriting: ", pokemon)
-  //   toggleFavoriteMutation({ 
-  //     variables: { pokemonId: pokemon.id, isFavorited: !pokemon.isFavorited },
-  //     optimisticResponse: {
-  //       toggleFavorite: {
-  //         __typename: 'pokemon_v2_pokemon',
-  //         id: pokemon.id,
-  //         isFavorited: !pokemon.isFavorited,
-  //       }
+  // // Function that allows users to mark a pokemon as favorited/caught
+  // const handleToggleFavoriteAndCaught = (pokemon, statusToUpdate) => {
+  //   console.log(pokemon.name, statusToUpdate)
+
+  //   // Edit the pokemon list query by mapping through it until we find our pokemon
+  //   apolloClient.writeQuery({
+  //     query: POKEMON_LIST_QUERY,
+  //     data: {
+  //       pokemon_v2_pokemon: pokemonList.pokemon_v2_pokemon.map((p) => 
+  //         p.id === pokemon.id ? { 
+  //           ...p, [statusToUpdate]: !pokemon[statusToUpdate] } : p
+  //       )
   //     },
-  //     update(cache, { data: { toggleFavorite } }) {
-  //       console.log("Mutation response data: ", toggleFavorite);
-  //       // Manually update the cache
-  //       cache.writeFragment({
-  //         id: `pokemon_v2_pokemon:${pokemon.id}`,
-  //         fragment: gql`
-  //           fragment UpdatedPokemon on pokemon_v2_pokemon {
-  //             isFavorited
-  //           }
-  //         `,
-  //         data: {
-  //           isFavorited: !toggleFavorite.isFavorited,
-  //         },
-  //       });
-  //     },
-  //   }).catch((error) => {
-  //     console.error(`Error mutating favorite status for ${pokemon.name}: `, error)
   //   })
-
-  //   if (mutationData) {
-  //     console.log("Mutation Result:", mutationData)
-  //   }
-
-  //   if (mutationError) {
-  //     console.error("Mutation Error:", mutationError)
-  //   }
   // };
-
 
 
   // function to handle search query changes
@@ -225,7 +150,7 @@ export default function Page() {
   const filterPokemon = () => {
     const {
       showFavorites,
-      showCapturedPokemon,
+      showCaughtPokemon,
       selectedVersions,
       selectedTypes,
       searchQuery,
@@ -233,9 +158,9 @@ export default function Page() {
     } = filterOptions;
 
     // Turn pokemonList to an object
-    const filteredList = data.pokemon_v2_pokemon && data.pokemon_v2_pokemon.filter((pokemon: any) =>
-      (showFavorites ? pokemon.isFavorite : true) &&
-      (showCapturedPokemon ? pokemon.isCaptured : true) &&
+    const filteredList = pokemonList.pokemon_v2_pokemon && pokemonList.pokemon_v2_pokemon.filter((pokemon: any) =>
+      (showFavorites ? pokemon.isFavorited : true) &&
+      (showCaughtPokemon ? pokemon.isCaught : true) &&
       (selectedVersions.length > 0 ?
         selectedVersions.some((version) => {
           const range = groupedVersions[version];
@@ -304,32 +229,16 @@ export default function Page() {
 
     const iconContainer = (
       <View style={{ flexDirection: 'row' }}>
-        {pokemon.isFavorited ? (
-          <Ionicons
-            name="star"
-            size={24} color="#555"
-            onPress={() => handleToggleFavorite(pokemon)}
-          />
-        ) : (
-          <Ionicons
-            name="star-outline"
-            size={24} color="#555"
-            onPress={() => handleToggleFavorite(pokemon)}
-          />
-        )}
-        {pokemon.isCaught ? (
-          <Ionicons
-            name="checkmark-circle-outline"
-            size={26} color="#555"
-            onPress={() => handleCaughtPress(pokemon)}
-          />
-        ) : (
-          <Ionicons
-            name="ellipse-outline"
-            size={26} color="#555"
-            onPress={() => handleCaughtPress(pokemon)}
-          />
-        )}
+        <Ionicons
+          name={pokemon.isFavorited ? "star" : "star-outline"}
+          size={24} color="#555"
+          onPress={() => handleToggleFavoriteAndCaught(pokemon, "isFavorited")}
+        />
+        <Ionicons
+          name={pokemon.isCaught ? "checkmark-circle-outline" : "ellipse-outline"}
+          size={26} color="#555"
+          onPress={() => handleToggleFavoriteAndCaught(pokemon, "isCaught")}
+        />
       </View>
     );
 
