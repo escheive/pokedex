@@ -1,30 +1,21 @@
-
+// Dependencies
+// React
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Platform, View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
-import { FlashList } from "@shopify/flash-list";
-import { capitalizeString, getTMImageUrl } from '../../../utils/helpers';
-// // import { fetchPokemonData } from '../utils/api';
-// import { fetchPokemonData } from '../store/slices/pokemonSlice';
-// import { fetchPokemonDetails } from '../services/pokemonService';
-import Ionicons from '@expo/vector-icons/Ionicons';
-// import { updatePokemonStatusAction, updatePokemonFavoriteStatusAction } from '../actions/pokemonActions';
-// import FilterDropdownDrawer from '../components/FilterDropdownDrawer';
-import { setItems, selectItems } from '../../../store/slices/itemsSlice';
-// import { selectAbilities } from '../store/slices/abilitiesSlice';
-import { useAppSelector, useAppDispatch } from '../../../utils/hooks';
-// import { setPokemonFavoriteStatus, setPokemonCaughtStatus } from '../store/slices/pokemonSlice';
+import { DrawerToggleButton } from "@react-navigation/drawer";
+// Expo
 import { Link } from 'expo-router';
 import { Image } from "expo-image";
-import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
-
+import Ionicons from '@expo/vector-icons/Ionicons';
+// FlashList
+import { FlashList } from "@shopify/flash-list";
+// Apollo
 import { useQuery, gql, useApolloClient } from '@apollo/client';
-
 // Components
 import { ScrollToTopButton } from 'components/button/ScrollToTopButton';
-
-const screenWidth = Dimensions.get('window').width;
-
+// Utils
+import { capitalizeString, getTMImageUrl } from '../../../utils/helpers';
 
 // Define Graphql query
 const ITEMS_LIST_QUERY = gql`
@@ -218,7 +209,7 @@ export default function Page() {
     const listContent = (filteredItems.length === 0) ? (
       <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
     ) : (
-      <View style={{ flex: 1, height: "100%", width: Dimensions.get("screen").width }}>
+      <View style={styles.flashListContainer}>
         <FlashList
           ref={flashListRef}
           data={filteredItems}
@@ -278,6 +269,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: 'white',
+      justifyContent: 'center',
     },
     filterContainer: {
       flexDirection: 'column',
@@ -331,8 +323,12 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       zIndex: 1,
     },
+    flashListContainer: {
+      flex: 1,
+      padding: "1.5%"
+    },
     itemContainer: {
-      width: screenWidth - 10,
+      width: "100%",
       marginVertical: 10,
       justifyContent: 'center',
       alignItems: 'center',

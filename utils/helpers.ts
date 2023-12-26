@@ -1,4 +1,4 @@
-export const capitalizeString = (string) => {
+export const capitalizeString = (string: any) => {
   if (typeof string === 'string') {
     return string.charAt(0).toUpperCase() + string.slice(1);
   } else if (typeof string === 'object' && string !== null) {

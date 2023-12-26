@@ -20,6 +20,8 @@ import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
 import { FlashList } from '@shopify/flash-list';
 
+import { PokemonListItem } from 'components/pokemon/PokemonListItem';
+
 import { useQuery, gql, useReactiveVar, useMutation, useApolloClient } from '@apollo/client';
 
 // Define Graphql query
@@ -109,22 +111,6 @@ export default function Page() {
     })
   };
 
-  // // Function that allows users to mark a pokemon as favorited/caught
-  // const handleToggleFavoriteAndCaught = (pokemon, statusToUpdate) => {
-  //   console.log(pokemon.name, statusToUpdate)
-
-  //   // Edit the pokemon list query by mapping through it until we find our pokemon
-  //   apolloClient.writeQuery({
-  //     query: POKEMON_LIST_QUERY,
-  //     data: {
-  //       pokemon_v2_pokemon: pokemonList.pokemon_v2_pokemon.map((p) => 
-  //         p.id === pokemon.id ? { 
-  //           ...p, [statusToUpdate]: !pokemon[statusToUpdate] } : p
-  //       )
-  //     },
-  //   })
-  // };
-
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
@@ -184,33 +170,7 @@ export default function Page() {
 
     return filteredList;
   };
-  //   // Turn pokemonList to an object
-  //   const filteredList = pokemonList && pokemonList.filter((pokemon: any) =>
-  //     (showFavorites ? pokemon.isFavorite : true) &&
-  //     (showCapturedPokemon ? pokemon.isCaptured : true) &&
-  //     (selectedVersions.length > 0 ?
-  //       selectedVersions.some((version) => {
-  //         const range = groupedVersions[version];
-  //         return pokemon.id >= range.start && pokemon.id <= range.end;
-  //     }) : true
-  //   ) &&
-  //   (selectedTypes.length > 0 ?
-  //     (filterByDualTypes ?
-  //       // Filter for Pokemon with both selected types
-  //       selectedTypes.every((type) =>
-  //         pokemon.type1.includes(type) || (pokemon.type2 && pokemon.type2.includes(type))
-  //       ) :
-  //       // Filter for Pokemon with any of selected types
-  //       selectedTypes.some((type) =>
-  //         pokemon.type1.includes(type) || (pokemon.type2 && pokemon.type2.includes(type))
-  //       )
-  //     ) : true
-  //   ) &&
-  //     pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-  //   );
 
-  //   return filteredList;
-  // };
 
   const filteredPokemon = filterPokemon();
 
@@ -218,70 +178,35 @@ export default function Page() {
     console.log('caught')
   }
 
-  const renderItem = ({ item: pokemon }: { item: any }) => {
-    const screenWidth = Dimensions.get('window').width;
-    const itemWidth = screenWidth - 5;
-    const type1 = pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name;
-    const type2 = pokemon.pokemon_v2_pokemontypes[1]?.pokemon_v2_type.name;
+  const renderItem = ({ item: pokemon }: { item: any }) => (
+    <PokemonListItem pokemon={pokemon} handleToggleFavoriteAndCaught={handleToggleFavoriteAndCaught} />
+  )
 
-    const backgroundColor = pokemonColors[type1].backgroundColor;
-    const textColor = pokemonColors[type1].color;
-
-    const iconContainer = (
-      <View style={{ flexDirection: 'row' }}>
-        <Ionicons
-          name={pokemon.isFavorited ? "star" : "star-outline"}
-          size={24} color="#555"
-          onPress={() => handleToggleFavoriteAndCaught(pokemon, "isFavorited")}
-        />
-        <Ionicons
-          name={pokemon.isCaught ? "checkmark-circle-outline" : "ellipse-outline"}
-          size={26} color="#555"
-          onPress={() => handleToggleFavoriteAndCaught(pokemon, "isCaught")}
-        />
-      </View>
-    );
-
-    const typesContainer = (
-      <View style={styles.pokemonTypesContainer}>
-        <Text style={[styles.pokemonType, { color: textColor }]}>{capitalizeString(type1)}</Text>
-        {type2 && <Text style={[styles.pokemonType, { color: textColor }]}>{capitalizeString(type2)}</Text>}
-      </View>
-    );
-
-    return (
-      <View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
-        <Link 
-          style={styles.itemCard} 
-          href={`/pokemon/${pokemon.id}`}
-        >
-        {/* <Link 
-          style={styles.itemCard} 
-          href={{
-            pathname: '/pokemon/[id]',
-            params: { id: pokemon.id }
-          }}
-        > */}
-          <View style={styles.itemDetailsContainer}>
-            <Text style={[styles.pokemonId, { color: textColor }]}>{pokemon.id}</Text>
-            <View style={styles.pokemonNameAndTypeContainer}>
-              <View style={styles.nameContainer}>
-                <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
-                {iconContainer}
-              </View>
-              {typesContainer}
-            </View>
-          </View>
-          <Image
-            style={styles.image}
-            source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
-            contentFit="contain"
-            transition={1000}
-          />
-        </Link>
-      </View>
-    );
-  };
+    // return (
+    //   <<View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
+    //     <Link 
+    //       style={styles.itemCard} 
+    //       href={`/pokemon/${pokemon.id}`}
+    //     >
+    //       <View style={styles.itemDetailsContainer}>
+    //         <Text style={[styles.pokemonId, { color: textColor }]}>{pokemon.id}</Text>
+    //         <View style={styles.pokemonNameAndTypeContainer}>
+    //           <View style={styles.nameContainer}>
+    //             <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
+    //             {iconContainer}
+    //           </View>
+    //           {typesContainer}
+    //         </View>
+    //       </View>
+    //       <Image
+    //         style={styles.image}
+    //         source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
+    //         contentFit="contain"
+    //         transition={1000}
+    //       />
+    //     </Link>
+    //   </View>>
+    // );
 
   const renderPokemonList = () => {
     if (loading) {
@@ -289,12 +214,6 @@ export default function Page() {
         <Text>Loading...</Text>
       )
     };
-
-    // if (error) {
-    //   return (
-    //     <Text>Error: {error.message}</Text>
-    //   )
-    // };
 
     const listContent = (filteredPokemon?.length === 0) ? (
       <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
@@ -405,6 +324,7 @@ const styles = StyleSheet.create({
       zIndex: 1,
       width: Dimensions.get("screen").width,
       flex: 1,
+      padding: "1.5%",
     },
     itemContainer: {
       marginVertical: 10,
@@ -459,11 +379,3 @@ const styles = StyleSheet.create({
       height: 75,
     },
 });
-
-      // <FlatList
-      //   data={filteredPokemon}
-      //   renderItem={renderItem}
-      //   keyExtractor={(item) => item.name}
-      //   contentContainerStyle={styles.listContainer}
-      //   windowSize={10}
-      // />
