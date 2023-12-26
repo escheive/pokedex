@@ -140,12 +140,12 @@ export default function Page() {
   }
 
   const renderItem = ({ item: item }: { item: any }) => {
-    // Check if the item has a valid image URL before rendering the Image component
-    let imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`;
-    if (item.name.startsWith("tm") && item.name !== "tmv-pass" && item.name !== "tm-case") {
-      imageUrl = getTMImageUrl(item.name)
-    }
-    const hasValidImageUrl = imageUrl && imageUrl !== 'undefined';
+    // // Check if the item has a valid image URL before rendering the Image component
+    // let imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`;
+    // if (item.name.startsWith("tm") && item.name !== "tmv-pass" && item.name !== "tm-case") {
+    //   imageUrl = getTMImageUrl(item.name)
+    // }
+    // const hasValidImageUrl = imageUrl && imageUrl !== 'undefined';
 
     const iconContainer = (
       <View style={{ flexDirection: 'row' }}>
@@ -160,7 +160,7 @@ export default function Page() {
     return (
       <View style={styles.itemContainer}>
         <Link
-          style={styles.itemCard} 
+          style={styles.itemDetails} 
           href={`/items/${item.id}`}
         >
         {/* <Link
@@ -170,7 +170,6 @@ export default function Page() {
             params: { id: item.id }
           }}
         > */}
-          <View style={styles.itemDetails}>
             <Text style={styles.itemId}>{item.id}</Text>
             <Text style={styles.itemName}>{capitalizeString(item.name)}</Text>
             {iconContainer}
@@ -179,8 +178,15 @@ export default function Page() {
             ) : (
               <Text style={styles.shortEffect}>This item has no info on PokeAPI yet!</Text>
             )}
-          </View>
-          {hasValidImageUrl ? (
+            <Image 
+              style={styles.image}
+              source={{
+                uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`
+              }}
+              placeholder=""
+              contentFit="contain"
+            />
+          {/* {hasValidImageUrl ? (
             <Image 
               style={styles.image}
               source={{
@@ -189,7 +195,7 @@ export default function Page() {
               placeholder=""
               contentFit="contain"
             />
-          ) : null }
+          ) : null } */}
         </Link>
       </View>
     );
@@ -203,7 +209,7 @@ export default function Page() {
         <FlashList
           data={filteredItems}
           renderItem={renderItem}
-          keyExtractor={(item) => item.name}
+          keyExtractor={(item: any, i:number) => `${i}: ${item.name}`}
           estimatedItemSize={300}
           estimatedListSize={{ height: 120, width: Dimensions.get("screen").width }}
         />
