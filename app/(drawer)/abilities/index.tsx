@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
+import { Platform, View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput, SafeAreaView } from 'react-native';
 import { capitalizeString } from '../../../utils/helpers';
 // // import { fetchPokemonData } from '../utils/api';
 // import { fetchPokemonData } from '../store/slices/pokemonSlice';
@@ -116,24 +116,29 @@ export default function Page() {
     // );
 
     return (
-      <View style={styles.itemContainer}>
-        <Link 
+      <SafeAreaView style={styles.itemContainer}>
+        {/* <Link 
           style={styles.itemCard} 
           href={{
             pathname: '/abilities/[id]',
             params: { id: ability.id }
           }}
+        > */}
+        <Link 
+          style={styles.itemDetails} 
+          href={{
+            pathname: '/abilities/[id]',
+            params: { id: ability.id }
+          }}
         >
-          <View style={styles.itemDetails}>
-            <Text style={styles.itemId}>{ability?.id}</Text>
-            <Text style={styles.itemName}>{capitalizeString(ability?.name)}</Text>
-            <Text style={styles.shortEffect}>{ability?.pokemon_v2_ability}</Text>
-            <Text style={styles.shortEffect}>EFFECT: {ability?.pokemon_v2_abilityeffecttexts[0]?.effect}</Text>
-            <Text style={styles.shortEffect}>SHORT EFFECT: {ability?.pokemon_v2_abilityeffecttexts[0]?.short_effect}</Text>
-            <Text style={styles.shortEffect}>FLAVOR TEXT: {ability?.pokemon_v2_abilityflavortexts[0]?.flavor_text}</Text>
-          </View>
+          <Text style={styles.itemId}>{ability?.id}</Text>
+          <Text style={styles.itemName}>{capitalizeString(ability?.name)}</Text>
+          <Text style={styles.shortEffect}>{ability?.pokemon_v2_ability}</Text>
+          <Text style={styles.shortEffect}>EFFECT: {ability?.pokemon_v2_abilityeffecttexts[0]?.effect}</Text>
+          <Text style={styles.shortEffect}>SHORT EFFECT: {ability?.pokemon_v2_abilityeffecttexts[0]?.short_effect}</Text>
+          <Text style={styles.shortEffect}>FLAVOR TEXT: {ability?.pokemon_v2_abilityflavortexts[0]?.flavor_text}</Text>
         </Link>
-      </View>
+      </SafeAreaView>
     );
   };
 
@@ -256,7 +261,8 @@ const styles = StyleSheet.create({
       zIndex: 1,
     },
     itemContainer: {
-      width: screenWidth - 10,
+      flex: 1,
+      width: "95%",
       marginVertical: 10,
       justifyContent: 'center',
       alignItems: 'center',
@@ -264,32 +270,34 @@ const styles = StyleSheet.create({
       borderColor: '#ccc',
       borderRadius: 10,
       backgroundColor: '#fff',
-    },
-    itemCard: {
-
+      flexWrap: "wrap",
+      overflow: "hidden",
     },
     itemDetails: {
       justifyContent: 'space-between',
       alignItems: 'center',
+      flex: 1,
     },
     itemName: {
       fontSize: 20,
       fontWeight: 'bold',
       textAlign: 'center',
+      flexWrap: "wrap",
+      flex: 1,
     },
     itemId: {
       fontSize: 14,
       color: '#777',
       marginRight: 10,
+      flex: 1,
     },
     shortEffect: {
       fontSize: 16,
       fontStyle: 'italic',
       color: '#333',
-      flexShrink: 1,
-    },
-    image: {
-      width: 75,
-      height: 75,
+      flex: 1,
+      width: "100%",
+      padding: 10,
+      flexDirection: "row",
     },
 });
