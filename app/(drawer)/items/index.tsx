@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Platform, View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
 import { FlashList } from "@shopify/flash-list";
 import { capitalizeString, getTMImageUrl } from '../../../utils/helpers';
@@ -68,6 +68,14 @@ export default function Page() {
   const { loading, error, data: itemsList, networkStatus } = useQuery(ITEMS_LIST_QUERY);
   console.log(loading, error, networkStatus);
   // const itemsList = data?.pokemon_v2_item;
+
+  // Ref used to track position in flashlist
+  const flashListRef = useRef(null);
+
+  // Function to scroll to the top of the list
+  const scrollToTop = () => {
+    flashListRef.current.scrollToOffset({ offset: 0, animated: true });
+  };
 
   if (!itemsList) {
     return (
@@ -207,12 +215,17 @@ export default function Page() {
     ) : (
       <View style={{ flex: 1, height: "100%", width: Dimensions.get("screen").width }}>
         <FlashList
+          ref={flashListRef}
           data={filteredItems}
           renderItem={renderItem}
           keyExtractor={(item: any, i:number) => `${i}: ${item.name}`}
           estimatedItemSize={300}
           estimatedListSize={{ height: 120, width: Dimensions.get("screen").width }}
         />
+        {/* Jump to Top Button */}
+        <TouchableOpacity onPress={scrollToTop} style={{ position: 'absolute', bottom: 20, right: 20 }}>
+          <Text style={{ fontSize: 18 }}>Top</Text>
+        </TouchableOpacity>
       </View>
     );
 
