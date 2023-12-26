@@ -17,7 +17,7 @@ import { Image } from "expo-image";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
 
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, useApolloClient } from '@apollo/client';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -30,6 +30,7 @@ const ITEMS_LIST_QUERY = gql`
       id
       cost
       fling_power
+      isFavorited @client
       pokemon_v2_itemflingeffect {
         pokemon_v2_itemflingeffecteffecttexts {
           effect
@@ -64,11 +65,11 @@ export default function Page() {
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
 //   const { loading, data: pokemonList, error } = useAppSelector(selectPokemon);
-  const { loading, error, data, networkStatus } = useQuery(ITEMS_LIST_QUERY);
+  const { loading, error, data: itemsList, networkStatus } = useQuery(ITEMS_LIST_QUERY);
   console.log(loading, error, networkStatus);
-  const itemsList = data?.pokemon_v2_item;
+  // const itemsList = data?.pokemon_v2_item;
 
-  if (!data) {
+  if (!itemsList) {
     return (
       <>
         {Platform.OS === "web" ? (
@@ -99,7 +100,7 @@ export default function Page() {
     } = filterOptions;
 
     // Turn itemsList to an object
-    const filteredList = itemsList && itemsList.filter((item: any) =>
+    const filteredList = itemsList.pokemon_v2_item && itemsList.pokemon_v2_item.filter((item: any) =>
       (showFavorites ? item.isFavorite : true) &&
         item.name.toLowerCase().startsWith(searchQuery.toLowerCase()
       )
@@ -109,6 +110,30 @@ export default function Page() {
   };
 
   const filteredItems = filterItems();
+  const apolloClient = useApolloClient();
+
+  // Function that allows users to mark a item as favorited/caught
+  const handleToggleFavoriteAndCaught = (item, statusToUpdate) => {
+    console.log(item.name, statusToUpdate)
+
+    // Update the item's status to opposite of what is was set to when clicked
+    item[statusToUpdate] = !item[statusToUpdate];
+
+    // Edit the pokemon list by accessing it in cache by id
+    // Using fragment allows editing of a 'fragment' of the cache instead of the whole query list
+    apolloClient.writeFragment({
+      id: `pokemon_v2_item:${item.id}`,
+      fragment: gql`
+        fragment UpdatedItem on pokemon_v2_item {
+          ${statusToUpdate}
+        }
+      `,
+      data: {
+        __typename: 'pokemon_v2_item',
+        [statusToUpdate]: !item[statusToUpdate]
+      },
+    })
+  };
 
   const handleFavoritePress = (item: any) => {
     console.log('favorited')
@@ -124,19 +149,11 @@ export default function Page() {
 
     const iconContainer = (
       <View style={{ flexDirection: 'row' }}>
-        {item?.isFavorite ? (
-          <Ionicons
-            name="star"
-            size={24} color="#555"
-            onPress={() => handleFavoritePress(item)}
-          />
-        ) : (
-          <Ionicons
-            name="star-outline"
-            size={24} color="#555"
-            onPress={() => handleFavoritePress(item)}
-          />
-        )}
+        <Ionicons
+          name={item.isFavorited ? "star" : "star-outline"}
+          size={24} color="#555"
+          onPress={() => handleToggleFavoriteAndCaught(item, "isFavorited")}
+        />
       </View>
     );
 
@@ -179,19 +196,6 @@ export default function Page() {
   };
 
   const renderItemsList = () => {
-
-    if (loading) {
-      return (
-        <Text>Loading...</Text>
-      )
-    };
-
-    if (error) {
-      return (
-        <Text>Error: {error.message}</Text>
-      )
-    };
-
     const listContent = (filteredItems.length === 0) ? (
       <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
     ) : (

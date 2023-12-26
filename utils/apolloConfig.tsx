@@ -51,6 +51,18 @@ export const ApolloCacheProvider = ({ children }) => {
               }
             },
           },
+          pokemon_v2_item: {
+            fields: {
+              isFavorited: {
+                read(isFavorited = false) {
+                  // Read the current value of isFavorited from the cache
+                  // If it doesn't exist, default to false
+                  return isFavorited;
+                },
+                merge: true,
+              }
+            }
+          }
         },
       });
 
