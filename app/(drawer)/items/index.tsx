@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Platform, View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
 import { FlashList } from "@shopify/flash-list";
@@ -19,7 +20,8 @@ import Drawer from "expo-router/src/layouts/Drawer";
 
 import { useQuery, gql, useApolloClient } from '@apollo/client';
 
-import { ScrollToTopButton } from '../../../index';
+// Components
+import { ScrollToTopButton } from 'components/button/ScrollToTopButton';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -228,11 +230,10 @@ export default function Page() {
             // Calculate the scroll offset
             const offsetY = event.nativeEvent.contentOffset.y;
   
-            // Update the visibility state based on the scroll offset
-            setShowScrollToTopButton(offsetY > 450); // Adjust the threshold as needed
+            // Update visibility state of scrollToTopBottom after a user scrolls a certain distance
+            setShowScrollToTopButton(offsetY > 450);
           }}
         />
-        {/* Conditional Rendering of the Jump to Top Button */}
         {showScrollToTopButton && (
           <ScrollToTopButton flashListRef={flashListRef} />
         )}
