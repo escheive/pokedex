@@ -71,6 +71,7 @@ export default function Page() {
 
   // Ref used to track position in flashlist
   const flashListRef = useRef(null);
+  const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
 
   // Function to scroll to the top of the list
   const scrollToTop = () => {
@@ -221,11 +222,23 @@ export default function Page() {
           keyExtractor={(item: any, i:number) => `${i}: ${item.name}`}
           estimatedItemSize={300}
           estimatedListSize={{ height: 120, width: Dimensions.get("screen").width }}
+          onScroll={(event) => {
+            // Calculate the scroll offset
+            const offsetY = event.nativeEvent.contentOffset.y;
+  
+            // Update the visibility state based on the scroll offset
+            setShowScrollToTopButton(offsetY > 450); // Adjust the threshold as needed
+          }}
         />
-        {/* Jump to Top Button */}
-        <TouchableOpacity onPress={scrollToTop} style={{ position: 'absolute', bottom: 20, right: 20 }}>
-          <Text style={{ fontSize: 18 }}>Top</Text>
-        </TouchableOpacity>
+        {/* Conditional Rendering of the Jump to Top Button */}
+        {showScrollToTopButton && (
+          <TouchableOpacity onPress={scrollToTop} style={styles.scrollToTopButton}>
+            <Ionicons
+              name="arrow-up"
+              size={36} color="#555"
+            />
+          </TouchableOpacity>
+        )}
       </View>
     );
 
@@ -357,4 +370,13 @@ const styles = StyleSheet.create({
       width: 75,
       height: 75,
     },
+    scrollToTopButton: {
+      position: "absolute",
+      bottom: 10,
+      right: 10,
+      borderWidth: 2,
+      borderColor: "black",
+      borderRadius: 28,
+      padding: 6,
+    }
 });
