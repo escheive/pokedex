@@ -19,6 +19,8 @@ import Drawer from "expo-router/src/layouts/Drawer";
 
 import { useQuery, gql, useApolloClient } from '@apollo/client';
 
+import { ScrollToTopButton } from '../../../index';
+
 const screenWidth = Dimensions.get('window').width;
 
 
@@ -232,12 +234,7 @@ export default function Page() {
         />
         {/* Conditional Rendering of the Jump to Top Button */}
         {showScrollToTopButton && (
-          <TouchableOpacity onPress={scrollToTop} style={styles.scrollToTopButton}>
-            <Ionicons
-              name="arrow-up"
-              size={36} color="#555"
-            />
-          </TouchableOpacity>
+          <ScrollToTopButton flashListRef={flashListRef} />
         )}
       </View>
     );

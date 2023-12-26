@@ -261,7 +261,6 @@ const styles = StyleSheet.create({
       zIndex: 1,
     },
     itemContainer: {
-      flex: 1,
       width: "95%",
       marginVertical: 10,
       justifyContent: 'center',
@@ -276,7 +275,6 @@ const styles = StyleSheet.create({
     itemDetails: {
       justifyContent: 'space-between',
       alignItems: 'center',
-      flex: 1,
     },
     itemName: {
       fontSize: 20,
