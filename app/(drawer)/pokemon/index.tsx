@@ -1,29 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Platform, View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
-import { capitalizeString, pokemonColors } from '../../../utils/helpers';
-// // import { fetchPokemonData } from '../utils/api';
-// import { fetchPokemonData } from '../store/slices/pokemonSlice';
-// import { fetchPokemonDetails } from '../services/pokemonService';
-import Ionicons from '@expo/vector-icons/Ionicons';
-// import { updatePokemonStatusAction, updatePokemonFavoriteStatusAction } from '../actions/pokemonActions';
-// import FilterDropdownDrawer from '../components/FilterDropdownDrawer';
-import { setPokemon, selectPokemon } from '../../../store/slices/pokemonSlice';
-// import { selectAbilities } from '../store/slices/abilitiesSlice';
-import { useAppSelector, useAppDispatch } from '../../../utils/hooks';
-// import { setPokemonFavoriteStatus, setPokemonCaughtStatus } from '../store/slices/pokemonSlice';
-
-import { toggleFavorite, isFavorite } from "../../../utils/favorites";
-
-import { Link } from 'expo-router';
-import { Image } from "expo-image";
+// Dependencies
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, TextInput } from 'react-native';
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
-import { FlashList } from '@shopify/flash-list';
-
-import { PokemonListItem } from 'components/pokemon/PokemonListItem';
-import { ListViewScreen } from 'components/ListViewScreen';
-
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery, gql, useReactiveVar, useMutation, useApolloClient } from '@apollo/client';
+// Components
+import { ListViewScreen } from 'components/ListViewScreen';
 
 // Define Graphql query
 const POKEMON_LIST_QUERY = gql`
@@ -175,57 +158,15 @@ export default function Page() {
 
   const filteredItems = filterPokemon();
 
-  // const renderItem = ({ item: pokemon }: { item: any }) => (
-  //   <PokemonListItem 
-  //     pokemon={pokemon} 
-  //     handleToggleFavoriteAndCaught={handleToggleFavoriteAndCaught} 
-  //   />
-  // )
-
-  // const renderPokemonList = () => {
-  //   if (loading) {
-  //     return (
-  //       <Text>Loading...</Text>
-  //     )
-  //   };
-
-  //   const listContent = (filteredPokemon?.length === 0) ? (
-  //     <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
-  //   ) : (
-  //     <View style={styles.listContainer}>
-  //       <FlashList
-  //         data={filteredPokemon}
-  //         renderItem={renderItem}
-  //         keyExtractor={(item) => item.name}
-  //         estimatedItemSize={300}
-  //         estimatedListSize={{ height: 120, width: Dimensions.get("screen").width }}
-  //       />
-  //     </View>
-  //   );
-
-  //   return listContent;
-  // };
-
-  const renderItem = ({ item: pokemon }: { item: any }) => (
-    <PokemonListItem 
-      pokemon={pokemon} 
-      handleToggleFavoriteAndCaught={handleToggleFavoriteAndCaught} 
-    />
-  )
 
   const renderPokemonList = () => {
     if (loading) {
-      return (
-        <Text>Loading...</Text>
-      )
+      return <Text>Loading...</Text>
     };
 
-    return (
-      <ListViewScreen
-        filteredItems={filteredItems}
-      />
-    )
+    return <ListViewScreen filteredItems={filteredItems} />
   };
+
 
   return (
     <View style={styles.container}>
