@@ -11,6 +11,7 @@
       "assets/*": ["./assets/*"],
       "utils/*": ["./utils/*"],
       "constants/*": ["./constants/*"],
+      "api/*": ["./api/*"],
     },
   },
   "include": [

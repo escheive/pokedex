@@ -7,24 +7,10 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery, gql, useReactiveVar, useMutation, useApolloClient } from '@apollo/client';
 // Components
 import { ListViewScreen } from 'components/ListViewScreen';
+// graphQL
+import { POKEMON_LIST_QUERY } from 'api/queries';
+import { handleClearApolloCache } from 'api/reset';
 
-// Define Graphql query
-const POKEMON_LIST_QUERY = gql`
-  query pokemonListQuery {
-    pokemon_v2_pokemon {
-      id
-      name
-      isFavorited @client
-      isCaught @ client
-      pokemon_v2_pokemontypes {
-        pokemon_v2_type {
-          name
-          id
-        }
-      }
-    }
-  }
-`;
 
 type GroupedVersions = {
   [version: string]: {
@@ -63,38 +49,6 @@ export default function Page() {
   // const favoritedPokemon = useReactiveVar(favoritedPokemonVar);
   const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY);
   console.log(loading, error, networkStatus);
-
-  const apolloClient = useApolloClient();
-
-  const handleClearApolloCache = () => {
-    apolloClient.resetStore().catch((error) => {
-      console.error("Error clearing cache", error);
-    });
-  };
-
-  // Function that allows users to mark a pokemon as favorited/caught
-  const handleToggleFavoriteAndCaught = (pokemon, statusToUpdate) => {
-    console.log(pokemon.name, statusToUpdate)
-
-    // Update the pokemon's status to opposite of what is was set to when clicked
-    pokemon[statusToUpdate] = !pokemon[statusToUpdate];
-
-    // Edit the pokemon list by accessing it in cache by id
-    // Using fragment allows editing of a 'fragment' of the cache instead of the whole query list
-    apolloClient.writeFragment({
-      id: `pokemon_v2_pokemon:${pokemon.id}`,
-      fragment: gql`
-        fragment UpdatedPokemon on pokemon_v2_pokemon {
-          ${statusToUpdate}
-        }
-      `,
-      data: {
-        __typename: 'pokemon_v2_pokemon',
-        [statusToUpdate]: !pokemon[statusToUpdate]
-      },
-    })
-  };
-
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
