@@ -1,17 +1,30 @@
-import { gql } from "@apollo/client";
-import { EntityType, ApolloClientMethods } from "types";
+import { gql, DocumentNode } from "@apollo/client";
+
+export type EntityType = 'pokemon_v2_pokemon' | 'pokemon_v2_item' | 'pokemon_v2_ability';
 
 // toggleFavorite type definitions
 interface ToggleFavorite {
   entityType: EntityType,
   entity: any,
-  apolloClient: ApolloClientMethods
+  apolloClient: {
+    writeFragment: (options: {
+      id: string;
+      fragment: DocumentNode;
+      data: { __typename: string; isFavorited: boolean; };
+    }) => void;
+  }
 };
 
 // toggleCaught type definitions
 interface ToggleCaught {
   pokemon: any,
-  apolloClient: ApolloClientMethods
+  apolloClient: {
+    writeFragment: (options: {
+      id: string;
+      fragment: DocumentNode;
+      data: { __typename: string; isCaught: boolean; };
+    }) => void;
+  }
 };
 
 // Function that takes a type of entity, the entity, and apolloClient, and updates its favorite status

@@ -10,33 +10,11 @@ import { ListViewScreen } from 'components/ListViewScreen';
 // graphQL
 import { POKEMON_LIST_QUERY } from 'api/queries';
 import { handleClearApolloCache } from 'api/reset';
-
-
-type GroupedVersions = {
-  [version: string]: {
-    start: number;
-    end: number
-  };
-};
-
-const versionOptions = [
-    { key: 'gen1', label: 'Gen 1' },
-    { key: 'gen2', label: 'Gen 2' },
-    { key: 'gen3', label: 'Gen 3' },
-    { key: 'gen4', label: 'Gen 4' },
-    { key: 'gen5', label: 'Gen 5' },
-    { key: 'gen6', label: 'Gen 6' },
-    { key: 'gen7', label: 'Gen 7' },
-    { key: 'gen8', label: 'Gen 8' },
-    { key: 'gen9', label: 'Gen 9' },
-];
+// Constants
+import { groupedVersions, versionOptions } from 'constants/Pokemon';
 
 export default function Page() {
-  // const dispatch = useAppDispatch();
-  const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
-  const [showFavorites, setShowFavorites] = useState(false);
-  const [showCaughtPokemon, setShowCaughtPokemon] = useState(false);
-//     const [searchQuery, setSearchQuery] = useState('');
+  // State to track various filter options
   const [filterOptions, setFilterOptions] = useState({
     showFavorites: false,
     showCaughtPokemon: false,
@@ -46,7 +24,6 @@ export default function Page() {
     filterByDualTypes: false,
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  // const favoritedPokemon = useReactiveVar(favoritedPokemonVar);
   const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY);
   console.log(loading, error, networkStatus);
 
@@ -56,18 +33,6 @@ export default function Page() {
       ...prevOptions,
       searchQuery: query,
     }));
-  };
-
-  const groupedVersions: GroupedVersions = {
-    gen1: { start: 1, end: 151 },
-    gen2: { start: 152, end: 251 },
-    gen3: { start: 252, end: 386 },
-    gen4: { start: 387, end: 493 },
-    gen5: { start: 494, end: 649 },
-    gen6: { start: 650, end: 721 },
-    gen7: { start: 722, end: 809 },
-    gen8: { start: 810, end: 905 },
-    gen9: { start: 906, end: 1010 },
   };
 
   // function to handle the filtering of pokemon
@@ -157,115 +122,56 @@ export default function Page() {
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: 'white',
-    },
-    filterContainer: {
-      flexDirection: 'column',
-      alignItems: 'center',
-      marginVertical: 10,
-      zIndex: 2
-    },
-    filterTitleText: {
-      fontSize: 18,
-    },
-    dropdownContainer: {
-      position: 'relative',
-    },
-    dropdownTrigger: {
-      padding: 10,
-      backgroundColor: '#F5F5F5',
-      borderColor: '#DDDDDD',
-      borderWidth: 1,
-      borderRadius: 5,
-    },
-    dropdownContent: {
-      position: 'absolute',
-      top: '100%',
-      left: 0,
-      width: '100%',
-      backgroundColor: '#FFFFFF',
-      borderColor: '#DDDDDD',
-      borderWidth: 1,
-      borderRadius: 5,
-      marginTop: 5,
-      padding: 10,
-    },
-    filtersContainer: {
-      marginTop: 10,
-      flexDirection: 'row',
-      justifyContent: 'center',
-    },
-    searchInputContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderWidth: 1,
-      borderColor: 'black',
-      borderRadius: 5,
-      paddingHorizontal: 10,
-    },
-    searchInput: {
-      fontSize: 16,
-    },
-    listContainer: {
-      alignItems: 'center',
-      zIndex: 1,
-      width: Dimensions.get("screen").width,
-      flex: 1,
-      padding: "1.5%",
-    },
-    itemContainer: {
-      marginVertical: 10,
-      aspectRatio: 5,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 5,
-    },
-    itemCard: {
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-    },
-    itemDetailsContainer: {
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      flexDirection: 'row',
-      flex: 1,
-    },
-    pokemonId: {
-      fontSize: 16,
-    },
-    pokemonNameAndTypeContainer: {
-
-    },
-    nameContainer: {
-      flexDirection: 'row',
-    },
-    pokemonName: {
-      fontSize: 20,
-      marginBottom: 10,
-      paddingRight: 15,
-    },
-    pokemonTypesContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    pokemonType: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      paddingHorizontal: 20,
-      marginRight: 15,
-      borderWidth: 1,
-      borderRadius: 10,
-      borderColor: '#555',
-      textAlign: 'center',
-    },
-    image: {
-      width: 75,
-      height: 75,
-    },
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  filterContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginVertical: 10,
+    zIndex: 2
+  },
+  filterTitleText: {
+    fontSize: 18,
+  },
+  dropdownContainer: {
+    position: 'relative',
+  },
+  dropdownTrigger: {
+    padding: 10,
+    backgroundColor: '#F5F5F5',
+    borderColor: '#DDDDDD',
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+  dropdownContent: {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#DDDDDD',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginTop: 5,
+    padding: 10,
+  },
+  filtersContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  searchInputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  searchInput: {
+    fontSize: 16,
+  },
 });
