@@ -1,18 +1,15 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-
+// Dependencies
+import { View, Text, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
-import Ionicons from '@expo/vector-icons/Ionicons';
-
-import { capitalizeString, pokemonColors } from 'utils/helpers';
-import { useApolloClient, gql } from '@apollo/client';
-
-import { toggleFavorite } from 'utils/favorites';
-
+import { useApolloClient } from '@apollo/client';
+// Components
 import { IconContainer } from 'components/card/IconContainer';
+// Utils
+import { capitalizeString, pokemonColors } from 'utils/helpers';
 
-export const PokemonListItem: React.FC<Props> = ({ pokemon, handleToggleFavoriteAndCaught }) => {
+
+export const PokemonListItem = ({ pokemon }: any) => {
   const apolloClient = useApolloClient();
 
   const type1 = pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name;

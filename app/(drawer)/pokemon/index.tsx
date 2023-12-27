@@ -21,6 +21,7 @@ import Drawer from "expo-router/src/layouts/Drawer";
 import { FlashList } from '@shopify/flash-list';
 
 import { PokemonListItem } from 'components/pokemon/PokemonListItem';
+import { ListViewScreen } from 'components/ListViewScreen';
 
 import { useQuery, gql, useReactiveVar, useMutation, useApolloClient } from '@apollo/client';
 
@@ -172,11 +173,38 @@ export default function Page() {
   };
 
 
-  const filteredPokemon = filterPokemon();
+  const filteredItems = filterPokemon();
 
-  const handleCaughtPress = (pokemon: any) => {
-    console.log('caught')
-  }
+  // const renderItem = ({ item: pokemon }: { item: any }) => (
+  //   <PokemonListItem 
+  //     pokemon={pokemon} 
+  //     handleToggleFavoriteAndCaught={handleToggleFavoriteAndCaught} 
+  //   />
+  // )
+
+  // const renderPokemonList = () => {
+  //   if (loading) {
+  //     return (
+  //       <Text>Loading...</Text>
+  //     )
+  //   };
+
+  //   const listContent = (filteredPokemon?.length === 0) ? (
+  //     <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
+  //   ) : (
+  //     <View style={styles.listContainer}>
+  //       <FlashList
+  //         data={filteredPokemon}
+  //         renderItem={renderItem}
+  //         keyExtractor={(item) => item.name}
+  //         estimatedItemSize={300}
+  //         estimatedListSize={{ height: 120, width: Dimensions.get("screen").width }}
+  //       />
+  //     </View>
+  //   );
+
+  //   return listContent;
+  // };
 
   const renderItem = ({ item: pokemon }: { item: any }) => (
     <PokemonListItem 
@@ -185,32 +213,6 @@ export default function Page() {
     />
   )
 
-    // return (
-    //   <<View style={[styles.itemContainer, { width: itemWidth, backgroundColor }]}>
-    //     <Link 
-    //       style={styles.itemCard} 
-    //       href={`/pokemon/${pokemon.id}`}
-    //     >
-    //       <View style={styles.itemDetailsContainer}>
-    //         <Text style={[styles.pokemonId, { color: textColor }]}>{pokemon.id}</Text>
-    //         <View style={styles.pokemonNameAndTypeContainer}>
-    //           <View style={styles.nameContainer}>
-    //             <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
-    //             {iconContainer}
-    //           </View>
-    //           {typesContainer}
-    //         </View>
-    //       </View>
-    //       <Image
-    //         style={styles.image}
-    //         source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
-    //         contentFit="contain"
-    //         transition={1000}
-    //       />
-    //     </Link>
-    //   </View>>
-    // );
-
   const renderPokemonList = () => {
     if (loading) {
       return (
@@ -218,21 +220,11 @@ export default function Page() {
       )
     };
 
-    const listContent = (filteredPokemon?.length === 0) ? (
-      <Text style={{ textAlign: 'center' }}>There are no results for {filterOptions.searchQuery}</Text>
-    ) : (
-      <View style={styles.listContainer}>
-        <FlashList
-          data={filteredPokemon}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.name}
-          estimatedItemSize={300}
-          estimatedListSize={{ height: 120, width: Dimensions.get("screen").width }}
-        />
-      </View>
-    );
-
-    return listContent;
+    return (
+      <ListViewScreen
+        filteredItems={filteredItems}
+      />
+    )
   };
 
   return (
