@@ -179,7 +179,10 @@ export default function Page() {
   }
 
   const renderItem = ({ item: pokemon }: { item: any }) => (
-    <PokemonListItem pokemon={pokemon} handleToggleFavoriteAndCaught={handleToggleFavoriteAndCaught} />
+    <PokemonListItem 
+      pokemon={pokemon} 
+      handleToggleFavoriteAndCaught={handleToggleFavoriteAndCaught} 
+    />
   )
 
     // return (

@@ -6,33 +6,20 @@ import { Link } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { capitalizeString, pokemonColors } from 'utils/helpers';
+import { useApolloClient, gql } from '@apollo/client';
 
-type Props = {
-  pokemon: any;
-  handleToggleFavoriteAndCaught: (pokemon: any, statusToUpdate: string) => void;
-};
+import { toggleFavorite } from 'utils/favorites';
+
+import { IconContainer } from 'components/card/IconContainer';
 
 export const PokemonListItem: React.FC<Props> = ({ pokemon, handleToggleFavoriteAndCaught }) => {
+  const apolloClient = useApolloClient();
+
   const type1 = pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name;
   const type2 = pokemon.pokemon_v2_pokemontypes[1]?.pokemon_v2_type.name;
 
   const backgroundColor = pokemonColors[type1].backgroundColor;
   const textColor = pokemonColors[type1].color;
-
-  const iconContainer = (
-    <View style={{ flexDirection: 'row' }}>
-      <Ionicons
-        name={pokemon.isFavorited ? "star" : "star-outline"}
-        size={24} color="#555"
-        onPress={() => handleToggleFavoriteAndCaught(pokemon, "isFavorited")}
-      />
-      <Ionicons
-        name={pokemon.isCaught ? "checkmark-circle-outline" : "ellipse-outline"}
-        size={26} color="#555"
-        onPress={() => handleToggleFavoriteAndCaught(pokemon, "isCaught")}
-      />
-    </View>
-  );
 
     const typesContainer = (
       <View style={styles.pokemonTypesContainer}>
@@ -52,7 +39,7 @@ export const PokemonListItem: React.FC<Props> = ({ pokemon, handleToggleFavorite
             <View style={styles.pokemonNameAndTypeContainer}>
               <View style={styles.nameContainer}>
                 <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
-                {iconContainer}
+                <IconContainer pokemon={pokemon} />
               </View>
               {typesContainer}
             </View>
