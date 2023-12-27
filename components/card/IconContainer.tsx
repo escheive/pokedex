@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-import { toggleFavorite } from 'utils/entityUtils';
+import { toggleFavorite, toggleCaught } from 'utils/entityUtils';
 import { useApolloClient } from '@apollo/client';
 
 export const IconContainer = ({ pokemon }: any) => {
@@ -18,7 +18,7 @@ export const IconContainer = ({ pokemon }: any) => {
       <Ionicons
         name={pokemon.isCaught ? "checkmark-circle-outline" : "ellipse-outline"}
         size={26} color="#555"
-        onPress={() => handleToggleFavoriteAndCaught(pokemon, "isCaught")}
+        onPress={() => toggleCaught({ pokemon, apolloClient })}
       />
     </View>
   );
