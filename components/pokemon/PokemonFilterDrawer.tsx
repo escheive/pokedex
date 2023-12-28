@@ -196,6 +196,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }) => {
                 <View style={styles.filtersContainer}>
 
                     <View style={styles.dualTypeFilterContainer}>
+                        <Text>Filter By dual types</Text>
                         <CheckBox
                             color={filterOptions.filterByDualTypes ? '#FF5A5A' : 'black'}
                             value={filterOptions.filterByDualTypes}
