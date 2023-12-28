@@ -7,6 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery, gql, useReactiveVar, useMutation, useApolloClient } from '@apollo/client';
 // Components
 import { ListViewScreen } from 'components/ListViewScreen';
+import { PokemonFilterDrawer } from 'components/pokemon/PokemonFilterDrawer';
 // graphQL
 import { POKEMON_LIST_QUERY } from 'api/queries';
 import { handleClearApolloCache } from 'api/reset';
@@ -98,7 +99,7 @@ export default function Page() {
       />
       <View style={styles.filterContainer}>
         <View style={styles.filtersContainer}>
-          {/* <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} filterOptions={filterOptions} setFilterOptions={setFilterOptions} /> */}
+          <PokemonFilterDrawer filterOptions={filterOptions} setFilterOptions={setFilterOptions} />
           <View style={styles.searchInputContainer}>
             <Ionicons
               name="search"
