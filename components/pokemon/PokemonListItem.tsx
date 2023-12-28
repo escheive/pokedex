@@ -10,8 +10,6 @@ import { capitalizeString, pokemonColors } from 'utils/helpers';
 
 
 export const PokemonListItem = ({ pokemon }: any) => {
-  const apolloClient = useApolloClient();
-
   const type1 = pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name;
   const type2 = pokemon.pokemon_v2_pokemontypes[1]?.pokemon_v2_type.name;
 
@@ -45,7 +43,7 @@ export const PokemonListItem = ({ pokemon }: any) => {
             style={styles.image}
             source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
             contentFit="contain"
-            transition={1000}
+            transition={0}
           />
         </Link>
       </View>
