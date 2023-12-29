@@ -16,13 +16,14 @@ import { useLocalSearchParams, Stack } from 'expo-router';
 import { useApolloClient } from '@apollo/client';
 import { GET_POKEMON_BY_ID } from 'api/queries';
 import { pokemonFragment } from 'api/fragments';
+import { Pokemon } from 'types';
 
 
 export default function Page() {
   const client = useApolloClient();
   const params = useLocalSearchParams();
   const pokemonId = params.id;
-  const [pokemon, setPokemon] = useState(null);
+  const [pokemon, setPokemon] = useState<Pokemon | null>(null);
 
   useEffect(() => {
     const getPokemonById = () => {
@@ -50,7 +51,14 @@ export default function Page() {
 
   return (
     <View>
+      <Text>{pokemon.id}</Text>
       <Text>{pokemon.name}</Text>
+      {pokemon.isFavorited ? <Text>Pokemon is favorited!</Text> : null}
+      {pokemon.isCaught ? <Text>Pokemon has been caught!</Text> : null}
+      <Text>{pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name}</Text>
+      {pokemon.pokemon_v2_pokemontypes[1] ? (
+        <Text>{pokemon.pokemon_v2_pokemontypes[1].pokemon_v2_type.name}</Text>
+      ) : null}
     </View>
   )
 
