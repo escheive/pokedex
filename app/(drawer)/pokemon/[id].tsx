@@ -4,7 +4,6 @@ import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableO
 // Components
 // import PokemonStats from '../components/pokemon/PokemonStats';
 // import PillBar from '../components/PillBar';
-import PokemonCard from '../../../components/pokemon/PokemonCard';
 // import EvolutionChain from '../components/pokemon/EvolutionChain';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // Utils
@@ -17,6 +16,7 @@ import { useApolloClient } from '@apollo/client';
 import { GET_POKEMON_BY_ID } from 'api/queries';
 import { pokemonFragment } from 'api/fragments';
 import { Pokemon } from 'types';
+import { PokemonCard } from 'components/pokemon/PokemonCard';
 
 
 export default function Page() {
@@ -50,31 +50,16 @@ export default function Page() {
   }
 
   return (
-    <View>
-      <Text>{pokemon.id}</Text>
-      <Text>{pokemon.name}</Text>
-      {pokemon.isFavorited ? <Text>Pokemon is favorited!</Text> : null}
-      {pokemon.isCaught ? <Text>Pokemon has been caught!</Text> : null}
-      <Text>{pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name}</Text>
-      {pokemon.pokemon_v2_pokemontypes[1] ? (
-        <Text>{pokemon.pokemon_v2_pokemontypes[1].pokemon_v2_type.name}</Text>
-      ) : null}
-    </View>
+    <ScrollView style={styles.container}>
+      <PokemonCard pokemon={pokemon} />
+    </ScrollView>
   )
-
-  // return (
-  //   <ScrollView style={styles.container}>
-  //     <Stack.Screen options={{ headerShown: true, title: pokemon.name }} />
-  //     <PokemonCard
-  //       pokemon={pokemon}
-  //     />
-  //   </ScrollView>
-  // );
-
-  const styles = StyleSheet.create({
-    container: {
-      height: '100%',
-      backgroundColor: 'white',
-    },
-  });
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: '100%',
+    backgroundColor: 'white',
+  },
+});
