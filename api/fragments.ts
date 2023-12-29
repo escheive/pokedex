@@ -1,11 +1,5 @@
 import { gql } from "@apollo/client";
 
-export const updatedEntityFavoriteFragment = gql`
-  fragment UpdatedEntityFavoriteFragment on ${entityType} {
-    isFavorited
-  }
-`;
-
 export const updatedPokemonFavoriteFragment = gql`
   fragment UpdatedPokemonFavorite on pokemon_v2_pokemon {
     isFavorited
@@ -27,5 +21,20 @@ export const updatedAbilityFavoriteFragment = gql`
 export const updatedItemFavoriteFragment = gql`
   fragment UpdatedItemFavorite on pokemon_v2_item {
     isFavorited
+  }
+`;
+
+export const pokemonFragment = gql`
+  fragment PokemonFragment on pokemon_v2_pokemon {
+    id
+    name
+    isFavorited @client
+    isCaught @ client
+    pokemon_v2_pokemontypes {
+      pokemon_v2_type {
+        name
+        id
+      }
+    }
   }
 `;

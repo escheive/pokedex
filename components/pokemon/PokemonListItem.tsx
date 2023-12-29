@@ -1,4 +1,5 @@
 // Dependencies
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
@@ -9,12 +10,12 @@ import { IconContainer } from 'components/card/IconContainer';
 import { capitalizeString, pokemonColors } from 'utils/helpers';
 
 
-export const PokemonListItem = ({ pokemon }: any) => {
-  const type1 = pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name;
-  const type2 = pokemon.pokemon_v2_pokemontypes[1]?.pokemon_v2_type.name;
+export const PokemonListItem = React.memo(({ pokemon }: any) => {
+  const type1 = useMemo(() => pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name, [pokemon]);
+  const type2 = useMemo(() => pokemon.pokemon_v2_pokemontypes[1]?.pokemon_v2_type.name, [pokemon]);
 
-  const backgroundColor = pokemonColors[type1].backgroundColor;
-  const textColor = pokemonColors[type1].color;
+  const backgroundColor = useMemo(() => pokemonColors[type1].backgroundColor, [type1]);
+  const textColor = useMemo(() => pokemonColors[type1].color, [type1]);
 
     const typesContainer = (
       <View style={styles.pokemonTypesContainer}>
@@ -49,7 +50,7 @@ export const PokemonListItem = ({ pokemon }: any) => {
         </Link>
       </View>
     );
-}
+});
 
 const styles = StyleSheet.create({
   itemContainer: {

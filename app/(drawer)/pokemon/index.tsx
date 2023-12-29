@@ -48,7 +48,7 @@ export default function Page() {
     } = filterOptions;
 
     // Turn pokemonList to an object
-    const filteredList = pokemonList.pokemon_v2_pokemon && pokemonList.pokemon_v2_pokemon.filter((pokemon: any) =>
+    const filteredList = pokemonList && pokemonList?.pokemon_v2_pokemon.filter((pokemon: any) =>
       (showFavorites ? pokemon.isFavorited : true) &&
       (showCaughtPokemon ? pokemon.isCaught : true) &&
       (selectedVersions.length > 0 ?

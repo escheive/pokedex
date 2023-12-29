@@ -18,3 +18,21 @@ export const POKEMON_LIST_QUERY = gql`
     }
   }
 `;
+
+// graphQL query for fetching a pokemons details
+export const GET_POKEMON_BY_ID = gql`
+  query getPokemonById($id: ID!) {
+    pokemon_v2_pokemon(id: $id) {
+      id
+      name
+      isFavorited @client
+      isCaught @ client
+      pokemon_v2_pokemontypes {
+        pokemon_v2_type {
+          name
+          id
+        }
+      }
+    }
+  }
+`;
