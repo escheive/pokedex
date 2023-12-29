@@ -1,5 +1,5 @@
 // Dependencies
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, TextInput } from 'react-native';
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
@@ -27,7 +27,6 @@ export default function Page() {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY);
   console.log(loading, error, networkStatus);
-  console.log(pokemonList.pokemon_v2_pokemon[0].pokemon_v2_pokemontypes)
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
@@ -77,7 +76,7 @@ export default function Page() {
   };
 
 
-  const filteredItems = filterPokemon();
+  const filteredItems = useMemo(() => filterPokemon(), [filterOptions, pokemonList]);
 
 
   const renderPokemonList = () => {
@@ -118,7 +117,7 @@ export default function Page() {
           <Text>Clear Apollo Cache</Text>
         </TouchableOpacity>
       </View>
-      {renderPokemonList()}
+      {pokemonList ? renderPokemonList() : null}
     </View>
   );
 };
