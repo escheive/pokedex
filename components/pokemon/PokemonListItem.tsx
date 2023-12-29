@@ -44,6 +44,7 @@ export const PokemonListItem = ({ pokemon }: any) => {
             source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
             contentFit="contain"
             transition={0}
+            recyclingKey={pokemon.name}
           />
         </Link>
       </View>

@@ -19,8 +19,8 @@ export const ListViewScreen: React.FC<Props> = ({ query, title, filteredItems })
         data={filteredItems}
         renderItem={renderItem}
         keyExtractor={(item) => item.name}
-        estimatedItemSize={300}
-        estimatedListSize={{ height: 120, width: Dimensions.get("screen").width }}
+        estimatedItemSize={279}
+        estimatedListSize={{ height: Dimensions.get("screen").height, width: Dimensions.get("screen").width }}
       />
     </View>
   );
