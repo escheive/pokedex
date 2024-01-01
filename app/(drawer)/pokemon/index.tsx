@@ -15,6 +15,7 @@ import { handleClearApolloCache } from 'api/reset';
 import { groupedVersions, versionOptions } from 'constants/Pokemon';
 
 export default function Page() {
+  const apolloClient = useApolloClient();
   // State to track various filter options
   const [filterOptions, setFilterOptions] = useState({
     showFavorites: false,
@@ -25,8 +26,13 @@ export default function Page() {
     filterByDualTypes: false,
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY);
+  const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY, {
+    fetchPolicy: 'cache-first',
+  });
   console.log(loading, error, networkStatus);
+  if (loading) {
+    return <Text>Loading...</Text>
+  }
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
@@ -113,7 +119,7 @@ export default function Page() {
             />
           </View>
         </View>
-        <TouchableOpacity onPress={handleClearApolloCache}>
+        <TouchableOpacity onPress={() => handleClearApolloCache(apolloClient)}>
           <Text>Clear Apollo Cache</Text>
         </TouchableOpacity>
       </View>

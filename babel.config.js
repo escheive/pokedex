@@ -5,7 +5,7 @@ module.exports = function (api) {
     plugins: [
       // Required for expo-router
       'expo-router/babel',
-      // Required for reanimated and in turn, drawer navigation
+      // Required for reanimated and drawer navigation
       'react-native-reanimated/plugin',
       [
         'module-resolver',

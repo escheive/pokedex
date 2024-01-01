@@ -49,9 +49,14 @@ export default function Page() {
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
 //   const { loading, data: pokemonList, error } = useAppSelector(selectPokemon);
-  const { loading, error, data, networkStatus } = useQuery(ABILITIES_LIST_QUERY);
+  const { loading, error, data: abilitiesList, networkStatus } = useQuery(ABILITIES_LIST_QUERY, {
+    fetchPolicy: 'cache-first',
+  });
   console.log(loading, error, networkStatus);
-  const abilitiesList = data?.pokemon_v2_ability;
+
+  if (!abilitiesList || abilitiesList === null) {
+    return <Text>Loading...</Text>
+  }
 
   if (loading) {
     if (Platform.OS === "android" || Platform.OS === "ios") {
@@ -80,7 +85,7 @@ export default function Page() {
     } = filterOptions;
 
     // Turn abilitiesList to an object
-    const filteredList = abilitiesList && abilitiesList.filter((ability: any) =>
+    const filteredList = abilitiesList.pokemon_v2_ability && abilitiesList.pokemon_v2_ability.filter((ability: any) =>
       (showFavorites ? ability.isFavorite : true) &&
         ability.name.toLowerCase().startsWith(searchQuery.toLowerCase()
       )
