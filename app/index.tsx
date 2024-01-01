@@ -3,9 +3,11 @@ import { useQuery } from "@apollo/client/react/hooks/useQuery";
 import { ABILITIES_LIST_QUERY, ITEMS_LIST_QUERY, POKEMON_LIST_QUERY } from "api/queries";
 import { Redirect } from "expo-router"
 import { useEffect, useState } from "react";
+import { LoadingScreen } from "components/LoadingScreen";
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
+  const [loadingText, setLoadingText] = useState<string>("Loading...")
 
   const { loading: pokemonLoading, error: pokemonError, data: pokemonList } = useQuery(POKEMON_LIST_QUERY, {
     fetchPolicy: 'cache-first',
@@ -23,10 +25,20 @@ export default function Page() {
     if (pokemonList !== null && abilitiesList !== null && itemsList !== null) {
       setLoading(false);
     }
+
+    if (pokemonList === null) {
+      setLoadingText("Loading Pokemon...");
+    } else if (abilitiesList === null) {
+      setLoadingText("Loading Abilities...");
+    } else if (itemsList === null) {
+      setLoadingText("Loading Items");
+    } else {
+      setLoadingText("Loading...");
+    }
   }, []);
   
   if (loading) {
-    return <Text>Loading...</Text>
+    return <LoadingScreen loadingText={loadingText} />
   }
 
   return <Redirect href={"/(drawer)/pokemon"} />;
