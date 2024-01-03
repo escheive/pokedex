@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { capitalizeString, pokemonColors } from '../../utils/helpers';
 
-export const PokemonCard = ({ pokemon }) => {
+export const PokemonCard = ({ pokemon, pokemonDetails }) => {
 
     // Grab the dimensions of the device for sizing of components
     const windowHeight = Dimensions.get('window').height;
@@ -244,6 +244,33 @@ return (
         {pokemon.pokemon_v2_pokemontypes[1] ? (
           <Text>{pokemon.pokemon_v2_pokemontypes[1].pokemon_v2_type.name}</Text>
         ) : null}
+        <Text>POKEMON DETAILS</Text>
+        <Text>ID: {pokemonDetails.id}</Text>
+        <Text>HEIGHT: {pokemonDetails.height}</Text>
+        <Text>WEIGHT: {pokemonDetails.weight}</Text>
+        <Text>BASE EXPERIENCE: {pokemonDetails.base_experience}</Text>
+        <Text>ABILITIES</Text>
+        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.name}</Text>
+        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
+        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].effect}</Text>
+        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.name}</Text>
+        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
+        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].effect}</Text>
+        <Text>BASE HAPPINESS: {pokemonDetails.pokemon_v2_pokemonspecy.base_happiness}</Text>
+        <Text>IS BABY: {pokemonDetails.pokemon_v2_pokemonspecy.is_baby}</Text>
+        <Text>IS LEGENDARY: {pokemonDetails.pokemon_v2_pokemonspecy.is_legendary}</Text>
+        <Text>IS MYTHICAL: {pokemonDetails.pokemon_v2_pokemonspecy.is_mythical}</Text>
+        <Text>EVOLUTION CHAIN:</Text>
+        {pokemonDetails.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.map((evolution) => (
+          <Text>EVOLUTION ID: {evolution.id}</Text>
+        ))}
+        <Text>HABITAT: {pokemonDetails.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat.name}</Text>
+        <Text>STATS: </Text>
+        {pokemonDetails.pokemon_v2_pokemonstats.map((stat) => (
+          <View>
+            <Text>{stat.pokemon_v2_stat.name}: {stat.base_stat}</Text>
+          </View>
+        ))}
       </View>
     </View>
   );

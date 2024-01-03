@@ -14,7 +14,7 @@ import { selectPokemonById } from '../../../store/slices/pokemonSlice';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useApolloClient } from '@apollo/client';
 import { GET_POKEMON_BY_ID } from 'api/queries';
-import { pokemonFragment } from 'api/fragments';
+import { pokemonFragment, pokemonDetailsFragment } from 'api/fragments';
 import { Pokemon } from 'types';
 import { PokemonCard } from 'components/pokemon/PokemonCard';
 
@@ -24,6 +24,7 @@ export default function Page() {
   const params = useLocalSearchParams();
   const pokemonId = params.id;
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
+  const [pokemonDetails, setPokemonDetails] = useState<Pokemon | null>(null);
 
   useEffect(() => {
     const getPokemonById = () => {
@@ -32,10 +33,18 @@ export default function Page() {
           id: `pokemon_v2_pokemon:${pokemonId}`,
           fragment: pokemonFragment,
         });
-  
+
         console.log(pokemon)
+
+        const pokemonDetails = client.readFragment({
+          id: `pokemon_v2_pokemon:${pokemonId}`,
+          fragment: pokemonDetailsFragment,
+        });
+
+        console.log("Pokemon Details:", pokemonDetails);
   
         setPokemon(pokemon);
+        setPokemonDetails(pokemonDetails);
       } catch (error) {
         console.error('Error reading from cache:', error);
         return null;
@@ -51,7 +60,7 @@ export default function Page() {
 
   return (
     <ScrollView style={styles.container}>
-      <PokemonCard pokemon={pokemon} />
+      <PokemonCard pokemon={pokemon} pokemonDetails={pokemonDetails} />
     </ScrollView>
   )
 };
