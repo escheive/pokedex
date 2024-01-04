@@ -267,7 +267,7 @@ return (
         <Text>HABITAT: {pokemonDetails.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat.name}</Text>
         <Text>STATS: </Text>
         {pokemonDetails.pokemon_v2_pokemonstats.map((stat) => (
-          <View>
+          <View key={stat.pokemon_v2_stat.name}>
             <Text>{stat.pokemon_v2_stat.name}: {stat.base_stat}</Text>
           </View>
         ))}

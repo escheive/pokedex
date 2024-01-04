@@ -2,8 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
 // Components
-// import PokemonStats from '../components/pokemon/PokemonStats';
-// import PillBar from '../components/PillBar';
+import { PokemonStats } from 'components/pokemon/PokemonStats';
 // import EvolutionChain from '../components/pokemon/EvolutionChain';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // Utils
@@ -61,6 +60,8 @@ export default function Page() {
   return (
     <ScrollView style={styles.container}>
       <PokemonCard pokemon={pokemon} pokemonDetails={pokemonDetails} />
+
+      <PokemonStats pokemonTypes={pokemon.pokemon_v2_pokemontypes} pokemonStats={pokemonDetails.pokemon_v2_pokemonstats} />
     </ScrollView>
   )
 };

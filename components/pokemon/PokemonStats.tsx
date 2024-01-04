@@ -2,21 +2,45 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 // Components
-import PillBar from '../PillBar';
+import { PillBar } from '../PillBar';
 // Utils
 import { capitalizeString } from '../../utils/helpers';
 import { pokemonColors } from '../../utils/helpers';
 
+interface PokemonStat {
+  __typename: string;
+  base_stat: number;
+  pokemon_v2_stat: {
+    __typename: string;
+    name: string;
+  };
+}
 
-const PokemonStats = ({ pokemon }) => {
+interface PokemonType {
+  __typename: string;
+  pokemon_v2_type: {
+    id: number;
+    name: string;
+    __typename: string;
+  };
+}
+
+interface PokemonStatsProps {
+  pokemonTypes: PokemonType[];
+  pokemonStats: PokemonStat[];
+}
+
+
+export const PokemonStats: React.FC<PokemonStatsProps> = ({ 
+  pokemonTypes, pokemonStats 
+}) => {
+
   // useState for selected stat value tab
   const [selectedTab, setSelectedTab] = useState('base');
   const [calculatedStats, setCalculatedStats] = useState({});
   const [highestStat, setHighestStat] = useState(0);
   const [statsTotal, setStatsTotal] = useState(0);
 
-  // Turn pokemon.stats string into an object
-  const pokemonStats = JSON.parse(pokemon.stats);
 
     useEffect(() => {
       // Based on your tab, calculate stats
@@ -25,25 +49,25 @@ const PokemonStats = ({ pokemon }) => {
       } else if (selectedTab === 'max') {
         setCalculatedStats(calculateMinMaxStats(100, 31, 252, 'max'));
       }
-    }, [selectedTab, pokemon]);
+    }, [selectedTab, pokemonStats]);
 
 
 
     // Function to calculate min and max of the pokemons stats
-    function calculateMinMaxStats(level, ivs, evs, nature) {
-      const maxStats = {};
+    function calculateMinMaxStats(level: number, ivs: number, evs: number, nature: string) {
+      const maxStats: { [key: string]: number } = {};
 
       // Iterate over each stat
       for (let stat of pokemonStats) {
         // Effort values and individual values default to 0
         const iv = ivs || 0;
         const ev = evs || 0;
-        let maxStat = stat.value;
+        let maxStat = stat.base_stat;
 
         if (level === 100) {
-          maxStat = Math.floor(((2 * stat.value + iv + Math.floor(ev / 4)) * level) / 100) + 5;
+          maxStat = Math.floor(((2 * stat.base_stat + iv + Math.floor(ev / 4)) * level) / 100) + 5;
 
-          if (stat.name !== "hp") {
+          if (stat.pokemon_v2_stat.name !== "hp") {
             if (nature === 'max') {
               maxStat = Math.floor(maxStat * 1.1)
             } else {
@@ -54,7 +78,7 @@ const PokemonStats = ({ pokemon }) => {
           }
         }
 
-        maxStats[stat.name] = maxStat;
+        maxStats[stat.pokemon_v2_stat.name] = maxStat;
       };
 
       const statsArray = Object.values(maxStats);
@@ -79,20 +103,20 @@ const PokemonStats = ({ pokemon }) => {
     const renderStats = () => {
       const statItems = [];
 
-      JSON.parse(pokemon.stats).forEach((stat) => {
-        const shortenedStatName = statNameMappings[stat.name] || stat.name;
-        let statValue = stat.value
+      pokemonStats.forEach((stat) => {
+        const shortenedStatName = statNameMappings[stat.pokemon_v2_stat.name] || stat.pokemon_v2_stat.name;
+        let statValue = stat.base_stat
 
-        if (selectedTab === 'min' && calculatedStats[stat.name]) {
-          statValue = calculatedStats[stat.name];
-        } else if (selectedTab === 'max' && calculatedStats[stat.name]) {
-          statValue = calculatedStats[stat.name];
+        if (selectedTab === 'min' && calculatedStats[stat.pokemon_v2_stat.name]) {
+          statValue = calculatedStats[stat.pokemon_v2_stat.name];
+        } else if (selectedTab === 'max' && calculatedStats[stat.pokemon_v2_stat.name]) {
+          statValue = calculatedStats[stat.pokemon_v2_stat.name];
         }
 
         const statItem = (
           <View style={styles.statItem} key={shortenedStatName}>
             <Text style={styles.statName}>{shortenedStatName}:</Text>
-            <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={shortenedStatName} pokemon={pokemon} />
+            <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={shortenedStatName} />
           </View>
         );
 
@@ -145,18 +169,18 @@ const PokemonStats = ({ pokemon }) => {
       },
       navItemText: {
         fontSize: 20,
-        fontWeight: 500,
-        color: pokemon.type2 ? pokemonColors[pokemon.type2].color : '#F5F5F5'
+        fontWeight: '500',
+        color: pokemonTypes[1] ? pokemonColors[pokemonTypes[1].pokemon_v2_type.name].color : '#F5F5F5'
       },
       selectedNavItem: {
-        backgroundColor: pokemonColors[pokemon.type1].backgroundColor,
-        color: pokemonColors[pokemon.type1].color,
+        backgroundColor: pokemonColors[pokemonTypes[0].pokemon_v2_type.name].backgroundColor,
+        color: pokemonColors[pokemonTypes[0].pokemon_v2_type.name].color,
         flex: 8,
         height: 40,
       },
       selectedNavItemText: {
-        fontWeight: 900,
-        color: pokemonColors[pokemon.type1].color,
+        fontWeight: '900',
+        color: pokemonColors[pokemonTypes[0].pokemon_v2_type.name].color,
       },
       pillBars: {
         paddingHorizontal: 5,
@@ -171,7 +195,7 @@ const PokemonStats = ({ pokemon }) => {
       },
       statsTotalValue: {
         fontWeight: 'bold',
-        color: pokemonColors[pokemon.type1].backgroundColor,
+        color: pokemonColors[pokemonTypes[0].pokemon_v2_type.name].backgroundColor,
       },
     });
 
@@ -184,7 +208,7 @@ const PokemonStats = ({ pokemon }) => {
                     style={[
                         styles.navItem,
                         selectedTab === 'base' && styles.selectedNavItem,
-                        selectedTab !== 'base' && (pokemon.type2 ? { backgroundColor: pokemonColors[pokemon.type2].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                        selectedTab !== 'base' && (pokemonTypes[1] ? { backgroundColor: pokemonColors[pokemonTypes[1].pokemon_v2_type.name].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                     ]}
                     onPress={() => setSelectedTab('base')}
                 >
@@ -194,7 +218,7 @@ const PokemonStats = ({ pokemon }) => {
                     style={[
                         styles.navItem,
                         selectedTab === 'min' && styles.selectedNavItem,
-                        selectedTab !== 'min' && (pokemon.type2 ? { backgroundColor: pokemonColors[pokemon.type2].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                        selectedTab !== 'min' && (pokemonTypes[1] ? { backgroundColor: pokemonColors[pokemonTypes[1].pokemon_v2_type.name].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                     ]}
                     onPress={() => setSelectedTab('min')}
                 >
@@ -204,7 +228,7 @@ const PokemonStats = ({ pokemon }) => {
                     style={[
                         styles.navItem,
                         selectedTab === 'max' && styles.selectedNavItem,
-                        selectedTab !== 'max' && (pokemon.type2 ? { backgroundColor: pokemonColors[pokemon.type2].backgroundColor, color: pokemonColors[pokemon.type2].color } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
+                        selectedTab !== 'max' && (pokemonTypes[1] ? { backgroundColor: pokemonColors[pokemonTypes[1].pokemon_v2_type.name].backgroundColor, color: pokemonColors[pokemonTypes[0].pokemon_v2_type.name].color } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
                     ]}
                     onPress={() => setSelectedTab('max')}
                 >
@@ -233,5 +257,3 @@ const PokemonStats = ({ pokemon }) => {
         </View>
     );
 };
-
-export default PokemonStats;
