@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
+import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // Components
@@ -89,10 +90,9 @@ export const EvolutionChain = ({ pokemonId, evolutionChain }) => {
               <Text style={styles.evolutionTrigger}>{evolution.pokemon_v2_pokemonevolutions[0].pokemon_v2_evolutiontrigger.name}</Text>
             </View>
           )}
-          <TouchableOpacity
-            style={styles.evolutionItemContainer}
-            onPress={() => console.log("navigate to ", evolution.name, "!")}
-            activeOpacity={0.5}
+          <Link 
+            style={styles.evolutionItemContainer} 
+            href={`/pokemon/${evolution.id}`}
           >
             <Image
               style={styles.image}
@@ -101,7 +101,7 @@ export const EvolutionChain = ({ pokemonId, evolutionChain }) => {
               transition={500}
             />
             <Text>{capitalizeString(evolution.name)}</Text>
-          </TouchableOpacity>
+          </Link>
         </React.Fragment>
       ))}
       </View>
