@@ -5,7 +5,7 @@ import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // Components
-// import OctagonLayout from './OctagonLayout';
+import { OctagonEvolutionLayout } from './OctagonEvolutionLayout';
 // Utils
 import { capitalizeString } from '../../utils/helpers';
 
@@ -58,9 +58,8 @@ export const EvolutionChain = ({ pokemonId, evolutionChain }) => {
   return (
     <View style={styles.container}>
       <Text style= {{ fontSize: 24 }}>Evolution Chain</Text>
-    {pokemonId === "eevee" ? (
-      <Text></Text>
-      // <OctagonLayout evolutionChain={evolutionChain} />
+    {pokemonId === 133 ? (
+      <OctagonEvolutionLayout evolutionChain={evolutionChain} />
     ) : (
       <View style={styles.evolutionsContainer}>
       {sortedEvolutionChain.map((evolution, index) => (
