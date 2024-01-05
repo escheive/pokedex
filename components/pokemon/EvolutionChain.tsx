@@ -83,6 +83,12 @@ export const EvolutionChain = ({ pokemonId, evolutionChain }) => {
       <View style={styles.evolutionsContainer}>
       {sortedEvolutionChain.map((evolution, index) => (
         <React.Fragment key={index}>
+          {index < sortedEvolutionChain.length && evolution.pokemon_v2_pokemonevolutions[0] && (
+            <View style={styles.arrowContainer}>
+              <Ionicons name='arrow-forward-sharp' size={32} color='gray' />
+              <Text style={styles.evolutionTrigger}>{evolution.pokemon_v2_pokemonevolutions[0].pokemon_v2_evolutiontrigger.name}</Text>
+            </View>
+          )}
           <TouchableOpacity
             style={styles.evolutionItemContainer}
             onPress={() => console.log("navigate to ", evolution.name, "!")}
