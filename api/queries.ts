@@ -127,6 +127,7 @@ export const POKEMON_DETAILS_LIST_QUERY = gql`
           pokemon_v2_pokemonspecies {
             name
             id
+            evolves_from_species_id
             pokemon_v2_pokemonevolutions {
               pokemon_v2_evolutiontrigger {
                 name
@@ -135,7 +136,6 @@ export const POKEMON_DETAILS_LIST_QUERY = gql`
               min_level
               time_of_day
               needs_overworld_rain
-              evolved_species_id
             }
           }
         }

@@ -73,6 +73,7 @@ export const pokemonDetailsFragment = gql`
         pokemon_v2_pokemonspecies {
           name
           id
+          evolves_from_species_id
           pokemon_v2_pokemonevolutions {
             pokemon_v2_evolutiontrigger {
               name
@@ -81,7 +82,6 @@ export const pokemonDetailsFragment = gql`
             min_level
             time_of_day
             needs_overworld_rain
-            evolved_species_id
           }
         }
       }

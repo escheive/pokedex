@@ -254,16 +254,12 @@ return (
         <Text>{pokemonDetails.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
         <Text>{pokemonDetails.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].effect}</Text>
         <Text>{pokemonDetails.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.name}</Text>
-        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
+        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[1]?.pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
         <Text>{pokemonDetails.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].effect}</Text>
         <Text>BASE HAPPINESS: {pokemonDetails.pokemon_v2_pokemonspecy.base_happiness}</Text>
         <Text>IS BABY: {pokemonDetails.pokemon_v2_pokemonspecy.is_baby}</Text>
         <Text>IS LEGENDARY: {pokemonDetails.pokemon_v2_pokemonspecy.is_legendary}</Text>
         <Text>IS MYTHICAL: {pokemonDetails.pokemon_v2_pokemonspecy.is_mythical}</Text>
-        <Text>EVOLUTION CHAIN:</Text>
-        {pokemonDetails.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.map((evolution) => (
-          <Text key={evolution.id}>EVOLUTION ID: {evolution.id}</Text>
-        ))}
         <Text>HABITAT: {pokemonDetails.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat.name}</Text>
       </View>
     </View>
