@@ -16,6 +16,7 @@ import { GET_POKEMON_BY_ID } from 'api/queries';
 import { pokemonFragment, pokemonDetailsFragment } from 'api/fragments';
 import { Pokemon } from 'types';
 import { PokemonCard } from 'components/pokemon/PokemonCard';
+import { EvolutionChain } from 'components/pokemon/EvolutionChain';
 
 
 export default function Page() {
@@ -62,6 +63,9 @@ export default function Page() {
       <PokemonCard pokemon={pokemon} pokemonDetails={pokemonDetails} />
 
       <PokemonStats pokemonTypes={pokemon.pokemon_v2_pokemontypes} pokemonStats={pokemonDetails.pokemon_v2_pokemonstats} />
+
+      <EvolutionChain pokemonId={pokemon.id} evolutionChain={pokemonDetails.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies} />
+
     </ScrollView>
   )
 };

@@ -125,7 +125,18 @@ export const POKEMON_DETAILS_LIST_QUERY = gql`
         is_mythical
         pokemon_v2_evolutionchain {
           pokemon_v2_pokemonspecies {
+            name
             id
+            pokemon_v2_pokemonevolutions {
+              pokemon_v2_evolutiontrigger {
+                name
+              }
+              evolution_item_id
+              min_level
+              time_of_day
+              needs_overworld_rain
+              evolved_species_id
+            }
           }
         }
         pokemon_v2_pokemonhabitat {

@@ -262,15 +262,9 @@ return (
         <Text>IS MYTHICAL: {pokemonDetails.pokemon_v2_pokemonspecy.is_mythical}</Text>
         <Text>EVOLUTION CHAIN:</Text>
         {pokemonDetails.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.map((evolution) => (
-          <Text>EVOLUTION ID: {evolution.id}</Text>
+          <Text key={evolution.id}>EVOLUTION ID: {evolution.id}</Text>
         ))}
         <Text>HABITAT: {pokemonDetails.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat.name}</Text>
-        <Text>STATS: </Text>
-        {pokemonDetails.pokemon_v2_pokemonstats.map((stat) => (
-          <View key={stat.pokemon_v2_stat.name}>
-            <Text>{stat.pokemon_v2_stat.name}: {stat.base_stat}</Text>
-          </View>
-        ))}
       </View>
     </View>
   );
