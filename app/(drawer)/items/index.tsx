@@ -11,7 +11,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 // FlashList
 import { FlashList } from "@shopify/flash-list";
 // Apollo
-import { useQuery, gql, useApolloClient } from '@apollo/client';
+import { useQuery, gql, useApolloClient, useLazyQuery } from '@apollo/client';
 // Components
 import { ScrollToTopButton } from 'components/button/ScrollToTopButton';
 // Utils
@@ -59,12 +59,11 @@ export default function Page() {
     searchQuery: '',
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
-//   const { loading, data: pokemonList, error } = useAppSelector(selectPokemon);
+
   const { loading, error, data: itemsList, networkStatus } = useQuery(ITEMS_LIST_QUERY, {
     fetchPolicy: 'cache-first',
   });
   console.log(loading, error, networkStatus);
-  // const itemsList = data?.pokemon_v2_item;
 
   // Ref used to track position in flashlist
   const flashListRef = useRef(null);
@@ -86,9 +85,6 @@ export default function Page() {
       </>
     )
   }
-  // if (data) {
-  //   dispatch(setItems(itemsList))
-  // }
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
