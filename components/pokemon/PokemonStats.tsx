@@ -41,10 +41,17 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
   const [highestStat, setHighestStat] = useState(0);
   const [statsTotal, setStatsTotal] = useState(0);
 
+  const textColor = pokemonColors[pokemonTypes[0].pokemon_v2_type.name].color;
+  const alternateTextColor = pokemonTypes[1] ? pokemonColors[pokemonTypes[1].pokemon_v2_type.name].color : '#F5F5F5';
+  const backgroundColor = pokemonColors[pokemonTypes[0].pokemon_v2_type.name].backgroundColor;
+  const alternateBackgroundColor = pokemonTypes[1] ? pokemonColors[pokemonTypes[1].pokemon_v2_type.name].backgroundColor : 'rgba(128, 128, 128, 0.5)';
+
 
     useEffect(() => {
       // Based on your tab, calculate stats
-      if (selectedTab === 'min') {
+      if (selectedTab === 'base') {
+        setCalculatedStats(calculateMinMaxStats(1, 0, 0, 'base'));
+      } else if (selectedTab === 'min') {
         setCalculatedStats(calculateMinMaxStats(100, 0, 0, 'min'));
       } else if (selectedTab === 'max') {
         setCalculatedStats(calculateMinMaxStats(100, 31, 252, 'max'));
@@ -82,10 +89,10 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
       };
 
       const statsArray = Object.values(maxStats);
-      const total = statsArray.reduce((sum, stat) => sum + stat, 0);
-      setStatsTotal(total);
       const maxStat = Math.max(...statsArray);
       setHighestStat(maxStat);
+      const total = statsArray.reduce((sum, stat) => sum + stat, 0);
+      setStatsTotal(total);
 
       return maxStats;
     }
@@ -127,133 +134,157 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
     };
 
 
-    const styles = StyleSheet.create({
-      container: {
-        margin: 10,
-        marginBottom: 25,
-        backgroundColor: 'rgba(170, 170, 170, 0.2)',
-        borderRadius: 15,
-        padding: 10,
-        textAlign: 'center',
-      },
-      statsTitleText: {
-        fontSize: 24,
-        alignSelf: 'center',
-        marginBottom: 18,
-      },
-      statItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginVertical: 5,
-      },
-      statName: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        width: 80,
-      },
-      navContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 25,
-      },
-      navItem: {
-        flex: 7,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 3,
-        borderRadius: 10,
-        marginHorizontal: 8,
-        height: 35,
-      },
-      navItemText: {
-        fontSize: 20,
-        fontWeight: '500',
-        color: pokemonTypes[1] ? pokemonColors[pokemonTypes[1].pokemon_v2_type.name].color : '#F5F5F5'
-      },
-      selectedNavItem: {
-        backgroundColor: pokemonColors[pokemonTypes[0].pokemon_v2_type.name].backgroundColor,
-        color: pokemonColors[pokemonTypes[0].pokemon_v2_type.name].color,
-        flex: 8,
-        height: 40,
-      },
-      selectedNavItemText: {
-        fontWeight: '900',
-        color: pokemonColors[pokemonTypes[0].pokemon_v2_type.name].color,
-      },
-      pillBars: {
-        paddingHorizontal: 5,
-      },
-      statDisclaimerText: {
-        textAlign: 'center',
-      },
-      statsTotalContainer: {
-        textAlign: 'center',
-        marginVertical: 5,
-        fontSize: 18,
-      },
-      statsTotalValue: {
-        fontWeight: 'bold',
-        color: pokemonColors[pokemonTypes[0].pokemon_v2_type.name].backgroundColor,
-      },
-    });
-
-
     return (
         <View style={styles.container}>
             <Text style={styles.statsTitleText}>Stats</Text>
             <View style={styles.navContainer}>
-                <TouchableOpacity
-                    style={[
-                        styles.navItem,
-                        selectedTab === 'base' && styles.selectedNavItem,
-                        selectedTab !== 'base' && (pokemonTypes[1] ? { backgroundColor: pokemonColors[pokemonTypes[1].pokemon_v2_type.name].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
-                    ]}
-                    onPress={() => setSelectedTab('base')}
+              <TouchableOpacity
+                style={[
+                  styles.navItem,
+                  selectedTab === 'base' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
+                  selectedTab !== 'base' && { backgroundColor: alternateBackgroundColor }
+                ]}
+                onPress={() => setSelectedTab('base')}
+              >
+                <Text 
+                  style={[
+                    styles.navItemText, 
+                    { color: alternateTextColor }, 
+                    selectedTab === 'base' && (styles.selectedNavItemText, 
+                    { color: textColor })
+                  ]}
                 >
-                    <Text style={[styles.navItemText, selectedTab === 'base' && styles.selectedNavItemText]}>Base</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.navItem,
-                        selectedTab === 'min' && styles.selectedNavItem,
-                        selectedTab !== 'min' && (pokemonTypes[1] ? { backgroundColor: pokemonColors[pokemonTypes[1].pokemon_v2_type.name].backgroundColor } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
-                    ]}
-                    onPress={() => setSelectedTab('min')}
+                  Base
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.navItem,
+                  selectedTab === 'min' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
+                  selectedTab !== 'min' && { backgroundColor: alternateBackgroundColor }
+                ]}
+                onPress={() => setSelectedTab('min')}
+              >
+                <Text 
+                  style={[
+                    styles.navItemText, 
+                    { color: alternateTextColor }, 
+                    selectedTab === 'min' && (styles.selectedNavItemText, 
+                    { color: textColor })
+                  ]}
                 >
-                    <Text style={[styles.navItemText, selectedTab === 'min' && styles.selectedNavItemText]}>Min</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.navItem,
-                        selectedTab === 'max' && styles.selectedNavItem,
-                        selectedTab !== 'max' && (pokemonTypes[1] ? { backgroundColor: pokemonColors[pokemonTypes[1].pokemon_v2_type.name].backgroundColor, color: pokemonColors[pokemonTypes[0].pokemon_v2_type.name].color } : { backgroundColor: 'rgba(128, 128, 128, 0.5)' })
-                    ]}
-                    onPress={() => setSelectedTab('max')}
+                  Min
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.navItem,
+                  selectedTab === 'max' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
+                  selectedTab !== 'max' && { backgroundColor: alternateBackgroundColor }
+                ]}
+                onPress={() => setSelectedTab('max')}
+              >
+                <Text 
+                  style={[
+                    styles.navItemText,
+                    { color: alternateTextColor },
+                    selectedTab === 'max' && (styles.selectedNavItemText, 
+                    { color: textColor })
+                  ]}
                 >
-                    <Text style={[styles.navItemText, selectedTab === 'max' && styles.selectedNavItemText]}>Max</Text>
-                </TouchableOpacity>
+                  Max
+                </Text>
+              </TouchableOpacity>
+
             </View>
 
             <View style={styles.pillBars}>
-                {renderStats()}
+              {renderStats()}
             </View>
 
             <Text style={styles.statsTotalContainer}>
-                <Text style={styles.statsTotalText}>TOTAL </Text>
-                <Text style={styles.statsTotalValue}>{statsTotal}</Text>
+              <Text style={styles.statsTotalText}>TOTAL </Text>
+              <Text style={[styles.statsTotalValue, { color: backgroundColor }]}>{statsTotal}</Text>
             </Text>
 
             {selectedTab === "max" ? (
-                <>
-                    <Text style={styles.statDisclaimerText}>*Stats at lvl 100, 31 IVs, 252 Evs, and beneficial nature</Text>
-                    <Text style={styles.statDisclaimerText}>**Please note that a pokemon can only have 510 EVs total</Text>
-                </>
+              <>
+                <Text style={styles.statDisclaimerText}>*Stats at lvl 100, 31 IVs, 252 Evs, and beneficial nature</Text>
+                <Text style={styles.statDisclaimerText}>**Please note that a pokemon can only have 510 EVs total</Text>
+              </>
             ) : null}
             {selectedTab === "min" ? (
-                <Text style={styles.statDisclaimerText}>*Stats at lvl 100, 0 IVs, 0 Evs, and hindering nature</Text>
+              <Text style={styles.statDisclaimerText}>*Stats at lvl 100, 0 IVs, 0 Evs, and hindering nature</Text>
             ) : null}
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    margin: 10,
+    marginBottom: 25,
+    backgroundColor: 'rgba(170, 170, 170, 0.2)',
+    borderRadius: 15,
+    padding: 10,
+    textAlign: 'center',
+  },
+  statsTitleText: {
+    fontSize: 24,
+    alignSelf: 'center',
+    marginBottom: 18,
+  },
+  statItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  statName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    width: 80,
+  },
+  navContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 25,
+  },
+  navItem: {
+    flex: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 3,
+    borderRadius: 10,
+    marginHorizontal: 8,
+    height: 35,
+  },
+  navItemText: {
+    fontSize: 20,
+    fontWeight: '500',
+  },
+  selectedNavItem: {
+    flex: 8,
+    height: 40,
+  },
+  selectedNavItemText: {
+    fontWeight: '900',
+  },
+  pillBars: {
+    paddingHorizontal: 5,
+  },
+  statDisclaimerText: {
+    textAlign: 'center',
+  },
+  statsTotalContainer: {
+    textAlign: 'center',
+    marginVertical: 5,
+    fontSize: 18,
+  },
+  statsTotalValue: {
+    fontWeight: 'bold',
+  },
+});
