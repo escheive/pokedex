@@ -30,6 +30,10 @@ interface PokemonStatsProps {
   pokemonStats: PokemonStat[];
 }
 
+const MAX_LEVEL = 100;
+const MAX_IV = 31;
+const MAX_EV = 252;
+
 
 export const PokemonStats: React.FC<PokemonStatsProps> = ({ 
   pokemonTypes, pokemonStats 
@@ -42,10 +46,13 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
   const [statsTotal, setStatsTotal] = useState({});
   
 
-  const textColor = pokemonColors[pokemonTypes[0].pokemon_v2_type.name].color;
-  const alternateTextColor = pokemonTypes[1] ? pokemonColors[pokemonTypes[1].pokemon_v2_type.name].color : '#F5F5F5';
-  const backgroundColor = pokemonColors[pokemonTypes[0].pokemon_v2_type.name].backgroundColor;
-  const alternateBackgroundColor = pokemonTypes[1] ? pokemonColors[pokemonTypes[1].pokemon_v2_type.name].backgroundColor : 'rgba(128, 128, 128, 0.5)';
+  const { pokemon_v2_type: firstType } = pokemonTypes[0];
+  const { pokemon_v2_type: secondType } = pokemonTypes[1] || {};
+
+  const textColor = pokemonColors[firstType.name].color;
+  const alternateTextColor = secondType ? pokemonColors[secondType.name].color : '#F5F5F5';
+  const backgroundColor = pokemonColors[firstType.name].backgroundColor;
+  const alternateBackgroundColor = secondType ? pokemonColors[secondType.name].backgroundColor : 'rgba(128, 128, 128, 0.5)';
 
 
   useEffect(() => {
@@ -54,8 +61,8 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
       baseStats[stat.pokemon_v2_stat.name] = stat.base_stat;
     });
 
-    const minStats = calculateMinMaxStats(100, 0, 0, 'min');
-    const maxStats = calculateMinMaxStats(100, 31, 252, 'max');
+    const minStats = calculateMinMaxStats(MAX_LEVEL, 0, 0, 'min');
+    const maxStats = calculateMinMaxStats(MAX_LEVEL, MAX_IV, MAX_EV, 'max');
 
     const calculateTotal = (stats) => Object.values(stats).reduce((sum, value) => sum + value, 0);
 
