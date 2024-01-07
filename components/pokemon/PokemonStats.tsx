@@ -38,8 +38,9 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
   // useState for selected stat value tab
   const [selectedTab, setSelectedTab] = useState('base');
   const [calculatedStats, setCalculatedStats] = useState({});
-  const [highestStat, setHighestStat] = useState(0);
-  const [statsTotal, setStatsTotal] = useState(0);
+  const [highestStat, setHighestStat] = useState({});
+  const [statsTotal, setStatsTotal] = useState({});
+  
 
   const textColor = pokemonColors[pokemonTypes[0].pokemon_v2_type.name].color;
   const alternateTextColor = pokemonTypes[1] ? pokemonColors[pokemonTypes[1].pokemon_v2_type.name].color : '#F5F5F5';
@@ -47,179 +48,195 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
   const alternateBackgroundColor = pokemonTypes[1] ? pokemonColors[pokemonTypes[1].pokemon_v2_type.name].backgroundColor : 'rgba(128, 128, 128, 0.5)';
 
 
-    useEffect(() => {
-      // Based on your tab, calculate stats
-      if (selectedTab === 'base') {
-        setCalculatedStats(calculateMinMaxStats(1, 0, 0, 'base'));
-      } else if (selectedTab === 'min') {
-        setCalculatedStats(calculateMinMaxStats(100, 0, 0, 'min'));
-      } else if (selectedTab === 'max') {
-        setCalculatedStats(calculateMinMaxStats(100, 31, 252, 'max'));
-      }
-    }, [selectedTab, pokemonStats]);
+  useEffect(() => {
+    const baseStats = {};
+    pokemonStats.forEach(stat => {
+      baseStats[stat.pokemon_v2_stat.name] = stat.base_stat;
+    });
+
+    const minStats = calculateMinMaxStats(100, 0, 0, 'min');
+    const maxStats = calculateMinMaxStats(100, 31, 252, 'max');
+
+    const calculateTotal = (stats) => Object.values(stats).reduce((sum, value) => sum + value, 0);
+
+    const baseTotal = calculateTotal(baseStats);
+    const minTotal = calculateTotal(minStats);
+    const maxTotal = calculateTotal(maxStats);
+
+    setCalculatedStats({
+      base: baseStats,
+      min: minStats,
+      max: maxStats,
+    });
+
+    setHighestStat({
+      base: Math.max(...Object.values(baseStats)),
+      min: Math.max(...Object.values(minStats)),
+      max: Math.max(...Object.values(maxStats))
+    })
+
+    setStatsTotal({
+      base: baseTotal,
+      min: minTotal,
+      max: maxTotal
+    })
+  }, [pokemonStats]);
 
 
 
-    // Function to calculate min and max of the pokemons stats
-    function calculateMinMaxStats(level: number, ivs: number, evs: number, nature: string) {
-      const maxStats: { [key: string]: number } = {};
+  // Function to calculate min and max of the pokemons stats
+  function calculateMinMaxStats(level: number, ivs: number, evs: number, nature: string) {
+    const maxStats: { [key: string]: number } = {};
 
-      // Iterate over each stat
-      for (let stat of pokemonStats) {
-        // Effort values and individual values default to 0
-        const iv = ivs || 0;
-        const ev = evs || 0;
-        let maxStat = stat.base_stat;
+    // Iterate over each stat
+    for (let stat of pokemonStats) {
+      // Effort values and individual values default to 0
+      const iv = ivs || 0;
+      const ev = evs || 0;
+      let maxStat = stat.base_stat;
 
-        if (level === 100) {
-          maxStat = Math.floor(((2 * stat.base_stat + iv + Math.floor(ev / 4)) * level) / 100) + 5;
+      if (level === 100) {
+        maxStat = Math.floor(((2 * stat.base_stat + iv + Math.floor(ev / 4)) * level) / 100) + 5;
 
-          if (stat.pokemon_v2_stat.name !== "hp") {
-            if (nature === 'max') {
-              maxStat = Math.floor(maxStat * 1.1)
-            } else {
-            maxStat = Math.floor(maxStat * 0.9)
-            }
+        if (stat.pokemon_v2_stat.name !== "hp") {
+          if (nature === 'max') {
+            maxStat = Math.floor(maxStat * 1.1)
           } else {
-            maxStat += level + 5
+          maxStat = Math.floor(maxStat * 0.9)
           }
+        } else {
+          maxStat += level + 5
         }
+      }
 
-        maxStats[stat.pokemon_v2_stat.name] = maxStat;
-      };
+      maxStats[stat.pokemon_v2_stat.name] = maxStat;
+    };
 
-      const statsArray = Object.values(maxStats);
-      const maxStat = Math.max(...statsArray);
-      setHighestStat(maxStat);
-      const total = statsArray.reduce((sum, stat) => sum + stat, 0);
-      setStatsTotal(total);
+    return maxStats;
+  }
 
-      return maxStats;
+  const statNameMappings = {
+    hp: 'Hp',
+    attack: 'Atk',
+    defense: 'Def',
+    'special-attack': 'SpAtk',
+    'special-defense': 'SpDef',
+    speed: 'Spd',
+  };
+
+
+  const renderStats = () => {
+    const statItems = [];
+    const selectedStats = calculatedStats[selectedTab];
+
+    if (!selectedStats) {
+      return null;
     }
 
-    const statNameMappings = {
-      hp: 'Hp',
-      attack: 'Atk',
-      defense: 'Def',
-      'special-attack': 'SpAtk',
-      'special-defense': 'SpDef',
-      speed: 'Spd',
-    };
+    pokemonStats.forEach((stat) => {
+      const shortenedStatName = statNameMappings[stat.pokemon_v2_stat.name] || stat.pokemon_v2_stat.name;
+      const statValue = selectedStats[stat.pokemon_v2_stat.name];
 
-
-    const renderStats = () => {
-      const statItems = [];
-
-      pokemonStats.forEach((stat) => {
-        const shortenedStatName = statNameMappings[stat.pokemon_v2_stat.name] || stat.pokemon_v2_stat.name;
-        let statValue = stat.base_stat
-
-        if (selectedTab === 'min' && calculatedStats[stat.pokemon_v2_stat.name]) {
-          statValue = calculatedStats[stat.pokemon_v2_stat.name];
-        } else if (selectedTab === 'max' && calculatedStats[stat.pokemon_v2_stat.name]) {
-          statValue = calculatedStats[stat.pokemon_v2_stat.name];
-        }
-
-        const statItem = (
-          <View style={styles.statItem} key={shortenedStatName}>
-            <Text style={styles.statName}>{shortenedStatName}:</Text>
-            <PillBar percentage={(statValue / highestStat) * 100} stat={statValue} statName={shortenedStatName} />
-          </View>
-        );
-
-        statItems.push(statItem);
-      });
-
-      return statItems;
-    };
-
-
-    return (
-        <View style={styles.container}>
-            <Text style={styles.statsTitleText}>Stats</Text>
-            <View style={styles.navContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.navItem,
-                  selectedTab === 'base' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
-                  selectedTab !== 'base' && { backgroundColor: alternateBackgroundColor }
-                ]}
-                onPress={() => setSelectedTab('base')}
-              >
-                <Text 
-                  style={[
-                    styles.navItemText, 
-                    { color: alternateTextColor }, 
-                    selectedTab === 'base' && (styles.selectedNavItemText, 
-                    { color: textColor })
-                  ]}
-                >
-                  Base
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.navItem,
-                  selectedTab === 'min' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
-                  selectedTab !== 'min' && { backgroundColor: alternateBackgroundColor }
-                ]}
-                onPress={() => setSelectedTab('min')}
-              >
-                <Text 
-                  style={[
-                    styles.navItemText, 
-                    { color: alternateTextColor }, 
-                    selectedTab === 'min' && (styles.selectedNavItemText, 
-                    { color: textColor })
-                  ]}
-                >
-                  Min
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.navItem,
-                  selectedTab === 'max' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
-                  selectedTab !== 'max' && { backgroundColor: alternateBackgroundColor }
-                ]}
-                onPress={() => setSelectedTab('max')}
-              >
-                <Text 
-                  style={[
-                    styles.navItemText,
-                    { color: alternateTextColor },
-                    selectedTab === 'max' && (styles.selectedNavItemText, 
-                    { color: textColor })
-                  ]}
-                >
-                  Max
-                </Text>
-              </TouchableOpacity>
-
-            </View>
-
-            <View style={styles.pillBars}>
-              {renderStats()}
-            </View>
-
-            <Text style={styles.statsTotalContainer}>
-              <Text style={styles.statsTotalText}>TOTAL </Text>
-              <Text style={[styles.statsTotalValue, { color: backgroundColor }]}>{statsTotal}</Text>
-            </Text>
-
-            {selectedTab === "max" ? (
-              <>
-                <Text style={styles.statDisclaimerText}>*Stats at lvl 100, 31 IVs, 252 Evs, and beneficial nature</Text>
-                <Text style={styles.statDisclaimerText}>**Please note that a pokemon can only have 510 EVs total</Text>
-              </>
-            ) : null}
-            {selectedTab === "min" ? (
-              <Text style={styles.statDisclaimerText}>*Stats at lvl 100, 0 IVs, 0 Evs, and hindering nature</Text>
-            ) : null}
+      const statItem = (
+        <View style={styles.statItem} key={shortenedStatName}>
+          <Text style={styles.statName}>{shortenedStatName}:</Text>
+          <PillBar percentage={(statValue / highestStat[selectedTab]) * 100} stat={statValue} statName={shortenedStatName} />
         </View>
-    );
+      );
+
+      statItems.push(statItem);
+    });
+
+    return statItems;
+  };
+
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.statsTitleText}>Stats</Text>
+
+      <View style={styles.navContainer}>
+        <TouchableOpacity
+          style={[
+            styles.navItem,
+            selectedTab === 'base' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
+            selectedTab !== 'base' && { backgroundColor: alternateBackgroundColor }
+          ]}
+          onPress={() => setSelectedTab('base')}
+        >
+          <Text 
+            style={[
+              styles.navItemText, 
+              { color: alternateTextColor }, 
+              selectedTab === 'base' && (styles.selectedNavItemText, 
+              { color: textColor })
+            ]}
+          >
+            Base
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.navItem,
+            selectedTab === 'min' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
+            selectedTab !== 'min' && { backgroundColor: alternateBackgroundColor }
+          ]}
+          onPress={() => setSelectedTab('min')}
+        >
+          <Text 
+            style={[
+              styles.navItemText, 
+              { color: alternateTextColor }, 
+              selectedTab === 'min' && (styles.selectedNavItemText, 
+              { color: textColor })
+            ]}
+          >
+            Min
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.navItem,
+            selectedTab === 'max' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
+            selectedTab !== 'max' && { backgroundColor: alternateBackgroundColor }
+          ]}
+          onPress={() => setSelectedTab('max')}
+        >
+          <Text 
+            style={[
+              styles.navItemText,
+              { color: alternateTextColor },
+              selectedTab === 'max' && (styles.selectedNavItemText, 
+              { color: textColor })
+            ]}
+          >
+            Max
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.pillBars}>
+        {renderStats()}
+      </View>
+
+      <Text style={styles.statsTotalContainer}>
+        <Text style={styles.statsTotalText}>TOTAL </Text>
+        <Text style={[styles.statsTotalValue, { color: backgroundColor }]}>{statsTotal[selectedTab]}</Text>
+      </Text>
+
+      {selectedTab === "max" ? (
+        <>
+          <Text style={styles.statDisclaimerText}>*Stats at lvl 100, 31 IVs, 252 Evs, and beneficial nature</Text>
+          <Text style={styles.statDisclaimerText}>**Please note that a pokemon can only have 510 EVs total</Text>
+        </>
+      ) : null}
+      {selectedTab === "min" ? (
+        <Text style={styles.statDisclaimerText}>*Stats at lvl 100, 0 IVs, 0 Evs, and hindering nature</Text>
+      ) : null}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
