@@ -1,11 +1,16 @@
 import { Text } from "react-native";
-import { useQuery } from "@apollo/client/react/hooks/useQuery";
 import { ABILITIES_LIST_QUERY, ITEMS_LIST_QUERY, POKEMON_LIST_QUERY, POKEMON_DETAILS_LIST_QUERY } from "api/queries";
 import { Redirect } from "expo-router"
 import { useEffect, useState } from "react";
 import { LoadingScreen } from "components/LoadingScreen";
 
+import mmkv from 'utils/mmkvConfig';
+import { useApolloClient, gql, useQuery } from "@apollo/client";
+
+const INITIAL_SETUP_KEY = 'hasInitialSetup';
+
 export default function Page() {
+  const apolloClient = useApolloClient();
   const [loading, setLoading] = useState(true);
   const [loadingText, setLoadingText] = useState<string>("Loading...")
 
@@ -24,6 +29,44 @@ export default function Page() {
   const { loading: pokemonDetailsLoading, error: pokemonDetailsError, data: pokemonDetailsList } = useQuery(POKEMON_DETAILS_LIST_QUERY, {
     fetchPolicy: 'cache-first',
   });
+
+
+  async function checkAndPerformInitialSetup() {
+    try {
+      const hasSetup = mmkv.getString(INITIAL_SETUP_KEY);
+  
+      const initialData = {
+        profile: {
+          __typename: 'Profile',
+          id: '1',
+          username: 'Ash',
+          email: 'ash@example.com',
+          // Initialize other profile fields
+        },
+      };
+  
+      if (!hasSetup) {
+        apolloClient.writeQuery({
+          query: gql`
+            query InitialProfile {
+              profile @client {
+                id
+                username
+                email
+              }
+            }
+          `,
+          data: initialData,
+        })
+        // Update the initial setup flag so future setups do not go through these steps
+        mmkv.set(INITIAL_SETUP_KEY, 'true');
+      }
+    } catch (error) {
+      console.error('Error during initial setup:', error);
+    }
+  }
+
+  checkAndPerformInitialSetup();
 
   useEffect(() => {
     if (

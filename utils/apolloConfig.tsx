@@ -5,24 +5,9 @@ import { persistCache, LocalStorageWrapper, MMKVWrapper } from 'apollo3-cache-pe
 import mmkv from "./mmkvConfig";
 import { Platform, Text } from 'react-native';
 
-// // Reactive variable to store favorite pokemon ids
-// export const favoritedPokemonVar = makeVar([]);
+import { GET_PROFILE_QUERY } from 'api/user/queries';
 
-// Reactive variable to store favorite pokemon ids
-// export const favoritedPokemonVar = makeVar(false);
-
-// const typePolicies = {
-//   Pokemon: {
-//     fields: {
-//       isFavorited: {
-//         read(_, { readField }) {
-//           const pokemonId = readField('id');
-//           return favoritedPokemonVar().includes(pokemonId);
-//         }
-//       }
-//     }
-//   }
-// }
+import { LoadingScreen } from 'components/LoadingScreen';
 
 export const ApolloCacheProvider = ({ children }) => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>();
@@ -92,6 +77,22 @@ export const ApolloCacheProvider = ({ children }) => {
             Pokemon: {
               isFavorited: () => false,
             },
+            Query: {
+              getProfile: (_, __, { cache }) => {
+                // Retrieve profile data from the cache
+                return cache.readQuery({ query: GET_PROFILE_QUERY });
+              },
+            },
+            Mutation: {
+              updateProfile: (_, { profile }, { cache }) => {
+                // Update profile data in the cache
+                cache.writeQuery({
+                  query: GET_PROFILE_QUERY,
+                  data: { profile },
+                });
+                return null;
+              },
+            },
           },
         })
       );
@@ -103,7 +104,7 @@ export const ApolloCacheProvider = ({ children }) => {
   
 
   if (!client) {
-    return <Text>Initializing Client...</Text>
+    return <LoadingScreen loadingText={'Initializing Client'} />
   }
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>
