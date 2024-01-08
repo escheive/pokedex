@@ -42,6 +42,7 @@ export default function Page() {
           id: '1',
           username: 'Ash',
           email: 'ash@example.com',
+          profileImage: '1'
           // Initialize other profile fields
         },
       };

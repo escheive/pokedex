@@ -19,6 +19,14 @@ export const POKEMON_LIST_QUERY = gql`
   }
 `;
 
+export const POKEMON_ID_QUERY = gql`
+  query pokemonIdQuery {
+    pokemon_v2_pokemon {
+      id
+    }
+  }
+`;
+
 // graphQL query for fetching all abilities basic details
 export const ABILITIES_LIST_QUERY = gql`
   query fetchAllPokemonAbilities {

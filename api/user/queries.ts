@@ -6,6 +6,7 @@ export const GET_PROFILE_QUERY = gql`
       id
       username
       email
+      profileImage
     }
   }
 `;
