@@ -47,9 +47,10 @@ export default function Profile() {
     }
   };
 
-  const showProfileImageOptions = () => {
-
-  }
+  const handleSelectNewProfileImage = (itemId) => {
+    setNewProfileImage(itemId);
+    setImageModalVisible(false);
+  };
 
   const gap = 10;
   const numColumns = 6;
@@ -58,7 +59,7 @@ export default function Profile() {
 
 
   const renderPokemonItem = ({ item }) => (
-    <TouchableOpacity onPress={() => setNewProfileImage(item.id)}>
+    <TouchableOpacity onPress={() => handleSelectNewProfileImage(item.id)}>
       <Image 
         style={[
           {
@@ -160,56 +161,69 @@ export default function Profile() {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flex: 1,
     alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#f0f0f0', // You can adjust the background color to match your app's theme
+    paddingTop: 20,
+    backgroundColor: '#f4f4f4',
   },
   avatar: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    marginRight: 10,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginBottom: 20,
+    borderWidth: 3,
+    borderColor: '#eaeaea',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   infoContainer: {
-    flexDirection: 'column',
+    alignItems: 'center',
   },
   username: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
   },
   email: {
-    fontSize: 14,
-    color: 'gray',
+    fontSize: 22,
+    color: '#666',
+    marginBottom: 20,
   },
   input: {
-    height: 40,
-    margin: 12,
+    height: 50,
+    width: '100%',
+    marginVertical: 10,
+    marginHorizontal: 25,
     borderWidth: 1,
-    padding: 10,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 15,
+    backgroundColor: '#f9f9f9'
   },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   modalContent: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#ccc',
+    backgroundColor: '#fff',
     width: '90%',
-    borderRadius: 16,
+    borderRadius: 20,
   },
   modalTitle: {
     textAlign: 'center',
     width: '100%',
     fontSize: 24,
     fontWeight: 'bold',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    color: 'white',
-    paddingVertical: 16,
+    color: '#333',
+    marginVertical: 20,
   },
   modalPokemonContainer: {
     backgroundColor: '#fff',
