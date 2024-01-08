@@ -52,25 +52,28 @@ export default function Profile() {
   }
 
   const gap = 10;
-  const numColumns = 5;
+  const numColumns = 6;
   const availableSpace = Dimensions.get('window').width - (numColumns - 1) * gap;
-  const itemSize = availableSpace / numColumns;
+  const itemSize = availableSpace / numColumns - 10;
 
 
   const renderPokemonItem = ({ item }) => (
-    <Image 
-      style={[
-        {
-          margin: gap / 2,
-          width: itemSize,
-          height: itemSize,
-        }
-      ]}
-      source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${item.id}.png` }}
-      contentFit="contain"
-      transition={0}
-      recyclingKey={item.id}
-    />
+    <TouchableOpacity onPress={() => setNewProfileImage(item.id)}>
+      <Image 
+        style={[
+          {
+            margin: gap / 2,
+            width: itemSize,
+            height: itemSize,
+          }
+        ]}
+        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${item.id}.png` }}
+        contentFit="contain"
+        transition={0}
+        recyclingKey={item.id}
+        pointerEvents='none'
+      />
+    </TouchableOpacity>
   );
 
   return (
@@ -84,7 +87,7 @@ export default function Profile() {
       />
       <Image
         style={[ styles.avatar, { margin: gap / 2 } ]}
-        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${profileImage ? profileImage : 1}.png` }}
+        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${profileImage ? newProfileImage : 1}.png` }}
         contentFit="contain"
         transition={0}
         recyclingKey={profileImage}
