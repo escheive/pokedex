@@ -79,18 +79,13 @@ export const ApolloCacheProvider = ({ children }) => {
             },
             Query: {
               getProfile: (_, __, { cache }) => {
-                // Retrieve profile data from the cache
-                return cache.readQuery({ query: GET_PROFILE_QUERY });
-              },
-            },
-            Mutation: {
-              updateProfile: (_, { profile }, { cache }) => {
-                // Update profile data in the cache
-                cache.writeQuery({
-                  query: GET_PROFILE_QUERY,
-                  data: { profile },
-                });
-                return null;
+                try {
+                  // Retrieve profile data from the cache
+                  return cache.readQuery({ query: GET_PROFILE_QUERY });
+                } catch (error) {
+                  console.error('Error reading profile from cache:', error);
+                  return null;
+                }
               },
             },
           },

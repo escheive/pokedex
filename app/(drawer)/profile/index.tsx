@@ -1,13 +1,43 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, TextInput, Button } from 'react-native';
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
 import { GET_PROFILE_QUERY } from 'api/user/queries';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation, useApolloClient } from '@apollo/client';
 
 export default function Profile() {
+  const apolloClient = useApolloClient();
   const { data: userData } = useQuery(GET_PROFILE_QUERY);
   const { id, username, email } = userData.profile;
+
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+  const [newUsername, setNewUsername] = useState(username);
+  const [newEmail, setNewEmail] = useState(email);
+
+  const handleUpdateProfile = async (newUsername, newEmail) => {
+    try {
+      console.log("trying to update profile...");
+      console.log(newUsername, newEmail);
+
+      const data = {
+        profile: {
+          __typename: 'Profile',
+          id, // Ensure this id is the same as the one in the initial data
+          username: newUsername,
+          email: newEmail,
+        },
+      };
+
+      apolloClient.writeQuery({
+        query: GET_PROFILE_QUERY,
+        data: data,
+      });
+
+      setIsUpdatingProfile(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -23,8 +53,36 @@ export default function Profile() {
         source={{ uri: 'https://via.placeholder.com/150' }} // Placeholder image, replace with a default Pokémon-themed icon if avatarUrl is not provided
       />
       <View style={styles.infoContainer}>
-        <Text style={styles.username}>{username || 'Trainer'}</Text>
-        <Text style={styles.email}>{email || 'trainer@example.com'}</Text>
+        {!isUpdatingProfile ? (
+          <>
+            <Text style={styles.username}>{username || 'Trainer'}</Text>
+            <Text style={styles.email}>{email || 'trainer@example.com'}</Text>
+            <Button 
+              title="Update Profile" 
+              onPress={() => setIsUpdatingProfile(true)} 
+            />
+          </>
+        ) : (
+          <>
+            <TextInput
+              style={styles.input}
+              onChangeText={setNewUsername}
+              value={newUsername}
+              placeholder="Username"
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={setNewEmail}
+              value={newEmail}
+              placeholder="Email"
+              keyboardType="email-address"
+            />
+            <Button 
+              title="Update Profile"
+              onPress={() => handleUpdateProfile(newUsername, newEmail)} 
+            />
+          </>
+        )}
       </View>
     </View>
   );
@@ -53,5 +111,11 @@ const styles = StyleSheet.create({
   email: {
     fontSize: 14,
     color: 'gray',
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });

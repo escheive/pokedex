@@ -14,6 +14,9 @@ import { handleClearApolloCache } from 'api/reset';
 // Constants
 import { groupedVersions, versionOptions } from 'constants/Pokemon';
 
+import mmkv from 'utils/mmkvConfig';
+const INITIAL_SETUP_KEY = 'hasInitialSetup';
+
 export default function Page() {
   const apolloClient = useApolloClient();
   // State to track various filter options
@@ -121,6 +124,9 @@ export default function Page() {
         </View>
         <TouchableOpacity onPress={() => handleClearApolloCache(apolloClient)}>
           <Text>Clear Apollo Cache</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => mmkv.set(INITIAL_SETUP_KEY, 'false')}>
+          <Text>RESET Initial setup</Text>
         </TouchableOpacity>
       </View>
       {pokemonList ? renderPokemonList() : null}

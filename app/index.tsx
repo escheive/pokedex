@@ -1,11 +1,12 @@
 import { Text } from "react-native";
-import { ABILITIES_LIST_QUERY, ITEMS_LIST_QUERY, POKEMON_LIST_QUERY, POKEMON_DETAILS_LIST_QUERY } from "api/queries";
+import { ABILITIES_LIST_QUERY, ITEMS_LIST_QUERY, POKEMON_LIST_QUERY, POKEMON_DETAILS_LIST_QUERY, GET_POKEMON_BY_ID } from "api/queries";
 import { Redirect } from "expo-router"
 import { useEffect, useState } from "react";
 import { LoadingScreen } from "components/LoadingScreen";
 
 import mmkv from 'utils/mmkvConfig';
 import { useApolloClient, gql, useQuery } from "@apollo/client";
+import { GET_PROFILE_QUERY } from "api/user/queries";
 
 const INITIAL_SETUP_KEY = 'hasInitialSetup';
 
@@ -45,22 +46,15 @@ export default function Page() {
         },
       };
   
-      if (!hasSetup) {
+      if (hasSetup != 'true') {
         apolloClient.writeQuery({
-          query: gql`
-            query InitialProfile {
-              profile @client {
-                id
-                username
-                email
-              }
-            }
-          `,
+          query: GET_PROFILE_QUERY,
           data: initialData,
         })
         // Update the initial setup flag so future setups do not go through these steps
         mmkv.set(INITIAL_SETUP_KEY, 'true');
       }
+
     } catch (error) {
       console.error('Error during initial setup:', error);
     }
