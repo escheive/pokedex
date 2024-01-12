@@ -31,34 +31,11 @@ export const EvolutionChain = ({ pokemonId, evolutionChain }) => {
   // Usage
   const sortedEvolutionChain = sortEvolutionChainByEvolution(evolutionChain);
 
-  // const sortEvolutionChainById = (evolutionChain) => {
-  //   // Deep copy the evolutionChain array to avoid mutating original data
-  //   const copiedEvolutionChain = evolutionChain.map(species => ({
-  //     ...species,
-  //     pokemon_v2_pokemonevolutions: species.pokemon_v2_pokemonevolutions.map(evolution => ({ ...evolution }))
-  //   }));
-  
-  //   // Sorting the evolution chain based on the IDs
-  //   const sortedEvolutionChain = copiedEvolutionChain.sort((a, b) => a.id - b.id);
-  
-  //   // If there are evolutions, ensure they are sorted as well
-  //   sortedEvolutionChain.forEach(species => {
-  //     species.pokemon_v2_pokemonevolutions.sort((a, b) => a.evolved_species_id - b.evolved_species_id);
-  //   });
-  
-  //   return sortedEvolutionChain;
-  // };
-  
-  // // Usage
-  // const sortedEvolutionChain = sortEvolutionChainById(evolutionChain);
-
-  console.log(evolutionChain)
-
 
   return (
     <View style={styles.container}>
       <Text style= {{ fontSize: 24 }}>Evolution Chain</Text>
-    {pokemonId === 133 ? (
+    {pokemonId === 133 || pokemonId === 134 || pokemonId === 135 || pokemonId === 136 || pokemonId === 196 || pokemonId === 197 || pokemonId === 470 || pokemonId === 471 || pokemonId === 700 ? (
       <OctagonEvolutionLayout evolutionChain={evolutionChain} />
     ) : (
       <View style={styles.evolutionsContainer}>

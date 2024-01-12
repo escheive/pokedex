@@ -8,8 +8,8 @@ import { IconContainer } from 'components/card/IconContainer';
 export const PokemonCard = ({ pokemon }) => {
   const [selectedAbility, setSelectedAbility] = useState(null);
 
-    const backgroundColor = pokemonColors[pokemon?.pokemon_v2_pokemontypes[0].pokemon_v2_type.name].backgroundColor;
-    const color = pokemonColors[pokemon?.pokemon_v2_pokemontypes[0].pokemon_v2_type.name].color;
+  const backgroundColor = pokemonColors[pokemon?.pokemon_v2_pokemontypes[0].pokemon_v2_type.name].backgroundColor;
+  const color = pokemonColors[pokemon?.pokemon_v2_pokemontypes[0].pokemon_v2_type.name].color;
 
 
   return (
@@ -116,7 +116,7 @@ export const PokemonCard = ({ pokemon }) => {
         <Text>IS BABY: {pokemon.pokemon_v2_pokemonspecy.is_baby}</Text>
         <Text>IS LEGENDARY: {pokemon.pokemon_v2_pokemonspecy.is_legendary}</Text>
         <Text>IS MYTHICAL: {pokemon.pokemon_v2_pokemonspecy.is_mythical}</Text>
-        <Text>HABITAT: {pokemon.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat.name}</Text>
+        <Text>HABITAT: {pokemon.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat?.name}</Text>
       </View>
     </View>
   );

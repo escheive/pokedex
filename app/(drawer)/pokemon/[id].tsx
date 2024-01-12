@@ -23,8 +23,6 @@ export default function Page() {
   const client = useApolloClient();
   const params = useLocalSearchParams();
   const pokemonId = params.id;
-  // const [pokemon, setPokemon] = useState<Pokemon | null>(null);
-  const [pokemonDetails, setPokemonDetails] = useState<Pokemon | null>(null);
 
   const { loading, error, data: pokemon } = useQuery(GET_POKEMON_BY_ID, {
     variables: { id: pokemonId },
