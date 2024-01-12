@@ -9,7 +9,7 @@ export const IconContainer = ({ pokemon }: any) => {
   const apolloClient = useApolloClient();
 
   return (
-    <View style={{ flexDirection: 'row' }}>
+    <View style={{ flexDirection: 'row', marginVertical: 10 }}>
       <Ionicons
         name={pokemon.isFavorited ? "star" : "star-outline"}
         size={24} color="#555"

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal } from 'rea
 import { Image } from "expo-image";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { capitalizeString, pokemonColors } from '../../utils/helpers';
+import { IconContainer } from 'components/card/IconContainer';
 
 export const PokemonCard = ({ pokemon }) => {
   const [selectedAbility, setSelectedAbility] = useState(null);
@@ -54,6 +55,8 @@ export const PokemonCard = ({ pokemon }) => {
             </View>
           ) : null}
         </View>
+
+        <IconContainer pokemon={pokemon} />
 
         <View style={styles.abilitiesContainer}>
           <Text style={styles.abilitiesTitle}>Abilities</Text>
