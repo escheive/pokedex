@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { capitalizeString, pokemonColors } from '../../utils/helpers';
 
-export const PokemonCard = ({ pokemon, pokemonDetails }) => {
+export const PokemonCard = ({ pokemon }) => {
   const [selectedAbility, setSelectedAbility] = useState(null);
 
     const backgroundColor = pokemonColors[pokemon?.pokemon_v2_pokemontypes[0].pokemon_v2_type.name].backgroundColor;
@@ -58,7 +58,7 @@ export const PokemonCard = ({ pokemon, pokemonDetails }) => {
         <View style={styles.abilitiesContainer}>
           <Text style={styles.abilitiesTitle}>Abilities</Text>
 
-          {pokemonDetails.pokemon_v2_pokemonabilities.map((ability) => (
+          {pokemon.pokemon_v2_pokemonabilities.map((ability) => (
             <TouchableOpacity
               key={ability.pokemon_v2_ability.name}
               style={[styles.abilityContainer, { backgroundColor } ]}
@@ -98,22 +98,22 @@ export const PokemonCard = ({ pokemon, pokemonDetails }) => {
           <Text>{pokemon.pokemon_v2_pokemontypes[1].pokemon_v2_type.name}</Text>
         ) : null}
         <Text>POKEMON DETAILS</Text>
-        <Text>ID: {pokemonDetails.id}</Text>
-        <Text>HEIGHT: {pokemonDetails.height}</Text>
-        <Text>WEIGHT: {pokemonDetails.weight}</Text>
-        <Text>BASE EXPERIENCE: {pokemonDetails.base_experience}</Text>
+        <Text>ID: {pokemon.id}</Text>
+        <Text>HEIGHT: {pokemon.height}</Text>
+        <Text>WEIGHT: {pokemon.weight}</Text>
+        <Text>BASE EXPERIENCE: {pokemon.base_experience}</Text>
         <Text>ABILITIES</Text>
-        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.name}</Text>
-        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
-        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].effect}</Text>
-        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.name}</Text>
-        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[1]?.pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
-        <Text>{pokemonDetails.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].effect}</Text>
-        <Text>BASE HAPPINESS: {pokemonDetails.pokemon_v2_pokemonspecy.base_happiness}</Text>
-        <Text>IS BABY: {pokemonDetails.pokemon_v2_pokemonspecy.is_baby}</Text>
-        <Text>IS LEGENDARY: {pokemonDetails.pokemon_v2_pokemonspecy.is_legendary}</Text>
-        <Text>IS MYTHICAL: {pokemonDetails.pokemon_v2_pokemonspecy.is_mythical}</Text>
-        <Text>HABITAT: {pokemonDetails.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat.name}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.name}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].effect}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.name}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[1]?.pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].effect}</Text>
+        <Text>BASE HAPPINESS: {pokemon.pokemon_v2_pokemonspecy.base_happiness}</Text>
+        <Text>IS BABY: {pokemon.pokemon_v2_pokemonspecy.is_baby}</Text>
+        <Text>IS LEGENDARY: {pokemon.pokemon_v2_pokemonspecy.is_legendary}</Text>
+        <Text>IS MYTHICAL: {pokemon.pokemon_v2_pokemonspecy.is_mythical}</Text>
+        <Text>HABITAT: {pokemon.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat.name}</Text>
       </View>
     </View>
   );

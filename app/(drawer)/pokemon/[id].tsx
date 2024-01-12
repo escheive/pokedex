@@ -11,7 +11,7 @@ import { pokemonColors } from '../../../utils/helpers';
 import { useAppSelector } from '../../../utils/hooks';
 import { selectPokemonById } from '../../../store/slices/pokemonSlice';
 import { useLocalSearchParams, Stack } from 'expo-router';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient, useQuery } from '@apollo/client';
 import { GET_POKEMON_BY_ID } from 'api/queries';
 import { pokemonFragment, pokemonDetailsFragment } from 'api/fragments';
 import { Pokemon } from 'types';
@@ -23,36 +23,20 @@ export default function Page() {
   const client = useApolloClient();
   const params = useLocalSearchParams();
   const pokemonId = params.id;
-  const [pokemon, setPokemon] = useState<Pokemon | null>(null);
+  // const [pokemon, setPokemon] = useState<Pokemon | null>(null);
   const [pokemonDetails, setPokemonDetails] = useState<Pokemon | null>(null);
 
-  useEffect(() => {
-    const getPokemonById = () => {
-      try {
-        const pokemon = client.readFragment({
-          id: `pokemon_v2_pokemon:${pokemonId}`,
-          fragment: pokemonFragment,
-        });
+  const { loading, error, data: pokemon } = useQuery(GET_POKEMON_BY_ID, {
+    variables: { id: pokemonId },
+  });
 
-        console.log(pokemon)
+  if (loading) {
+    return <Text>Loading...</Text>
+  }
 
-        const pokemonDetails = client.readFragment({
-          id: `pokemon_v2_pokemon:${pokemonId}`,
-          fragment: pokemonDetailsFragment,
-        });
-
-        console.log("Pokemon Details:", pokemonDetails);
-  
-        setPokemon(pokemon);
-        setPokemonDetails(pokemonDetails);
-      } catch (error) {
-        console.error('Error reading from cache:', error);
-        return null;
-      }
-    };
-
-    getPokemonById();
-  }, [client, pokemonId]);
+  if (error) {
+    console.log('Error', error)
+  }
 
   if (!pokemon) {
     return <Text>Loading...</Text>
@@ -60,11 +44,11 @@ export default function Page() {
 
   return (
     <ScrollView style={styles.container}>
-      <PokemonCard pokemon={pokemon} pokemonDetails={pokemonDetails} />
+      <PokemonCard pokemon={pokemon.pokemon_v2_pokemon_by_pk} />
 
-      <PokemonStats pokemonTypes={pokemon.pokemon_v2_pokemontypes} pokemonStats={pokemonDetails.pokemon_v2_pokemonstats} />
+      <PokemonStats pokemonTypes={pokemon.pokemon_v2_pokemon_by_pk.pokemon_v2_pokemontypes} pokemonStats={pokemon.pokemon_v2_pokemon_by_pk.pokemon_v2_pokemonstats} />
 
-      <EvolutionChain pokemonId={pokemon.id} evolutionChain={pokemonDetails.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies} />
+      <EvolutionChain pokemonId={pokemon.pokemon_v2_pokemon_by_pk.id} evolutionChain={pokemon.pokemon_v2_pokemon_by_pk.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies} />
 
     </ScrollView>
   )

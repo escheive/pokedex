@@ -85,8 +85,8 @@ export const ITEMS_LIST_QUERY = gql`
 
 // graphQL query for fetching a pokemon from the pokemon list
 export const GET_POKEMON_BY_ID = gql`
-  query getPokemonById($id: ID!) {
-    pokemon_v2_pokemon(id: $id) {
+  query getPokemonById($id: Int!) {
+    pokemon_v2_pokemon_by_pk(id: $id) {
       id
       name
       isFavorited @client
@@ -95,6 +95,53 @@ export const GET_POKEMON_BY_ID = gql`
         pokemon_v2_type {
           name
           id
+        }
+      }
+      weight
+      height
+      base_experience
+      pokemon_v2_pokemonstats {
+        base_stat
+        pokemon_v2_stat {
+          name
+        }
+      }
+      pokemon_v2_pokemonabilities {
+        pokemon_v2_ability {
+          id
+          name
+          pokemon_v2_abilityeffecttexts(limit: 1, order_by: {pokemon_v2_ability: {generation_id: desc}}, where: {pokemon_v2_language: {name: {_eq: "en"}}}) {
+            effect
+            short_effect
+          }
+          pokemon_v2_abilityflavortexts(limit: 1, order_by: {version_group_id: desc}, where: {pokemon_v2_language: {name: {_eq: "en"}}}) {
+            flavor_text
+          }
+        }
+      }
+      pokemon_v2_pokemonspecy {
+        base_happiness
+        is_baby
+        is_legendary
+        is_mythical
+        pokemon_v2_evolutionchain {
+          pokemon_v2_pokemonspecies {
+            name
+            id
+            evolves_from_species_id
+            pokemon_v2_pokemonevolutions {
+              pokemon_v2_evolutiontrigger {
+                name
+              }
+              evolution_item_id
+              min_level
+              time_of_day
+              needs_overworld_rain
+            }
+          }
+        }
+        pokemon_v2_pokemonhabitat {
+          name
         }
       }
     }
