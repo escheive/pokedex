@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Button, Modal, TouchableOpacity, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
 import { FlashList } from '@shopify/flash-list';
 import { GET_PROFILE_QUERY } from 'api/user/queries';
-import { POKEMON_ID_QUERY } from 'api/queries';
+import { POKEMON_ISFAVORITE_OR_CAUGHT_QUERY } from 'api/queries';
 import { useQuery, useMutation, useApolloClient } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function Profile() {
   const apolloClient = useApolloClient();
+
   const { data: userData } = useQuery(GET_PROFILE_QUERY);
-  const { data: pokemonIds } = useQuery(POKEMON_ID_QUERY);
+
+  const { loading: pokemonLoading, data: pokemon } = useQuery(POKEMON_ISFAVORITE_OR_CAUGHT_QUERY);
+
   const { id, username, email, profileImage } = userData.profile;
 
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
@@ -20,6 +23,20 @@ export default function Profile() {
   const [newEmail, setNewEmail] = useState(email);
   const [newProfileImage, setNewProfileImage] = useState(profileImage);
   const [imageModalVisible, setImageModalVisible] = useState(false);
+
+  const [favoritedPokemon, setFavoritedPokemon] = useState(() => {
+    if (pokemon) {
+      return pokemon.pokemon_v2_pokemon.filter(pokemon => pokemon.isFavorited === true);
+    }
+    return [];
+  });
+
+  useMemo(() => {
+    if (pokemon) {
+      setFavoritedPokemon(pokemon.pokemon_v2_pokemon.filter(p => p.isFavorited === true));
+    }
+  }, [pokemon]);
+
 
   const handleUpdateProfile = async (newUsername, newEmail, newProfileImage) => {
     try {
@@ -58,24 +75,28 @@ export default function Profile() {
   const itemSize = availableSpace / numColumns - 10;
 
 
-  const renderPokemonItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleSelectNewProfileImage(item.id)}>
-      <Image 
-        style={[
-          {
-            margin: gap / 2,
-            width: itemSize,
-            height: itemSize,
-          }
-        ]}
-        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${item.id}.png` }}
-        contentFit="contain"
-        transition={0}
-        recyclingKey={item.id}
-        pointerEvents='none'
-      />
-    </TouchableOpacity>
-  );
+  const renderPokemonItem = ({ item }) => {
+
+    return (
+      <TouchableOpacity onPress={() => handleSelectNewProfileImage(item.id)}>
+        <Image 
+          style={[
+            {
+              margin: gap / 2,
+              width: itemSize,
+              height: itemSize,
+            }
+          ]}
+          source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${item.id}.png` }}
+          contentFit="contain"
+          transition={0}
+          recyclingKey={item.id}
+          pointerEvents='none'
+        />
+      </TouchableOpacity>
+    )
+  };
+
 
   return (
     <View style={styles.container}>
@@ -131,6 +152,25 @@ export default function Profile() {
           </>
         )}
       </View>
+
+      <View>
+        {favoritedPokemon && favoritedPokemon.map((pokemon) => {
+
+          return (
+            <View>
+              <Image
+                style={[ styles.avatar, { margin: gap / 2 } ]}
+                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon ? pokemon.id : 1}.png` }}
+                contentFit="contain"
+                transition={0}
+                recyclingKey={pokemon.id.toString()}
+              />
+              <Text>{pokemon.id}</Text> 
+            </View>
+          )
+        })}
+      </View>
+
       <Modal visible={imageModalVisible} animationType="fade" transparent>
         <TouchableOpacity
           style={styles.modalContainer}
@@ -144,7 +184,7 @@ export default function Profile() {
           >
             <Text style={styles.modalTitle}>Choose an image for your profile</Text>
             <FlashList 
-              data={pokemonIds.pokemon_v2_pokemon}
+              data={pokemon.pokemon_v2_pokemon}
               renderItem={renderPokemonItem}
               numColumns={numColumns}
               keyExtractor={(item) => item.id.toString()}

@@ -8,7 +8,7 @@ export const POKEMON_LIST_QUERY = gql`
       id
       name
       isFavorited @client
-      isCaught @ client
+      isCaught @client
       pokemon_v2_pokemontypes {
         pokemon_v2_type {
           name
@@ -19,10 +19,12 @@ export const POKEMON_LIST_QUERY = gql`
   }
 `;
 
-export const POKEMON_ID_QUERY = gql`
+export const POKEMON_ISFAVORITE_OR_CAUGHT_QUERY = gql`
   query pokemonIdQuery {
     pokemon_v2_pokemon {
       id
+      isFavorited @client
+      isCaught @client
     }
   }
 `;
