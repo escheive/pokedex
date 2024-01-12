@@ -8,6 +8,7 @@ import { GET_PROFILE_QUERY } from 'api/user/queries';
 import { POKEMON_ISFAVORITE_OR_CAUGHT_QUERY } from 'api/queries';
 import { useQuery, useMutation, useApolloClient } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Link } from 'expo-router';
 
 export default function Profile() {
   const apolloClient = useApolloClient();
@@ -97,6 +98,31 @@ export default function Profile() {
     )
   };
 
+  const renderFavoritedPokemonItem = ({ item }) => {
+
+    return (
+      <Link 
+        href={`/pokemon/${item.id}`}
+      >
+        <Image 
+          style={[
+            {
+              margin: gap / 2,
+              width: itemSize,
+              height: itemSize,
+            }
+          ]}
+          source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${item.id}.png` }}
+          contentFit="contain"
+          transition={0}
+          recyclingKey={item.id.toString()}
+          pointerEvents='none'
+        />
+        <Text>{item.id}</Text>
+      </Link>
+    )
+  };
+
 
   return (
     <View style={styles.container}>
@@ -154,7 +180,16 @@ export default function Profile() {
       </View>
 
       <View>
-        {favoritedPokemon && favoritedPokemon.map((pokemon) => {
+      <FlashList 
+        data={favoritedPokemon}
+        renderItem={renderFavoritedPokemonItem}
+        numColumns={numColumns}
+        keyExtractor={(item) => item.id.toString()}
+        estimatedItemSize={100}
+        estimatedListSize={{ height: Dimensions.get("window").height, width: Dimensions.get("window").width * 0.90 }}
+        contentContainerStyle={{  }}
+      />
+        {/* {favoritedPokemon && favoritedPokemon.map((pokemon) => {
 
           return (
             <View>
@@ -168,7 +203,7 @@ export default function Profile() {
               <Text>{pokemon.id}</Text> 
             </View>
           )
-        })}
+        })} */}
       </View>
 
       <Modal visible={imageModalVisible} animationType="fade" transparent>
