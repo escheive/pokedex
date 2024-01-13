@@ -6,20 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 // Components
 import { FilterButton } from 'components/button/FilterButton';
 // Utils
-import { pokemonColors, capitalizeString } from 'utils/helpers';
-
-
-const versionOptions = [
-  { key: 'gen1', label: 'Gen 1', name: `Red/Blue`, colors: ['#FF5A5A', '#7C7CFF'] },
-  { key: 'gen2', label: 'Gen 2', name: `Gold/Silver`, colors: ['#F3C447', '#A8A8A8'] },
-  { key: 'gen3', label: 'Gen 3', name: `Ruby/Sapphire`, colors: ['#FF3737', '#3737FF'] },
-  { key: 'gen4', label: 'Gen 4', name: `Diamond/Pearl`, colors: ['#AAAAFF', '#FFAAAA'] },
-  { key: 'gen5', label: 'Gen 5', name: `Black/White`, colors: ['#262626', '#E6E6E6'] },
-  { key: 'gen6', label: 'Gen 6', name: `X/Y`, colors: ['#FF7254', '#3CB371'] },
-  { key: 'gen7', label: 'Gen 7', name: `Sun/Moon`, colors: ['#FFAB54', '#53A5D3'] },
-  { key: 'gen8', label: 'Gen 8', name: `Sword/Shield`, colors: ['#6CBDF9', '#DC2F5A'] },
-  { key: 'gen9', label: 'Gen 9', name: `Scarlet/Violet`, colors: ['#B43230', '#822F7B'] },
-];
+import { pokemonColors, capitalizeString, versionOptions } from 'utils/helpers';
 
 
 // Helper function to handle version and type selection
@@ -34,39 +21,10 @@ const handleFilterSelect = (filterOptions: any, setFilterOptions: any, key: any,
 };
 
 
-export const PokemonFilterDrawer = React.memo(({ setFilterOptions, filterOptions }: any) => {
+export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [drawerWidth] = useState(new Animated.Value(0));
 
-  const handleVersionSelect = (version: string) => {
-    let updatedVersions: string[] = [];
-
-    if (filterOptions.selectedVersions.includes(version)) {
-      updatedVersions = filterOptions.selectedVersions.filter((v) => v !== version);
-    } else {
-      updatedVersions = [...filterOptions.selectedVersions, version];
-    }
-
-    setFilterOptions((prevOptions) => ({
-      ...prevOptions,
-      selectedVersions: updatedVersions,
-    }))
-  };
-
-  const handleTypeSelect = (type: string) => {
-    let updatedTypes: string[] = [];
-
-    if (filterOptions.selectedTypes.includes(type)) {
-      updatedTypes = filterOptions.selectedTypes.filter((t) => t !== type);
-    } else {
-      updatedTypes = [...filterOptions.selectedTypes, type];
-    }
-
-    setFilterOptions((prevOptions) => ({
-      ...prevOptions,
-      selectedTypes: updatedTypes,
-    }))
-  };
 
   const handleDropdownToggle = () => {
     if (dropdownVisible) {
@@ -76,6 +34,7 @@ export const PokemonFilterDrawer = React.memo(({ setFilterOptions, filterOptions
     }
   };
 
+
   const openDrawer = () => {
     setDropdownVisible(!dropdownVisible);
     Animated.timing(drawerWidth, {
@@ -84,6 +43,7 @@ export const PokemonFilterDrawer = React.memo(({ setFilterOptions, filterOptions
       useNativeDriver: true,
     }).start();
   };
+
 
   const closeDrawer = () => {
     Animated.timing(drawerWidth, {
@@ -95,10 +55,6 @@ export const PokemonFilterDrawer = React.memo(({ setFilterOptions, filterOptions
     });
   };
 
-  const drawerWidthInterpolation = drawerWidth.interpolate({
-    inputRange: [0, 200],
-    outputRange: [0, 200],
-  });
 
   const selectedVersions = versionOptions.filter((range) =>
     filterOptions.selectedVersions.includes(range.key)
@@ -115,6 +71,7 @@ export const PokemonFilterDrawer = React.memo(({ setFilterOptions, filterOptions
   const unselectedTypes = Object.keys(pokemonColors).filter((type) =>
     !filterOptions.selectedTypes.includes(type)
   );
+
 
   return (
     <View style={styles.filterDropdownContainer}>
@@ -283,7 +240,7 @@ export const PokemonFilterDrawer = React.memo(({ setFilterOptions, filterOptions
       </Modal>
     </View>
   );
-});
+};
 
 
 const styles = StyleSheet.create({
