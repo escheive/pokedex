@@ -109,7 +109,7 @@ export const pokemonColors: PokemonColors = {
 
 interface TmTypeMapping {
     [key: string]: string;
-  }
+}
   
 const tmTypeMapping: TmTypeMapping = {
     tm01: 'dark',

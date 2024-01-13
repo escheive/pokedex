@@ -1,11 +1,26 @@
 // Dependencies
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Modal, ScrollView } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import CheckBox from 'expo-checkbox';
 import { Ionicons } from '@expo/vector-icons';
+// Components
+import { FilterButton } from 'components/button/FilterButton';
 // Utils
 import { pokemonColors, capitalizeString } from 'utils/helpers';
+
+
+const versionOptions = [
+  { key: 'gen1', label: 'Gen 1', name: `Red/Blue`, colors: ['#FF5A5A', '#7C7CFF'] },
+  { key: 'gen2', label: 'Gen 2', name: `Gold/Silver`, colors: ['#F3C447', '#A8A8A8'] },
+  { key: 'gen3', label: 'Gen 3', name: `Ruby/Sapphire`, colors: ['#FF3737', '#3737FF'] },
+  { key: 'gen4', label: 'Gen 4', name: `Diamond/Pearl`, colors: ['#AAAAFF', '#FFAAAA'] },
+  { key: 'gen5', label: 'Gen 5', name: `Black/White`, colors: ['#262626', '#E6E6E6'] },
+  { key: 'gen6', label: 'Gen 6', name: `X/Y`, colors: ['#FF7254', '#3CB371'] },
+  { key: 'gen7', label: 'Gen 7', name: `Sun/Moon`, colors: ['#FFAB54', '#53A5D3'] },
+  { key: 'gen8', label: 'Gen 8', name: `Sword/Shield`, colors: ['#6CBDF9', '#DC2F5A'] },
+  { key: 'gen9', label: 'Gen 9', name: `Scarlet/Violet`, colors: ['#B43230', '#822F7B'] },
+];
+
 
 // Helper function to handle version and type selection
 const handleFilterSelect = (filterOptions: any, setFilterOptions: any, key: any, value: any) => {
@@ -18,20 +33,6 @@ const handleFilterSelect = (filterOptions: any, setFilterOptions: any, key: any,
   setFilterOptions((prevOptions: any) => ({ ...prevOptions, [key]: updatedValues }));
 };
 
-const FilterButton: React.FC<{
-  label: any; 
-  onPress: any; 
-  gradientColors: any;
-}> = ({ label, onPress, gradientColors }) => {
-
-  return (
-    <TouchableOpacity style={styles.filterButton} onPress={onPress}>
-      <LinearGradient colors={gradientColors} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={styles.gradient}>
-        <Text style={styles.filterButtonText}>{label}</Text>
-      </LinearGradient>
-    </TouchableOpacity>
-  )
-};
 
 export const PokemonFilterDrawer = React.memo(({ setFilterOptions, filterOptions }: any) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -98,18 +99,6 @@ export const PokemonFilterDrawer = React.memo(({ setFilterOptions, filterOptions
     inputRange: [0, 200],
     outputRange: [0, 200],
   });
-
-  const versionOptions = [
-    { key: 'gen1', label: 'Gen 1', name: `Red/Blue`, colors: ['#FF5A5A', '#7C7CFF'] },
-    { key: 'gen2', label: 'Gen 2', name: `Gold/Silver`, colors: ['#F3C447', '#A8A8A8'] },
-    { key: 'gen3', label: 'Gen 3', name: `Ruby/Sapphire`, colors: ['#FF3737', '#3737FF'] },
-    { key: 'gen4', label: 'Gen 4', name: `Diamond/Pearl`, colors: ['#AAAAFF', '#FFAAAA'] },
-    { key: 'gen5', label: 'Gen 5', name: `Black/White`, colors: ['#262626', '#E6E6E6'] },
-    { key: 'gen6', label: 'Gen 6', name: `X/Y`, colors: ['#FF7254', '#3CB371'] },
-    { key: 'gen7', label: 'Gen 7', name: `Sun/Moon`, colors: ['#FFAB54', '#53A5D3'] },
-    { key: 'gen8', label: 'Gen 8', name: `Sword/Shield`, colors: ['#6CBDF9', '#DC2F5A'] },
-    { key: 'gen9', label: 'Gen 9', name: `Scarlet/Violet`, colors: ['#B43230', '#822F7B'] },
-  ];
 
   const selectedVersions = versionOptions.filter((range) =>
     filterOptions.selectedVersions.includes(range.key)
@@ -308,6 +297,7 @@ export const PokemonFilterDrawer = React.memo(({ setFilterOptions, filterOptions
   );
 });
 
+
 const styles = StyleSheet.create({
   activeFiltersTitle: {
     fontSize: 18,
@@ -351,16 +341,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 16,
   },
-  filterButton: {
-    justifyContent: 'center',
-    borderRadius: 15,
-    marginVertical: 3,
-  },
-  gradient: {
-    borderRadius: 10,
-    padding: 8,
-    flex: 1,
-  },
   otherFiltersContainer: {
     flexDirection: 'column',
     marginBottom: 20,
@@ -377,13 +357,6 @@ const styles = StyleSheet.create({
     padding: 8,
     flex: 1,
     backgroundColor: '#40E0D0',
-  },
-  filterButtonText: {
-    fontSize: 18,
-    fontWeight: "800",
-    color: 'white',
-    textAlign: 'center',
-    paddingHorizontal: 15
   },
   filterTitleContainer: {
     borderRadius: 5,
