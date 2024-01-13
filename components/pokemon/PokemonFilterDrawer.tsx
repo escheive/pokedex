@@ -160,35 +160,29 @@ export const PokemonFilterDrawer = React.memo(({ setFilterOptions, filterOptions
                   ))}
 
                   {filterOptions.showFavorites && (
-                    <TouchableOpacity
-                      style={styles.filterButton}
+                    <FilterButton
+                      label="Favorites"
                       onPress={() =>
                         setFilterOptions((prevOptions) => ({
                           ...prevOptions,
                           showFavorites: !filterOptions.showFavorites,
                         }))
                       }
-                    >
-                      <View style={styles.favoritesFilterButton}>
-                        <Text style={styles.filterButtonText}>Favorites</Text>
-                      </View>
-                    </TouchableOpacity>
+                      gradientColors={[ '#FF6347', '#ccc' ]}
+                    />
                   )}
 
                   {filterOptions.showCapturedPokemon && (
-                    <TouchableOpacity
-                      style={styles.filterButton}
+                    <FilterButton
+                      label="Caught"
                       onPress={() =>
                         setFilterOptions((prevOptions) => ({
                           ...prevOptions,
                           showCapturedPokemon: !filterOptions.showCapturedPokemon,
                         }))
                       }
-                    >
-                      <View style={styles.caughtFilterButton}>
-                        <Text style={styles.filterButtonText}>Caught</Text>
-                      </View>
-                    </TouchableOpacity>
+                      gradientColors={[ '#40E0D0', '#AAFAFA' ]}
+                    />
                   )}
 
                   </View>
@@ -251,35 +245,29 @@ export const PokemonFilterDrawer = React.memo(({ setFilterOptions, filterOptions
 
               <View style={styles.otherFiltersContainer}>
                 {(!filterOptions.showFavorites) && (
-                  <TouchableOpacity
-                    style={styles.filterButton}
+                  <FilterButton
+                    label="Favorites"
                     onPress={() =>
                       setFilterOptions((prevOptions) => ({
                         ...prevOptions,
                         showFavorites: !filterOptions.showFavorites,
                       }))
                     }
-                  >
-                    <View style={styles.favoritesFilterButton}>
-                      <Text style={styles.filterButtonText}>Favorites</Text>
-                    </View>
-                  </TouchableOpacity>
+                    gradientColors={[ '#FF6347', '#FFAAAA' ]}
+                  />
                 )}
 
                 {(!filterOptions.showCapturedPokemon) && (
-                  <TouchableOpacity
-                    style={styles.filterButton}
+                  <FilterButton
+                    label="Caught"
                     onPress={() =>
                       setFilterOptions((prevOptions) => ({
                         ...prevOptions,
                         showCapturedPokemon: !filterOptions.showCapturedPokemon,
                       }))
                     }
-                  >
-                    <View style={styles.caughtFilterButton}>
-                      <Text style={styles.filterButtonText}>Caught</Text>
-                    </View>
-                  </TouchableOpacity>
+                    gradientColors={[ '#40E0D0', '#AAFAFA' ]}
+                  />
                 )}
               </View>
             </ScrollView>
@@ -345,18 +333,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginBottom: 20,
     flex: 1,
-  },
-  favoritesFilterButton: {
-    borderRadius: 10,
-    padding: 8,
-    flex: 1,
-    backgroundColor: '#FF6347',
-  },
-  caughtFilterButton: {
-    borderRadius: 10,
-    padding: 8,
-    flex: 1,
-    backgroundColor: '#40E0D0',
   },
   filterTitleContainer: {
     borderRadius: 5,
