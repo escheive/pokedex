@@ -4,9 +4,16 @@ import { Image } from "expo-image";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { capitalizeString, pokemonColors } from '../../utils/helpers';
 import { IconContainer } from 'components/card/IconContainer';
+import { Pokemon } from 'types';
 
-export const PokemonCard = ({ pokemon }) => {
-  const [selectedAbility, setSelectedAbility] = useState(null);
+
+interface PokemonCardProps {
+  pokemon: Pokemon;
+}
+
+
+export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
+  const [selectedAbility, setSelectedAbility] = useState<any | null>(null);
 
   const backgroundColor = pokemonColors[pokemon?.pokemon_v2_pokemontypes[0].pokemon_v2_type.name].backgroundColor;
   const color = pokemonColors[pokemon?.pokemon_v2_pokemontypes[0].pokemon_v2_type.name].color;
@@ -108,10 +115,10 @@ export const PokemonCard = ({ pokemon }) => {
         <Text>ABILITIES</Text>
         <Text>{pokemon.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.name}</Text>
         <Text>{pokemon.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].effect}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].flavor_text}</Text>
         <Text>{pokemon.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.name}</Text>
         <Text>{pokemon.pokemon_v2_pokemonabilities[1]?.pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].effect}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].flavor_text}</Text>
         <Text>BASE HAPPINESS: {pokemon.pokemon_v2_pokemonspecy.base_happiness}</Text>
         <Text>IS BABY: {pokemon.pokemon_v2_pokemonspecy.is_baby}</Text>
         <Text>IS LEGENDARY: {pokemon.pokemon_v2_pokemonspecy.is_legendary}</Text>

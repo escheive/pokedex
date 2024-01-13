@@ -3,17 +3,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
 // Components
 import { PokemonStats } from 'components/pokemon/PokemonStats';
-// import EvolutionChain from '../components/pokemon/EvolutionChain';
-import Ionicons from '@expo/vector-icons/Ionicons';
 // Utils
-// import { getFavorites, addFavoritePokemon, removeFavoritePokemon } from '../utils/favorites.tsx';
-import { pokemonColors } from '../../../utils/helpers';
-import { useAppSelector } from '../../../utils/hooks';
-import { selectPokemonById } from '../../../store/slices/pokemonSlice';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useApolloClient, useQuery } from '@apollo/client';
 import { GET_POKEMON_BY_ID } from 'api/queries';
-import { pokemonFragment, pokemonDetailsFragment } from 'api/fragments';
 import { Pokemon } from 'types';
 import { PokemonCard } from 'components/pokemon/PokemonCard';
 import { EvolutionChain } from 'components/pokemon/EvolutionChain';
