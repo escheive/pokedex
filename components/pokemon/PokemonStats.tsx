@@ -30,6 +30,20 @@ interface PokemonStatsProps {
   pokemonStats: PokemonStat[];
 }
 
+interface CalculatedStats {
+  [key: string]: {
+    [key: string]: number
+  }
+}
+
+interface HighestStat {
+  [key: string]: number
+}
+
+interface StatsTotal {
+  [key: string]: number
+}
+
 const MAX_LEVEL = 100;
 const MAX_IV = 31;
 const MAX_EV = 252;
@@ -41,9 +55,9 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
 
   // useState for selected stat value tab
   const [selectedTab, setSelectedTab] = useState('base');
-  const [calculatedStats, setCalculatedStats] = useState({});
-  const [highestStat, setHighestStat] = useState({});
-  const [statsTotal, setStatsTotal] = useState({});
+  const [calculatedStats, setCalculatedStats] = useState<CalculatedStats>({});
+  const [highestStat, setHighestStat] = useState<HighestStat>({});
+  const [statsTotal, setStatsTotal] = useState<StatsTotal>({});
   
 
   const { pokemon_v2_type: firstType } = pokemonTypes[0];
@@ -56,7 +70,7 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
 
 
   useEffect(() => {
-    const baseStats = {};
+    const baseStats: {[key: string]: number} = {};
     pokemonStats.forEach(stat => {
       baseStats[stat.pokemon_v2_stat.name] = stat.base_stat;
     });
@@ -64,7 +78,7 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
     const minStats = calculateMinMaxStats(MAX_LEVEL, 0, 0, 'min');
     const maxStats = calculateMinMaxStats(MAX_LEVEL, MAX_IV, MAX_EV, 'max');
 
-    const calculateTotal = (stats) => Object.values(stats).reduce((sum, value) => sum + value, 0);
+    const calculateTotal = (stats: {[key: string]: number}) => Object.values(stats).reduce((sum, value) => sum + value, 0);
 
     const baseTotal = calculateTotal(baseStats);
     const minTotal = calculateTotal(minStats);
@@ -122,7 +136,7 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
     return maxStats;
   }
 
-  const statNameMappings = {
+  const statNameMappings: { [key: string]: string } = {
     hp: 'Hp',
     attack: 'Atk',
     defense: 'Def',
@@ -133,7 +147,7 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
 
 
   const renderStats = () => {
-    const statItems = [];
+    const statItems: any[] = [];
     const selectedStats = calculatedStats[selectedTab];
 
     if (!selectedStats) {
@@ -166,7 +180,7 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
         <TouchableOpacity
           style={[
             styles.navItem,
-            selectedTab === 'base' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
+            selectedTab === 'base' && (styles.selectedNavItem, { backgroundColor }),
             selectedTab !== 'base' && { backgroundColor: alternateBackgroundColor }
           ]}
           onPress={() => setSelectedTab('base')}
@@ -186,7 +200,7 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
         <TouchableOpacity
           style={[
             styles.navItem,
-            selectedTab === 'min' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
+            selectedTab === 'min' && (styles.selectedNavItem, { backgroundColor }),
             selectedTab !== 'min' && { backgroundColor: alternateBackgroundColor }
           ]}
           onPress={() => setSelectedTab('min')}
@@ -206,7 +220,7 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
         <TouchableOpacity
           style={[
             styles.navItem,
-            selectedTab === 'max' && (styles.selectedNavItem, { backgroundColor, color: textColor}),
+            selectedTab === 'max' && (styles.selectedNavItem, { backgroundColor }),
             selectedTab !== 'max' && { backgroundColor: alternateBackgroundColor }
           ]}
           onPress={() => setSelectedTab('max')}
@@ -229,7 +243,7 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
       </View>
 
       <Text style={styles.statsTotalContainer}>
-        <Text style={styles.statsTotalText}>TOTAL </Text>
+        <Text style={styles.statsTotalValue}>TOTAL </Text>
         <Text style={[styles.statsTotalValue, { color: backgroundColor }]}>{statsTotal[selectedTab]}</Text>
       </Text>
 
