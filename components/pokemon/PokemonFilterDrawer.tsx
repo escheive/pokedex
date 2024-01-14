@@ -74,7 +74,9 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
 
 
   return (
-    <View style={styles.filterDropdownContainer}>
+    <View>
+
+      {/* Button to open the drawer of pokemon filters */}
       <TouchableOpacity
         style={styles.dropdownTrigger}
         onPress={handleDropdownToggle}
@@ -86,18 +88,41 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
         <Text style={styles.dropdownTriggerText}>Filter Pokémon</Text>
       </TouchableOpacity>
 
+      {/* Modal of all pokemon filters */}
       <Modal visible={dropdownVisible} animationType="slide" transparent>
+
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+
+            {/* Pokemon filters main title */}
             <View style={styles.filterTitleContainer}>
               <Text style={styles.filterTitleText}>Filter Pokémon</Text>
             </View>
+
+            {/* Checkbox to allow users to filter for dual type pokemon */}
+            <View style={styles.dualTypeFilterContainer}>
+              <Text>Filter By dual types</Text>
+              <CheckBox
+                color={filterOptions.filterByDualTypes ? '#FF5A5A' : 'black'}
+                value={filterOptions.filterByDualTypes}
+                onValueChange={() =>
+                  setFilterOptions((prevOptions) => ({
+                    ...prevOptions,
+                    filterByDualTypes: !prevOptions.filterByDualTypes,
+                  }))
+                }
+              />
+            </View>
+
+            {/* Container of all pokemon filters in the modal */}
             <ScrollView>
 
+              {/* Container that renders any active filters */}
               {(selectedVersions.length > 0 || selectedTypes.length > 0 || filterOptions.showFavorites || filterOptions.showCapturedPokemon) && (
-                <View style={styles.activeFiltersContainer}>
+                <View style={styles.filtersContainer}>
                   <Text style={styles.activeFiltersTitle}>Active Filters</Text>
 
+                  {/* Render any selected game versions buttons */}
                   {selectedVersions.map((range) => (
                     <FilterButton
                       key={range.key}
@@ -107,6 +132,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                     />
                   ))}
 
+                  {/* Render any selected type buttons */}
                   {selectedTypes.map((type) => (
                     <FilterButton
                       key={type}
@@ -116,6 +142,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                     />
                   ))}
 
+                  {/* Render favorites button */}
                   {filterOptions.showFavorites && (
                     <FilterButton
                       label="Favorites"
@@ -129,6 +156,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                     />
                   )}
 
+                  {/* Render captured pokemon button */}
                   {filterOptions.showCapturedPokemon && (
                     <FilterButton
                       label="Caught"
@@ -141,26 +169,13 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                       gradientColors={[ '#40E0D0', '#AAFAFA' ]}
                     />
                   )}
-
                   </View>
                 )}
 
+                {/* Container of all inactive filter buttons */}
                 <View style={styles.filtersContainer}>
 
-                  <View style={styles.dualTypeFilterContainer}>
-                    <Text>Filter By dual types</Text>
-                    <CheckBox
-                      color={filterOptions.filterByDualTypes ? '#FF5A5A' : 'black'}
-                      value={filterOptions.filterByDualTypes}
-                      onValueChange={() =>
-                        setFilterOptions((prevOptions) => ({
-                          ...prevOptions,
-                          filterByDualTypes: !prevOptions.filterByDualTypes,
-                        }))
-                      }
-                    />
-                  </View>
-
+                  {/* Render unselected generations buttons and title */}
                   {unselectedVersions.length > 0 && (
                     <Text style={styles.activeFiltersTitle}>Gens</Text>
                   )}
@@ -180,6 +195,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                     );
                   })}
 
+                  {/* Render unselected types buttons and title */}
                   {unselectedTypes.length > 0 && (
                     <Text style={styles.activeFiltersTitle}>Types</Text>
                   )}
@@ -200,6 +216,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                   })}
                 </View>
 
+              {/* Container of showFavorites and isCaught filter buttons */}
               <View style={styles.otherFiltersContainer}>
                 {(!filterOptions.showFavorites) && (
                   <FilterButton
@@ -229,6 +246,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
               </View>
             </ScrollView>
 
+            {/* Button to close the filter drawer */}
             <TouchableOpacity 
               style={styles.closeButton} 
               onPress={handleDropdownToggle}
@@ -237,7 +255,9 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
             </TouchableOpacity>
           </View>
         </View>
+
       </Modal>
+
     </View>
   );
 };
@@ -248,13 +268,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 10,
+    marginBottom: 10,
     marginHorizontal: 10,
     borderBottomWidth: 1,
     borderColor: '#777',
-  },
-  activeFiltersContainer: {
-    marginBottom: 20,
   },
   modalContainer: {
     flex: 1,
@@ -264,7 +281,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
-    paddingTop: 5,
+    paddingVertical: 5,
     paddingHorizontal: 10,
   },
   filtersContainer: {
@@ -293,7 +310,7 @@ const styles = StyleSheet.create({
   },
   filterTitleContainer: {
     borderRadius: 5,
-    marginVertical: 5,
+    marginBottom: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -302,10 +319,10 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   closeButton: {
-    backgroundColor: '#BBBBBB',
-    padding: 6,
-    borderRadius: 5,
-    marginVertical: 10,
+    backgroundColor: '#f77',
+    padding: 8,
+    borderRadius: 10,
+    marginVertical: 2,
     paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
