@@ -1,8 +1,8 @@
 // Dependencies
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import { useApolloClient } from '@apollo/client';
 // Components
 import { IconContainer } from 'components/card/IconContainer';
@@ -25,21 +25,20 @@ export const PokemonListItem = React.memo(({ pokemon }: any) => {
     );
 
     return (
-      <View style={[styles.itemContainer, { backgroundColor } ]}>
-        <Link 
-          style={styles.itemCard} 
-          href={`/pokemon/${pokemon.id}`}
-        >
-          <View style={styles.itemDetailsContainer}>
-            <Text style={[styles.pokemonId, { color: textColor }]}>{pokemon.id}</Text>
-            <View style={styles.pokemonNameAndTypeContainer}>
-              <View style={styles.nameContainer}>
-                <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
-                <IconContainer pokemon={pokemon} />
-              </View>
-              {typesContainer}
-            </View>
+      <TouchableOpacity 
+        onPress={() => router.push(`/pokemon/${pokemon.id}`)} 
+        style={[styles.itemContainer, { backgroundColor } ]}
+        activeOpacity={0.7}
+      >
+        <Text style={[styles.pokemonId, { color: textColor }]}>{pokemon.id}</Text>
+        <View style={styles.itemDetailsContainer}>
+          <View style={styles.nameAndIconContainer}>
+            <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
+            <IconContainer pokemon={pokemon} />
           </View>
+          {typesContainer}
+        </View>
+        <View style={styles.imageContainer}>
           <Image
             style={styles.image}
             source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
@@ -47,61 +46,90 @@ export const PokemonListItem = React.memo(({ pokemon }: any) => {
             transition={0}
             recyclingKey={pokemon.name}
           />
-        </Link>
-      </View>
+        </View>
+      </TouchableOpacity>
     );
+
+    // return (
+    //   <View style={[styles.itemContainer, { backgroundColor } ]}>
+    //     <Link href={`/pokemon/${pokemon.id}`} style={styles.itemCard}>
+    //       <Text style={[styles.pokemonId, { color: textColor }]}>{pokemon.id}</Text>
+    //       <View style={styles.itemDetailsContainer}>
+    //         <View style={styles.nameAndIconContainer}>
+    //           <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
+    //           <IconContainer pokemon={pokemon} />
+    //         </View>
+    //         {typesContainer}
+    //       </View>
+    //       <Image
+    //         style={styles.image}
+    //         source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
+    //         contentFit="contain"
+    //         transition={0}
+    //         recyclingKey={pokemon.name}
+    //       />
+    //     </Link>
+    //   </View>
+    // );
 });
 
 const styles = StyleSheet.create({
   itemContainer: {
-    aspectRatio: 5,
+    width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-  },
-  itemCard: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
   },
   itemDetailsContainer: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
   },
   pokemonId: {
+    width: '15%',
+    alignItems: 'center',
+    justifyContent: 'center',
     fontSize: 16,
   },
-  pokemonNameAndTypeContainer: {
-
-  },
-  nameContainer: {
+  nameAndIconContainer: {
+    width: '100%',
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginBottom: 5,
   },
   pokemonName: {
     fontSize: 20,
-    marginBottom: 10,
-    paddingRight: 15,
+    marginRight: 15,
   },
   pokemonTypesContainer: {
+    width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   pokemonType: {
     fontSize: 16,
     fontWeight: 'bold',
     paddingHorizontal: 20,
-    marginRight: 15,
+    marginRight: 10,
     borderWidth: 1,
     borderRadius: 10,
     borderColor: '#555',
     textAlign: 'center',
   },
+  imageContainer: {
+    width: '30%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   image: {
-    width: 75,
-    height: 75,
+    width: 80,
+    height: 80,
   },
 });

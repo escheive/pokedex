@@ -20,11 +20,6 @@ export const ListViewScreen:React.FC<Props> = ({ query, title, filteredItems }) 
   const flashListRef = useRef(null);
   const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
 
-  // Function to scroll to the top of the list
-  const scrollToTop = () => {
-    flashListRef.current.scrollToOffset({ offset: 0, animated: true });
-  };
-
 
   const renderItem = ({ item: item }: { item: any }) => (
     title === 'pokemon' ? (
@@ -49,7 +44,7 @@ export const ListViewScreen:React.FC<Props> = ({ query, title, filteredItems }) 
         ref={flashListRef}
         renderItem={renderItem}
         keyExtractor={(item) => item.name}
-        estimatedItemSize={279}
+        estimatedItemSize={250}
         estimatedListSize={{ height: Dimensions.get("screen").height, width: Dimensions.get("screen").width }}
         onScroll={(event) => {
           // Calculate the scroll offset
