@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export const ScrollToTopButton = ( flashListRef ) => {
+export const ScrollToTopButton = ({ flashListRef }: any) => {
   // Function to scroll to the top of the list
   const scrollToTop = () => {
     flashListRef.current.scrollToOffset({ offset: 0, animated: true });
