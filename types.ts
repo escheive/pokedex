@@ -1,5 +1,6 @@
 import { DocumentNode } from "@apollo/client";
 
+// Type definitions for Pokemon object
 export interface Pokemon {
   id: number;
   name: string;
@@ -58,4 +59,18 @@ export interface Pokemon {
       name: string;
     }
   }
+};
+
+// Type definitions for filterOptions useState in pokemon page and filter drawer component
+export interface FilterOptions {
+  showFavorites: boolean;
+  showCaughtPokemon: boolean;
+  selectedVersions: {
+   [key: string]: any;
+  }[];
+  selectedTypes: {
+    [key: string]: any;
+  }[];
+  searchQuery: string;
+  filterByDualTypes: boolean;
 }

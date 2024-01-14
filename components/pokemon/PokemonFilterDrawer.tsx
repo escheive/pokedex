@@ -1,5 +1,5 @@
 // Dependencies
-import React, { useState } from 'react';
+import React, { useState, Dispatch, SetStateAction } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Modal, ScrollView } from 'react-native';
 import CheckBox from 'expo-checkbox';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,21 +7,47 @@ import { Ionicons } from '@expo/vector-icons';
 import { FilterButton } from 'components/button/FilterButton';
 // Utils
 import { pokemonColors, capitalizeString, versionOptions } from 'utils/helpers';
+import { FilterOptions } from 'types';
+
+
+type FilterOptionKeys = 'selectedVersions' | 'selectedTypes' | 'searchQuery' | 'filterByDualTypes' | 'showFavorites' | 'showCaughtPokemon';
+
+interface HandleFilterSelectProps {
+  filterOptions: FilterOptions;
+  setFilterOptions: Dispatch<SetStateAction<FilterOptions>>;
+  key: FilterOptionKeys;
+  value: any;
+}
+
+
+interface PokemonFilterDrawer {
+  filterOptions: FilterOptions;
+  setFilterOptions: Dispatch<SetStateAction<FilterOptions>>;
+}
 
 
 // Helper function to handle version and type selection
-const handleFilterSelect = (filterOptions: any, setFilterOptions: any, key: any, value: any) => {
-  let updatedValues = {};
-  if (filterOptions[key].includes(value)) {
-    updatedValues = filterOptions[key].filter((item) => item !== value);
+const handleFilterSelect = ({ 
+  filterOptions, setFilterOptions, key, value 
+}: HandleFilterSelectProps) => {
+
+  let updatedValues: any[] = [];
+
+  if ((filterOptions[key] as any[]).includes(value)) {
+    updatedValues = (filterOptions[key] as any[]).filter((item: any) => item !== value);
   } else {
-    updatedValues = [...filterOptions[key], value];
+    updatedValues = [...(filterOptions[key] as any[]), value];
   }
-  setFilterOptions((prevOptions: any) => ({ ...prevOptions, [key]: updatedValues }));
+
+  setFilterOptions((prevOptions) => ({
+    ...prevOptions, 
+    [key]: updatedValues
+  }));
 };
 
 
-export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) => {
+export const PokemonFilterDrawer:React.FC<PokemonFilterDrawer> = ({ setFilterOptions, filterOptions }: any) => {
+
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [drawerWidth] = useState(new Animated.Value(0));
 
@@ -106,7 +132,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                 color={filterOptions.filterByDualTypes ? '#FF5A5A' : 'black'}
                 value={filterOptions.filterByDualTypes}
                 onValueChange={() =>
-                  setFilterOptions((prevOptions) => ({
+                  setFilterOptions((prevOptions: FilterOptions) => ({
                     ...prevOptions,
                     filterByDualTypes: !prevOptions.filterByDualTypes,
                   }))
@@ -127,7 +153,12 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                     <FilterButton
                       key={range.key}
                       label={range.name}
-                      onPress={() => handleFilterSelect(filterOptions, setFilterOptions, 'selectedVersions', range.key)}
+                      onPress={() => handleFilterSelect({
+                        filterOptions, 
+                        setFilterOptions, 
+                        key: 'selectedVersions', 
+                        value: range.key
+                      })}
                       gradientColors={range.colors}
                     />
                   ))}
@@ -137,7 +168,12 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                     <FilterButton
                       key={type}
                       label={capitalizeString(type)}
-                      onPress={() => handleFilterSelect(filterOptions, setFilterOptions, 'selectedTypes', type)}
+                      onPress={() => handleFilterSelect({
+                        filterOptions, 
+                        setFilterOptions, 
+                        key: 'selectedTypes', 
+                        value: type
+                      })}
                       gradientColors={[ pokemonColors[type].backgroundColor, pokemonColors[type].alternateBackgroundColor ]}
                     />
                   ))}
@@ -147,7 +183,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                     <FilterButton
                       label="Favorites"
                       onPress={() =>
-                        setFilterOptions((prevOptions) => ({
+                        setFilterOptions((prevOptions: FilterOptions) => ({
                           ...prevOptions,
                           showFavorites: !filterOptions.showFavorites,
                         }))
@@ -161,7 +197,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                     <FilterButton
                       label="Caught"
                       onPress={() =>
-                        setFilterOptions((prevOptions) => ({
+                        setFilterOptions((prevOptions: FilterOptions) => ({
                           ...prevOptions,
                           showCapturedPokemon: !filterOptions.showCapturedPokemon,
                         }))
@@ -189,7 +225,12 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                       <FilterButton
                         key={range.key}
                         label={range.name}
-                        onPress={() => handleFilterSelect(filterOptions, setFilterOptions, 'selectedVersions', range.key)}
+                        onPress={() => handleFilterSelect({
+                          filterOptions, 
+                          setFilterOptions, 
+                          key: 'selectedVersions', 
+                          value: range.key
+                        })}
                         gradientColors={range.colors}
                       />
                     );
@@ -209,7 +250,12 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                       <FilterButton
                         key={type}
                         label={capitalizeString(type)}
-                        onPress={() => handleFilterSelect(filterOptions, setFilterOptions, 'selectedTypes', type)}
+                        onPress={() => handleFilterSelect({
+                          filterOptions, 
+                          setFilterOptions, 
+                          key: 'selectedTypes', 
+                          value: type
+                        })}
                         gradientColors={[ pokemonColors[type].backgroundColor, pokemonColors[type].alternateBackgroundColor ]}
                       />
                     );
@@ -222,7 +268,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                   <FilterButton
                     label="Favorites"
                     onPress={() =>
-                      setFilterOptions((prevOptions) => ({
+                      setFilterOptions((prevOptions: FilterOptions) => ({
                         ...prevOptions,
                         showFavorites: !filterOptions.showFavorites,
                       }))
@@ -235,7 +281,7 @@ export const PokemonFilterDrawer = ({ setFilterOptions, filterOptions }: any) =>
                   <FilterButton
                     label="Caught"
                     onPress={() =>
-                      setFilterOptions((prevOptions) => ({
+                      setFilterOptions((prevOptions: FilterOptions) => ({
                         ...prevOptions,
                         showCapturedPokemon: !filterOptions.showCapturedPokemon,
                       }))
@@ -268,7 +314,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 15,
     marginHorizontal: 10,
     borderBottomWidth: 1,
     borderColor: '#777',
@@ -302,6 +348,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     color: 'black',
     fontSize: 16,
+  },
+  dualTypeFilterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 5,
+    marginBottom: 15,
   },
   otherFiltersContainer: {
     flexDirection: 'column',
