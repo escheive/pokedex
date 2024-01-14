@@ -4,13 +4,31 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions, TextInput } from 
 import { FlashList } from '@shopify/flash-list';
 // Components
 import { PokemonListItem } from './pokemon/PokemonListItem';
+import { ListItem } from './lists/ListItem';
 
 
-export const ListViewScreen: React.FC<Props> = ({ query, title, filteredItems }) => {
-  const renderItem = ({ item: pokemon }: { item: any }) => (
-    <PokemonListItem
-      pokemon={pokemon}
-    />
+interface Props {
+  query: string;
+  title: string;
+  filteredItems: [];
+}
+
+
+export const ListViewScreen:React.FC<Props> = ({ query, title, filteredItems }) => {
+  const renderItem = ({ item: item }: { item: any }) => (
+    title === 'pokemon' ? (
+
+      <PokemonListItem
+        pokemon={item}
+      />
+
+    ) : title === 'item' || title === 'ability' ? (
+
+      <ListItem
+        item={item}
+      />
+
+    ) : null
   )
 
   return (

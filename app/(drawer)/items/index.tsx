@@ -17,6 +17,8 @@ import { ScrollToTopButton } from 'components/button/ScrollToTopButton';
 // Utils
 import { capitalizeString, getTMImageUrl } from '../../../utils/helpers';
 
+import { ListItem } from 'components/lists/ListItem';
+
 // Define Graphql query
 const ITEMS_LIST_QUERY = gql`
   query getItemsListQuery {
@@ -142,65 +144,49 @@ export default function Page() {
   }
 
   const renderItem = ({ item: item }: { item: any }) => {
-    // // Check if the item has a valid image URL before rendering the Image component
-    // let imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`;
-    // if (item.name.startsWith("tm") && item.name !== "tmv-pass" && item.name !== "tm-case") {
-    //   imageUrl = getTMImageUrl(item.name)
-    // }
-    // const hasValidImageUrl = imageUrl && imageUrl !== 'undefined';
-
-    const iconContainer = (
-      <View style={{ flexDirection: 'row' }}>
-        <Ionicons
-          name={item.isFavorited ? "star" : "star-outline"}
-          size={24} color="#555"
-          onPress={() => handleToggleFavoriteAndCaught(item, "isFavorited")}
-        />
-      </View>
-    );
 
     return (
-      <View style={styles.itemContainer}>
-        <Link
-          style={styles.itemDetails} 
-          href={`/items/${item.id}`}
-        >
-        {/* <Link
-          style={styles.itemCard} 
-          href={{
-            pathname: '/items/[id]',
-            params: { id: item.id }
-          }}
-        > */}
-            <Text style={styles.itemId}>{item.id}</Text>
-            <Text style={styles.itemName}>{capitalizeString(item.name)}</Text>
-            {iconContainer}
-            {item.pokemon_v2_itemeffecttexts[0] ? (
-              <Text style={styles.shortEffect}>{item.pokemon_v2_itemeffecttexts[0]?.short_effect}</Text>
-            ) : (
-              <Text style={styles.shortEffect}>This item has no info on PokeAPI yet!</Text>
-            )}
-            <Image 
-              style={styles.image}
-              source={{
-                uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`
-              }}
-              placeholder=""
-              contentFit="contain"
-            />
-          {/* {hasValidImageUrl ? (
-            <Image 
-              style={styles.image}
-              source={{
-                uri: `${imageUrl}`
-              }}
-              placeholder=""
-              contentFit="contain"
-            />
-          ) : null } */}
-        </Link>
-      </View>
-    );
+
+      <ListItem 
+        item={item}
+      />
+    )
+
+    // const iconContainer = (
+    //   <View style={{ flexDirection: 'row' }}>
+    //     <Ionicons
+    //       name={item.isFavorited ? "star" : "star-outline"}
+    //       size={24} color="#555"
+    //       onPress={() => handleToggleFavoriteAndCaught(item, "isFavorited")}
+    //     />
+    //   </View>
+    // );
+
+    // return (
+    //   <View style={styles.itemContainer}>
+    //     <Link
+    //       style={styles.itemDetails} 
+    //       href={`/items/${item.id}`}
+    //     >
+    //       <Text style={styles.itemId}>{item.id}</Text>
+    //       <Text style={styles.itemName}>{capitalizeString(item.name)}</Text>
+    //       {iconContainer}
+    //       {item.pokemon_v2_itemeffecttexts[0] ? (
+    //         <Text style={styles.shortEffect}>{item.pokemon_v2_itemeffecttexts[0]?.short_effect}</Text>
+    //       ) : (
+    //         <Text style={styles.shortEffect}>This item has no info on PokeAPI yet!</Text>
+    //       )}
+    //       <Image 
+    //         style={styles.image}
+    //         source={{
+    //           uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`
+    //         }}
+    //         placeholder=""
+    //         contentFit="contain"
+    //       />
+    //     </Link>
+    //   </View>
+    // );
   };
 
   const renderItemsList = () => {
