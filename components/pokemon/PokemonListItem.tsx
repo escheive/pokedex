@@ -17,60 +17,38 @@ export const PokemonListItem = React.memo(({ pokemon }: any) => {
   const backgroundColor = useMemo(() => pokemonColors[type1].backgroundColor, [type1]);
   const textColor = useMemo(() => pokemonColors[type1].color, [type1]);
 
-    const typesContainer = (
-      <View style={styles.pokemonTypesContainer}>
-        <Text style={[styles.pokemonType, { color: textColor }]}>{capitalizeString(type1)}</Text>
-        {type2 && <Text style={[styles.pokemonType, { color: textColor }]}>{capitalizeString(type2)}</Text>}
+  const typesContainer = (
+    <View style={styles.pokemonTypesContainer}>
+      <Text style={[styles.pokemonType, { color: textColor }]}>{capitalizeString(type1)}</Text>
+      {type2 && <Text style={[styles.pokemonType, { color: textColor }]}>{capitalizeString(type2)}</Text>}
+    </View>
+  );
+
+  return (
+    <TouchableOpacity 
+      onPress={() => router.push(`/pokemon/${pokemon.id}`)} 
+      style={[styles.itemContainer, { backgroundColor } ]}
+      activeOpacity={0.7}
+    >
+      <Text style={[styles.pokemonId, { color: textColor }]}>{pokemon.id}</Text>
+      <View style={styles.itemDetailsContainer}>
+        <View style={styles.nameAndIconContainer}>
+          <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
+          <IconContainer pokemon={pokemon} />
+        </View>
+        {typesContainer}
       </View>
-    );
-
-    return (
-      <TouchableOpacity 
-        onPress={() => router.push(`/pokemon/${pokemon.id}`)} 
-        style={[styles.itemContainer, { backgroundColor } ]}
-        activeOpacity={0.7}
-      >
-        <Text style={[styles.pokemonId, { color: textColor }]}>{pokemon.id}</Text>
-        <View style={styles.itemDetailsContainer}>
-          <View style={styles.nameAndIconContainer}>
-            <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
-            <IconContainer pokemon={pokemon} />
-          </View>
-          {typesContainer}
-        </View>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.image}
-            source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
-            contentFit="contain"
-            transition={0}
-            recyclingKey={pokemon.name}
-          />
-        </View>
-      </TouchableOpacity>
-    );
-
-    // return (
-    //   <View style={[styles.itemContainer, { backgroundColor } ]}>
-    //     <Link href={`/pokemon/${pokemon.id}`} style={styles.itemCard}>
-    //       <Text style={[styles.pokemonId, { color: textColor }]}>{pokemon.id}</Text>
-    //       <View style={styles.itemDetailsContainer}>
-    //         <View style={styles.nameAndIconContainer}>
-    //           <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
-    //           <IconContainer pokemon={pokemon} />
-    //         </View>
-    //         {typesContainer}
-    //       </View>
-    //       <Image
-    //         style={styles.image}
-    //         source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
-    //         contentFit="contain"
-    //         transition={0}
-    //         recyclingKey={pokemon.name}
-    //       />
-    //     </Link>
-    //   </View>
-    // );
+      <View style={styles.imageContainer}>
+        <Image
+          style={styles.image}
+          source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png` }}
+          contentFit="contain"
+          transition={0}
+          recyclingKey={pokemon.name}
+        />
+      </View>
+    </TouchableOpacity>
+  );
 });
 
 const styles = StyleSheet.create({

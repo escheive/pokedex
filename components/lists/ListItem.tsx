@@ -1,8 +1,8 @@
 // Dependencies
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useApolloClient } from '@apollo/client';
 import { Ionicons } from '@expo/vector-icons';
 // Components
@@ -24,10 +24,10 @@ export const ListItem = React.memo(({ item }: any) => {
   );
 
   return (
-    <View style={styles.itemContainer}>
-      <Link
-        style={styles.itemDetailsContainer}
-        href={`/items/${item.id}`}
+    <TouchableOpacity 
+        onPress={() => router.push(`/items/${item.id}`)} 
+        style={styles.itemContainer}
+        activeOpacity={0.7}
       >
         <Text style={styles.itemId}>{item.id}</Text>
         <Text style={styles.itemName}>{capitalizeString(item.name)}</Text>
@@ -45,19 +45,21 @@ export const ListItem = React.memo(({ item }: any) => {
           placeholder=""
           contentFit="contain"
         />
-      </Link>
-    </View>
+    </TouchableOpacity>
   );
 });
 
 const styles = StyleSheet.create({
   itemContainer: {
-    aspectRatio: 5,
+    width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
   },
   itemCard: {
     flex: 1,
