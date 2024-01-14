@@ -74,3 +74,18 @@ export interface FilterOptions {
   searchQuery: string;
   filterByDualTypes: boolean;
 }
+
+export interface EvolutionChainProps {
+  filter(arg0: (pokemon: any) => boolean): any;
+  find(arg0: (pokemon: any) => boolean): any;
+  map(arg0: (species: any) => any): any;
+  pokemon_v2_pokemonevolutions: {
+    pokemon_v2_evolutiontrigger: {
+      name: string;
+    }
+    evolution_item_id: string;
+    min_level: number;
+    time_of_day: string;
+    needs_overworld_rain: boolean;
+  }[];
+}

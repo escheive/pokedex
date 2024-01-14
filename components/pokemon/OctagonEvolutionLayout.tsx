@@ -1,11 +1,18 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { capitalizeString } from '../../utils/helpers';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
+import { EvolutionChainProps } from 'types';
 
-export const OctagonEvolutionLayout = ({ evolutionChain }) => {
+
+interface OctagonEvolutionLayoutProps {
+  evolutionChain: EvolutionChainProps
+}
+
+
+export const OctagonEvolutionLayout: React.FC<OctagonEvolutionLayoutProps> = ({ evolutionChain }) => {
   console.log("Evolution chain", evolutionChain)
   const centerPokemon = evolutionChain.find(pokemon => pokemon.name === 'eevee');
   const evolutions = evolutionChain.filter(pokemon => pokemon.name !== 'eevee');
@@ -18,7 +25,7 @@ export const OctagonEvolutionLayout = ({ evolutionChain }) => {
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        {topEvolutions.map((pokemon, index) => (
+        {topEvolutions.map((pokemon: any, index: number) => (
           <Link 
             href={`/pokemon/${pokemon.id}`}
             key={index}
@@ -90,7 +97,7 @@ export const OctagonEvolutionLayout = ({ evolutionChain }) => {
       </View>
 
       <View style={styles.bottomRow}>
-        {bottomEvolutions.map((pokemon, index) => (
+        {bottomEvolutions.map((pokemon: any, index: number) => (
           <Link 
             href={`/pokemon/${pokemon.id}`}
             key={index}

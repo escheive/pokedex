@@ -8,18 +8,28 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { OctagonEvolutionLayout } from './OctagonEvolutionLayout';
 // Utils
 import { capitalizeString } from '../../utils/helpers';
+import { EvolutionChainProps } from 'types';
 
-export const EvolutionChain = ({ pokemonId, evolutionChain }) => {
+interface EvolutionChainComponentProps {
+  pokemonId: number;
+  evolutionChain: EvolutionChainProps;
+}
 
-  const sortEvolutionChainByEvolution = (evolutionChain) => {
+
+export const EvolutionChain:React.FC<EvolutionChainComponentProps> = ({ pokemonId, evolutionChain }) => {
+
+  const sortEvolutionChainByEvolution = (evolutionChain: EvolutionChainProps) => {
     // Deep copy the evolutionChain array to avoid mutating original data
-    const copiedEvolutionChain = evolutionChain.map(species => ({
+    const copiedEvolutionChain: any = evolutionChain.map(species => ({
       ...species,
-      pokemon_v2_pokemonevolutions: species.pokemon_v2_pokemonevolutions.map(evolution => ({ ...evolution }))
+      pokemon_v2_pokemonevolutions: species.pokemon_v2_pokemonevolutions.map((evolution: any) => ({ ...evolution }))
     }));
   
     // Step 2: Sort the species based on their evolved_from_species_id
-    const sortedEvolutionChain = copiedEvolutionChain.sort((a, b) => {
+    const sortedEvolutionChain = copiedEvolutionChain.sort((
+      a: { evolves_from_species_id: number | null; }, 
+      b: { evolves_from_species_id: number | null; }
+    ) => {
       if (a.evolves_from_species_id === null) return -1; // a is a root evolution
       if (b.evolves_from_species_id === null) return 1;  // b is a root evolution
       return a.evolves_from_species_id - b.evolves_from_species_id; // sort by evolved_from_species_id
@@ -39,7 +49,7 @@ export const EvolutionChain = ({ pokemonId, evolutionChain }) => {
       <OctagonEvolutionLayout evolutionChain={evolutionChain} />
     ) : (
       <View style={styles.evolutionsContainer}>
-      {sortedEvolutionChain.map((evolution, index) => (
+      {sortedEvolutionChain.map((evolution: any, index: number) => (
         <React.Fragment key={index}>
           {index < sortedEvolutionChain.length && evolution.pokemon_v2_pokemonevolutions[0] && (
             <View style={styles.arrowContainer}>
