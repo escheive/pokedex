@@ -34,7 +34,7 @@ export const PokemonListItem = React.memo(({ pokemon }: any) => {
       <View style={styles.itemDetailsContainer}>
         <View style={styles.nameAndIconContainer}>
           <Text style={[styles.pokemonName, { color: textColor } ]}>{capitalizeString(pokemon.name)}</Text>
-          <IconContainer pokemon={pokemon} />
+          <IconContainer item={pokemon} title='pokemon' />
         </View>
         {typesContainer}
       </View>

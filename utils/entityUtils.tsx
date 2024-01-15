@@ -1,6 +1,6 @@
 import { gql, DocumentNode } from "@apollo/client";
 
-export type EntityType = 'pokemon_v2_pokemon' | 'pokemon_v2_item' | 'pokemon_v2_ability';
+export type EntityType = 'pokemon_v2_pokemon' | 'pokemon_v2_item' | 'pokemon_v2_ability' | null;
 
 // toggleFavorite type definitions
 interface ToggleFavorite {
@@ -29,13 +29,12 @@ interface ToggleCaught {
 
 // Function that takes a type of entity, the entity, and apolloClient, and updates its favorite status
 export const toggleFavorite = ({ entityType, entity, apolloClient }: ToggleFavorite ) => {
-  console.log(entity)
 
   // Edit the entity list by accessing it in cache by id and edit only what we need to with fragment
   apolloClient.writeFragment({
     id: `${entityType}:${entity.id}`,
     fragment: gql`
-      fragment UpdatedEntityFavoriteFragment on ${entityType} {
+      fragment Updated${entityType}FavoriteFragment on ${entityType} {
         isFavorited
       }
     `,

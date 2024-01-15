@@ -2,9 +2,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
-import { Link, router } from 'expo-router';
-import { useApolloClient } from '@apollo/client';
-import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 // Components
 import { IconContainer } from 'components/card/IconContainer';
 // Utils
@@ -13,15 +11,6 @@ import { capitalizeString, pokemonColors } from 'utils/helpers';
 
 export const ListItem = React.memo(({ item }: any) => {
 
-  const iconContainer = (
-    <View style={{ flexDirection: 'row' }}>
-      <Ionicons
-        name={item.isFavorited ? "star" : "star-outline"}
-        size={24} color="#555"
-        onPress={() => handleToggleFavoriteAndCaught(item, "isFavorited")}
-      />
-    </View>
-  );
 
   return (
     <TouchableOpacity 
@@ -29,14 +18,17 @@ export const ListItem = React.memo(({ item }: any) => {
         style={styles.itemContainer}
         activeOpacity={0.7}
       >
-        <Text style={styles.itemId}>{item.id}</Text>
-        <Text style={styles.itemName}>{capitalizeString(item.name)}</Text>
-        {iconContainer}
-        {item.pokemon_v2_itemeffecttexts[0] ? (
-          <Text style={styles.shortEffect}>{item.pokemon_v2_itemeffecttexts[0]?.short_effect}</Text>
-        ) : (
-          <Text style={styles.shortEffect}>This item has no info on PokeAPI yet!</Text>
-        )}
+        <View style={styles.itemDetailsContainer}>
+          <View style={styles.nameAndIconContainer}>
+            <Text style={styles.itemName}>{capitalizeString(item.name)}</Text>
+            <IconContainer item={item} title='item' />
+          </View>
+          {item.pokemon_v2_itemeffecttexts[0] ? (
+            <Text style={styles.shortEffect}>{item.pokemon_v2_itemeffecttexts[0]?.short_effect}</Text>
+          ) : (
+            <Text style={styles.shortEffect}>This item has no info on PokeAPI yet!</Text>
+          )}
+        </View>
         <Image 
           style={styles.image}
           source={{
@@ -61,26 +53,18 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 15,
   },
-  itemCard: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
   itemDetailsContainer: {
+    width: '80%'
+  },
+  nameAndIconContainer: {
+    width: '100%',
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    flex: 1,
-  },
-  itemId: {
-    fontSize: 16,
-  },
-  nameContainer: {
-    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginBottom: 5,
   },
   itemName: {
     fontSize: 20,
-    marginBottom: 10,
     paddingRight: 15,
   },
   shortEffect: {
@@ -90,11 +74,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   image: {
-    width: 75,
-    height: 75,
+    width: 80,
+    height: 80,
   },
 });
-
-function handleToggleFavoriteAndCaught(item: any, arg1: string): void {
-  throw new Error('Function not implemented.');
-}
