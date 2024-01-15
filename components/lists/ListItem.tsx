@@ -9,26 +9,42 @@ import { IconContainer } from 'components/card/IconContainer';
 import { capitalizeString, pokemonColors } from 'utils/helpers';
 
 
-export const ListItem = React.memo(({ item }: any) => {
+export const ListItem = React.memo(({ item, title }: any) => {
 
 
   return (
     <TouchableOpacity 
-        onPress={() => router.push(`/items/${item.id}`)} 
-        style={styles.itemContainer}
-        activeOpacity={0.7}
-      >
-        <View style={styles.itemDetailsContainer}>
-          <View style={styles.nameAndIconContainer}>
-            <Text style={styles.itemName}>{capitalizeString(item.name)}</Text>
-            <IconContainer item={item} title='item' />
-          </View>
-          {item.pokemon_v2_itemeffecttexts[0] ? (
+      onPress={() => router.push(`/items/${item.id}`)} 
+      style={styles.itemContainer}
+      activeOpacity={0.7}
+    >
+      <View style={styles.itemDetailsContainer}>
+        <View style={styles.nameAndIconContainer}>
+          <Text style={styles.itemName}>{capitalizeString(item.name)}</Text>
+          <IconContainer item={item} title={title} />
+        </View>
+
+        {title === 'item' ? (
+
+          item.pokemon_v2_itemeffecttexts[0] ? (
             <Text style={styles.shortEffect}>{item.pokemon_v2_itemeffecttexts[0]?.short_effect}</Text>
           ) : (
             <Text style={styles.shortEffect}>This item has no info on PokeAPI yet!</Text>
-          )}
-        </View>
+          )
+
+        ) : title === 'ability' ? (
+
+          item.pokemon_v2_abilityeffecttexts[0] ? (
+            <Text style={styles.shortEffect}>SHORT EFFECT: {item.pokemon_v2_abilityeffecttexts[0]?.short_effect}</Text>
+          ) : (
+            <Text style={styles.shortEffect}>This item has no info on PokeAPI yet!</Text>
+          )
+
+        ) : null}
+
+      </View>
+
+      {title === 'item' ? (
         <Image 
           style={styles.image}
           source={{
@@ -37,6 +53,8 @@ export const ListItem = React.memo(({ item }: any) => {
           placeholder=""
           contentFit="contain"
         />
+      ) : null}
+
     </TouchableOpacity>
   );
 });

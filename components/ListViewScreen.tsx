@@ -28,10 +28,11 @@ export const ListViewScreen:React.FC<Props> = ({ query, title, filteredItems }) 
         pokemon={item}
       />
 
-    ) : title === 'items' || title === 'ability' ? (
+    ) : title === 'item' || title === 'ability' ? (
 
       <ListItem
         item={item}
+        title={title}
       />
 
     ) : null

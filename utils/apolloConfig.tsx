@@ -16,6 +16,7 @@ export const ApolloCacheProvider = ({ children }) => {
     async function init() {
       const cache = new InMemoryCache({
         typePolicies: {
+          // This defines client side variables for the pokemon data in the cache
           pokemon_v2_pokemon: {
             fields: {
               isFavorited: {
@@ -36,7 +37,21 @@ export const ApolloCacheProvider = ({ children }) => {
               }
             },
           },
+          // This defines client side isFavorited for items in the cache
           pokemon_v2_item: {
+            fields: {
+              isFavorited: {
+                read(isFavorited = false) {
+                  // Read the current value of isFavorited from the cache
+                  // If it doesn't exist, default to false
+                  return isFavorited;
+                },
+                merge: true,
+              }
+            }
+          },
+          // This defines client side isFavorited for abilities in the cache
+          pokemon_v2_ability: {
             fields: {
               isFavorited: {
                 read(isFavorited = false) {

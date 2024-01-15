@@ -57,34 +57,6 @@ export default function Page() {
   };
 
   const filteredItems = filterItems();
-  const apolloClient = useApolloClient();
-
-  // Function that allows users to mark a item as favorited/caught
-  const handleToggleFavoriteAndCaught = (item, statusToUpdate) => {
-    console.log(item.name, statusToUpdate)
-
-    // Update the item's status to opposite of what is was set to when clicked
-    item[statusToUpdate] = !item[statusToUpdate];
-
-    // Edit the pokemon list by accessing it in cache by id
-    // Using fragment allows editing of a 'fragment' of the cache instead of the whole query list
-    apolloClient.writeFragment({
-      id: `pokemon_v2_item:${item.id}`,
-      fragment: gql`
-        fragment UpdatedItem on pokemon_v2_item {
-          ${statusToUpdate}
-        }
-      `,
-      data: {
-        __typename: 'pokemon_v2_item',
-        [statusToUpdate]: !item[statusToUpdate]
-      },
-    })
-  };
-
-  const handleFavoritePress = (item: any) => {
-    console.log('favorited')
-  }
 
 
   const renderItemsList = () => {
@@ -92,7 +64,7 @@ export default function Page() {
       return <Text>Loading...</Text>
     };
 
-    return <ListViewScreen query={''} title='items' filteredItems={filteredItems} />
+    return <ListViewScreen query={''} title='item' filteredItems={filteredItems} />
   };
 
 
