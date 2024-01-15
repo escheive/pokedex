@@ -1,20 +1,24 @@
 // Dependencies
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 // Components
 import { IconContainer } from 'components/card/IconContainer';
+import { ItemModal } from 'components/modal/ItemModal';
 // Utils
 import { capitalizeString, pokemonColors } from 'utils/helpers';
 
 
 export const ListItem = React.memo(({ item, title }: any) => {
+  const [modalOpen, setModalOpen] = useState(false);
 
 
   return (
     <TouchableOpacity 
-      onPress={() => router.push(`/items/${item.id}`)} 
+    onPress={() => setModalOpen(true)} 
+      // onPress={() => router.push(`/items/${item.id}`)} 
       style={styles.itemContainer}
       activeOpacity={0.7}
     >
@@ -53,7 +57,15 @@ export const ListItem = React.memo(({ item, title }: any) => {
           placeholder=""
           contentFit="contain"
         />
+      ) : title === 'ability' ? (
+        <Ionicons 
+          name="information-circle-outline" 
+          size={24} 
+          color="black" 
+        />
       ) : null}
+
+      <ItemModal modalOpen={modalOpen} setModalOpen={setModalOpen} item={item} />
 
     </TouchableOpacity>
   );
