@@ -17,7 +17,7 @@ export const ListItem = React.memo(({ item, title }: any) => {
 
   return (
     <TouchableOpacity 
-    onPress={() => setModalOpen(true)} 
+      onPress={() => setModalOpen(true)} 
       // onPress={() => router.push(`/items/${item.id}`)} 
       style={styles.itemContainer}
       activeOpacity={0.7}
