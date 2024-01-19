@@ -3,6 +3,7 @@ import { TouchableOpacity, ScrollView, Text, View, Dimensions, StyleSheet } from
 import Modal from 'react-native-modal';
 
 const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
 
 export const ItemModal = ({ modalOpen, setModalOpen, item } : { modalOpen: boolean, setModalOpen: any, item: any }) => {
   console.log(item)
@@ -19,7 +20,7 @@ export const ItemModal = ({ modalOpen, setModalOpen, item } : { modalOpen: boole
 
 
   const scrollViewRef = useRef(null);
-  const [scrollOffset, setScrollOffset] = useState<undefined | number>(undefined);
+  const [scrollOffset, setScrollOffset] = useState<number>(0);
 
   const handleOnScroll = (event) => {
     setScrollOffset(event.nativeEvent.contentOffset.y)
@@ -35,6 +36,13 @@ export const ItemModal = ({ modalOpen, setModalOpen, item } : { modalOpen: boole
   const toggleModal = () => {
     setModalOpen(!modalOpen)
   }
+
+  const calculateModalHeight = () => {
+    // Calculate the dynamic height based on scroll offset
+    const maxModalHeight = deviceHeight - 100;
+    const expandedHeight = maxModalHeight - scrollOffset;
+    return Math.min(maxModalHeight, Math.max(deviceHeight / 2, expandedHeight))
+  };
   
   return (
     <Modal 
@@ -44,23 +52,13 @@ export const ItemModal = ({ modalOpen, setModalOpen, item } : { modalOpen: boole
       propagateSwipe={true}
       onBackdropPress={() => setModalOpen(false)}
       deviceWidth={deviceWidth}
-      style={styles.container}
+      deviceHeight={deviceHeight}
+      style={[styles.container, { height: calculateModalHeight() }]}
       hasBackdrop={true}
-      coverScreen={true}
       scrollTo={handleScrollTo}
       scrollOffset={scrollOffset}
-      scrollOffsetMax={400 - 300}
+      scrollOffsetMax={deviceHeight / 2}
     >
-      {/* <TouchableOpacity
-        style={styles.modalContainer}
-        activeOpacity={1}
-        onPress={() => setModalOpen(false)}
-      > */}
-        {/* <TouchableOpacity
-          style={styles.modalContent}
-          activeOpacity={1}
-          onPress={() => {}}
-        > */}
         <View style={styles.modalContainer}>
           <ScrollView 
             style={styles.modalContent}
@@ -83,8 +81,6 @@ export const ItemModal = ({ modalOpen, setModalOpen, item } : { modalOpen: boole
             </View>
           </ScrollView>
         </View>
-        {/* </TouchableOpacity> */}
-      {/* </TouchableOpacity> */}
     </Modal>
   )
 }
@@ -93,27 +89,24 @@ export const ItemModal = ({ modalOpen, setModalOpen, item } : { modalOpen: boole
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-end',
+    margin: 0,
     
   },
   modalContainer: {
-    height: '50%',
+    backgroundColor: 'white',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
   modalContent: {
-    // flex: 1,
-    // alignItems: 'center',
-    backgroundColor: '#ccc',
-    // width: '100%',
-    // height: '50%',
     borderRadius: 16,
+    padding: 16,
   },
   modalTitle: {
     textAlign: 'center',
     width: '100%',
     fontSize: 24,
     fontWeight: 'bold',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    color: 'white',
+    color: '#aaa',
     paddingVertical: 16,
   },
   modalDefinitionContainer: {
@@ -121,8 +114,6 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     paddingHorizontal: 10,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
   },
   modalDefinition: {
     fontSize: 18,

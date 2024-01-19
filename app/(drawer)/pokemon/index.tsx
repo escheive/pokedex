@@ -59,32 +59,55 @@ export default function Page() {
       filterByDualTypes
     } = filterOptions;
 
-    // Turn pokemonList to an object
-    const filteredList = pokemonList && pokemonList?.pokemon_v2_pokemon.filter((pokemon: any) =>
-      (showFavorites ? pokemon.isFavorited : true) &&
-      (showCaughtPokemon ? pokemon.isCaught : true) &&
-      (selectedVersions.length > 0 ?
-        selectedVersions.some((version) => {
-          const range = groupedVersions[version];
-          return pokemon.id >= range.start && pokemon.id <= range.end;
-        }) : true
-      ) &&
-      (selectedTypes.length > 0 ?
-        (filterByDualTypes ?
-          // Filter for Pokemon with both selected types
-          selectedTypes.every((type) =>
-            pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name.includes(type) || (pokemon.pokemon_v2_pokemontypes[1] && pokemon.pokemon_v2_pokemontypes[1].pokemon_v2_type.name.includes(type))
-          ) :
-          // Filter for Pokemon with any of selected types
-          selectedTypes.some((type) =>
-            pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name.includes(type) || (pokemon.pokemon_v2_pokemontypes[1] && pokemon.pokemon_v2_pokemontypes[1].pokemon_v2_type.name.includes(type))
-          )
-        ) : true
-      ) &&
-      pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-    );
 
-    return filteredList;
+    // Turn pokemonList to an object
+    return pokemonList?.pokemon_v2_pokemon.filter((pokemon: any) => {
+      if (showFavorites && !pokemon.isFavorited) return false;
+      if (showCaughtPokemon && !pokemon.isCaught) return false;
+      if (!pokemon.name.startsWith(searchQuery)) return false;
+
+      const isInSelectedVersions = selectedVersions.length === 0 || selectedVersions.some(version => {
+        const range = groupedVersions[version];
+        return pokemon.id >= range.start && pokemon.id <= range.end;
+      });
+      if (!isInSelectedVersions) return false;
+      
+      const matchesSelectedTypes = selectedTypes.length === 0 || (
+        filterByDualTypes
+          ? selectedTypes.every(type => pokemon.pokemon_v2_pokemontypes.some(pokemonType => pokemonType.pokemon_v2_type.name.includes(type)))
+          : selectedTypes.some(type => pokemon.pokemon_v2_pokemontypes.some(pokemonType => pokemonType.pokemon_v2_type.name.includes(type)))
+      );
+      if (!matchesSelectedTypes) return false;
+
+      return true;
+    });
+
+    // // Turn pokemonList to an object
+    // const filteredList = pokemonList && pokemonList?.pokemon_v2_pokemon.filter((pokemon: any) =>
+    //   (showFavorites ? pokemon.isFavorited : true) &&
+    //   (showCaughtPokemon ? pokemon.isCaught : true) &&
+    //   (selectedVersions.length > 0 ?
+    //     selectedVersions.some((version) => {
+    //       const range = groupedVersions[version];
+    //       return pokemon.id >= range.start && pokemon.id <= range.end;
+    //     }) : true
+    //   ) &&
+    //   (selectedTypes.length > 0 ?
+    //     (filterByDualTypes ?
+    //       // Filter for Pokemon with both selected types
+    //       selectedTypes.every((type) =>
+    //         pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name.includes(type) || (pokemon.pokemon_v2_pokemontypes[1] && pokemon.pokemon_v2_pokemontypes[1].pokemon_v2_type.name.includes(type))
+    //       ) :
+    //       // Filter for Pokemon with any of selected types
+    //       selectedTypes.some((type) =>
+    //         pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name.includes(type) || (pokemon.pokemon_v2_pokemontypes[1] && pokemon.pokemon_v2_pokemontypes[1].pokemon_v2_type.name.includes(type))
+    //       )
+    //     ) : true
+    //   ) &&
+    //   pokemon.name.startsWith(searchQuery)
+    // );
+
+    // return filteredList;
   };
 
 
