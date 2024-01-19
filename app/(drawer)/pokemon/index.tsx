@@ -60,57 +60,45 @@ export default function Page() {
     } = filterOptions;
 
 
-    // Turn pokemonList to an object
+    // return pokemon list after filters have been applied
     return pokemonList?.pokemon_v2_pokemon.filter((pokemon: any) => {
-      if (showFavorites && !pokemon.isFavorited) return false;
-      if (showCaughtPokemon && !pokemon.isCaught) return false;
-      if (!pokemon.name.startsWith(searchQuery)) return false;
+      // Ensure pokemon is true before accessing any properties
+      if (!pokemon) return false;
 
+      const { name, id, isFavorited, isCaught, pokemon_v2_pokemontypes: pokemonTypes } = pokemon;
+
+      // return false if user filters for favorites and pokemon isnt favorited
+      if (showFavorites && !isFavorited) return false;
+
+      // return false if user filters for caught and pokemon isnt caught
+      if (showCaughtPokemon && !isCaught) return false;
+
+      // return false if user searches for a pokemon by name and pokemon doesnt have that letter
+      if (!name.startsWith(searchQuery)) return false;
+
+      // Logic to match filtered versions with pokemon id ranges
       const isInSelectedVersions = selectedVersions.length === 0 || selectedVersions.some(version => {
         const range = groupedVersions[version];
-        return pokemon.id >= range.start && pokemon.id <= range.end;
+        return id >= range.start && id <= range.end;
       });
+      // return false if a pokemons id isnt in the selected versions range
       if (!isInSelectedVersions) return false;
       
+      // Logic to match pokemon types and if a user wants to filter by dual types
       const matchesSelectedTypes = selectedTypes.length === 0 || (
         filterByDualTypes
-          ? selectedTypes.every(type => pokemon.pokemon_v2_pokemontypes.some(pokemonType => pokemonType.pokemon_v2_type.name.includes(type)))
-          : selectedTypes.some(type => pokemon.pokemon_v2_pokemontypes.some(pokemonType => pokemonType.pokemon_v2_type.name.includes(type)))
+          ? selectedTypes.every(type => pokemonTypes.some(pokemonType => pokemonType.pokemon_v2_type.name.includes(type)))
+          : selectedTypes.some(type => pokemonTypes.some(pokemonType => pokemonType.pokemon_v2_type.name.includes(type)))
       );
+      // return false if a pokemon doesnt possess the filtered types
       if (!matchesSelectedTypes) return false;
 
+      // return true if a pokemon meets all of the previous criteria
       return true;
     });
-
-    // // Turn pokemonList to an object
-    // const filteredList = pokemonList && pokemonList?.pokemon_v2_pokemon.filter((pokemon: any) =>
-    //   (showFavorites ? pokemon.isFavorited : true) &&
-    //   (showCaughtPokemon ? pokemon.isCaught : true) &&
-    //   (selectedVersions.length > 0 ?
-    //     selectedVersions.some((version) => {
-    //       const range = groupedVersions[version];
-    //       return pokemon.id >= range.start && pokemon.id <= range.end;
-    //     }) : true
-    //   ) &&
-    //   (selectedTypes.length > 0 ?
-    //     (filterByDualTypes ?
-    //       // Filter for Pokemon with both selected types
-    //       selectedTypes.every((type) =>
-    //         pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name.includes(type) || (pokemon.pokemon_v2_pokemontypes[1] && pokemon.pokemon_v2_pokemontypes[1].pokemon_v2_type.name.includes(type))
-    //       ) :
-    //       // Filter for Pokemon with any of selected types
-    //       selectedTypes.some((type) =>
-    //         pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name.includes(type) || (pokemon.pokemon_v2_pokemontypes[1] && pokemon.pokemon_v2_pokemontypes[1].pokemon_v2_type.name.includes(type))
-    //       )
-    //     ) : true
-    //   ) &&
-    //   pokemon.name.startsWith(searchQuery)
-    // );
-
-    // return filteredList;
   };
 
-
+  // Call the filterItems function to filter the pokemon list
   const filteredItems = useMemo(() => filterPokemon(), [filterOptions, pokemonList]);
 
 
