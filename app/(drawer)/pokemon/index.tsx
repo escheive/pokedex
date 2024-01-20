@@ -74,7 +74,7 @@ export default function Page() {
       if (showCaughtPokemon && !isCaught) return false;
 
       // return false if user searches for a pokemon by name and pokemon doesnt have that letter
-      if (!name.startsWith(searchQuery)) return false;
+      if (searchQuery !== '' && !name.startsWith(searchQuery)) return false;
 
       // Logic to match filtered versions with pokemon id ranges
       const isInSelectedVersions = selectedVersions.length === 0 || selectedVersions.some(version => {
