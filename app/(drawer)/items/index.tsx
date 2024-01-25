@@ -10,6 +10,9 @@ import Drawer from "expo-router/src/layouts/Drawer";
 import Ionicons from '@expo/vector-icons/Ionicons';
 // Apollo
 import { useQuery, gql, useApolloClient, useLazyQuery } from '@apollo/client';
+import BottomSheet from '@gorhom/bottom-sheet';
+// Components
+// import { ItemModal } from 'components/modal/BottomSheetComponent';
 // Utils
 import { capitalizeString, getTMImageUrl } from '../../../utils/helpers';
 import { ListViewScreen } from 'components/ListViewScreen';
@@ -24,11 +27,11 @@ export default function Page() {
     searchQuery: '',
   });
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const { loading, error, data: itemsList, networkStatus } = useQuery(ITEMS_LIST_QUERY, {
     fetchPolicy: 'cache-first',
   });
-  console.log(loading, error, networkStatus);
 
 
   // function to handle search query changes
@@ -60,11 +63,7 @@ export default function Page() {
 
 
   const renderItemsList = () => {
-    if (loading) {
-      return <Text>Loading...</Text>
-    };
-
-    return <ListViewScreen query={''} title='item' filteredItems={filteredItems} />
+    return <ListViewScreen query={''} title='item' filteredItems={filteredItems} loading={loading} />
   };
 
 
@@ -94,6 +93,7 @@ export default function Page() {
           </View>
         </View>
       </View>
+
       {itemsList ? renderItemsList() : (
         Platform.OS === "web" ? (
           <p>Loading....</p>

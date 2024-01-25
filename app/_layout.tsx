@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -7,6 +7,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useColorScheme, Platform, Text } from 'react-native';
 // import { client } from "../utils/apolloConfig";
 import { ApolloCacheProvider } from '../utils/apolloConfig';
+import { BottomSheetComponent } from 'components/modal/BottomSheetComponent';
+import { BottomSheetProvider } from '../contexts/BottomSheetContext';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -44,7 +46,9 @@ export default function RootLayout() {
 
   return (
     <ApolloCacheProvider>
-      <RootLayoutNav />
+      <BottomSheetProvider>
+        <RootLayoutNav />
+      </BottomSheetProvider>
     </ApolloCacheProvider>
   )
 }
@@ -52,10 +56,12 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Slot />
+          <BottomSheetComponent />
         </ThemeProvider>
     </GestureHandlerRootView>
   );

@@ -1,23 +1,26 @@
 // Dependencies
-import React, { useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Button } from 'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 // Components
 import { IconContainer } from 'components/card/IconContainer';
-import { ItemModal } from 'components/modal/ItemModal';
 // Utils
 import { capitalizeString, pokemonColors } from 'utils/helpers';
+import { useBottomSheet } from 'contexts/BottomSheetContext';
 
 
 export const ListItem = React.memo(({ item, title }: any) => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const { snapToIndex } = useBottomSheet();
 
+  const openBottomSheet = () => {
+    snapToIndex(0);
+  };
 
   return (
     <TouchableOpacity 
-      onPress={() => setModalOpen(true)} 
+      onPress={openBottomSheet} 
       // onPress={() => router.push(`/items/${item.id}`)} 
       style={styles.itemContainer}
       activeOpacity={0.7}
@@ -65,7 +68,13 @@ export const ListItem = React.memo(({ item, title }: any) => {
         />
       ) : null}
 
-      <ItemModal modalOpen={modalOpen} setModalOpen={setModalOpen} item={item} />
+      {/* <View style={{ flexDirection: 'column' }}>
+        <Button title="Snap To 90%" onPress={() => handleSnapPress(1)} />
+        <Button title="Snap To 50%" onPress={() => handleSnapPress(0)} />
+        <Button title="Close" onPress={() => handleClosePress()} />
+      </View> */}
+
+      {/* <ItemModal bottomSheetModalRef={bottomSheetModalRef} handleSheetChange={handleSheetChange} item={item} /> */}
 
     </TouchableOpacity>
   );

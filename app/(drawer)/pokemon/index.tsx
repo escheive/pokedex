@@ -35,10 +35,6 @@ export default function Page() {
   const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY, {
     fetchPolicy: 'cache-first',
   });
-  console.log(loading, error, networkStatus);
-  if (loading) {
-    return <Text>Loading...</Text>
-  }
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
@@ -103,11 +99,11 @@ export default function Page() {
 
 
   const renderPokemonList = () => {
-    if (loading) {
-      return <Text>Loading...</Text>
-    };
+    // if (loading) {
+    //   return <Text>Loading...</Text>
+    // };
 
-    return <ListViewScreen query={''} title='pokemon' filteredItems={filteredItems} />
+    return <ListViewScreen query={''} title='pokemon' filteredItems={filteredItems} loading={loading} />
   };
 
 

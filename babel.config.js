@@ -16,7 +16,8 @@ module.exports = function (api) {
             assets: './assets',
             constants: './constants',
             app: './app',
-            api: './api'
+            api: './api',
+            contexts: './contexts'
           }
         }
       ]

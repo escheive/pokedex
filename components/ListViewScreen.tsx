@@ -6,17 +6,18 @@ import { FlashList } from '@shopify/flash-list';
 import { PokemonListItem } from './pokemon/PokemonListItem';
 import { ListItem } from './lists/ListItem';
 import { ScrollToTopButton } from 'components/button/ScrollToTopButton';
-import { ItemModal } from './modal/ItemModal';
+import { SkeletonListItem } from './lists/SkeletonItem';
 
 
 interface Props {
   query: string;
   title: string;
   filteredItems: [];
+  loading: boolean;
 }
 
 
-export const ListViewScreen:React.FC<Props> = ({ query, title, filteredItems }) => {
+export const ListViewScreen:React.FC<Props> = ({ query, title, filteredItems, loading }) => {
   // Ref used to track position in flashlist
   const flashListRef = useRef(null);
   const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
@@ -24,7 +25,12 @@ export const ListViewScreen:React.FC<Props> = ({ query, title, filteredItems }) 
 
 
   const renderItem = ({ item: item }: { item: any }) => (
-    title === 'pokemon' ? (
+    loading === true ? (
+      <SkeletonListItem 
+        title={title}
+      />
+
+    ) : title === 'pokemon' ? (
 
       <PokemonListItem
         pokemon={item}

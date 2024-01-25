@@ -86,11 +86,7 @@ export default function Page() {
 
 
   const renderItemsList = () => {
-    if (loading) {
-      return <Text>Loading...</Text>
-    };
-
-    return <ListViewScreen query={''} title='ability' filteredItems={filteredAbilities} />
+    return <ListViewScreen query={''} title='ability' filteredItems={filteredAbilities} loading={loading} />
   };
 
 

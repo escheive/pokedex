@@ -12,6 +12,7 @@
       "utils/*": ["./utils/*"],
       "constants/*": ["./constants/*"],
       "api/*": ["./api/*"],
+      "contexts/*": ["./contexts/*"],
     },
   },
   "include": [
