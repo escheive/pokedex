@@ -4,8 +4,9 @@ import Modal from 'react-native-modal';
 import Animated, { Easing, withSpring, withTiming, useSharedValue, useDerivedValue, useAnimatedStyle, useAnimatedGestureHandler } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 // Bottom Sheet
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { useBottomSheet } from "contexts/BottomSheetContext";
+import { CustomBackdrop } from "./BottomSheetBackdrop";
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -39,6 +40,7 @@ export const BottomSheetComponent = () => {
   const itemFlavorText = pokemon_v2_itemflavortexts[0]?.flavor_text || null;
 
 
+
   return (
     <BottomSheet
       ref={bottomSheetRef}
@@ -46,6 +48,15 @@ export const BottomSheetComponent = () => {
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
       enablePanDownToClose={true}
+      backdropComponent={props => (
+        <BottomSheetBackdrop
+          {...props}
+          opacity={0.7}
+          enableTouchThrough={true}
+          appearsOnIndex={0}
+          disappearsOnIndex={-1}
+        />
+      )}
     >
       <BottomSheetView>
         <Text>Hi</Text>
