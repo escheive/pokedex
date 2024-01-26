@@ -1,5 +1,5 @@
 // BottomSheetContext.js
-import React, { createContext, useContext, useRef, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useRef, useMemo, useCallback, useState } from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
 
 
@@ -9,6 +9,8 @@ type BottomSheetContextType = {
   snapToIndex: (index: number) => void;
   closeBottomSheet: () => void;
   bottomSheetRef: React.RefObject<BottomSheet> | null;
+  item: any;
+  setItem: any;
 };
 
 
@@ -17,6 +19,8 @@ const BottomSheetContext = createContext<BottomSheetContextType>({
   snapToIndex: (index: number) => {},
   closeBottomSheet: () => {},
   bottomSheetRef: null,
+  item: null,
+  setItem: () => {},
 });
 
 
@@ -31,6 +35,7 @@ export const useBottomSheet = () => {
 
 export const BottomSheetProvider = ({ children }: any) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const [item, setItem] = useState(null);
 
 
   const handleSheetChanges = useCallback((index: number) => {
@@ -50,6 +55,8 @@ export const BottomSheetProvider = ({ children }: any) => {
     handleSheetChanges,
     closeBottomSheet,
     bottomSheetRef,
+    item,
+    setItem,
   };
 
   return (

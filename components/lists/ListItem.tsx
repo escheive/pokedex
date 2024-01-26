@@ -12,11 +12,13 @@ import { useBottomSheet } from 'contexts/BottomSheetContext';
 
 
 export const ListItem = React.memo(({ item, title }: any) => {
-  const { snapToIndex } = useBottomSheet();
+  const { snapToIndex, setItem } = useBottomSheet();
 
   const openBottomSheet = () => {
+    setItem(item);
     snapToIndex(0);
   };
+
 
   return (
     <TouchableOpacity 

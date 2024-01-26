@@ -11,20 +11,27 @@ const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 export const BottomSheetComponent = () => {
-  const { bottomSheetRef, handleSheetChanges } = useBottomSheet();
+  const { bottomSheetRef, handleSheetChanges, item } = useBottomSheet();
+    // console.log(item)
 
   const snapPoints = useMemo(() => ['50%', '90%'], []);
-  // console.log(item)
-  // const itemName = selectedItem.name
-  // const cost = selectedItem?.cost ? selectedItem.cost : null;
-  // const fling_power = selectedItem?.fling_power ? selectedItem.fling_power : 0;
-  // const isFavorited = selectedItem?.isFavorited ? 'Favorited!' : 'not favorited';
-  // const flingEffect = selectedItem?.pokemon_v2_itemflingeffect?.pokemon_v2_itemflingeffecteffecttexts.effect ? selectedItem.pokemon_v2_itemflingeffect.pokemon_v2_itemflingeffecteffecttexts.effect : null;
-  // const itemCategory = selectedItem?.pokemon_v2_itemcategory.name ? selectedItem.pokemon_v2_itemcategory?.name : null;
-  // const itemPocket = selectedItem?.pokemon_v2_itemcategory.pokemon_v2_itempocket.name ? selectedItem.pokemon_v2_itemcategory.pokemon_v2_itempocket.name : null;
-  // const itemEffect = selectedItem.pokemon_v2_itemeffecttexts[0]?.effect ? selectedItem.pokemon_v2_itemeffecttexts[0]?.effect : null;
-  // const itemShortEffect = selectedItem.pokemon_v2_itemeffecttexts[0]?.short_effect ? selectedItem.pokemon_v2_itemeffecttexts[0]?.short_effect : null
-  // const itemFlavorText = selectedItem.pokemon_v2_itemflavortexts[0]?.flavor_text ? selectedItem.pokemon_v2_itemflavortexts[0]?.flavor_text : null;
+  const { 
+    name, 
+    cost, 
+    fling_power, 
+    isFavorited,
+    pokemon_v2_itemflingeffect,
+    pokemon_v2_itemcategory,
+    pokemon_v2_itemeffecttexts,
+    pokemon_v2_itemflavortexts,
+  } = item;
+
+  const flingEffect = pokemon_v2_itemflingeffect?.pokemon_v2_itemflingeffecteffecttexts.effect || null;
+  const itemCategory = pokemon_v2_itemcategory?.name || null;
+  const itemPocket = pokemon_v2_itemcategory?.pokemon_v2_itempocket?.name || null;
+  const itemEffect = pokemon_v2_itemeffecttexts[0]?.effect || null;
+  const itemShortEffect = pokemon_v2_itemeffecttexts[0]?.short_effect || null
+  const itemFlavorText = pokemon_v2_itemflavortexts[0]?.flavor_text || null;
 
 
   return (
@@ -37,6 +44,16 @@ export const BottomSheetComponent = () => {
     >
       <BottomSheetView>
         <Text>Hi</Text>
+        <Text>Name: {name}</Text>
+        <Text>Cost: {cost}</Text>
+        <Text>Fling Power: {fling_power}</Text>
+        <Text>{isFavorited ? 'Is Favorited!' : 'Not Favorited'}</Text>
+        <Text>Fling Effect: {flingEffect}</Text>
+        <Text>Item Category: {itemCategory}</Text>
+        <Text>Item Pocket: {itemPocket}</Text>
+        <Text>Item Effect: {itemEffect}</Text>
+        <Text>Item Short Effect: {itemShortEffect}</Text>
+        <Text>Item Flavor Text: {itemFlavorText}</Text>
       </BottomSheetView>
     </BottomSheet>
   )
