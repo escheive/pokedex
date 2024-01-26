@@ -15,6 +15,11 @@ export const BottomSheetComponent = () => {
     // console.log(item)
 
   const snapPoints = useMemo(() => ['50%', '90%'], []);
+
+  if (!item) {
+    return null;
+  }
+
   const { 
     name, 
     cost, 

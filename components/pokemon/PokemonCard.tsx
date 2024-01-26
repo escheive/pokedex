@@ -63,7 +63,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
           ) : null}
         </View>
 
-        <IconContainer pokemon={pokemon} />
+        <IconContainer item={pokemon} title='pokemon' />
 
         <View style={styles.abilitiesContainer}>
           <Text style={styles.abilitiesTitle}>Abilities</Text>
