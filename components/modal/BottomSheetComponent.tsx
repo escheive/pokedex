@@ -6,7 +6,7 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 // Bottom Sheet
 import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { useBottomSheet } from "contexts/BottomSheetContext";
-import { CustomBackdrop } from "./BottomSheetBackdrop";
+import { capitalizeString } from "utils/helpers";
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -15,7 +15,7 @@ export const BottomSheetComponent = () => {
   const { bottomSheetRef, handleSheetChanges, item } = useBottomSheet();
     // console.log(item)
 
-  const snapPoints = useMemo(() => ['50%', '90%'], []);
+  const snapPoints = useMemo(() => ['50%', '95%'], []);
 
   if (!item) {
     return null;
@@ -32,6 +32,7 @@ export const BottomSheetComponent = () => {
     pokemon_v2_itemflavortexts,
   } = item;
 
+  const capitalizedName = capitalizeString(name);
   const flingEffect = pokemon_v2_itemflingeffect?.pokemon_v2_itemflingeffecteffecttexts.effect || null;
   const itemCategory = pokemon_v2_itemcategory?.name || null;
   const itemPocket = pokemon_v2_itemcategory?.pokemon_v2_itempocket?.name || null;
@@ -44,10 +45,19 @@ export const BottomSheetComponent = () => {
   return (
     <BottomSheet
       ref={bottomSheetRef}
+      // Bottom sheet defaults as closed
       index={-1}
+      // Heights that the bottom sheet will snap to
       snapPoints={snapPoints}
+      // On change of bottom sheet call this function
       onChange={handleSheetChanges}
+      // Allow users to swipe down to close bottom sheet
       enablePanDownToClose={true}
+      // Remove the handle from the top of the bottom sheet
+      handleComponent={null}
+      // style for the background of the bottom sheet, without this there was white behind the border radius
+      backgroundStyle={styles.backgroundContainer}
+      // Component for the backdrop ie dark background of the bottom sheet
       backdropComponent={props => (
         <BottomSheetBackdrop
           {...props}
@@ -58,18 +68,64 @@ export const BottomSheetComponent = () => {
         />
       )}
     >
-      <BottomSheetView>
-        <Text>Hi</Text>
-        <Text>Name: {name}</Text>
-        <Text>Cost: {cost}</Text>
-        <Text>Fling Power: {fling_power}</Text>
-        <Text>{isFavorited ? 'Is Favorited!' : 'Not Favorited'}</Text>
-        <Text>Fling Effect: {flingEffect}</Text>
-        <Text>Item Category: {itemCategory}</Text>
-        <Text>Item Pocket: {itemPocket}</Text>
-        <Text>Item Effect: {itemEffect}</Text>
-        <Text>Item Short Effect: {itemShortEffect}</Text>
-        <Text>Item Flavor Text: {itemFlavorText}</Text>
+      <BottomSheetView style={styles.container}>
+
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{capitalizedName}</Text>
+          <Text style={styles.itemType}>Item</Text>
+
+          <View style={styles.borderHorizontal}></View>
+
+          <View style={styles.titleRowGroup}>
+
+            <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
+            <Text style={styles.itemValue}>{itemPocket}</Text>
+              <Text style={styles.itemText}>Bag Pocket</Text>
+            </View>
+
+            <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
+              <Text style={styles.itemValue}>{itemCategory}</Text>
+              <Text style={styles.itemText}>Item Category</Text>
+            </View>
+          </View>
+
+        </View>
+
+        <View style={styles.detailsContainer}>
+
+        <View style={styles.rowGroup}>
+
+          <View style={styles.itemValueTextContainer}>
+            <Text style={styles.itemValue}>{cost !== null ? cost : '-'}</Text>
+            <Text style={styles.itemText}>Cost</Text>
+          </View>
+
+          <View style={styles.borderVertical}></View>
+
+          <View style={styles.itemValueTextContainer}>
+            <Text style={styles.itemValue}>{fling_power !== null ? fling_power : '-'}</Text>
+            <Text style={styles.itemText}>Fling Power</Text>
+          </View>
+
+          <View style={styles.borderVertical}></View>
+
+          <View style={styles.itemValueTextContainer}>
+            <Text style={styles.itemValue}>{flingEffect !== null ? flingEffect : '-'}</Text>
+            <Text style={styles.itemText}>Fling Effect</Text>
+          </View>
+
+        </View>
+          
+          <Text style={styles.itemText}>{isFavorited ? 'Is Favorited!' : 'Not Favorited'}</Text>
+
+            
+          <View style={styles.group}>
+            <Text style={styles.itemText}>Item Effect: {itemEffect}</Text>
+            <Text style={styles.itemText}>Item Short Effect: {itemShortEffect}</Text>
+            <Text style={styles.itemText}>Item Flavor Text: {itemFlavorText}</Text>
+          </View>
+          
+        </View>
       </BottomSheetView>
     </BottomSheet>
   )
@@ -78,205 +134,77 @@ export const BottomSheetComponent = () => {
 // Stylesheet for this screen
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'flex-end',
-    margin: 0,
-    pointerEvents: 'box-none',
+    backgroundColor: 'transparent',
   },
-  modalContainer: {
-    backgroundColor: 'gray',
-    flex: 1,
-    zIndex: 100,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    pointerEvents: 'box-none',
+  backgroundContainer: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
-  modalContent: {
-    borderRadius: 16,
-    padding: 16,
-  },
-  modalTitle: {
-    textAlign: 'center',
-    width: '100%',
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#aaa',
-    paddingVertical: 16,
-  },
-  modalDefinitionContainer: {
-    backgroundColor: '#fff',
-    width: '100%',
-    alignItems: 'center',
+  titleContainer: {
     paddingHorizontal: 10,
+    paddingVertical: 30,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
-  modalDefinition: {
-    fontSize: 18,
-    color: 'gray',
-    padding: 10,
+  detailsContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+  },
+  titleRowGroup: {
+    flexDirection: 'row',
     width: '100%',
-    borderRadius: 12,
+    justifyContent: 'center',
+    paddingTop: 30,
+  },
+  borderHorizontal: {
+    borderTopWidth: 1,
+    borderColor: '#eee',
+    width: '80%',
+    alignSelf: 'center'
+  },
+  borderVertical: {
+    borderRightWidth: 1,
+    borderColor: '#eee',
+    height: '80%',
+    alignSelf: 'center'
+  },
+  rowGroup: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  itemValueTextContainer: {
+    width: '33%',
+    justifyContent: 'center',
+  },
+  group: {
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: '#ddd',
+    borderRadius: 20,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    paddingVertical: 10,
     textAlign: 'center',
-    marginVertical: 30,
+  },
+  itemType: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  itemValue: {
+    fontSize: 18,
+    color: '#555',
+    marginBottom: 4,
+    textAlign: 'center'
+  },
+  itemText: {
+    fontSize: 16,
+    color: '#888',
+    textAlign: 'center'
   },
 });
-
-// import { useRef, useState, useEffect, useMemo, useCallback } from "react";
-// import { TouchableOpacity, ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
-// import Modal from 'react-native-modal';
-// import Animated, { Easing, withSpring, withTiming, useSharedValue, useDerivedValue, useAnimatedStyle, useAnimatedGestureHandler } from 'react-native-reanimated';
-// import { PanGestureHandler } from 'react-native-gesture-handler';
-// // Bottom Sheet
-// import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-
-// const deviceWidth = Dimensions.get('window').width;
-// const deviceHeight = Dimensions.get('window').height;
-
-// export const ItemModal = ({ sheetRef, handleSheetChange, modalOpen, setModalOpen, item } : { sheetRef: any, handleSheetChange: any, modalOpen: boolean, setModalOpen: any, item: any }) => {
-//   // console.log(item)
-//   const itemName = item.name
-//   const cost = item.cost ? item.cost : null;
-//   const fling_power = item.fling_power ? item.fling_power : 0;
-//   const isFavorited = item.isFavorited ? 'Favorited!' : 'not favorited';
-//   const flingEffect = item.pokemon_v2_itemflingeffect?.pokemon_v2_itemflingeffecteffecttexts.effect ? item.pokemon_v2_itemflingeffect.pokemon_v2_itemflingeffecteffecttexts.effect : null;
-//   const itemCategory = item.pokemon_v2_itemcategory.name ? item.pokemon_v2_itemcategory?.name : null;
-//   const itemPocket = item.pokemon_v2_itemcategory.pokemon_v2_itempocket.name ? item.pokemon_v2_itemcategory.pokemon_v2_itempocket.name : null;
-//   const itemEffect = item.pokemon_v2_itemeffecttexts[0]?.effect ? item.pokemon_v2_itemeffecttexts[0]?.effect : null;
-//   const itemShortEffect = item.pokemon_v2_itemeffecttexts[0]?.short_effect ? item.pokemon_v2_itemeffecttexts[0]?.short_effect : null
-//   const itemFlavorText = item.pokemon_v2_itemflavortexts[0]?.flavor_text ? item.pokemon_v2_itemflavortexts[0]?.flavor_text : null;
-
-
-//   const scrollViewRef = useRef(null);
-//   const [scrollOffset, setScrollOffset] = useState<number>(0);
-//   const [isScrollEnabled, setIsScrollEnabled] = useState(false);
-//   const [modalHeight, setModalHeight] = useState(deviceHeight / 2);
-//   // Bottom Sheet
-//   const snapPoints = useMemo(() => ['50%', '100%'], [])
-
-
-
-//   const handleOnScroll = (event) => {
-//     setScrollOffset(event.nativeEvent.contentOffset.y)
-//   };
-
-
-//   const handleScrollTo = (p) => {
-//     if (scrollViewRef.current) {
-//       scrollViewRef.current.scrollTo(p);
-//     }
-//   }
-
-
-//   const handleSwipeMove = (gestureState) => {
-//     const { moveY, vy} = gestureState;
-//     setModalHeight(Math.max(deviceHeight / 2, deviceHeight - moveY));
-//   };
-
-
-//   const toggleModal = () => {
-//     console.log(scrollOffset)
-//     setIsScrollEnabled(false);
-//     setModalOpen(!modalOpen)
-//   }
-
-//   const calculateModalHeight = () => {
-//     if (scrollOffset > 50) {
-//       return deviceHeight;
-//     }
-//     return deviceHeight / 2;
-//   }
-
-  
-//   return (
-//     <BottomSheet
-//       ref={sheetRef}
-//       index={-1}
-//       snapPoints={snapPoints}
-//       onChange={handleSheetChange}
-//       containerStyle={styles.container}
-//     >
-//       <BottomSheetScrollView contentContainerStyle={styles.modalContainer}>
-//         <Text>Bottom Sheet content</Text>
-//       </BottomSheetScrollView>
-//     </BottomSheet>
-//   )
-// }
-
-// // Stylesheet for this screen
-// const styles = StyleSheet.create({
-//   container: {
-//     justifyContent: 'flex-end',
-//     margin: 0,
-//     flex: 1,
-//   },
-//   modalContainer: {
-//     backgroundColor: 'white',
-//     borderTopLeftRadius: 16,
-//     borderTopRightRadius: 16,
-//   },
-//   modalContent: {
-//     borderRadius: 16,
-//     padding: 16,
-//   },
-//   modalTitle: {
-//     textAlign: 'center',
-//     width: '100%',
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//     color: '#aaa',
-//     paddingVertical: 16,
-//   },
-//   modalDefinitionContainer: {
-//     backgroundColor: '#fff',
-//     width: '100%',
-//     alignItems: 'center',
-//     paddingHorizontal: 10,
-//   },
-//   modalDefinition: {
-//     fontSize: 18,
-//     color: 'gray',
-//     padding: 10,
-//     width: '100%',
-//     borderRadius: 12,
-//     textAlign: 'center',
-//     marginVertical: 30,
-//   },
-// });
-
-    // <Modal 
-    //   isVisible={modalOpen} 
-    //   onSwipeComplete={toggleModal}
-    //   onSwipeMove={handleSwipeMove}
-    //   swipeDirection={['down', 'up']}
-    //   propagateSwipe={true}
-    //   onBackdropPress={() => setModalOpen(false)}
-    //   deviceWidth={deviceWidth}
-    //   deviceHeight={deviceHeight}
-    //   style={styles.container}
-    //   hasBackdrop={true}
-    //   scrollTo={handleScrollTo}
-    //   scrollOffset={scrollOffset}
-    //   scrollOffsetMax={deviceHeight / 2}
-    // >
-      // <View style={styles.modalContainer}>
-      //   <Text style={styles.modalTitle}>item name: {item.name}</Text>
-      //   <ScrollView 
-      //     style={styles.modalContent}
-      //     ref={scrollViewRef}
-      //     onScroll={handleOnScroll}
-      //     scrollEnabled={isScrollEnabled ? true : false}
-      //     scrollEventThrottle={16}
-      //     contentContainerStyle={{ alignItems: 'center' }}
-      //   >
-      //     <View style={styles.modalDefinitionContainer}>
-      //       <Text style={styles.modalDefinition}>Cost: {cost}</Text>
-      //       <Text style={styles.modalDefinition}>{isFavorited ? 'favorited' : 'not favorited'}</Text>
-      //       <Text style={styles.modalDefinition}>Fling effect: {flingEffect}</Text>
-      //       <Text style={styles.modalDefinition}>Fling Power: {fling_power}</Text>
-      //       <Text style={styles.modalDefinition}>Category: {itemCategory}</Text>
-      //       <Text style={styles.modalDefinition}>Pocket: {itemPocket}</Text>
-      //       <Text style={styles.modalDefinition}>Effect: {itemEffect}</Text>
-      //       <Text style={styles.modalDefinition}>Short Effect: {itemShortEffect}</Text>
-      //       <Text style={styles.modalDefinition}>Flavor Text: {itemFlavorText}</Text>
-      //     </View>
-      //   </ScrollView>
-      // </View>
-    {/* </Modal> */}
