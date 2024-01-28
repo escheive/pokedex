@@ -43,7 +43,8 @@ export const BottomSheetProvider = ({ children }: any) => {
   }, []);
 
   const handleSnapPress = useCallback((index: number) => {
-    bottomSheetRef.current?.snapToIndex(index); // or use the appropriate method to open the bottom sheet
+    bottomSheetRef.current?.snapToIndex(index);
+    console.log('handleSnapPress', index)
   }, []);
 
   const closeBottomSheet = useCallback(() => {
