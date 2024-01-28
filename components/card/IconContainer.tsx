@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -15,12 +15,16 @@ export const IconContainer = ({ item, title }: any) => {
     null
   );
 
+  const handlePress = () => {
+    toggleFavorite({ entityType: entityType, entity: item, apolloClient })
+  }
+
   return (
     <View style={{ flexDirection: 'row', marginVertical: 10 }}>
       <Ionicons
         name={item.isFavorited ? "star" : "star-outline"}
         size={24} color="#555"
-        onPress={() => toggleFavorite({ entityType: entityType, entity: item, apolloClient })}
+        onPress={() => handlePress()}
       />
       {title === 'pokemon' ? (
         <Ionicons

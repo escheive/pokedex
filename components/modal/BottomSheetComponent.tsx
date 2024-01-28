@@ -1,11 +1,13 @@
 import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { TouchableOpacity, ScrollView, Text, View, Dimensions, StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import Modal from 'react-native-modal';
 import Animated, { Easing, withSpring, withTiming, useSharedValue, useDerivedValue, useAnimatedStyle, useAnimatedGestureHandler } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 // Bottom Sheet
 import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { useBottomSheet } from "contexts/BottomSheetContext";
+import { IconContainer } from "components/card/IconContainer";
 import { capitalizeString } from "utils/helpers";
 
 const deviceWidth = Dimensions.get('window').width;
@@ -71,12 +73,24 @@ export const BottomSheetComponent = () => {
       <BottomSheetView style={styles.container}>
 
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>{capitalizedName}</Text>
+
+          <View style={styles.titleRow}>
+            <Text style={styles.title}>{capitalizedName}</Text>
+            <Image 
+              style={styles.image}
+              source={{
+                uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`
+              }}
+              placeholder=""
+              contentFit="contain"
+            />
+          </View>
+
           <Text style={styles.itemType}>Item</Text>
 
           <View style={styles.borderHorizontal}></View>
 
-          <View style={styles.titleRowGroup}>
+          <View style={styles.categoryGroup}>
 
             <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
             <Text style={styles.itemValue}>{itemPocket}</Text>
@@ -142,15 +156,20 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     paddingHorizontal: 10,
-    paddingVertical: 30,
+    paddingBottom: 30,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between'
   },
   detailsContainer: {
     backgroundColor: 'white',
     padding: 20,
   },
-  titleRowGroup: {
+  categoryGroup: {
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'center',
@@ -187,8 +206,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    paddingVertical: 10,
+    paddingTop: 30,
+    paddingBottom: 10,
     textAlign: 'center',
+    width: '100%'
+  },
+  image: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: '25%',
+    height: '175%',
   },
   itemType: {
     fontSize: 16,
