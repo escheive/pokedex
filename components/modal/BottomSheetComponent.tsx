@@ -36,8 +36,8 @@ export const BottomSheetComponent = () => {
 
   const capitalizedName = capitalizeString(name);
   const flingEffect = pokemon_v2_itemflingeffect?.pokemon_v2_itemflingeffecteffecttexts.effect || null;
-  const itemCategory = pokemon_v2_itemcategory?.name || null;
-  const itemPocket = pokemon_v2_itemcategory?.pokemon_v2_itempocket?.name || null;
+  const itemCategory = capitalizeString(pokemon_v2_itemcategory?.name) || null;
+  const itemPocket = capitalizeString(pokemon_v2_itemcategory?.pokemon_v2_itempocket?.name) || null;
   const itemEffect = pokemon_v2_itemeffecttexts[0]?.effect || null;
   const itemShortEffect = pokemon_v2_itemeffecttexts[0]?.short_effect || null
   const itemFlavorText = pokemon_v2_itemflavortexts[0]?.flavor_text || null;
