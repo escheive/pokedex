@@ -7,7 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useColorScheme, Platform, Text } from 'react-native';
 // import { client } from "../utils/apolloConfig";
 import { ApolloCacheProvider } from '../utils/apolloConfig';
-import { BottomSheetComponent } from 'components/modal/BottomSheetComponent';
+import { BottomSheetComponent } from 'components/bottomSheet/BottomSheetComponent';
 import { BottomSheetProvider } from '../contexts/BottomSheetContext';
 
 export {
