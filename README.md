@@ -41,3 +41,6 @@ solution => https://github.com/facebook/metro/issues/1003#issuecomment-162639873
 //////////////////
 
 For Apollo Persist, setting debug to true allowed me to realize my data was being purged when too much was attempting to be persisted. Adding maxSize 'false' solved the issue
+
+
+Ran into an issue where i tried to set an item using react state in the bottom sheet component and it would take place after snapping the bottomsheet to an index or opening it. This caused a bug where on app start it would take two taps to get bottom sheet working, and after that it would work on each tap. To fix this, i changed bottom sheet to conditionally render everything inside of it only if item was not null that way the bottom sheet would still render, it would just be empty and then when item was set it could populate the rendered bottom sheet

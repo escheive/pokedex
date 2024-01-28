@@ -18,41 +18,6 @@ export const BottomSheetComponent = () => {
 
   const snapPoints = useMemo(() => ['50%', '95%'], []);
 
-  // // Handle the case when item is null
-  // if (!item) {
-  //   return (
-  //     <BottomSheet
-  //     ref={bottomSheetRef}
-  //     // Bottom sheet defaults as closed
-  //     index={-1}
-  //     // Heights that the bottom sheet will snap to
-  //     snapPoints={snapPoints}
-  //     // On change of bottom sheet call this function
-  //     onChange={handleSheetChanges}
-  //     // Allow users to swipe down to close bottom sheet
-  //     enablePanDownToClose={true}
-  //     // Remove the handle from the top of the bottom sheet
-  //     handleComponent={null}
-  //     // style for the background of the bottom sheet, without this there was white behind the border radius
-  //     backgroundStyle={styles.backgroundContainer}
-  //     // Component for the backdrop ie dark background of the bottom sheet
-  //     backdropComponent={props => (
-  //       <BottomSheetBackdrop
-  //         {...props}
-  //         opacity={0.7}
-  //         enableTouchThrough={true}
-  //         appearsOnIndex={0}
-  //         disappearsOnIndex={-1}
-  //       />
-  //     )}
-  //   >
-  //     <BottomSheetView style={styles.container}>
-  //       <Text></Text>
-  //     </BottomSheetView>
-  //   </BottomSheet>
-  //   );
-  // }
-
 
   const capitalizedName = capitalizeString(item?.name);
   const cost = item?.cost || null;
