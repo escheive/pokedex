@@ -4,19 +4,23 @@ import { useBottomSheet } from "contexts/BottomSheetContext";
 import { capitalizeString } from "utils/helpers";
 
 
-export const ItemBottomSheet = () => {
+export const AbilityBottomSheet = () => {
   const { item, itemType } = useBottomSheet();
 
 
-  const capitalizedName = capitalizeString(item?.name);
-  const cost = item?.cost || null;
-  const fling_power = item?.fling_power || null;
-  const flingEffect = item?.pokemon_v2_itemflingeffect?.pokemon_v2_itemflingeffecteffecttexts.effect || null;
-  const itemCategory = capitalizeString(item?.pokemon_v2_itemcategory?.name) || null;
-  const itemPocket = capitalizeString(item?.pokemon_v2_itemcategory?.pokemon_v2_itempocket?.name) || null;
-  const itemEffect = item?.pokemon_v2_itemeffecttexts[0]?.effect || null;
-  const itemShortEffect = item?.pokemon_v2_itemeffecttexts[0]?.short_effect || null
-  const itemFlavorText = item?.pokemon_v2_itemflavortexts[0]?.flavor_text || null;
+  const { 
+    id, 
+    name, 
+    isFavorited, 
+    pokemon_v2_abilityeffecttexts, 
+    pokemon_v2_abilityflavortexts, 
+    pokemon_v2_pokemonabilities 
+  } = item;
+
+  const capitalizedName = capitalizeString(name);
+  console.log(pokemon_v2_abilityeffecttexts)
+  console.log(pokemon_v2_abilityflavortexts)
+  console.log(pokemon_v2_pokemonabilities)
 
 
 
@@ -26,14 +30,6 @@ export const ItemBottomSheet = () => {
 
           <View style={styles.titleRow}>
             <Text style={styles.title}>{capitalizedName}</Text>
-            <Image 
-              style={styles.image}
-              source={{
-                uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${item.name}.png`
-              }}
-              placeholder=""
-              contentFit="contain"
-            />
           </View>
 
           <Text style={styles.itemType}>{capitalizeString(itemType)}</Text>
@@ -43,12 +39,12 @@ export const ItemBottomSheet = () => {
           <View style={styles.categoryGroup}>
 
             <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
-            <Text style={styles.itemValue}>{itemPocket}</Text>
+            <Text style={styles.itemValue}>{isFavorited}</Text>
               <Text style={styles.itemText}>Bag Pocket</Text>
             </View>
 
             <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
-              <Text style={styles.itemValue}>{itemCategory}</Text>
+              <Text style={styles.itemValue}>hi</Text>
               <Text style={styles.itemText}>Item Category</Text>
             </View>
           </View>
@@ -60,21 +56,21 @@ export const ItemBottomSheet = () => {
           <View style={styles.rowGroup}>
 
             <View style={styles.itemValueTextContainer}>
-              <Text style={styles.itemValue}>{cost !== null ? cost : '-'}</Text>
+              <Text style={styles.itemValue}>hi</Text>
               <Text style={styles.itemText}>Cost</Text>
             </View>
 
             <View style={styles.borderVertical}></View>
 
             <View style={styles.itemValueTextContainer}>
-              <Text style={styles.itemValue}>{fling_power !== null ? fling_power : '-'}</Text>
+              <Text style={styles.itemValue}>hi</Text>
               <Text style={styles.itemText}>Fling Power</Text>
             </View>
 
             <View style={styles.borderVertical}></View>
 
             <View style={styles.itemValueTextContainer}>
-              <Text style={styles.itemValue}>{flingEffect !== null ? flingEffect : '-'}</Text>
+              <Text style={styles.itemValue}>hi</Text>
               <Text style={styles.itemText}>Fling Effect</Text>
             </View>
 
@@ -82,17 +78,17 @@ export const ItemBottomSheet = () => {
 
           <View style={styles.group}>
             <Text style={styles.groupTitle}>Effect</Text>
-            <Text style={styles.itemText}>{itemShortEffect}</Text>
+            <Text style={styles.itemText}>hi</Text>
           </View>
 
           <View style={styles.group}>
             <Text style={styles.groupTitle}>In-Depth Effect</Text>
-            <Text style={styles.itemText}>{itemEffect}</Text>
+            <Text style={styles.itemText}>hi</Text>
           </View>
 
           <View style={styles.group}>
             <Text style={styles.groupTitle}>Description</Text>
-            <Text style={styles.itemText}>{itemFlavorText}</Text>
+            <Text style={styles.itemText}>hi</Text>
           </View>
 
       </View>

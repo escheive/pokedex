@@ -12,9 +12,10 @@ import { useBottomSheet } from 'contexts/BottomSheetContext';
 
 
 export const ListItem = React.memo(({ item, title }: any) => {
-  const { snapToIndex, setItem } = useBottomSheet();
+  const { snapToIndex, setItem, setItemType } = useBottomSheet();
 
   const openBottomSheet = () => {
+    setItemType(title)
     setItem(item);
     snapToIndex(0);
   };

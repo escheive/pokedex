@@ -10,7 +10,9 @@ type BottomSheetContextType = {
   closeBottomSheet: () => void;
   bottomSheetRef: React.RefObject<BottomSheet> | null;
   item: any;
-  setItem: any;
+  setItem: (item: any) => void;
+  itemType: any;
+  setItemType: (itemType: any) => void;
 };
 
 
@@ -20,7 +22,9 @@ const BottomSheetContext = createContext<BottomSheetContextType>({
   closeBottomSheet: () => {},
   bottomSheetRef: null,
   item: null,
-  setItem: () => {},
+  setItem: (item: any) => {},
+  itemType: null,
+  setItemType: (itemType: any) => {},
 });
 
 
@@ -36,6 +40,7 @@ export const useBottomSheet = () => {
 export const BottomSheetProvider = ({ children }: any) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [item, setItem] = useState(null);
+  const [itemType, setItemType] = useState(null);
 
 
   const handleSheetChanges = useCallback((index: number) => {
@@ -58,6 +63,8 @@ export const BottomSheetProvider = ({ children }: any) => {
     bottomSheetRef,
     item,
     setItem,
+    itemType,
+    setItemType,
   };
 
   return (
