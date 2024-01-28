@@ -1,8 +1,16 @@
-export const capitalizeString = (string: any) => {
-  if (typeof string === 'string') {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  } else if (typeof string === 'object' && string !== null) {
-    return string.name.charAt(0).toUpperCase() + string.name.slice(1);
+
+export const capitalizeString = (input: string | { name: string } | null) => {
+  if (typeof input === 'string') {
+    return input
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+  } else if (typeof input === 'object' && input !== null) {
+    return input.name
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+  } else {
+    return input;
   }
 }
 

@@ -107,36 +107,42 @@ export const BottomSheetComponent = () => {
 
         <View style={styles.detailsContainer}>
 
-        <View style={styles.rowGroup}>
+          <View style={styles.rowGroup}>
 
-          <View style={styles.itemValueTextContainer}>
-            <Text style={styles.itemValue}>{cost !== null ? cost : '-'}</Text>
-            <Text style={styles.itemText}>Cost</Text>
+            <View style={styles.itemValueTextContainer}>
+              <Text style={styles.itemValue}>{cost !== null ? cost : '-'}</Text>
+              <Text style={styles.itemText}>Cost</Text>
+            </View>
+
+            <View style={styles.borderVertical}></View>
+
+            <View style={styles.itemValueTextContainer}>
+              <Text style={styles.itemValue}>{fling_power !== null ? fling_power : '-'}</Text>
+              <Text style={styles.itemText}>Fling Power</Text>
+            </View>
+
+            <View style={styles.borderVertical}></View>
+
+            <View style={styles.itemValueTextContainer}>
+              <Text style={styles.itemValue}>{flingEffect !== null ? flingEffect : '-'}</Text>
+              <Text style={styles.itemText}>Fling Effect</Text>
+            </View>
+
           </View>
 
-          <View style={styles.borderVertical}></View>
-
-          <View style={styles.itemValueTextContainer}>
-            <Text style={styles.itemValue}>{fling_power !== null ? fling_power : '-'}</Text>
-            <Text style={styles.itemText}>Fling Power</Text>
-          </View>
-
-          <View style={styles.borderVertical}></View>
-
-          <View style={styles.itemValueTextContainer}>
-            <Text style={styles.itemValue}>{flingEffect !== null ? flingEffect : '-'}</Text>
-            <Text style={styles.itemText}>Fling Effect</Text>
-          </View>
-
-        </View>
-          
-          <Text style={styles.itemText}>{isFavorited ? 'Is Favorited!' : 'Not Favorited'}</Text>
-
-            
           <View style={styles.group}>
-            <Text style={styles.itemText}>Item Effect: {itemEffect}</Text>
-            <Text style={styles.itemText}>Item Short Effect: {itemShortEffect}</Text>
-            <Text style={styles.itemText}>Item Flavor Text: {itemFlavorText}</Text>
+            <Text style={styles.groupTitle}>Effect</Text>
+            <Text style={styles.itemText}>{itemShortEffect}</Text>
+          </View>
+
+          <View style={styles.group}>
+            <Text style={styles.groupTitle}>In-Depth Effect</Text>
+            <Text style={styles.itemText}>{itemEffect}</Text>
+          </View>
+
+          <View style={styles.group}>
+            <Text style={styles.groupTitle}>Description</Text>
+            <Text style={styles.itemText}>{itemFlavorText}</Text>
           </View>
           
         </View>
@@ -200,7 +206,7 @@ const styles = StyleSheet.create({
   group: {
     marginBottom: 20,
     padding: 10,
-    backgroundColor: '#ddd',
+    backgroundColor: '#F2F7FB',
     borderRadius: 20,
   },
   title: {
@@ -230,9 +236,16 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     textAlign: 'center'
   },
+  groupTitle: {
+    color: '#acf',
+    fontSize: 20,
+    textAlign: 'center',
+    paddingBottom: 10,
+  },
   itemText: {
     fontSize: 16,
     color: '#888',
-    textAlign: 'center'
+    textAlign: 'center',
+    lineHeight: 22,
   },
 });
