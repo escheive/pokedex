@@ -16,31 +16,11 @@ import { Image } from "expo-image";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
 import { ListViewScreen } from 'components/ListViewScreen';
+import { ABILITIES_LIST_QUERY } from 'api/queries';
 
 import { useQuery, gql } from '@apollo/client';
 
 const screenWidth = Dimensions.get('window').width;
-
-// Define Graphql query
-const ABILITIES_LIST_QUERY = gql`
-  query fetchAllPokemonAbilities {
-    pokemon_v2_ability {
-      id
-      name
-      isFavorited @client
-      pokemon_v2_abilityeffecttexts(where: {language_id: {_eq: 9}}) {
-        effect
-        short_effect
-      }
-      pokemon_v2_abilityflavortexts(order_by: {id: desc}, limit: 1, where: {language_id: {_eq: 9}}) {
-        flavor_text
-      }
-      pokemon_v2_pokemonabilities {
-        id
-      }
-    }
-  }
-`;
 
 export default function Page() {
   // const dispatch = useAppDispatch();
@@ -73,7 +53,7 @@ export default function Page() {
     } = filterOptions;
 
     // Turn abilitiesList to an object
-    const filteredList = abilitiesList.pokemon_v2_ability && abilitiesList.pokemon_v2_ability.filter((ability: any) =>
+    const filteredList = abilitiesList?.pokemon_v2_ability && abilitiesList.pokemon_v2_ability.filter((ability: any) =>
       (showFavorites ? ability.isFavorite : true) &&
         ability.name.toLowerCase().startsWith(searchQuery.toLowerCase()
       )

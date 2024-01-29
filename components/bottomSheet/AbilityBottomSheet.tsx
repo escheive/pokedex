@@ -31,7 +31,7 @@ export const AbilityBottomSheet = () => {
   console.log(pokemon_v2_abilityeffecttexts[0].short_effect)
   console.log(pokemon_v2_abilityflavortexts[0].flavor_text)
   console.log(pokemon_v2_pokemonabilities)
-  const pokemonWithAbilityIds = pokemon_v2_pokemonabilities.map((pokemon) => pokemon.id)
+  const pokemonWithAbilityIds = pokemon_v2_pokemonabilities.map((pokemon) => pokemon.pokemon_id)
 
   const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY, {
     fetchPolicy: 'cache-first',
@@ -39,16 +39,16 @@ export const AbilityBottomSheet = () => {
 
   const allPokemonWithAbility = pokemonList?.pokemon_v2_pokemon.filter((pokemon) => pokemonWithAbilityIds.includes(pokemon.id));
 
-  console.log(allPokemonWithAbility)
+  console.log('allPokemonWithAbility', allPokemonWithAbility)
 
-  const renderItem = useCallback(
-    ({ item }: any) => (
+  // const renderItem = useCallback(
+  //   ({ item }: any) => (
 
-      <PokemonListItem pokemon={item} />
+  //     <PokemonListItem pokemon={item} />
 
-    ),
-    []
-  );
+  //   ),
+  //   []
+  // );
 
 
 
@@ -121,13 +121,13 @@ export const AbilityBottomSheet = () => {
 
         <View style={styles.listContainer}>
 
-          <FlashList
-            data={allPokemonWithAbility}
-            ref={flashListRef}
-            scrollEnabled={false}
-            keyExtractor={(pokemon: any) => pokemon.id}
-            renderItem={renderItem}
-          />
+          {allPokemonWithAbility.map((pokemon) => {
+
+            return (
+              <PokemonListItem pokemon={pokemon} key={pokemon.id} />
+            )
+
+          })}
         </View>
 
       </View>

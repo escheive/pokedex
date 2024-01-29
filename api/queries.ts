@@ -43,7 +43,7 @@ export const ABILITIES_LIST_QUERY = gql`
         flavor_text
       }
       pokemon_v2_pokemonabilities {
-        id
+        pokemon_id
       }
     }
   }
