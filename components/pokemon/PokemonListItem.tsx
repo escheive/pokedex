@@ -8,11 +8,13 @@ import { useApolloClient } from '@apollo/client';
 import { IconContainer } from 'components/card/IconContainer';
 // Utils
 import { capitalizeString, pokemonColors } from 'utils/helpers';
+import { useBottomSheet } from 'contexts/BottomSheetContext';
 
 
 export const PokemonListItem = React.memo(({ pokemon }: any) => {
   const type1 = useMemo(() => pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name, [pokemon]);
   const type2 = useMemo(() => pokemon.pokemon_v2_pokemontypes[1]?.pokemon_v2_type.name, [pokemon]);
+  const { closeBottomSheet } = useBottomSheet();
 
   const backgroundColor = useMemo(() => pokemonColors[type1].backgroundColor, [type1]);
   const textColor = useMemo(() => pokemonColors[type1].color, [type1]);
@@ -26,7 +28,10 @@ export const PokemonListItem = React.memo(({ pokemon }: any) => {
 
   return (
     <TouchableOpacity 
-      onPress={() => router.push(`/pokemon/${pokemon.id}`)} 
+      onPress={() => {
+        router.push(`/pokemon/${pokemon.id}`)
+        closeBottomSheet()
+      }} 
       style={[styles.itemContainer, { backgroundColor } ]}
       activeOpacity={0.7}
     >
