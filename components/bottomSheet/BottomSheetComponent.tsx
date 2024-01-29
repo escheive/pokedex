@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 // Bottom Sheet
-import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetScrollView, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { useBottomSheet } from "contexts/BottomSheetContext";
 import { ItemBottomSheet } from "./ItemBottomSheet";
 import { AbilityBottomSheet } from "./AbilityBottomSheet";
@@ -39,7 +39,7 @@ export const BottomSheetComponent = () => {
         />
       )}
     >
-      <BottomSheetView style={styles.container}>
+      <BottomSheetScrollView style={styles.container}>
         {item ? (
           itemType === 'item' ? (
 
@@ -51,7 +51,7 @@ export const BottomSheetComponent = () => {
 
           ) : null
         ) : null}
-      </BottomSheetView>
+      </BottomSheetScrollView>
     </BottomSheet>
   )
 }
@@ -59,6 +59,7 @@ export const BottomSheetComponent = () => {
 // Stylesheet for this screen
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: 'transparent',
   },
   backgroundContainer: {

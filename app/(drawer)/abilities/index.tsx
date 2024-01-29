@@ -36,7 +36,7 @@ const ABILITIES_LIST_QUERY = gql`
         flavor_text
       }
       pokemon_v2_pokemonabilities {
-        pokemon_id
+        id
       }
     }
   }
@@ -86,7 +86,7 @@ export default function Page() {
 
 
   const renderItemsList = () => {
-    return <ListViewScreen query={''} title='ability' filteredItems={filteredAbilities} loading={loading} />
+    return <ListViewScreen title='ability' filteredItems={filteredAbilities} loading={loading} />
   };
 
 

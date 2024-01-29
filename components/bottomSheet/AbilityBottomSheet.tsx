@@ -2,10 +2,19 @@ import { Text, View, StyleSheet } from "react-native";
 import { Image } from "expo-image";
 import { useBottomSheet } from "contexts/BottomSheetContext";
 import { capitalizeString } from "utils/helpers";
-
+import { POKEMON_LIST_QUERY } from "api/queries";
+import { useQuery } from "@apollo/client";
+import { ListViewScreen } from "components/ListViewScreen";
+import { BottomSheetVirtualizedList, BottomSheetFlatList } from "@gorhom/bottom-sheet";
+import { useCallback, useRef } from "react";
+import { PokemonListItem } from "components/pokemon/PokemonListItem";
+import { useFocusEffect } from '@react-navigation/native';
+import { FlashList } from "@shopify/flash-list";
+import { FlatList } from "react-native-gesture-handler";
 
 export const AbilityBottomSheet = () => {
   const { item, itemType } = useBottomSheet();
+  const flashListRef = useRef(null);
 
 
   const { 
@@ -18,9 +27,28 @@ export const AbilityBottomSheet = () => {
   } = item;
 
   const capitalizedName = capitalizeString(name);
-  console.log(pokemon_v2_abilityeffecttexts)
-  console.log(pokemon_v2_abilityflavortexts)
+  console.log(pokemon_v2_abilityeffecttexts[0].effect)
+  console.log(pokemon_v2_abilityeffecttexts[0].short_effect)
+  console.log(pokemon_v2_abilityflavortexts[0].flavor_text)
   console.log(pokemon_v2_pokemonabilities)
+  const pokemonWithAbilityIds = pokemon_v2_pokemonabilities.map((pokemon) => pokemon.id)
+
+  const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY, {
+    fetchPolicy: 'cache-first',
+  });
+
+  const allPokemonWithAbility = pokemonList?.pokemon_v2_pokemon.filter((pokemon) => pokemonWithAbilityIds.includes(pokemon.id));
+
+  console.log(allPokemonWithAbility)
+
+  const renderItem = useCallback(
+    ({ item }: any) => (
+
+      <PokemonListItem pokemon={item} />
+
+    ),
+    []
+  );
 
 
 
@@ -28,68 +56,79 @@ export const AbilityBottomSheet = () => {
     <>
       <View style={styles.titleContainer}>
 
-          <View style={styles.titleRow}>
-            <Text style={styles.title}>{capitalizedName}</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.title}>{capitalizedName}</Text>
+        </View>
+
+        <Text style={styles.itemType}>{capitalizeString(itemType)}</Text>
+
+        <View style={styles.borderHorizontal}></View>
+
+        <View style={styles.categoryGroup}>
+
+          <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
+            <Text style={styles.itemValue}>{isFavorited}</Text>
+            <Text style={styles.itemText}>Bag Pocket</Text>
           </View>
 
-          <Text style={styles.itemType}>{capitalizeString(itemType)}</Text>
+          <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
+            <Text style={styles.itemValue}>hi</Text>
+            <Text style={styles.itemText}>Item Category</Text>
+          </View>
+        </View>
 
-          <View style={styles.borderHorizontal}></View>
+      </View>
 
-          <View style={styles.categoryGroup}>
+      <View style={styles.detailsContainer}>
 
-            <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
-            <Text style={styles.itemValue}>{isFavorited}</Text>
-              <Text style={styles.itemText}>Bag Pocket</Text>
-            </View>
+        <View style={styles.rowGroup}>
 
-            <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
-              <Text style={styles.itemValue}>hi</Text>
-              <Text style={styles.itemText}>Item Category</Text>
-            </View>
+          <View style={styles.itemValueTextContainer}>
+            <Text style={styles.itemValue}>hi</Text>
+            <Text style={styles.itemText}>Cost</Text>
+          </View>
+
+          <View style={styles.borderVertical}></View>
+
+          <View style={styles.itemValueTextContainer}>
+            <Text style={styles.itemValue}>hi</Text>
+            <Text style={styles.itemText}>Fling Power</Text>
+          </View>
+
+          <View style={styles.borderVertical}></View>
+
+          <View style={styles.itemValueTextContainer}>
+            <Text style={styles.itemValue}>hi</Text>
+            <Text style={styles.itemText}>Fling Effect</Text>
           </View>
 
         </View>
 
-        <View style={styles.detailsContainer}>
+        <View style={styles.group}>
+          <Text style={styles.groupTitle}>Effect</Text>
+          <Text style={styles.itemText}>hi</Text>
+        </View>
 
-          <View style={styles.rowGroup}>
+        <View style={styles.group}>
+          <Text style={styles.groupTitle}>In-Depth Effect</Text>
+          <Text style={styles.itemText}>hi</Text>
+        </View>
 
-            <View style={styles.itemValueTextContainer}>
-              <Text style={styles.itemValue}>hi</Text>
-              <Text style={styles.itemText}>Cost</Text>
-            </View>
+        <View style={styles.group}>
+          <Text style={styles.groupTitle}>Description</Text>
+          <Text style={styles.itemText}>hi</Text>
+        </View>
 
-            <View style={styles.borderVertical}></View>
+        <View style={styles.listContainer}>
 
-            <View style={styles.itemValueTextContainer}>
-              <Text style={styles.itemValue}>hi</Text>
-              <Text style={styles.itemText}>Fling Power</Text>
-            </View>
-
-            <View style={styles.borderVertical}></View>
-
-            <View style={styles.itemValueTextContainer}>
-              <Text style={styles.itemValue}>hi</Text>
-              <Text style={styles.itemText}>Fling Effect</Text>
-            </View>
-
-          </View>
-
-          <View style={styles.group}>
-            <Text style={styles.groupTitle}>Effect</Text>
-            <Text style={styles.itemText}>hi</Text>
-          </View>
-
-          <View style={styles.group}>
-            <Text style={styles.groupTitle}>In-Depth Effect</Text>
-            <Text style={styles.itemText}>hi</Text>
-          </View>
-
-          <View style={styles.group}>
-            <Text style={styles.groupTitle}>Description</Text>
-            <Text style={styles.itemText}>hi</Text>
-          </View>
+          <FlashList
+            data={allPokemonWithAbility}
+            ref={flashListRef}
+            scrollEnabled={false}
+            keyExtractor={(pokemon: any) => pokemon.id}
+            renderItem={renderItem}
+          />
+        </View>
 
       </View>
     </>
@@ -110,6 +149,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   detailsContainer: {
+    flex: 1,
     backgroundColor: 'white',
     padding: 20,
   },
@@ -185,5 +225,11 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     lineHeight: 22,
+  },
+  listContainer: {
+    flex: 1,
+  },
+  contentContainer: {
+    flex: 1
   },
 });

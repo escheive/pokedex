@@ -103,7 +103,7 @@ export default function Page() {
     //   return <Text>Loading...</Text>
     // };
 
-    return <ListViewScreen query={''} title='pokemon' filteredItems={filteredItems} loading={loading} />
+    return <ListViewScreen title='pokemon' filteredItems={filteredItems} loading={loading} />
   };
 
 

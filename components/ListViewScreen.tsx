@@ -10,14 +10,13 @@ import { SkeletonListItem } from './lists/SkeletonItem';
 
 
 interface Props {
-  query: string;
   title: string;
   filteredItems: [];
   loading: boolean;
 }
 
 
-export const ListViewScreen:React.FC<Props> = ({ query, title, filteredItems, loading }) => {
+export const ListViewScreen:React.FC<Props> = ({ title, filteredItems, loading }) => {
   // Ref used to track position in flashlist
   const flashListRef = useRef(null);
   const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);

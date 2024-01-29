@@ -43,7 +43,7 @@ export const ABILITIES_LIST_QUERY = gql`
         flavor_text
       }
       pokemon_v2_pokemonabilities {
-        pokemon_id
+        id
       }
     }
   }
@@ -203,6 +203,25 @@ export const POKEMON_DETAILS_LIST_QUERY = gql`
     }
   }
 `;
+
+
+// // graphQL query for fetching pokemon from an array of ids
+// export const GET_POKEMON_BY_IDS = gql`
+//   query getPokemonByIds($ids: [Int!]) {
+//     pokemon_v2_pokemon(where: {pokemon_v2_pokemonabilities: {ability_id}}) {
+//       id
+//       name
+//       isFavorited @client
+//       isCaught @ client
+//       pokemon_v2_pokemontypes {
+//         pokemon_v2_type {
+//           name
+//           id
+//         }
+//       }
+//     }
+//   }
+// `;
 
 // graphQL query for fetching all pokemons moves from the api
 export const POKEMON_MOVES_LIST_QUERY = gql`

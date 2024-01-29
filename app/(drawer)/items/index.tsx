@@ -63,7 +63,7 @@ export default function Page() {
 
 
   const renderItemsList = () => {
-    return <ListViewScreen query={''} title='item' filteredItems={filteredItems} loading={loading} />
+    return <ListViewScreen title='item' filteredItems={filteredItems} loading={loading} />
   };
 
 
