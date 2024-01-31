@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 // Bottom Sheet
 import BottomSheet, { BottomSheetScrollView, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
@@ -8,7 +8,7 @@ import { AbilityBottomSheet } from "./AbilityBottomSheet";
 
 
 export const BottomSheetComponent = () => {
-  const { bottomSheetRef, handleSheetChanges, item, itemType } = useBottomSheet();
+  const { bottomSheetRef, scrollViewRef, handleSheetChanges, item, itemType } = useBottomSheet();
 
   const snapPoints = useMemo(() => ['50%', '95%'], []);
 
@@ -39,7 +39,10 @@ export const BottomSheetComponent = () => {
         />
       )}
     >
-      <BottomSheetScrollView style={styles.container}>
+      <BottomSheetScrollView 
+        ref={scrollViewRef}
+        style={styles.container}
+      >
         {item ? (
           itemType === 'item' ? (
 

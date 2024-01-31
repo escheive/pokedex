@@ -113,10 +113,10 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
         <Text>WEIGHT: {pokemon.weight}</Text>
         <Text>BASE EXPERIENCE: {pokemon.base_experience}</Text>
         <Text>ABILITIES</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.name}</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[0].pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].flavor_text}</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[1].pokemon_v2_ability.name}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[0]?.pokemon_v2_ability.name}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[0]?.pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[0]?.pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].flavor_text}</Text>
+        <Text>{pokemon.pokemon_v2_pokemonabilities[1]?.pokemon_v2_ability.name}</Text>
         <Text>{pokemon.pokemon_v2_pokemonabilities[1]?.pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
         <Text>{pokemon.pokemon_v2_pokemonabilities[1]?.pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].flavor_text}</Text>
         <Text>BASE HAPPINESS: {pokemon.pokemon_v2_pokemonspecy.base_happiness}</Text>

@@ -14,7 +14,6 @@ import { FlatList } from "react-native-gesture-handler";
 
 export const AbilityBottomSheet = () => {
   const { item, itemType } = useBottomSheet();
-  const flashListRef = useRef(null);
 
 
   const { 
@@ -27,10 +26,6 @@ export const AbilityBottomSheet = () => {
   } = item;
 
   const capitalizedName = capitalizeString(name);
-  console.log(pokemon_v2_abilityeffecttexts[0].effect)
-  console.log(pokemon_v2_abilityeffecttexts[0].short_effect)
-  console.log(pokemon_v2_abilityflavortexts[0].flavor_text)
-  console.log(pokemon_v2_pokemonabilities)
   const pokemonWithAbilityIds = pokemon_v2_pokemonabilities.map((pokemon) => pokemon.pokemon_id)
 
   const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY, {
@@ -38,18 +33,6 @@ export const AbilityBottomSheet = () => {
   });
 
   const allPokemonWithAbility = pokemonList?.pokemon_v2_pokemon.filter((pokemon) => pokemonWithAbilityIds.includes(pokemon.id));
-
-  console.log('allPokemonWithAbility', allPokemonWithAbility)
-
-  // const renderItem = useCallback(
-  //   ({ item }: any) => (
-
-  //     <PokemonListItem pokemon={item} />
-
-  //   ),
-  //   []
-  // );
-
 
 
   return (

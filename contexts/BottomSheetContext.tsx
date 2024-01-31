@@ -1,6 +1,7 @@
 // BottomSheetContext.js
 import React, { createContext, useContext, useRef, useMemo, useCallback, useState } from 'react';
-import BottomSheet from '@gorhom/bottom-sheet';
+import { ScrollView } from 'react-native';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 
 
@@ -9,6 +10,7 @@ type BottomSheetContextType = {
   snapToIndex: (index: number) => void;
   closeBottomSheet: () => void;
   bottomSheetRef: React.RefObject<BottomSheet> | null;
+  scrollViewRef: React.RefObject<ScrollView> | null;
   item: any;
   setItem: (item: any) => void;
   itemType: any;
@@ -21,6 +23,7 @@ const BottomSheetContext = createContext<BottomSheetContextType>({
   snapToIndex: (index: number) => {},
   closeBottomSheet: () => {},
   bottomSheetRef: null,
+  scrollViewRef: null,
   item: null,
   setItem: (item: any) => {},
   itemType: null,
@@ -39,6 +42,7 @@ export const useBottomSheet = () => {
 
 export const BottomSheetProvider = ({ children }: any) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
   const [item, setItem] = useState(null);
   const [itemType, setItemType] = useState(null);
 
@@ -48,6 +52,9 @@ export const BottomSheetProvider = ({ children }: any) => {
   }, []);
 
   const handleSnapPress = useCallback((index: number) => {
+    if (index === -1 || index === 0) {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: false })
+    };
     bottomSheetRef.current?.snapToIndex(index);
     console.log('handleSnapPress', index)
   }, []);
@@ -61,6 +68,7 @@ export const BottomSheetProvider = ({ children }: any) => {
     handleSheetChanges,
     closeBottomSheet,
     bottomSheetRef,
+    scrollViewRef,
     item,
     setItem,
     itemType,
