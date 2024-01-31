@@ -36,8 +36,56 @@ export default function Profile() {
     }
     return [];
   });
+  const [caughtPokemon, setCaughtPokemon] = useState({
+    total: [],
+    kanto: [],
+    johto: [],
+    hoenn: [],
+    sinnoh: [],
+    unova: [],
+    kalos: [],
+    alola: [],
+    galar: [],
+    paldea: []
+  });
 
   useMemo(() => {
+
+    if (pokemon) {
+      const totalCaught = pokemon.pokemon_v2_pokemon.reduce((count, pokemon) => (pokemon.isCaught ? count + 1 : count), 0);
+
+      const kantoCaught = pokemon.pokemon_v2_pokemon.reduce((count, pokemon) => (pokemon.id >= groupedVersions.gen1.start && pokemon.id <= groupedVersions.gen1.end && pokemon.isCaught ? count + 1 : count), 0);
+
+      const johtoCaught = pokemon.pokemon_v2_pokemon.reduce((count, pokemon) => (pokemon.id >= groupedVersions.gen2.start && pokemon.id <= groupedVersions.gen2.end && pokemon.isCaught ? count + 1 : count), 0);
+
+      const hoennCaught = pokemon.pokemon_v2_pokemon.reduce((count, pokemon) => (pokemon.id >= groupedVersions.gen3.start && pokemon.id <= groupedVersions.gen3.end && pokemon.isCaught ? count + 1 : count), 0);
+
+      const sinnohCaught = pokemon.pokemon_v2_pokemon.reduce((count, pokemon) => (pokemon.id >= groupedVersions.gen4.start && pokemon.id <= groupedVersions.gen4.end && pokemon.isCaught ? count + 1 : count), 0);
+
+      const unovaCaught = pokemon.pokemon_v2_pokemon.reduce((count, pokemon) => (pokemon.id >= groupedVersions.gen5.start && pokemon.id <= groupedVersions.gen5.end && pokemon.isCaught ? count + 1 : count), 0);
+
+      const kalosCaught = pokemon.pokemon_v2_pokemon.reduce((count, pokemon) => (pokemon.id >= groupedVersions.gen6.start && pokemon.id <= groupedVersions.gen6.end && pokemon.isCaught ? count + 1 : count), 0);
+
+      const alolaCaught = pokemon.pokemon_v2_pokemon.reduce((count, pokemon) => (pokemon.id >= groupedVersions.gen7.start && pokemon.id <= groupedVersions.gen7.end && pokemon.isCaught ? count + 1 : count), 0);
+
+      const galarCaught = pokemon.pokemon_v2_pokemon.reduce((count, pokemon) => (pokemon.id >= groupedVersions.gen8.start && pokemon.id <= groupedVersions.gen8.end && pokemon.isCaught ? count + 1 : count), 0);
+
+      const paldeaCaught = pokemon.pokemon_v2_pokemon.reduce((count, pokemon) => (pokemon.id >= groupedVersions.gen9.start && pokemon.id <= groupedVersions.gen9.end && pokemon.isCaught ? count + 1 : count), 0);
+
+      setCaughtPokemon({
+        total: totalCaught,
+        kanto: kantoCaught,
+        johto: johtoCaught,
+        hoenn: hoennCaught,
+        sinnoh: sinnohCaught,
+        unova: unovaCaught,
+        kalos: kalosCaught,
+        alola: alolaCaught,
+        galar: galarCaught,
+        paldea: paldeaCaught,
+      });
+    }
+
     if (pokemon) {
       setFavoritedPokemon(pokemon.pokemon_v2_pokemon.filter(p => p.isFavorited === true));
     }
@@ -189,16 +237,16 @@ export default function Profile() {
         <View>
           <Text>Pokedex Progress</Text>
           <View>
-            <Text>Total: {groupedVersions.gen9.end}</Text>
-            <Text>Kanto: {groupedVersions.gen1.end}</Text>
-            <Text>Johto: {groupedVersions.gen2.end - groupedVersions.gen1.end}</Text>
-            <Text>Hoenn: {groupedVersions.gen3.end - groupedVersions.gen2.end}</Text>
-            <Text>Sinnoh: {groupedVersions.gen4.end - groupedVersions.gen3.end}</Text>
-            <Text>Unova: {groupedVersions.gen5.end - groupedVersions.gen4.end}</Text>
-            <Text>Kalos: {groupedVersions.gen6.end - groupedVersions.gen5.end}</Text>
-            <Text>Alola: {groupedVersions.gen7.end - groupedVersions.gen6.end}</Text>
-            <Text>Galar: {groupedVersions.gen8.end - groupedVersions.gen7.end}</Text>
-            <Text>Paldea: {groupedVersions.gen9.end - groupedVersions.gen8.end}</Text>
+            <Text>Total: {caughtPokemon.total} / {groupedVersions.gen9.end}</Text>
+            <Text>Kanto: {caughtPokemon.kanto} / {groupedVersions.gen1.end}</Text>
+            <Text>Johto: {caughtPokemon.johto} / {groupedVersions.gen2.end - groupedVersions.gen1.end}</Text>
+            <Text>Hoenn: {caughtPokemon.hoenn} / {groupedVersions.gen3.end - groupedVersions.gen2.end}</Text>
+            <Text>Sinnoh: {caughtPokemon.sinnoh} / {groupedVersions.gen4.end - groupedVersions.gen3.end}</Text>
+            <Text>Unova: {caughtPokemon.unova} / {groupedVersions.gen5.end - groupedVersions.gen4.end}</Text>
+            <Text>Kalos: {caughtPokemon.kalos} / {groupedVersions.gen6.end - groupedVersions.gen5.end}</Text>
+            <Text>Alola: {caughtPokemon.alola} / {groupedVersions.gen7.end - groupedVersions.gen6.end}</Text>
+            <Text>Galar: {caughtPokemon.galar} / {groupedVersions.gen8.end - groupedVersions.gen7.end}</Text>
+            <Text>Paldea: {caughtPokemon.paldea} / {groupedVersions.gen9.end - groupedVersions.gen8.end}</Text>
           </View>
         </View>
       </View>
