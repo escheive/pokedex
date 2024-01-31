@@ -9,6 +9,7 @@ import { POKEMON_ISFAVORITE_OR_CAUGHT_QUERY } from 'api/queries';
 import { useQuery, useMutation, useApolloClient } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Link } from 'expo-router';
+import { groupedVersions } from 'constants/Pokemon';
 
 
 
@@ -184,30 +185,34 @@ export default function Profile() {
       </View>
 
       <View>
-      <FlashList 
-        data={favoritedPokemon}
-        renderItem={renderFavoritedPokemonItem}
-        numColumns={numColumns}
-        keyExtractor={(item) => item.id.toString()}
-        estimatedItemSize={100}
-        estimatedListSize={{ height: Dimensions.get("window").height, width: Dimensions.get("window").width * 0.90 }}
-        contentContainerStyle={{  }}
-      />
-        {/* {favoritedPokemon && favoritedPokemon.map((pokemon) => {
+        <Text>Statistics</Text>
+        <View>
+          <Text>Pokedex Progress</Text>
+          <View>
+            <Text>Total: {groupedVersions.gen9.end}</Text>
+            <Text>Kanto: {groupedVersions.gen1.end}</Text>
+            <Text>Johto: {groupedVersions.gen2.end - groupedVersions.gen1.end}</Text>
+            <Text>Hoenn: {groupedVersions.gen3.end - groupedVersions.gen2.end}</Text>
+            <Text>Sinnoh: {groupedVersions.gen4.end - groupedVersions.gen3.end}</Text>
+            <Text>Unova: {groupedVersions.gen5.end - groupedVersions.gen4.end}</Text>
+            <Text>Kalos: {groupedVersions.gen6.end - groupedVersions.gen5.end}</Text>
+            <Text>Alola: {groupedVersions.gen7.end - groupedVersions.gen6.end}</Text>
+            <Text>Galar: {groupedVersions.gen8.end - groupedVersions.gen7.end}</Text>
+            <Text>Paldea: {groupedVersions.gen9.end - groupedVersions.gen8.end}</Text>
+          </View>
+        </View>
+      </View>
 
-          return (
-            <View>
-              <Image
-                style={[ styles.avatar, { margin: gap / 2 } ]}
-                source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon ? pokemon.id : 1}.png` }}
-                contentFit="contain"
-                transition={0}
-                recyclingKey={pokemon.id.toString()}
-              />
-              <Text>{pokemon.id}</Text> 
-            </View>
-          )
-        })} */}
+      <View>
+        <FlashList 
+          data={favoritedPokemon}
+          renderItem={renderFavoritedPokemonItem}
+          numColumns={numColumns}
+          keyExtractor={(item) => item.id.toString()}
+          estimatedItemSize={100}
+          estimatedListSize={{ height: Dimensions.get("window").height, width: Dimensions.get("window").width * 0.90 }}
+          contentContainerStyle={{  }}
+        />
       </View>
 
       <Modal visible={imageModalVisible} animationType="fade" transparent>
