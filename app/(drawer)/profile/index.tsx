@@ -10,6 +10,8 @@ import { useQuery, useMutation, useApolloClient } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Link } from 'expo-router';
 
+
+
 export default function Profile() {
   const apolloClient = useApolloClient();
 
@@ -17,7 +19,9 @@ export default function Profile() {
 
   const { loading: pokemonLoading, data: pokemon } = useQuery(POKEMON_ISFAVORITE_OR_CAUGHT_QUERY);
 
+
   const { id, username, email, profileImage } = userData.profile;
+
 
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [newUsername, setNewUsername] = useState(username);
@@ -135,10 +139,10 @@ export default function Profile() {
       />
       <Image
         style={[ styles.avatar, { margin: gap / 2 } ]}
-        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${profileImage ? newProfileImage : 1}.png` }}
+        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${userData?.profile.profileImage ? newProfileImage : 1}.png` }}
         contentFit="contain"
         transition={0}
-        recyclingKey={profileImage}
+        recyclingKey={userData?.profile.profileImage}
       />
       {isUpdatingProfile ? (
         <Button 
@@ -149,8 +153,8 @@ export default function Profile() {
       <View style={styles.infoContainer}>
         {!isUpdatingProfile ? (
           <>
-            <Text style={styles.username}>{username || 'Trainer'}</Text>
-            <Text style={styles.email}>{email || 'trainer@example.com'}</Text>
+            <Text style={styles.username}>{userData?.profile.username || 'Trainer'}</Text>
+            <Text style={styles.email}>{userData?.profile.email || 'trainer@example.com'}</Text>
             <Button 
               title="Update Profile" 
               onPress={() => setIsUpdatingProfile(true)} 

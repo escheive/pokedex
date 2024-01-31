@@ -4,11 +4,11 @@ import { Redirect } from "expo-router"
 import { useEffect, useState } from "react";
 import { LoadingScreen } from "components/LoadingScreen";
 
-import mmkv from 'utils/mmkvConfig';
 import { useApolloClient, gql, useQuery } from "@apollo/client";
+import { checkAndPerformInitialSetup } from "utils/setupFunctions";
 import { GET_PROFILE_QUERY } from "api/user/queries";
 
-const INITIAL_SETUP_KEY = 'hasInitialSetup';
+
 
 export default function Page() {
   const apolloClient = useApolloClient();
@@ -31,37 +31,12 @@ export default function Page() {
     fetchPolicy: 'cache-first',
   });
 
+  const { data: userData } = useQuery(GET_PROFILE_QUERY);
 
-  async function checkAndPerformInitialSetup() {
-    try {
-      const hasSetup = mmkv.getString(INITIAL_SETUP_KEY);
-  
-      const initialData = {
-        profile: {
-          __typename: 'Profile',
-          id: '1',
-          username: 'Ash',
-          email: 'ash@example.com',
-          profileImage: '1'
-          // Initialize other profile fields
-        },
-      };
-  
-      if (hasSetup != 'true') {
-        apolloClient.writeQuery({
-          query: GET_PROFILE_QUERY,
-          data: initialData,
-        })
-        // Update the initial setup flag so future setups do not go through these steps
-        mmkv.set(INITIAL_SETUP_KEY, 'true');
-      }
 
-    } catch (error) {
-      console.error('Error during initial setup:', error);
-    }
-  }
+  // Function to perform first login tasks, ie. create a default user profile, handle tutorials or guides
+  checkAndPerformInitialSetup(apolloClient, userData);
 
-  checkAndPerformInitialSetup();
 
   useEffect(() => {
     if (
