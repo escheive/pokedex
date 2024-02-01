@@ -232,22 +232,51 @@ export default function Profile() {
         )}
       </View>
 
-      <View>
-        <Text>Statistics</Text>
-        <View>
+      <View style={styles.statisticsContainer}>
+        <Text style={styles.pokedexTitle}>Statistics</Text>
+        <View style={styles.pokedexContainer}>
           <Text>Pokedex Progress</Text>
-          <View>
-            <Text>Total: {caughtPokemon.total} / {groupedVersions.gen9.end}</Text>
-            <Text>Kanto: {caughtPokemon.kanto} / {groupedVersions.gen1.end}</Text>
-            <Text>Johto: {caughtPokemon.johto} / {groupedVersions.gen2.end - groupedVersions.gen1.end}</Text>
-            <Text>Hoenn: {caughtPokemon.hoenn} / {groupedVersions.gen3.end - groupedVersions.gen2.end}</Text>
-            <Text>Sinnoh: {caughtPokemon.sinnoh} / {groupedVersions.gen4.end - groupedVersions.gen3.end}</Text>
-            <Text>Unova: {caughtPokemon.unova} / {groupedVersions.gen5.end - groupedVersions.gen4.end}</Text>
-            <Text>Kalos: {caughtPokemon.kalos} / {groupedVersions.gen6.end - groupedVersions.gen5.end}</Text>
-            <Text>Alola: {caughtPokemon.alola} / {groupedVersions.gen7.end - groupedVersions.gen6.end}</Text>
-            <Text>Galar: {caughtPokemon.galar} / {groupedVersions.gen8.end - groupedVersions.gen7.end}</Text>
-            <Text>Paldea: {caughtPokemon.paldea} / {groupedVersions.gen9.end - groupedVersions.gen8.end}</Text>
+          <View style={styles.caughtPokemonGroup}>
+            <Text>Total:</Text>
+            <Text>{caughtPokemon.total} / {groupedVersions.gen9.end}</Text>
           </View>
+          <View style={styles.caughtPokemonGroup}>
+            <Text>Kanto:</Text>
+            <Text>{caughtPokemon.kanto} / {groupedVersions.gen1.end}</Text>
+          </View>
+          <View style={styles.caughtPokemonGroup}>
+            <Text>Johto:</Text>
+            <Text>{caughtPokemon.johto} / {groupedVersions.gen2.end - groupedVersions.gen1.end}</Text>
+          </View>
+          <View style={styles.caughtPokemonGroup}>
+            <Text>Hoenn:</Text>
+            <Text>{caughtPokemon.hoenn} / {groupedVersions.gen3.end - groupedVersions.gen2.end}</Text>
+          </View>
+          <View style={styles.caughtPokemonGroup}>
+            <Text>Sinnoh:</Text>
+            <Text>{caughtPokemon.sinnoh} / {groupedVersions.gen4.end - groupedVersions.gen3.end}</Text>
+          </View>
+          <View style={styles.caughtPokemonGroup}>
+            <Text>Unova:</Text>
+            <Text>{caughtPokemon.unova} / {groupedVersions.gen5.end - groupedVersions.gen4.end}</Text>
+          </View>
+          <View style={styles.caughtPokemonGroup}>
+            <Text>Kalos:</Text>
+            <Text>{caughtPokemon.kalos} / {groupedVersions.gen6.end - groupedVersions.gen5.end}</Text>
+          </View>
+          <View style={styles.caughtPokemonGroup}>
+            <Text>Alola:</Text>
+            <Text>{caughtPokemon.alola} / {groupedVersions.gen7.end - groupedVersions.gen6.end}</Text>
+          </View>
+          <View style={styles.caughtPokemonGroup}>
+            <Text>Galar:</Text>
+            <Text>{caughtPokemon.galar} / {groupedVersions.gen8.end - groupedVersions.gen7.end}</Text>
+          </View>
+          <View style={styles.caughtPokemonGroup}>
+            <Text>Paldea:</Text>
+            <Text>{caughtPokemon.paldea} / {groupedVersions.gen9.end - groupedVersions.gen8.end}</Text>
+          </View>
+          
         </View>
       </View>
 
@@ -374,5 +403,24 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     textAlign: 'center',
     marginVertical: 30,
+  },
+  statisticsContainer: {
+    width: '100%',
+    marginTop: 20,
+    justifyContent: 'center'
+  },
+  pokedexTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  pokedexContainer: {
+    width: '100%',
+    padding: 10,
+    justifyContent: 'center'
+  },
+  caughtPokemonGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
