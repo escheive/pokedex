@@ -243,3 +243,29 @@ export const getTMImageUrl = (tmNumber: string) => {
     return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-normal.png`;
   }
 };
+
+export const getRegionName = (genKey: any) => {
+  switch (genKey) {
+    case 'gen1':
+      return 'kanto';
+    case 'gen2':
+      return 'johto';
+    case 'gen3':
+      return 'hoenn';
+    case 'gen4':
+      return 'sinnoh';
+    case 'gen5':
+      return 'unova';
+    case 'gen6':
+      return 'kalos';
+    case 'gen7':
+      return 'alola';
+    case 'gen8':
+      return 'galar';
+    case 'gen9':
+      return 'paldea';
+    default:
+      return genKey;
+
+    }
+}

@@ -10,6 +10,7 @@ import { useQuery, useMutation, useApolloClient } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Link } from 'expo-router';
 import { groupedVersions } from 'constants/Pokemon';
+import { capitalizeString, getRegionName } from 'utils/helpers';
 
 
 
@@ -177,6 +178,14 @@ export default function Profile() {
   };
 
 
+  const CaughtPokemonGroup = ({ title, caught, total }) => (
+    <View style={styles.caughtPokemonGroup}>
+      <Text style={styles.pokemonRegionText}>{title}:</Text>
+      <Text style={styles.caughtPokemonValue}>{caught} / {total}</Text>
+    </View>
+  );
+
+
   return (
     <View style={styles.container}>
       <Drawer.Screen
@@ -233,49 +242,26 @@ export default function Profile() {
       </View>
 
       <View style={styles.statisticsContainer}>
-        <Text style={styles.pokedexTitle}>Statistics</Text>
+        <Text style={styles.statisticsTitle}>Statistics</Text>
         <View style={styles.pokedexContainer}>
-          <Text>Pokedex Progress</Text>
+          <Text style={styles.pokedexTitle}>Pokedex Progress</Text>
           <View style={styles.caughtPokemonGroup}>
-            <Text>Total:</Text>
-            <Text>{caughtPokemon.total} / {groupedVersions.gen9.end}</Text>
+            <Text style={[styles.pokemonRegionText, { color: '#333' }]}>Total:</Text>
+            <Text style={styles.caughtPokemonValue}>{caughtPokemon.total} / {groupedVersions.gen9.end}</Text>
           </View>
-          <View style={styles.caughtPokemonGroup}>
-            <Text>Kanto:</Text>
-            <Text>{caughtPokemon.kanto} / {groupedVersions.gen1.end}</Text>
-          </View>
-          <View style={styles.caughtPokemonGroup}>
-            <Text>Johto:</Text>
-            <Text>{caughtPokemon.johto} / {groupedVersions.gen2.end - groupedVersions.gen1.end}</Text>
-          </View>
-          <View style={styles.caughtPokemonGroup}>
-            <Text>Hoenn:</Text>
-            <Text>{caughtPokemon.hoenn} / {groupedVersions.gen3.end - groupedVersions.gen2.end}</Text>
-          </View>
-          <View style={styles.caughtPokemonGroup}>
-            <Text>Sinnoh:</Text>
-            <Text>{caughtPokemon.sinnoh} / {groupedVersions.gen4.end - groupedVersions.gen3.end}</Text>
-          </View>
-          <View style={styles.caughtPokemonGroup}>
-            <Text>Unova:</Text>
-            <Text>{caughtPokemon.unova} / {groupedVersions.gen5.end - groupedVersions.gen4.end}</Text>
-          </View>
-          <View style={styles.caughtPokemonGroup}>
-            <Text>Kalos:</Text>
-            <Text>{caughtPokemon.kalos} / {groupedVersions.gen6.end - groupedVersions.gen5.end}</Text>
-          </View>
-          <View style={styles.caughtPokemonGroup}>
-            <Text>Alola:</Text>
-            <Text>{caughtPokemon.alola} / {groupedVersions.gen7.end - groupedVersions.gen6.end}</Text>
-          </View>
-          <View style={styles.caughtPokemonGroup}>
-            <Text>Galar:</Text>
-            <Text>{caughtPokemon.galar} / {groupedVersions.gen8.end - groupedVersions.gen7.end}</Text>
-          </View>
-          <View style={styles.caughtPokemonGroup}>
-            <Text>Paldea:</Text>
-            <Text>{caughtPokemon.paldea} / {groupedVersions.gen9.end - groupedVersions.gen8.end}</Text>
-          </View>
+          {Object.keys(groupedVersions).map(regionKey => {
+            const regionName = getRegionName(regionKey);
+
+            return (
+              <CaughtPokemonGroup 
+                key={regionKey}
+                title={capitalizeString(regionName)}
+                caught={caughtPokemon[regionName]}
+                total={groupedVersions[regionKey].end - groupedVersions[regionKey].start + 1}
+              />
+            )
+
+          })}
           
         </View>
       </View>
@@ -405,14 +391,23 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
   statisticsContainer: {
-    width: '100%',
+    width: '98%',
     marginTop: 20,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 16,
+    borderColor: '#bbb',
   },
-  pokedexTitle: {
+  statisticsTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
+  },
+  pokedexTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#333',
   },
   pokedexContainer: {
     width: '100%',
@@ -422,5 +417,17 @@ const styles = StyleSheet.create({
   caughtPokemonGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginVertical: 2,
+  },
+  pokemonRegionText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333'
+  },
+  caughtPokemonValue: {
+    color: '#333',
+    fontSize: 16,
+    fontWeight: 'bold'
   },
 });
