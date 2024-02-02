@@ -172,7 +172,6 @@ export default function Profile() {
           recyclingKey={item.id.toString()}
           pointerEvents='none'
         />
-        <Text>{item.id}</Text>
       </Link>
     )
   };
@@ -187,7 +186,10 @@ export default function Profile() {
 
 
   return (
-    <View style={styles.container}>
+    <ScrollView 
+      contentContainerStyle={{ alignItems: 'center' }}
+      style={styles.container}
+    >
       <Drawer.Screen
         options={{
           title: "Profile",
@@ -266,7 +268,8 @@ export default function Profile() {
         </View>
       </View>
 
-      <View>
+      <View style={styles.favoritePokemonContainer}>
+        <Text style={styles.favoritePokemonTitle}>Favorite Pokemon</Text>
         <FlashList 
           data={favoritedPokemon}
           renderItem={renderFavoritedPokemonItem}
@@ -302,14 +305,13 @@ export default function Profile() {
           </TouchableOpacity>
         </TouchableOpacity>
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     paddingTop: 20,
     backgroundColor: '#f4f4f4',
   },
@@ -328,6 +330,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     alignItems: 'center',
+    marginBottom: 20,
   },
   username: {
     fontSize: 22,
@@ -392,7 +395,7 @@ const styles = StyleSheet.create({
   },
   statisticsContainer: {
     width: '98%',
-    marginTop: 20,
+    marginBottom: 20,
     justifyContent: 'center',
     borderWidth: 1,
     borderRadius: 16,
@@ -429,5 +432,20 @@ const styles = StyleSheet.create({
     color: '#333',
     fontSize: 16,
     fontWeight: 'bold'
+  },
+  favoritePokemonContainer: {
+    width: '98%',
+    padding: 6,
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 16,
+    borderColor: '#bbb',
+    marginBottom: 30,
+  },
+  favoritePokemonTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
   },
 });

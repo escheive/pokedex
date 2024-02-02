@@ -68,7 +68,6 @@ export const EvolutionChain:React.FC<EvolutionChainComponentProps> = ({ pokemonI
               transition={500}
             />
             <Text>{capitalizeString(evolution.name)}</Text>
-            <Text>{capitalizeString(evolution.id)}</Text>
           </Link>
         </React.Fragment>
       ))}
@@ -99,6 +98,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    textAlign: 'center',
     paddingVertical: 10,
     width: '20%',
   },
