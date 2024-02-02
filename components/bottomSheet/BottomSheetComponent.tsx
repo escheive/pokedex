@@ -8,6 +8,7 @@ import { AbilityBottomSheet } from "./AbilityBottomSheet";
 
 
 export const BottomSheetComponent = () => {
+  
   const { bottomSheetRef, scrollViewRef, handleSheetChanges, item, itemType } = useBottomSheet();
 
   const snapPoints = useMemo(() => ['50%', '95%'], []);

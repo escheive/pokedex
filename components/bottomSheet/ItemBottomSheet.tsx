@@ -1,13 +1,17 @@
+// Dependencies
 import { Text, View, StyleSheet } from "react-native";
 import { Image } from "expo-image";
-import { useBottomSheet } from "contexts/BottomSheetContext";
+// Utils
 import { capitalizeString } from "utils/helpers";
+// Context
+import { useBottomSheet } from "contexts/BottomSheetContext";
 
 
 export const ItemBottomSheet = () => {
+  // Grab the set item from the bottom sheet context
   const { item, itemType } = useBottomSheet();
 
-
+  // Destructer the item
   const capitalizedName = capitalizeString(item?.name);
   const cost = item?.cost || null;
   const fling_power = item?.fling_power || null;
@@ -22,6 +26,7 @@ export const ItemBottomSheet = () => {
 
   return (
     <>
+      {/* Title container with item name, image and type */}
       <View style={styles.titleContainer}>
 
           <View style={styles.titleRow}>
@@ -41,7 +46,6 @@ export const ItemBottomSheet = () => {
           <View style={styles.borderHorizontal}></View>
 
           <View style={styles.categoryGroup}>
-
             <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
             <Text style={styles.itemValue}>{itemPocket}</Text>
               <Text style={styles.itemText}>Bag Pocket</Text>
@@ -55,10 +59,11 @@ export const ItemBottomSheet = () => {
 
         </View>
 
+        {/* Details container with all of items details */}
         <View style={styles.detailsContainer}>
 
+          {/* Row of details */}
           <View style={styles.rowGroup}>
-
             <View style={styles.itemValueTextContainer}>
               <Text style={styles.itemValue}>{cost !== null ? cost : '-'}</Text>
               <Text style={styles.itemText}>Cost</Text>
@@ -77,7 +82,6 @@ export const ItemBottomSheet = () => {
               <Text style={styles.itemValue}>{flingEffect !== null ? flingEffect : '-'}</Text>
               <Text style={styles.itemText}>Fling Effect</Text>
             </View>
-
           </View>
 
           <View style={styles.group}>
