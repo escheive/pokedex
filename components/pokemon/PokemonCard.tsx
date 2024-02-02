@@ -77,53 +77,74 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
               <Text style={[styles.abilityItem, { color }]}>{capitalizeString(ability.pokemon_v2_ability.name)}</Text>
             </TouchableOpacity>
           ))}
-      </View>
+        </View>
 
-      <Modal visible={selectedAbility !== null} animationType="fade" transparent>
-        <TouchableOpacity
-          style={styles.modalContainer}
-          activeOpacity={1}
-          onPress={() => setSelectedAbility(null)}
-        >
+        <Modal visible={selectedAbility !== null} animationType="fade" transparent>
           <TouchableOpacity
-            style={styles.modalContent}
+            style={styles.modalContainer}
             activeOpacity={1}
-            onPress={() => {}}
+            onPress={() => setSelectedAbility(null)}
           >
-            <Text style={[styles.modalTitle, { backgroundColor } ]}>{selectedAbility?.name}</Text>
-            <View style={styles.modalDefinitionContainer}>
-              <Text style={styles.modalDefinition}>{selectedAbility?.pokemon_v2_abilityeffecttexts[0]?.short_effect}</Text>
-            </View>
+            <TouchableOpacity
+              style={styles.modalContent}
+              activeOpacity={1}
+              onPress={() => {}}
+            >
+              <Text style={[styles.modalTitle, { backgroundColor } ]}>{selectedAbility?.name}</Text>
+              <View style={styles.modalDefinitionContainer}>
+                <Text style={styles.modalDefinition}>{selectedAbility?.pokemon_v2_abilityeffecttexts[0]?.short_effect}</Text>
+                <Text>{selectedAbility?.pokemon_v2_abilityeffecttexts[0].effect}</Text>
+                <Text>{selectedAbility?.pokemon_v2_abilityflavortexts[0].flavor_text}</Text>
+              </View>
+            </TouchableOpacity>
           </TouchableOpacity>
-        </TouchableOpacity>
-      </Modal>
+        </Modal>
 
+        <View style={styles.pokemonDetailsContainer}>
 
-        <Text>{pokemon.id}</Text>
-        <Text>{pokemon.name}</Text>
-        {pokemon.isFavorited ? <Text>Pokemon is favorited!</Text> : null}
-        {pokemon.isCaught ? <Text>Pokemon has been caught!</Text> : null}
-        <Text>{pokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type.name}</Text>
-        {pokemon.pokemon_v2_pokemontypes[1] ? (
-          <Text>{pokemon.pokemon_v2_pokemontypes[1].pokemon_v2_type.name}</Text>
-        ) : null}
-        <Text>POKEMON DETAILS</Text>
-        <Text>ID: {pokemon.id}</Text>
-        <Text>HEIGHT: {pokemon.height}</Text>
-        <Text>WEIGHT: {pokemon.weight}</Text>
-        <Text>BASE EXPERIENCE: {pokemon.base_experience}</Text>
-        <Text>ABILITIES</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[0]?.pokemon_v2_ability.name}</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[0]?.pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[0]?.pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].flavor_text}</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[1]?.pokemon_v2_ability.name}</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[1]?.pokemon_v2_ability.pokemon_v2_abilityeffecttexts[0].effect}</Text>
-        <Text>{pokemon.pokemon_v2_pokemonabilities[1]?.pokemon_v2_ability.pokemon_v2_abilityflavortexts[0].flavor_text}</Text>
-        <Text>BASE HAPPINESS: {pokemon.pokemon_v2_pokemonspecy.base_happiness}</Text>
-        <Text>IS BABY: {pokemon.pokemon_v2_pokemonspecy.is_baby}</Text>
-        <Text>IS LEGENDARY: {pokemon.pokemon_v2_pokemonspecy.is_legendary}</Text>
-        <Text>IS MYTHICAL: {pokemon.pokemon_v2_pokemonspecy.is_mythical}</Text>
-        <Text>HABITAT: {pokemon.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat?.name}</Text>
+          <View style={styles.pokemonDetailsGroup}>
+            <View style={styles.pokemonDetailsSubGroup}>
+              <Text style={styles.pokemonDetailsValue}>{pokemon.weight}</Text>
+              <Text style={styles.pokemonDetailsText}>WEIGHT</Text>
+            </View>
+            <View style={styles.pokemonDetailsSubGroup}>
+              <Text style={styles.pokemonDetailsValue}>{pokemon.height}</Text>
+              <Text style={styles.pokemonDetailsText}>HEIGHT</Text>
+            </View>
+          </View>
+
+          <View style={styles.pokemonDetailsGroup}>
+            <View style={styles.pokemonDetailsSubGroup}>
+              <Text style={styles.pokemonDetailsValue}>{pokemon.base_experience}</Text>
+              <Text style={styles.pokemonDetailsText}>BASE EXPERIENCE</Text>
+            </View>
+            <View style={styles.pokemonDetailsSubGroup}>
+              <Text style={styles.pokemonDetailsValue}>{pokemon.pokemon_v2_pokemonspecy.base_happiness}</Text>
+              <Text style={styles.pokemonDetailsText}>BASE HAPPINESS</Text>
+            </View>
+          </View>
+
+          <View style={styles.pokemonDetailsGroup}>
+            <View style={[styles.pokemonDetailsSubGroup, { width: '33%' }]}>
+              <Text style={styles.pokemonDetailsValue}>{pokemon.pokemon_v2_pokemonspecy.is_baby ? 'Yes' : 'No'}</Text>
+              <Text style={styles.pokemonDetailsText}>IS BABY</Text>
+            </View>
+            <View style={[styles.pokemonDetailsSubGroup, { width: '33%' }]}>
+              <Text style={styles.pokemonDetailsValue}>{pokemon.pokemon_v2_pokemonspecy.is_legendary ? 'Yes' : 'No'}</Text>
+              <Text style={styles.pokemonDetailsText}>IS LEGENDARY</Text>
+            </View>
+            <View style={[styles.pokemonDetailsSubGroup, { width: '33%' }]}>
+              <Text style={styles.pokemonDetailsValue}>{pokemon.pokemon_v2_pokemonspecy.is_mythical ? 'Yes' : 'No'}</Text>
+              <Text style={styles.pokemonDetailsText}>IS MYTHICAL</Text>
+            </View>
+          </View>
+
+          <View style={[styles.pokemonDetailsSubGroup, { width: '100%' }]}>
+            <Text style={styles.pokemonDetailsValue}>{capitalizeString(pokemon.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat?.name)}</Text>
+            <Text style={styles.pokemonDetailsText}>HABITAT</Text>
+          </View>
+          
+        </View>
       </View>
     </View>
   );
@@ -308,5 +329,41 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     textAlign: 'center',
     marginVertical: 30,
+  },
+  pokemonDetailsContainer: {
+    width: '100%',
+    padding: 8,
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 16,
+    borderColor: '#bbb',
+  },
+  pokemonDetailsGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 2,
+  },
+  pokemonDetailsSubGroup: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    width: '50%'
+  },
+  pokemonDetailsValue: {
+    borderWidth: 1,
+    borderColor: '#bbb',
+    borderRadius: 8,
+    padding: 8,
+    color: '#555',
+    fontWeight: 'bold',
+    width: '100%',
+    textAlign: 'center'
+  },
+  pokemonDetailsText: {
+    color: '#aaa',
+    textAlign: 'center',
+    fontWeight: 'bold'
   },
 });
