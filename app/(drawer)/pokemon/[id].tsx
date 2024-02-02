@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
 // Components
 import { PokemonStats } from 'components/pokemon/PokemonStats';
+import Drawer from "expo-router/src/layouts/Drawer";
+import { DrawerToggleButton } from "@react-navigation/drawer";
 // Utils
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useApolloClient, useQuery } from '@apollo/client';
@@ -10,6 +12,7 @@ import { GET_POKEMON_BY_ID } from 'api/queries';
 import { Pokemon } from 'types';
 import { PokemonCard } from 'components/pokemon/PokemonCard';
 import { EvolutionChain } from 'components/pokemon/EvolutionChain';
+import { capitalizeString } from 'utils/helpers';
 
 
 export default function Page() {
@@ -35,6 +38,13 @@ export default function Page() {
 
   return (
     <ScrollView style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: capitalizeString(pokemon?.pokemon_v2_pokemon_by_pk.name),
+          headerShown: true,
+        }}
+      />
+
       <PokemonCard pokemon={pokemon.pokemon_v2_pokemon_by_pk} />
 
       <PokemonStats pokemonTypes={pokemon.pokemon_v2_pokemon_by_pk.pokemon_v2_pokemontypes} pokemonStats={pokemon.pokemon_v2_pokemon_by_pk.pokemon_v2_pokemonstats} />
