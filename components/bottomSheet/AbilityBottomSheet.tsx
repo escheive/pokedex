@@ -1,21 +1,21 @@
+// Dependencies
 import { Text, View, StyleSheet } from "react-native";
-import { Image } from "expo-image";
-import { useBottomSheet } from "contexts/BottomSheetContext";
-import { capitalizeString } from "utils/helpers";
-import { POKEMON_LIST_QUERY } from "api/queries";
 import { useQuery } from "@apollo/client";
-import { ListViewScreen } from "components/ListViewScreen";
-import { BottomSheetVirtualizedList, BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { useCallback, useRef } from "react";
+// Components
 import { PokemonListItem } from "components/pokemon/PokemonListItem";
-import { useFocusEffect } from '@react-navigation/native';
-import { FlashList } from "@shopify/flash-list";
-import { FlatList } from "react-native-gesture-handler";
+// Utils
+import { capitalizeString } from "utils/helpers";
+// Context
+import { useBottomSheet } from "contexts/BottomSheetContext";
+// Api
+import { POKEMON_LIST_QUERY } from "api/queries";
+
 
 export const AbilityBottomSheet = () => {
+  // Grab the set item from the bottom sheet context
   const { item, itemType } = useBottomSheet();
 
-
+  // Destructure the set item and its type
   const { 
     id, 
     name, 
@@ -25,20 +25,25 @@ export const AbilityBottomSheet = () => {
     pokemon_v2_pokemonabilities 
   } = item;
 
+  // Capitalize the items name
   const capitalizedName = capitalizeString(name);
+
+  // Find grab all pokemon ids from the abilities pokemon list
   const pokemonWithAbilityIds = pokemon_v2_pokemonabilities.map((pokemon) => pokemon.pokemon_id)
 
+  // Grab the list of pokemon from apollo cache
   const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY, {
     fetchPolicy: 'cache-first',
   });
 
+  // Filter the pokemon list to grab details from only those that have the ability
   const allPokemonWithAbility = pokemonList?.pokemon_v2_pokemon.filter((pokemon) => pokemonWithAbilityIds.includes(pokemon.id));
 
 
   return (
     <>
+      {/* Title Container with ability name and type */}
       <View style={styles.titleContainer}>
-
         <View style={styles.titleRow}>
           <Text style={styles.title}>{capitalizedName}</Text>
         </View>
@@ -46,70 +51,34 @@ export const AbilityBottomSheet = () => {
         <Text style={styles.itemType}>{capitalizeString(itemType)}</Text>
 
         <View style={styles.borderHorizontal}></View>
-
-        <View style={styles.categoryGroup}>
-
-          <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
-            <Text style={styles.itemValue}>{isFavorited}</Text>
-            <Text style={styles.itemText}>Bag Pocket</Text>
-          </View>
-
-          <View style={[styles.itemValueTextContainer, { width: '50%' }]}>
-            <Text style={styles.itemValue}>hi</Text>
-            <Text style={styles.itemText}>Item Category</Text>
-          </View>
-        </View>
-
       </View>
 
+      {/* Detail container with all of the ability details */}
       <View style={styles.detailsContainer}>
-
-        <View style={styles.rowGroup}>
-
-          <View style={styles.itemValueTextContainer}>
-            <Text style={styles.itemValue}>hi</Text>
-            <Text style={styles.itemText}>Cost</Text>
-          </View>
-
-          <View style={styles.borderVertical}></View>
-
-          <View style={styles.itemValueTextContainer}>
-            <Text style={styles.itemValue}>hi</Text>
-            <Text style={styles.itemText}>Fling Power</Text>
-          </View>
-
-          <View style={styles.borderVertical}></View>
-
-          <View style={styles.itemValueTextContainer}>
-            <Text style={styles.itemValue}>hi</Text>
-            <Text style={styles.itemText}>Fling Effect</Text>
-          </View>
-
-        </View>
 
         <View style={styles.group}>
           <Text style={styles.groupTitle}>Effect</Text>
-          <Text style={styles.itemText}>hi</Text>
+          <Text style={styles.itemText}>{pokemon_v2_abilityeffecttexts[0]?.short_effect}</Text>
         </View>
 
         <View style={styles.group}>
           <Text style={styles.groupTitle}>In-Depth Effect</Text>
-          <Text style={styles.itemText}>hi</Text>
+          <Text style={styles.itemText}>{pokemon_v2_abilityeffecttexts[0]?.effect}</Text>
         </View>
 
         <View style={styles.group}>
           <Text style={styles.groupTitle}>Description</Text>
-          <Text style={styles.itemText}>hi</Text>
+          <Text style={styles.itemText}>{pokemon_v2_abilityflavortexts[0]?.flavor_text}</Text>
         </View>
 
-        <View style={styles.listContainer}>
 
+        {/* All of the pokemon with the ability */}
+        <View style={styles.listContainer}>
           {allPokemonWithAbility.map((pokemon) => {
 
             return (
               <PokemonListItem pokemon={pokemon} key={pokemon.id} />
             )
-
           })}
         </View>
 
@@ -122,7 +91,7 @@ export const AbilityBottomSheet = () => {
 const styles = StyleSheet.create({
   titleContainer: {
     paddingHorizontal: 10,
-    paddingBottom: 30,
+    paddingBottom: 10,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
