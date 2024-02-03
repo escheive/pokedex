@@ -19,6 +19,25 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
   const color = pokemonColors[pokemon?.pokemon_v2_pokemontypes[0].pokemon_v2_type.name].color;
 
 
+  const PokemonDetailsGroup = ({values, titles}: any) => {
+    const width = 1 / titles.length * 100
+
+    return (
+      <View style={styles.pokemonDetailsGroup}>
+        {titles.map((title, index) => (
+          <View 
+            key={index}
+            style={[styles.pokemonDetailsSubGroup, { width: `${width}%` }]}
+          >
+            <Text style={styles.pokemonDetailsValue}>{values[index]}</Text>
+            <Text style={styles.pokemonDetailsText}>{title}</Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
+
   return (
     <View style={styles.card}>
       <View style={[styles.imageContainer, { backgroundColor } ]}>
@@ -102,47 +121,37 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
 
         <View style={styles.pokemonDetailsContainer}>
 
-          <View style={styles.pokemonDetailsGroup}>
-            <View style={styles.pokemonDetailsSubGroup}>
-              <Text style={styles.pokemonDetailsValue}>{pokemon.weight}</Text>
-              <Text style={styles.pokemonDetailsText}>WEIGHT</Text>
-            </View>
-            <View style={styles.pokemonDetailsSubGroup}>
-              <Text style={styles.pokemonDetailsValue}>{pokemon.height}</Text>
-              <Text style={styles.pokemonDetailsText}>HEIGHT</Text>
-            </View>
-          </View>
+          <PokemonDetailsGroup
+            values={[
+              pokemon.weight, 
+              pokemon.height, 
+            ]}
+            titles={['WEIGHT', 'HEIGHT']}
+          />
 
-          <View style={styles.pokemonDetailsGroup}>
-            <View style={styles.pokemonDetailsSubGroup}>
-              <Text style={styles.pokemonDetailsValue}>{pokemon.base_experience}</Text>
-              <Text style={styles.pokemonDetailsText}>BASE EXPERIENCE</Text>
-            </View>
-            <View style={styles.pokemonDetailsSubGroup}>
-              <Text style={styles.pokemonDetailsValue}>{pokemon.pokemon_v2_pokemonspecy.base_happiness}</Text>
-              <Text style={styles.pokemonDetailsText}>BASE HAPPINESS</Text>
-            </View>
-          </View>
+          <PokemonDetailsGroup
+            values={[
+              pokemon.base_experience, 
+              pokemon.pokemon_v2_pokemonspecy.base_happiness, 
+            ]}
+            titles={['BASE EXPERIENCE', 'BASE HAPPINESS']}
+          />
 
-          <View style={styles.pokemonDetailsGroup}>
-            <View style={[styles.pokemonDetailsSubGroup, { width: '33%' }]}>
-              <Text style={styles.pokemonDetailsValue}>{pokemon.pokemon_v2_pokemonspecy.is_baby ? 'Yes' : 'No'}</Text>
-              <Text style={styles.pokemonDetailsText}>IS BABY</Text>
-            </View>
-            <View style={[styles.pokemonDetailsSubGroup, { width: '33%' }]}>
-              <Text style={styles.pokemonDetailsValue}>{pokemon.pokemon_v2_pokemonspecy.is_legendary ? 'Yes' : 'No'}</Text>
-              <Text style={styles.pokemonDetailsText}>IS LEGENDARY</Text>
-            </View>
-            <View style={[styles.pokemonDetailsSubGroup, { width: '33%' }]}>
-              <Text style={styles.pokemonDetailsValue}>{pokemon.pokemon_v2_pokemonspecy.is_mythical ? 'Yes' : 'No'}</Text>
-              <Text style={styles.pokemonDetailsText}>IS MYTHICAL</Text>
-            </View>
-          </View>
+          <PokemonDetailsGroup
+            values={[
+              pokemon.pokemon_v2_pokemonspecy.is_baby ? 'YES' : '-', 
+              pokemon.pokemon_v2_pokemonspecy.is_legendary ? 'YES' : '-', 
+              pokemon.pokemon_v2_pokemonspecy.is_mythical ? 'YES' : '-' 
+            ]}
+            titles={['IS BABY', 'IS LEGENDARY', 'IS MYTHICAL']}
+          />
 
-          <View style={[styles.pokemonDetailsSubGroup, { width: '100%' }]}>
-            <Text style={styles.pokemonDetailsValue}>{capitalizeString(pokemon.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat?.name)}</Text>
-            <Text style={styles.pokemonDetailsText}>HABITAT</Text>
-          </View>
+          <PokemonDetailsGroup
+            values={[
+              capitalizeString(pokemon.pokemon_v2_pokemonspecy.pokemon_v2_pokemonhabitat?.name)
+            ]}
+            titles={['HABITAT']}
+          />
           
         </View>
       </View>
