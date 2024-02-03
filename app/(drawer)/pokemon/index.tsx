@@ -1,27 +1,23 @@
 // Dependencies
-import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, TextInput } from 'react-native';
+import { useState, useMemo } from 'react';
+import { View, StyleSheet, TextInput } from 'react-native';
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useQuery, gql, useReactiveVar, useMutation, useApolloClient } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 // Components
 import { ListViewScreen } from 'components/ListViewScreen';
 import { PokemonFilterDrawer } from 'components/pokemon/PokemonFilterDrawer';
 // graphQL
 import { POKEMON_LIST_QUERY } from 'api/queries';
-import { handleClearApolloCache } from 'api/reset';
 // Constants
-import { groupedVersions, versionOptions } from 'constants/Pokemon';
+import { groupedVersions } from 'constants/Pokemon';
 
 import { FilterOptions } from 'types';
 
-import mmkv from 'utils/mmkvConfig';
-const INITIAL_SETUP_KEY = 'hasInitialSetup';
 
 
 export default function Page() {
-  const apolloClient = useApolloClient();
   // State to track various filter options
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     showFavorites: false,
@@ -31,7 +27,6 @@ export default function Page() {
     searchQuery: '',
     filterByDualTypes: false,
   });
-  const [dropdownVisible, setDropdownVisible] = useState(false);
   const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY, {
     fetchPolicy: 'cache-first',
   });
@@ -132,12 +127,6 @@ export default function Page() {
             />
           </View>
         </View>
-        <TouchableOpacity onPress={() => handleClearApolloCache(apolloClient)}>
-          <Text>Clear Apollo Cache</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => mmkv.set(INITIAL_SETUP_KEY, 'false')}>
-          <Text>RESET Initial setup</Text>
-        </TouchableOpacity>
       </View>
       {pokemonList ? renderPokemonList() : null}
     </View>

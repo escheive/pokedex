@@ -13,7 +13,6 @@ interface OctagonEvolutionLayoutProps {
 
 
 export const OctagonEvolutionLayout: React.FC<OctagonEvolutionLayoutProps> = ({ evolutionChain }) => {
-  console.log("Evolution chain", evolutionChain)
   const centerPokemon = evolutionChain.find(pokemon => pokemon.name === 'eevee');
   const evolutions = evolutionChain.filter(pokemon => pokemon.name !== 'eevee');
 

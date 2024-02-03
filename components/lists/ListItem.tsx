@@ -71,14 +71,6 @@ export const ListItem = React.memo(({ item, title }: any) => {
         />
       ) : null}
 
-      {/* <View style={{ flexDirection: 'column' }}>
-        <Button title="Snap To 90%" onPress={() => handleSnapPress(1)} />
-        <Button title="Snap To 50%" onPress={() => handleSnapPress(0)} />
-        <Button title="Close" onPress={() => handleClosePress()} />
-      </View> */}
-
-      {/* <ItemModal bottomSheetModalRef={bottomSheetModalRef} handleSheetChange={handleSheetChange} item={item} /> */}
-
     </TouchableOpacity>
   );
 });

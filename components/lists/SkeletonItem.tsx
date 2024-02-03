@@ -1,13 +1,6 @@
 // Dependencies
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
-import { Image } from 'expo-image';
-import { router } from 'expo-router';
-import { useApolloClient } from '@apollo/client';
-// Components
-import { IconContainer } from 'components/card/IconContainer';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 // Utils
-import { capitalizeString, pokemonColors } from 'utils/helpers';
 import { Ionicons } from '@expo/vector-icons';
 
 

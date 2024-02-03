@@ -1,12 +1,14 @@
-import { Text } from "react-native";
-import { ABILITIES_LIST_QUERY, ITEMS_LIST_QUERY, POKEMON_LIST_QUERY, POKEMON_DETAILS_LIST_QUERY, GET_POKEMON_BY_ID } from "api/queries";
-import { Redirect } from "expo-router"
+// Dependencies
 import { useEffect, useState } from "react";
-import { LoadingScreen } from "components/LoadingScreen";
-
+import { Redirect } from "expo-router";
 import { useApolloClient, gql, useQuery } from "@apollo/client";
-import { checkAndPerformInitialSetup } from "utils/setupFunctions";
+// Components
+import { LoadingScreen } from "components/LoadingScreen";
+// Api
+import { ABILITIES_LIST_QUERY, ITEMS_LIST_QUERY, POKEMON_LIST_QUERY, POKEMON_DETAILS_LIST_QUERY } from "api/queries";
 import { GET_PROFILE_QUERY } from "api/user/queries";
+// Utils
+import { checkAndPerformInitialSetup } from "utils/setupFunctions";
 
 
 

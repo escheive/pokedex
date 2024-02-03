@@ -1,22 +1,17 @@
 // Dependencies
-import React, { useState, useEffect, useRef } from 'react';
-import { ScrollView, View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity, Dimensions, Animated } from 'react-native';
+import { ScrollView, Text, StyleSheet } from 'react-native';
 // Components
 import { PokemonStats } from 'components/pokemon/PokemonStats';
-import Drawer from "expo-router/src/layouts/Drawer";
-import { DrawerToggleButton } from "@react-navigation/drawer";
 // Utils
 import { useLocalSearchParams, Stack } from 'expo-router';
-import { useApolloClient, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { GET_POKEMON_BY_ID } from 'api/queries';
-import { Pokemon } from 'types';
 import { PokemonCard } from 'components/pokemon/PokemonCard';
 import { EvolutionChain } from 'components/pokemon/EvolutionChain';
 import { capitalizeString } from 'utils/helpers';
 
 
 export default function Page() {
-  const client = useApolloClient();
   const params = useLocalSearchParams();
   const pokemonId = params.id;
 

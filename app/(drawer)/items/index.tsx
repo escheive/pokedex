@@ -1,20 +1,14 @@
 // Dependencies
 // React
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Platform, View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Dimensions, Switch, TextInput } from 'react-native';
+import { useState } from 'react';
+import { Platform, View, Text, StyleSheet, TextInput } from 'react-native';
 import { DrawerToggleButton } from "@react-navigation/drawer";
 // Expo
-import { Link } from 'expo-router';
-import { Image } from "expo-image";
 import Drawer from "expo-router/src/layouts/Drawer";
 import Ionicons from '@expo/vector-icons/Ionicons';
 // Apollo
-import { useQuery, gql, useApolloClient, useLazyQuery } from '@apollo/client';
-import BottomSheet from '@gorhom/bottom-sheet';
-// Components
-// import { ItemModal } from 'components/modal/BottomSheetComponent';
+import { useQuery } from '@apollo/client';
 // Utils
-import { capitalizeString, getTMImageUrl } from '../../../utils/helpers';
 import { ListViewScreen } from 'components/ListViewScreen';
 import { ITEMS_LIST_QUERY } from 'api/queries';
 
@@ -26,8 +20,6 @@ export default function Page() {
     selectedTypes: [],
     searchQuery: '',
   });
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
 
   const { loading, error, data: itemsList, networkStatus } = useQuery(ITEMS_LIST_QUERY, {
     fetchPolicy: 'cache-first',

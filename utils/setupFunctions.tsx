@@ -21,7 +21,6 @@ export async function checkAndPerformInitialSetup(apolloClient, userData) {
     };
 
     if (hasSetup != 'true' || !userData) {
-      console.log('setting up new user')
 
       apolloClient.writeQuery({
         query: GET_PROFILE_QUERY,

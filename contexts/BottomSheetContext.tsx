@@ -1,7 +1,7 @@
 // BottomSheetContext.js
-import React, { createContext, useContext, useRef, useMemo, useCallback, useState } from 'react';
+import React, { createContext, useContext, useRef, useCallback, useState } from 'react';
 import { ScrollView } from 'react-native';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 
 
@@ -48,7 +48,7 @@ export const BottomSheetProvider = ({ children }: any) => {
 
 
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
+    
   }, []);
 
   const handleSnapPress = useCallback((index: number) => {
@@ -56,7 +56,7 @@ export const BottomSheetProvider = ({ children }: any) => {
       scrollViewRef.current?.scrollTo({ y: 0, animated: false })
     };
     bottomSheetRef.current?.snapToIndex(index);
-    console.log('handleSnapPress', index)
+    
   }, []);
 
   const closeBottomSheet = useCallback(() => {

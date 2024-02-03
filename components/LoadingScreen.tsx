@@ -1,6 +1,5 @@
 // Dependencies
-import { gql, useApolloClient } from '@apollo/client';
-import { View, Text, ActivityIndicator, StyleSheet, Image, ImageBackground } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Image } from 'react-native';
 
 
 export const LoadingScreen = ({ loadingText }: string ) => {

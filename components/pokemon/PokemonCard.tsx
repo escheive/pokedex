@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal } from 'react-native';
 import { Image } from "expo-image";
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { capitalizeString, pokemonColors } from '../../utils/helpers';
 import { IconContainer } from 'components/card/IconContainer';
 import { Pokemon } from 'types';

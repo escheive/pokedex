@@ -47,7 +47,6 @@ export const toggleFavorite = ({ entityType, entity, apolloClient }: ToggleFavor
 
 // Function that takes a pokemon and apolloClient, and updates its caught status
 export const toggleCaught = ({ pokemon, apolloClient }: ToggleCaught ) => {
-  console.log(pokemon.name, "is caught")
 
   // Edit the pokemon list by accessing it in cache by id and edit only what we need to with fragment
   apolloClient.writeFragment({

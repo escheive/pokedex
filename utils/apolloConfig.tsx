@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { ApolloClient, InMemoryCache, makeVar, NormalizedCacheObject, ApolloProvider, ReactiveVar, gql } from "@apollo/client";
+import { useEffect, useState } from 'react';
+import { ApolloClient, InMemoryCache, NormalizedCacheObject, ApolloProvider, gql } from "@apollo/client";
 import { persistCache, LocalStorageWrapper, MMKVWrapper } from 'apollo3-cache-persist';
 
 import mmkv from "./mmkvConfig";
-import { Platform, Text } from 'react-native';
+import { Platform } from 'react-native';
 
 import { GET_PROFILE_QUERY } from 'api/user/queries';
 
@@ -119,25 +119,3 @@ export const ApolloCacheProvider = ({ children }) => {
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>
 };
-
-// export const client = new ApolloClient({
-//   uri: 'https://beta.pokeapi.co/graphql/v1beta',
-//   cache: new InMemoryCache(),
-// });
-
-// // Persist Cache
-// (async () => {
-//   try {
-//     const cache = client.cache;
-//     const storageWrapper = Platform.OS === "web" ? new LocalStorageWrapper(window.localStorage) : new MMKVWrapper(mmkv);
-    
-//     await persistCache({
-//       cache,
-//       storage: storageWrapper,
-//       debug: true,
-//       maxSize: false,
-//     });
-//   } catch (error) {
-//     console.error("Error persisting cache: ", error);
-//   }
-// })();

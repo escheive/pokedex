@@ -1,18 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Platform, View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Switch, TextInput, SafeAreaView } from 'react-native';
-import { capitalizeString } from '../../../utils/helpers';
-// // import { fetchPokemonData } from '../utils/api';
-// import { fetchPokemonData } from '../store/slices/pokemonSlice';
-// import { fetchPokemonDetails } from '../services/pokemonService';
+import { useState } from 'react';
+import { Platform, View, Text, StyleSheet, Dimensions, TextInput } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-// import { updatePokemonStatusAction, updatePokemonFavoriteStatusAction } from '../actions/pokemonActions';
-// import FilterDropdownDrawer from '../components/FilterDropdownDrawer';
-import { setAbilities, selectAbilities } from '../../../store/slices/abilitiesSlice';
-// import { selectAbilities } from '../store/slices/abilitiesSlice';
-import { useAppSelector, useAppDispatch } from '../../../utils/hooks';
-// import { setPokemonFavoriteStatus, setPokemonCaughtStatus } from '../store/slices/pokemonSlice';
-import { Link } from 'expo-router';
-import { Image } from "expo-image";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import Drawer from "expo-router/src/layouts/Drawer";
 import { ListViewScreen } from 'components/ListViewScreen';
@@ -20,7 +8,6 @@ import { ABILITIES_LIST_QUERY } from 'api/queries';
 
 import { useQuery, gql } from '@apollo/client';
 
-const screenWidth = Dimensions.get('window').width;
 
 export default function Page() {
   // const dispatch = useAppDispatch();
@@ -29,12 +16,10 @@ export default function Page() {
     selectedTypes: [],
     searchQuery: '',
   });
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-//   const { loading, data: pokemonList, error } = useAppSelector(selectPokemon);
+
   const { loading, error, data: abilitiesList, networkStatus } = useQuery(ABILITIES_LIST_QUERY, {
     fetchPolicy: 'cache-first',
   });
-
 
 
   // function to handle search query changes

@@ -1,10 +1,9 @@
 // Dependencies
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 // Components
 import { PillBar } from '../PillBar';
 // Utils
-import { capitalizeString } from '../../utils/helpers';
 import { pokemonColors } from '../../utils/helpers';
 
 interface PokemonStat {
