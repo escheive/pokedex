@@ -2,10 +2,10 @@
 import { gql, useApolloClient } from '@apollo/client';
 import { View, Text, ActivityIndicator, StyleSheet, Image, ImageBackground } from 'react-native';
 
+
 export const LoadingScreen = ({ loadingText }: string ) => {
 
   return (
-
     <View style={styles.container}>
       <Image
         source={{ uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png' }}

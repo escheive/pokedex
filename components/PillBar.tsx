@@ -2,6 +2,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
+
 type PillBarProps = {
   percentage: number | string;
   stat: number;
@@ -39,42 +40,6 @@ export const PillBar: React.FC<PillBarProps> = ({ percentage, stat, statName }) 
   const fillColor = getFillColor(statName);
 
 
-  const styles = StyleSheet.create({
-    container: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
-      flexShrink: 1,
-    },
-    pillContainer: {
-      height: 30,
-      width: '100%',
-      borderRadius: 10,
-      overflow: 'hidden',
-      position: 'relative',
-    },
-    pill: {
-      height: '100%',
-      borderRadius: 10,
-      flexDirection: 'row',
-    },
-    textContainer: {
-      flex: 1,
-      alignItems: 'flex-end',
-      justifyContent: 'center',
-      paddingRight: 10,
-    },
-    text: {
-      fontWeight: 'bold',
-      textShadowColor: 'rgba(0, 0, 0, 0.25)',
-      textShadowOffset: { width: 0, height: 1 },
-      textShadowRadius: 2,
-      fontSize: 18,
-    },
-  });
-
-
   return (
 
     <View style={styles.container}>
@@ -95,3 +60,38 @@ export const PillBar: React.FC<PillBarProps> = ({ percentage, stat, statName }) 
 
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    flexShrink: 1,
+  },
+  pillContainer: {
+    height: 30,
+    width: '100%',
+    borderRadius: 10,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  pill: {
+    height: '100%',
+    borderRadius: 10,
+    flexDirection: 'row',
+  },
+  textContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingRight: 10,
+  },
+  text: {
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.25)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+    fontSize: 18,
+  },
+});

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
+// Dependencies
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -8,7 +8,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { OctagonEvolutionLayout } from './OctagonEvolutionLayout';
 // Utils
 import { capitalizeString } from '../../utils/helpers';
+// Types
 import { EvolutionChainProps } from 'types';
+
 
 interface EvolutionChainComponentProps {
   pokemonId: number;
@@ -18,6 +20,7 @@ interface EvolutionChainComponentProps {
 
 export const EvolutionChain:React.FC<EvolutionChainComponentProps> = ({ pokemonId, evolutionChain }) => {
 
+  // Function to sort the pokemons evolutions
   const sortEvolutionChainByEvolution = (evolutionChain: EvolutionChainProps) => {
     // Deep copy the evolutionChain array to avoid mutating original data
     const copiedEvolutionChain: any = evolutionChain.map(species => ({
@@ -38,41 +41,61 @@ export const EvolutionChain:React.FC<EvolutionChainComponentProps> = ({ pokemonI
     return sortedEvolutionChain;
   };
   
-  // Usage
+
+  // Define pokemons sorted evolutions
   const sortedEvolutionChain = sortEvolutionChainByEvolution(evolutionChain);
 
+
+  // Define Eevee and Eevees evolutions
+  const eeveeEvolutionChainIds = [
+    133,
+    134,
+    135,
+    136,
+    196,
+    197,
+    470,
+    471,
+    700
+  ];
 
   return (
     <View style={styles.container}>
       <Text style= {{ fontSize: 24 }}>Evolution Chain</Text>
-    {pokemonId === 133 || pokemonId === 134 || pokemonId === 135 || pokemonId === 136 || pokemonId === 196 || pokemonId === 197 || pokemonId === 470 || pokemonId === 471 || pokemonId === 700 ? (
-      <OctagonEvolutionLayout evolutionChain={evolutionChain} />
-    ) : (
-      <View style={styles.evolutionsContainer}>
-      {sortedEvolutionChain.map((evolution: any, index: number) => (
-        <React.Fragment key={index}>
-          {index < sortedEvolutionChain.length && evolution.pokemon_v2_pokemonevolutions[0] && (
-            <View style={styles.arrowContainer}>
-              <Ionicons name='arrow-forward-sharp' size={32} color='gray' />
-              <Text style={styles.evolutionTrigger}>{evolution.pokemon_v2_pokemonevolutions[0]?.pokemon_v2_evolutiontrigger.name}</Text>
-            </View>
-          )}
-          <Link 
-            style={styles.evolutionItemContainer} 
-            href={`/pokemon/${evolution.id}`}
-          >
-            <Image
-              style={styles.image}
-              source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${evolution.id}.png` }}
-              contentFit="contain"
-              transition={500}
-            />
-            <Text>{capitalizeString(evolution.name)}</Text>
-          </Link>
-        </React.Fragment>
-      ))}
-      </View>
-    )}
+
+      {/* Check if a pokemon is part of eevees evolution chain */}
+      {eeveeEvolutionChainIds.includes(pokemonId) ? (
+
+        <OctagonEvolutionLayout evolutionChain={evolutionChain} />
+
+      ) : (
+
+        <View style={styles.evolutionsContainer}>
+          {sortedEvolutionChain.map((evolution: any, index: number) => (
+            <React.Fragment key={index}>
+              {index < sortedEvolutionChain.length && evolution.pokemon_v2_pokemonevolutions[0] && (
+                <View style={styles.arrowContainer}>
+                  <Ionicons name='arrow-forward-sharp' size={32} color='gray' />
+                  <Text style={styles.evolutionTrigger}>{evolution.pokemon_v2_pokemonevolutions[0]?.pokemon_v2_evolutiontrigger.name}</Text>
+                </View>
+              )}
+              <Link 
+                style={styles.evolutionItemContainer} 
+                href={`/pokemon/${evolution.id}`}
+              >
+                <Image
+                  style={styles.image}
+                  source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${evolution.id}.png` }}
+                  contentFit="contain"
+                  transition={500}
+                />
+                <Text>{capitalizeString(evolution.name)}</Text>
+              </Link>
+            </React.Fragment>
+            
+          ))}
+        </View>
+      )}
     </View>
   )
 };

@@ -1,27 +1,34 @@
-import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+// Dependencies
+import { useEffect } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Slot } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useColorScheme, Platform, Text } from 'react-native';
-// import { client } from "../utils/apolloConfig";
-import { ApolloCacheProvider } from '../utils/apolloConfig';
+import { useColorScheme } from 'react-native';
+// Components
 import { BottomSheetComponent } from 'components/bottomSheet/BottomSheetComponent';
+// Utils
+import { ApolloCacheProvider } from '../utils/apolloConfig';
+// Context
 import { BottomSheetProvider } from '../contexts/BottomSheetContext';
+
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
 
+
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: 'pokemon',
 };
 
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -29,10 +36,12 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
+
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
+
 
   useEffect(() => {
     if (loaded) {
@@ -40,10 +49,12 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+
   if (!loaded) {
     return null;
   }
 
+  
   return (
     <ApolloCacheProvider>
       <BottomSheetProvider>

@@ -19,32 +19,32 @@ interface Props {
 export const ListViewScreen:React.FC<Props> = ({ title, filteredItems, loading }) => {
   // Ref used to track position in flashlist
   const flashListRef = useRef(null);
+  // useState to handle visibility of scroll back to top button
   const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
 
 
+  // Function to handle rendering of list items
   const renderItem = ({ item: item }: { item: any }) => (
+    // If loading, return skeleton items, otherwise return appropriate list items
     loading === true ? (
       <SkeletonListItem 
         title={title}
       />
 
     ) : title === 'pokemon' ? (
-
       <PokemonListItem
         pokemon={item}
       />
 
     ) : title === 'item' || title === 'ability' ? (
-
       <ListItem
         item={item}
         title={title}
       />
-
     ) : null
   )
 
+  
   return (
     <View style={styles.container}>
       <FlashList
