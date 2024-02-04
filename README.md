@@ -44,3 +44,16 @@ For Apollo Persist, setting debug to true allowed me to realize my data was bein
 
 
 Ran into an issue where i tried to set an item using react state in the bottom sheet component and it would take place after snapping the bottomsheet to an index or opening it. This caused a bug where on app start it would take two taps to get bottom sheet working, and after that it would work on each tap. To fix this, i changed bottom sheet to conditionally render everything inside of it only if item was not null that way the bottom sheet would still render, it would just be empty and then when item was set it could populate the rendered bottom sheet
+
+
+
+
+upgrading to expo sdk 50, i an into a cannot resolve missing dependency error that i solved using this forum, https://github.com/getredash/redash/issues/5269
+
+involved babel-plugin-module-resolver
+
+
+
+updating to expo sdk 50 and expo router v3 broke the app because i was importing Drawer from import Drawer from "expo-router/src/layouts/Drawer";
+
+To fix i started importing it like this: import { Drawer } from 'expo-router/drawer';

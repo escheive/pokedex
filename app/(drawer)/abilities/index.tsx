@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Platform, View, Text, StyleSheet, Dimensions, TextInput } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { DrawerToggleButton } from "@react-navigation/drawer";
-import Drawer from "expo-router/src/layouts/Drawer";
+import { Drawer } from 'expo-router/drawer';
 import { ListViewScreen } from 'components/ListViewScreen';
 import { ABILITIES_LIST_QUERY } from 'api/queries';
 

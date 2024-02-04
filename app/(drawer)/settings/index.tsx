@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { ScrollView, Text, StyleSheet } from 'react-native';
 import { DrawerToggleButton } from "@react-navigation/drawer";
-import Drawer from "expo-router/src/layouts/Drawer";
+import { Drawer } from 'expo-router/drawer';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // Components
 import { TermsOfService } from 'components/settings/TermsOfService';

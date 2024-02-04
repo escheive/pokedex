@@ -2,7 +2,7 @@
 import { useState, useMemo } from 'react';
 import { View, StyleSheet, TextInput } from 'react-native';
 import { DrawerToggleButton } from "@react-navigation/drawer";
-import Drawer from "expo-router/src/layouts/Drawer";
+import { Drawer } from 'expo-router/drawer';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useQuery } from '@apollo/client';
 // Components

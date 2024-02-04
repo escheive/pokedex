@@ -2,7 +2,7 @@
 import { View, Text, ActivityIndicator, StyleSheet, Image } from 'react-native';
 
 
-export const LoadingScreen = ({ loadingText }: string ) => {
+export const LoadingScreen = ({ loadingText }: string) => {
 
   return (
     <View style={styles.container}>

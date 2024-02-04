@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Button, Modal, TouchableOpacity, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { DrawerToggleButton } from "@react-navigation/drawer";
-import Drawer from "expo-router/src/layouts/Drawer";
+import { Drawer } from 'expo-router/drawer';
 import { FlashList } from '@shopify/flash-list';
 import { GET_PROFILE_QUERY } from 'api/user/queries';
 import { POKEMON_ISFAVORITE_OR_CAUGHT_QUERY } from 'api/queries';

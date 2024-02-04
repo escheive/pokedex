@@ -11,7 +11,6 @@ import { GET_PROFILE_QUERY } from 'api/user/queries';
 import { LoadingScreen } from 'components/LoadingScreen';
 
 export const ApolloCacheProvider = ({ children }) => {
-  console.log('apollo cache provider rendered')
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>();
 
 

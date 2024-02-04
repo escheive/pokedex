@@ -1,11 +1,12 @@
 // Dependencies
-import { useState } from 'react';
+import { useEffect } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { SplashScreen, Slot } from 'expo-router';
+import { Slot } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useColorScheme, Text } from 'react-native';
+import { useColorScheme } from 'react-native';
 // Components
 import { BottomSheetComponent } from 'components/bottomSheet/BottomSheetComponent';
 // Utils
@@ -27,7 +28,7 @@ export const unstable_settings = {
 
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.hideAsync();
 
 
 export default function RootLayout() {
