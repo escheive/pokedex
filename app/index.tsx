@@ -1,7 +1,7 @@
 // Dependencies
 import { useEffect, useState } from "react";
 import { Redirect } from "expo-router";
-import { useApolloClient, gql, useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 // Components
 import { LoadingScreen } from "components/LoadingScreen";
 // Api
@@ -16,6 +16,7 @@ export default function Page() {
   const apolloClient = useApolloClient();
   const [loading, setLoading] = useState(true);
   const [loadingText, setLoadingText] = useState<string>("Loading...")
+
 
   const { loading: pokemonLoading, error: pokemonError, data: pokemonList } = useQuery(POKEMON_LIST_QUERY, {
     fetchPolicy: 'cache-first',

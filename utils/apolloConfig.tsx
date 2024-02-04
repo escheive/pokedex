@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { AppRegistry } from 'react-native';
 import { ApolloClient, InMemoryCache, NormalizedCacheObject, ApolloProvider, gql } from "@apollo/client";
 import { persistCache, LocalStorageWrapper, MMKVWrapper } from 'apollo3-cache-persist';
 
@@ -10,7 +11,9 @@ import { GET_PROFILE_QUERY } from 'api/user/queries';
 import { LoadingScreen } from 'components/LoadingScreen';
 
 export const ApolloCacheProvider = ({ children }) => {
+  console.log('apollo cache provider rendered')
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>();
+
 
   useEffect(() => {
     async function init() {
@@ -113,9 +116,11 @@ export const ApolloCacheProvider = ({ children }) => {
 
   
 
-  if (!client) {
+  if (!client || client === undefined) {
     return <LoadingScreen loadingText={'Initializing Client'} />
   }
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>
 };
+
+AppRegistry.registerComponent()
