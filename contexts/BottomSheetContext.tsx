@@ -42,7 +42,7 @@ export const useBottomSheet = () => {
 
 export const BottomSheetProvider = ({ children }: any) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<BottomSheet>(null);
   const [item, setItem] = useState(null);
   const [itemType, setItemType] = useState(null);
 

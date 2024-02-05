@@ -2,6 +2,7 @@
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 import BottomSheet, { BottomSheetScrollView, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import { ScrollView } from "react-native-gesture-handler";
 // Components
 import { ItemBottomSheet } from "./ItemBottomSheet";
 import { AbilityBottomSheet } from "./AbilityBottomSheet";
@@ -43,7 +44,7 @@ export const BottomSheetComponent = () => {
         />
       )}
     >
-      <BottomSheetScrollView 
+      <ScrollView 
         ref={scrollViewRef}
         style={styles.container}
       >
@@ -58,7 +59,7 @@ export const BottomSheetComponent = () => {
 
           ) : null
         ) : null}
-      </BottomSheetScrollView>
+      </ScrollView>
     </BottomSheet>
   )
 }
