@@ -13,7 +13,7 @@ import { POKEMON_LIST_QUERY } from "api/queries";
 
 export const AbilityBottomSheet = () => {
   // Grab the set item from the bottom sheet context
-  const { item, itemType } = useBottomSheet();
+  const { item, itemType, closeBottomSheet } = useBottomSheet();
 
   // Destructure the set item and its type
   const { 
@@ -44,6 +44,7 @@ export const AbilityBottomSheet = () => {
     <>
       {/* Title Container with ability name and type */}
       <View style={styles.titleContainer}>
+
         <View style={styles.titleRow}>
           <Text style={styles.title}>{capitalizedName}</Text>
         </View>
@@ -92,8 +93,10 @@ const styles = StyleSheet.create({
   titleContainer: {
     paddingHorizontal: 10,
     paddingBottom: 10,
+    marginTop: -10,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    backgroundColor: 'white',
   },
   titleRow: {
     flexDirection: 'row',

@@ -60,6 +60,7 @@ export const BottomSheetProvider = ({ children }: any) => {
   }, []);
 
   const closeBottomSheet = useCallback(() => {
+    console.log('close bottom sheet')
     bottomSheetRef.current?.close();
   }, []);
 

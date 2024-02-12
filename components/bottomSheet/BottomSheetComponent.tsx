@@ -1,21 +1,39 @@
 // Dependencies
-import { useMemo } from "react";
-import { StyleSheet } from "react-native";
+import { useCallback, useMemo } from "react";
+import { View, Platform, StyleSheet } from "react-native";
 import BottomSheet, { BottomSheetScrollView, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 // Components
 import { ItemBottomSheet } from "./ItemBottomSheet";
 import { AbilityBottomSheet } from "./AbilityBottomSheet";
 // Context
 import { useBottomSheet } from "contexts/BottomSheetContext";
+import MaterialCommunityIcons from "@expo/vector-icons/build/MaterialCommunityIcons";
 
 
 export const BottomSheetComponent = () => {
   // Context for bottom sheet
-  const { bottomSheetRef, scrollViewRef, handleSheetChanges, item, itemType } = useBottomSheet();
+  const { bottomSheetRef, scrollViewRef, handleSheetChanges, item, itemType, closeBottomSheet } = useBottomSheet();
+
+
 
   // Heights that the bottom sheet will snap to
-  const snapPoints = useMemo(() => ['50%', '95%'], []);
+  const snapPoints = Platform.OS !== 'web' ? 
+    useMemo(() => ['50%', '95%'], []) :
+    useMemo(() => ['75%'], []);
+
+  
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        {...props}
+        opacity={0.7}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    []
+  );
 
 
   return (
@@ -34,20 +52,22 @@ export const BottomSheetComponent = () => {
       // style for the background of the bottom sheet, without this there was white behind the border radius
       backgroundStyle={styles.backgroundContainer}
       // Component for the backdrop ie dark background of the bottom sheet
-      backdropComponent={props => (
-        <BottomSheetBackdrop
-          {...props}
-          opacity={0.7}
-          enableTouchThrough={true}
-          appearsOnIndex={0}
-          disappearsOnIndex={-1}
-        />
-      )}
+      backdropComponent={renderBackdrop}
     >
       <ScrollView 
         ref={scrollViewRef}
         style={styles.container}
       >
+        <TouchableOpacity
+        style={styles.closeButton}
+        onPress={closeBottomSheet}
+      >
+        <MaterialCommunityIcons 
+          name="close-circle-outline" 
+          size={40} 
+          color="gray" 
+        />
+      </TouchableOpacity>
         {item ? (
           itemType === 'item' ? (
 
@@ -74,4 +94,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
+  closeButton: {
+    alignSelf: 'flex-end',
+    margin: 10,
+  }
 });

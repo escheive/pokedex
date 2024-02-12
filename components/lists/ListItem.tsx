@@ -1,11 +1,12 @@
 // Dependencies
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { Platform, View, Text, TouchableOpacity, StyleSheet, Button } from 'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 // Components
 import { IconContainer } from 'components/card/IconContainer';
+import { WebBottomSheet } from 'components/bottomSheet/WebBottomSheet';
 // Utils
 import { capitalizeString, pokemonColors } from 'utils/helpers';
 import { useBottomSheet } from 'contexts/BottomSheetContext';
@@ -13,11 +14,18 @@ import { useBottomSheet } from 'contexts/BottomSheetContext';
 
 export const ListItem = React.memo(({ item, title }: any) => {
   const { snapToIndex, setItem, setItemType } = useBottomSheet();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const openBottomSheet = () => {
     setItemType(title)
     setItem(item);
     snapToIndex(0);
+
+    // if (Platform.OS === 'web') {
+    //   setModalVisible(!modalVisible);
+    // } else {
+    //   snapToIndex(0);
+    // }
   };
 
 
@@ -62,6 +70,8 @@ export const ListItem = React.memo(({ item, title }: any) => {
           }}
           placeholder=""
           contentFit="contain"
+          pointerEvents='none'
+          
         />
       ) : title === 'ability' ? (
         <Ionicons 
@@ -70,6 +80,8 @@ export const ListItem = React.memo(({ item, title }: any) => {
           color="black" 
         />
       ) : null}
+
+      <WebBottomSheet  modalVisible={modalVisible} setModalVisible={setModalVisible} />
 
     </TouchableOpacity>
   );
@@ -110,5 +122,6 @@ const styles = StyleSheet.create({
   image: {
     width: 80,
     height: 80,
+    pointerEvents: 'none'
   },
 });

@@ -9,7 +9,7 @@ import { useBottomSheet } from "contexts/BottomSheetContext";
 
 export const ItemBottomSheet = () => {
   // Grab the set item from the bottom sheet context
-  const { item, itemType } = useBottomSheet();
+  const { item, itemType, closeBottomSheet } = useBottomSheet();
 
   // Destructer the item
   const capitalizedName = capitalizeString(item?.name);
@@ -109,8 +109,10 @@ const styles = StyleSheet.create({
   titleContainer: {
     paddingHorizontal: 10,
     paddingBottom: 30,
+    marginTop: -10,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    backgroundColor: 'white',
   },
   titleRow: {
     flexDirection: 'row',

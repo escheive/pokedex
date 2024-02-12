@@ -6,7 +6,7 @@ import { useFonts } from 'expo-font';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useColorScheme } from 'react-native';
+import { Platform, useColorScheme, View, Text } from 'react-native';
 // Components
 import { BottomSheetComponent } from 'components/bottomSheet/BottomSheetComponent';
 // Utils
@@ -46,13 +46,21 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
-
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Slot />
-          <BottomSheetComponent />
-        </ThemeProvider>
-    </GestureHandlerRootView>
-  );
+  if (Platform.OS !== 'web') {
+    return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <Slot />
+            <BottomSheetComponent />
+          </ThemeProvider>
+      </GestureHandlerRootView>
+    )
+  } else {
+    return (
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Slot />
+        <BottomSheetComponent />
+      </ThemeProvider>
+    )
+  }
 }

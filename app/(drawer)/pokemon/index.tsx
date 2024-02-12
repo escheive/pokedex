@@ -1,6 +1,6 @@
 // Dependencies
 import { useState, useMemo } from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { Platform, View, StyleSheet, TextInput } from 'react-native';
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Drawer } from 'expo-router/drawer';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -30,6 +30,8 @@ export default function Page() {
   const { loading, error, data: pokemonList, networkStatus } = useQuery(POKEMON_LIST_QUERY, {
     fetchPolicy: 'cache-first',
   });
+
+  console.log(pokemonList)
 
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
@@ -111,6 +113,7 @@ export default function Page() {
           headerLeft: () => <DrawerToggleButton />
         }}
       />
+      
       <View style={styles.filterContainer}>
         <View style={styles.filtersContainer}>
           <PokemonFilterDrawer filterOptions={filterOptions} setFilterOptions={setFilterOptions} />

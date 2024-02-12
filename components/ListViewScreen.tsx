@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, TextInput } from 'react-native';
+import { Platform, View, Text, StyleSheet, TouchableOpacity, Dimensions, TextInput } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 // Components
 import { PokemonListItem } from './pokemon/PokemonListItem';
@@ -21,6 +21,11 @@ export const ListViewScreen:React.FC<Props> = ({ title, filteredItems, loading }
   const flashListRef = useRef(null);
   // useState to handle visibility of scroll back to top button
   const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
+  const windowWidth = Dimensions.get('window').width;
+
+  useEffect(() => {
+
+  }, [windowWidth])
 
 
   // Function to handle rendering of list items
@@ -44,7 +49,7 @@ export const ListViewScreen:React.FC<Props> = ({ title, filteredItems, loading }
     ) : null
   )
 
-  
+
   return (
     <View style={styles.container}>
       <FlashList
@@ -53,7 +58,8 @@ export const ListViewScreen:React.FC<Props> = ({ title, filteredItems, loading }
         renderItem={renderItem}
         keyExtractor={(item) => item.name}
         estimatedItemSize={250}
-        estimatedListSize={{ height: Dimensions.get("screen").height, width: Dimensions.get("screen").width }}
+        estimatedListSize={{ height: Dimensions.get("window").height, width: Dimensions.get("window").width }}
+        numColumns={Platform.OS === 'web' ? 2 : 1}
         onScroll={(event) => {
           // Calculate the scroll offset
           const offsetY = event.nativeEvent.contentOffset.y;
@@ -73,7 +79,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     zIndex: 1,
-    width: Dimensions.get("screen").width,
+    width: Dimensions.get("window").width,
     flex: 1,
   },
 });

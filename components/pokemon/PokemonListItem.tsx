@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 // Components
@@ -113,5 +113,6 @@ const styles = StyleSheet.create({
   image: {
     width: 80,
     height: 80,
+    pointerEvents: 'none'
   },
 });

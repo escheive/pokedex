@@ -1,8 +1,11 @@
 import { Drawer } from "expo-router/drawer";
 import { Ionicons, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Platform } from "react-native";
+import { Link, Slot } from "expo-router";
 
 
 export default function DrawerLayout() {
+  
   return (
     <Drawer
       screenOptions={{ 
