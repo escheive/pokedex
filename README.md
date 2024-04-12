@@ -2,6 +2,14 @@
 - Creating a pokedex app using the pokeapi and react native for all your pokemon needs!
 
 # Screenshots
+![Screenshot 2024-04-12 at 4 46 53 PM](https://github.com/escheive/pokedex/assets/115295094/d02abb14-604d-45ef-a4fc-00e5a94e8a08)
+![Screenshot 2024-04-12 at 4 48 48 PM](https://github.com/escheive/pokedex/assets/115295094/83c0eedd-8212-4253-8ca5-4f51daab197d)
+
+![Screenshot 2024-04-12 at 4 47 08 PM](https://github.com/escheive/pokedex/assets/115295094/7b2bf172-0200-4a5e-b6f2-d4d93a4878e6)
+![Screenshot 2024-04-12 at 4 47 21 PM](https://github.com/escheive/pokedex/assets/115295094/e21280d0-79d5-423a-8767-3931886fddee)
+
+![Screenshot 2024-04-12 at 4 47 34 PM](https://github.com/escheive/pokedex/assets/115295094/0c7b87cf-8a09-4ba1-b358-6c7c9901d3c7)
+![Screenshot 2024-04-12 at 4 48 32 PM](https://github.com/escheive/pokedex/assets/115295094/42caae69-317f-4b74-a2ca-17cc0e48f943)
 
 
 - When I first set out to develop this app, I wanted to better learn react-native and mobile development. I chose to NOT use Expo initially because I wanted to dive deep into the fundamentals. I would STRONGLY advise against doing this unless you have a specific reason your app doesn't need Expo. I later rebuilt my app with Expo and it was significantly easier. The functionality that Expo provides is well worth using.
