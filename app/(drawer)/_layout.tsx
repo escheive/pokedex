@@ -87,6 +87,23 @@ export default function DrawerLayout() {
           ),
         }}
       />
+      <Drawer.Screen
+        name="settings"
+        options={{
+          drawerLabel: "Settings",
+          title: "Settings",
+          drawerLabelStyle: {
+            fontSize: 18,
+          },
+          drawerIcon: ({ focused }) => (
+            <Ionicons 
+              name="settings" 
+              size={focused ? 36 : 32} 
+              color={focused ? '#FF7777' : '#646464'}
+            />
+          ),
+        }}
+      />
     </Drawer>
   );
 }
