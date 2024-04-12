@@ -31,8 +31,6 @@ export default function Page() {
     fetchPolicy: 'cache-first',
   });
 
-  console.log(pokemonList)
-
   // function to handle search query changes
   const handleSearchQueryChange = (query: string) => {
     setFilterOptions((prevOptions) => ({
@@ -96,9 +94,6 @@ export default function Page() {
 
 
   const renderPokemonList = () => {
-    // if (loading) {
-    //   return <Text>Loading...</Text>
-    // };
 
     return <ListViewScreen title='pokemon' filteredItems={filteredItems} loading={loading} />
   };

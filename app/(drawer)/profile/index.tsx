@@ -95,8 +95,6 @@ export default function Profile() {
 
   const handleUpdateProfile = async (newUsername, newEmail, newProfileImage) => {
     try {
-      console.log("trying to update profile...");
-      console.log(newUsername, newEmail);
 
       const data = {
         profile: {
@@ -218,6 +216,7 @@ export default function Profile() {
             <Button 
               title="Update Profile" 
               onPress={() => setIsUpdatingProfile(true)} 
+              color={'green'}
             />
           </>
         ) : (
@@ -270,15 +269,19 @@ export default function Profile() {
 
       <View style={styles.favoritePokemonContainer}>
         <Text style={styles.favoritePokemonTitle}>Favorite Pokemon</Text>
-        <FlashList 
-          data={favoritedPokemon}
-          renderItem={renderFavoritedPokemonItem}
-          numColumns={numColumns}
-          keyExtractor={(item) => item.id.toString()}
-          estimatedItemSize={100}
-          estimatedListSize={{ height: Dimensions.get("window").height, width: Dimensions.get("window").width * 0.90 }}
-          contentContainerStyle={{  }}
-        />
+        {favoritedPokemon.length > 0 ? (
+          <FlashList 
+            data={favoritedPokemon}
+            renderItem={renderFavoritedPokemonItem}
+            numColumns={numColumns}
+            keyExtractor={(item) => item.id.toString()}
+            estimatedItemSize={100}
+            estimatedListSize={{ height: Dimensions.get("window").height, width: Dimensions.get("window").width * 0.90 }}
+            contentContainerStyle={{  }}
+          />
+        ) : (
+          <Text style={{ textAlign: 'center' }}>You have no favorited pokemon yet!</Text>
+        )}
       </View>
 
       <Modal visible={imageModalVisible} animationType="fade" transparent>

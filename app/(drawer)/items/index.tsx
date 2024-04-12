@@ -70,7 +70,6 @@ export default function Page() {
       />
       <View style={styles.filterContainer}>
         <View style={styles.filtersContainer}>
-          {/* <FilterDropdownDrawer setSelectedVersions={setSelectedVersions} filterOptions={filterOptions} setFilterOptions={setFilterOptions} /> */}
           <View style={styles.searchInputContainer}>
             <Ionicons
               name="search"

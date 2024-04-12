@@ -1,12 +1,13 @@
 // Dependencies
 import React, { useState, useEffect, useRef } from 'react';
-import { Platform, View, Text, StyleSheet, TouchableOpacity, Dimensions, TextInput } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
+import { Platform, View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, TextInput, Dimensions } from 'react-native';
+import { CellContainer, FlashList } from '@shopify/flash-list';
 // Components
 import { PokemonListItem } from './pokemon/PokemonListItem';
 import { ListItem } from './lists/ListItem';
 import { ScrollToTopButton } from 'components/button/ScrollToTopButton';
 import { SkeletonListItem } from './lists/SkeletonItem';
+import Animated from 'react-native-reanimated';
 
 
 interface Props {
@@ -21,11 +22,17 @@ export const ListViewScreen:React.FC<Props> = ({ title, filteredItems, loading }
   const flashListRef = useRef(null);
   // useState to handle visibility of scroll back to top button
   const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
-  const windowWidth = Dimensions.get('window').width;
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const [windowSize, setWindowSize] = useState(Dimensions.get('window'));
 
   useEffect(() => {
+    const handleResize = () => {
+      setWindowSize(Dimensions.get('window'));
+    };
 
-  }, [windowWidth])
+    Dimensions.addEventListener('change', handleResize);
+
+  }, []);
 
 
   // Function to handle rendering of list items
@@ -48,8 +55,7 @@ export const ListViewScreen:React.FC<Props> = ({ title, filteredItems, loading }
       />
     ) : null
   )
-
-
+    
   return (
     <View style={styles.container}>
       <FlashList
@@ -57,8 +63,8 @@ export const ListViewScreen:React.FC<Props> = ({ title, filteredItems, loading }
         ref={flashListRef}
         renderItem={renderItem}
         keyExtractor={(item) => item.name}
-        estimatedItemSize={250}
-        estimatedListSize={{ height: Dimensions.get("window").height, width: Dimensions.get("window").width }}
+        estimatedItemSize={Platform.OS === 'web' ? windowWidth / 2 : windowWidth}
+        estimatedListSize={{ height: windowSize.height, width: windowSize.width }}
         numColumns={Platform.OS === 'web' ? 2 : 1}
         onScroll={(event) => {
           // Calculate the scroll offset
@@ -79,7 +85,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     zIndex: 1,
-    width: Dimensions.get("window").width,
     flex: 1,
   },
 });

@@ -75,7 +75,7 @@ export const ApolloCacheProvider = ({ children }) => {
       await persistCache({
         cache,
         storage: storageWrapper,
-        debug: true,
+        debug: false,
         maxSize: false,
       });
 

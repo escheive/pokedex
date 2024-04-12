@@ -17,8 +17,6 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [loadingText, setLoadingText] = useState<string>("Loading...")
 
-  console.log('index')
-
 
   const { loading: pokemonLoading, error: pokemonError, data: pokemonList } = useQuery(POKEMON_LIST_QUERY, {
     fetchPolicy: 'cache-first',
