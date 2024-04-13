@@ -22,4 +22,4 @@ Changes to this privacy policy
   This privacy policy may be updated at any time. You, the user, will be notified of any changes. You may be notified via email or via notice on the service itself. You are also advised to review the privacy policy periodically for any changes. Changes to this privacy policy are effective when they are updated on this page.
 
 Contact Us
-  If you have any questions or concerns regarding this policy, you, the user, can contact us by email at sockgamefordays@gmail.com
+  If you have any questions or concerns regarding this policy, you, the user, can contact us by email at erik.softwaredevelopment@gmail.com
