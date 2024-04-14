@@ -13,7 +13,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/build/MaterialCommunityIc
 
 export const BottomSheetComponent = () => {
   // Context for bottom sheet
-  const { bottomSheetRef, scrollViewRef, handleSheetChanges, item, itemType, closeBottomSheet } = useBottomSheet();
+  const { bottomSheetRef, scrollViewRef, handleSheetChanges, item, itemType, closeBottomSheet, isScrollable } = useBottomSheet();
 
 
 
@@ -47,8 +47,6 @@ export const BottomSheetComponent = () => {
       onChange={handleSheetChanges}
       // Allow users to swipe down to close bottom sheet
       enablePanDownToClose={true}
-      // Remove the handle from the top of the bottom sheet
-      handleComponent={null}
       // style for the background of the bottom sheet, without this there was white behind the border radius
       backgroundStyle={styles.backgroundContainer}
       // Component for the backdrop ie dark background of the bottom sheet
@@ -56,6 +54,7 @@ export const BottomSheetComponent = () => {
     >
       <ScrollView 
         ref={scrollViewRef}
+        scrollEnabled={isScrollable}
         style={styles.container}
       >
         <TouchableOpacity
