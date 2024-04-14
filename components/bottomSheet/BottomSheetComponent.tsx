@@ -1,6 +1,6 @@
 // Dependencies
-import { useCallback, useMemo } from "react";
-import { View, Platform, StyleSheet } from "react-native";
+import { useCallback, useMemo, useState } from "react";
+import { View, Platform, StyleSheet, Dimensions } from "react-native";
 import BottomSheet, { BottomSheetScrollView, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 // Components
@@ -13,8 +13,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/build/MaterialCommunityIc
 
 export const BottomSheetComponent = () => {
   // Context for bottom sheet
-  const { bottomSheetRef, scrollViewRef, handleSheetChanges, item, itemType, closeBottomSheet, isScrollable } = useBottomSheet();
-
+  const { bottomSheetRef, scrollViewRef, handleSheetChanges, item, itemType, closeBottomSheet, isScrollable, setIsScrollable } = useBottomSheet();
 
 
   // Heights that the bottom sheet will snap to
@@ -35,7 +34,6 @@ export const BottomSheetComponent = () => {
     []
   );
 
-
   return (
     <BottomSheet
       ref={bottomSheetRef}
@@ -52,21 +50,21 @@ export const BottomSheetComponent = () => {
       // Component for the backdrop ie dark background of the bottom sheet
       backdropComponent={renderBackdrop}
     >
-      <ScrollView 
+      <BottomSheetScrollView 
         ref={scrollViewRef}
         scrollEnabled={isScrollable}
         style={styles.container}
       >
         <TouchableOpacity
-        style={styles.closeButton}
-        onPress={closeBottomSheet}
-      >
-        <MaterialCommunityIcons 
-          name="close-circle-outline" 
-          size={40} 
-          color="gray" 
-        />
-      </TouchableOpacity>
+          style={styles.closeButton}
+          onPress={closeBottomSheet}
+        >
+          <MaterialCommunityIcons 
+            name="close-circle-outline" 
+            size={40} 
+            color="gray" 
+          />
+        </TouchableOpacity>
         {item ? (
           itemType === 'item' ? (
 
@@ -78,7 +76,7 @@ export const BottomSheetComponent = () => {
 
           ) : null
         ) : null}
-      </ScrollView>
+      </BottomSheetScrollView>
     </BottomSheet>
   )
 }

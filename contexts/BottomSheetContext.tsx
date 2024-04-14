@@ -16,6 +16,7 @@ type BottomSheetContextType = {
   itemType: any;
   setItemType: (itemType: any) => void;
   isScrollable: boolean;
+  setIsScrollable: (isScrollable: boolean) => void;
 };
 
 
@@ -30,6 +31,7 @@ const BottomSheetContext = createContext<BottomSheetContextType>({
   itemType: null,
   setItemType: (itemType: any) => {},
   isScrollable: false,
+  setIsScrollable: (isScrollable: boolean) => {},
 });
 
 
@@ -76,7 +78,8 @@ export const BottomSheetProvider = ({ children }: any) => {
     setItem,
     itemType,
     setItemType,
-    isScrollable
+    isScrollable,
+    setIsScrollable
   };
 
   return (
