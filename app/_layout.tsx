@@ -36,9 +36,11 @@ export default function RootLayout() {
 
   return (
     <ApolloCacheProvider>
-      <BottomSheetProvider>
-        <RootLayoutNav />
-      </BottomSheetProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <BottomSheetProvider>
+          <RootLayoutNav />
+        </BottomSheetProvider>
+      </GestureHandlerRootView>
     </ApolloCacheProvider>
   )
 }
@@ -48,12 +50,10 @@ function RootLayoutNav() {
 
   if (Platform.OS !== 'web') {
     return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <Slot />
-            <BottomSheetComponent />
-          </ThemeProvider>
-      </GestureHandlerRootView>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Slot />
+        <BottomSheetComponent />
+      </ThemeProvider>
     )
   } else {
     return (

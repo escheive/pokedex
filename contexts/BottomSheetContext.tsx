@@ -15,6 +15,8 @@ type BottomSheetContextType = {
   setItem: (item: any) => void;
   itemType: any;
   setItemType: (itemType: any) => void;
+  isScrollable: boolean;
+  setIsScrollable: (isScrollable: boolean) => void;
 };
 
 
@@ -28,6 +30,8 @@ const BottomSheetContext = createContext<BottomSheetContextType>({
   setItem: (item: any) => {},
   itemType: null,
   setItemType: (itemType: any) => {},
+  isScrollable: false,
+  setIsScrollable: (isScrollable: boolean) => {},
 });
 
 
@@ -45,10 +49,11 @@ export const BottomSheetProvider = ({ children }: any) => {
   const scrollViewRef = useRef<BottomSheet>(null);
   const [item, setItem] = useState(null);
   const [itemType, setItemType] = useState(null);
+  const [isScrollable, setIsScrollable] = useState(false);
 
 
   const handleSheetChanges = useCallback((index: number) => {
-    
+    setIsScrollable(index === 1);
   }, []);
 
   const handleSnapPress = useCallback((index: number) => {
@@ -73,6 +78,8 @@ export const BottomSheetProvider = ({ children }: any) => {
     setItem,
     itemType,
     setItemType,
+    isScrollable,
+    setIsScrollable
   };
 
   return (
